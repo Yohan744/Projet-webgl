@@ -1,0 +1,18 @@
+{
+  "repository": "#",
+  "license": "UNLICENSED",
+  "scripts":
+  {
+    "dev": "vite serve --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies":
+  {
+    "lil-gui": "latest",
+    "stats.js": "latest",
+    "three": "latest",
+    "vite": "latest",
+    "vite-plugin-glsl": "latest"
+  }
+}
