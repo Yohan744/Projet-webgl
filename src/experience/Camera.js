@@ -1,11 +1,9 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
-export default class Camera
-{
-    constructor(_options)
-    {
+export default class Camera {
+    constructor(_options) {
         // Options
         this.experience = new Experience()
         this.config = this.experience.config
@@ -22,8 +20,7 @@ export default class Camera
         this.setModes()
     }
 
-    setInstance()
-    {
+    setInstance() {
         // Set up
         this.instance = new THREE.PerspectiveCamera(25, this.config.width / this.config.height, 0.1, 150)
         this.instance.rotation.reorder('YXZ')
@@ -31,8 +28,7 @@ export default class Camera
         this.scene.add(this.instance)
     }
 
-    setModes()
-    {
+    setModes() {
         this.modes = {}
 
         // Default
@@ -45,7 +41,7 @@ export default class Camera
         this.modes.debug.instance = this.instance.clone()
         this.modes.debug.instance.rotation.reorder('YXZ')
         this.modes.debug.instance.position.set(5, 5, 5)
-        
+
         this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
         this.modes.debug.orbitControls.enabled = this.modes.debug.active
         this.modes.debug.orbitControls.screenSpacePanning = true
@@ -56,8 +52,7 @@ export default class Camera
     }
 
 
-    resize()
-    {
+    resize() {
         this.instance.aspect = this.config.width / this.config.height
         this.instance.updateProjectionMatrix()
 
@@ -68,8 +63,7 @@ export default class Camera
         this.modes.debug.instance.updateProjectionMatrix()
     }
 
-    update()
-    {
+    update() {
         // Update debug orbit controls
         this.modes.debug.orbitControls.update()
 
@@ -79,8 +73,7 @@ export default class Camera
         this.instance.updateMatrixWorld() // To be used in projection
     }
 
-    destroy()
-    {
+    destroy() {
         this.modes.debug.orbitControls.destroy()
     }
 }

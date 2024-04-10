@@ -1,6 +1,6 @@
 {
-  "repository": "",
-  "license": "MIT",
+  "repository": "#",
+  "license": "",
   "scripts":
   {
     "dev": "vite serve --host",
