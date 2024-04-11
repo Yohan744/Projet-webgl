@@ -24,7 +24,7 @@ export default class Lights {
     }
 
     setupSpotLight() {
-        const spotLight = new THREE.SpotLight(0xffffff, 4000, 18)
+        const spotLight = new THREE.SpotLight("#fff4cc", 4000, 18)
         spotLight.position.copy(this.spotLightPosition)
         spotLight.target.position.copy(this.spotLightTarget)
         spotLight.castShadow = true

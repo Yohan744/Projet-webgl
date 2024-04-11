@@ -44,13 +44,15 @@ export default class Resources extends EventEmitter {
             this.groups.loaded.push(this.groups.current)
 
             // Trigger
-            this.trigger('groupEnd', [this.groups.current])
+            this.trigger('ready', [this.groups.current])
 
             if (this.groups.assets.length > 0) {
                 this.loadNextGroup()
             } else {
                 this.trigger('end')
             }
+
+            console.log(" ")
         })
     }
 

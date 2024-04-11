@@ -11,29 +11,22 @@ export default class World {
         this.resources = this.experience.resources
         this.time = this.experience.time
 
-        this.resources.on('groupEnd', (_group) => {
+        this.resources.on('ready', (_group) => {
             if (_group.name === 'base') {
 
                 this.lights = new Lights()
                 this.attic = new Attic()
 
-                this.setupGridHelper()
-
             }
         })
-    }
-
-    setupGridHelper() {
-        const gridHelper = new THREE.GridHelper(10, 10)
-        this.scene.add(gridHelper)
-        const axesHelper = new THREE.AxesHelper(5)
-        this.scene.add(axesHelper)
     }
 
     resize() {
     }
 
     update() {
+
+        if (this.attic) this.attic.update()
 
     }
 

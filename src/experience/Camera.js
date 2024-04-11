@@ -14,18 +14,19 @@ export default class Camera {
         this.scene = this.experience.scene
 
 
-        this.mode = 'debug' // 'default' for production, 'debug' for development
+        this.mode = 'default' // 'default' for production, 'debug' for development
 
-        this.startLookingPoint = new THREE.Vector3(0, 0, -3)
+        this.startLookingPoint = new THREE.Vector3(0, 1, -3)
 
         this.setInstance()
         this.setModes()
     }
 
     setInstance() {
-        // Set up
-        this.instance = new THREE.PerspectiveCamera(45, this.config.width / this.config.height, 0.1, 150)
+        const width = this.config.width === null ? window.innerWidth : this.config.width
+        this.instance = new THREE.PerspectiveCamera(55, width / this.config.height, 0.1, 150)
         this.instance.rotation.reorder('YXZ')
+        this.instance.lookAt(this.startLookingPoint)
 
         this.scene.add(this.instance)
     }
@@ -37,7 +38,7 @@ export default class Camera {
         this.modes.default = {}
         this.modes.default.instance = this.instance.clone()
         this.modes.default.instance.rotation.reorder('YXZ')
-        this.modes.default.instance.position.set(0, 1, 0)
+        this.modes.default.instance.position.set(0, 1.25, 2)
         this.modes.default.instance.lookAt(this.startLookingPoint)
 
         // Debug
