@@ -32,12 +32,12 @@ export default class Attic {
                     const texture = this.resources.items.atticModel.diffuse
                     texture.wrapS = THREE.RepeatWrapping
                     texture.wrapT = THREE.RepeatWrapping
-                    texture.repeat.set(2.5, 2.5)
+                    texture.repeat.set(2, 2)
 
                     const roughness = this.resources.items.atticModel.roughness
                     roughness.wrapS = THREE.RepeatWrapping
                     roughness.wrapT = THREE.RepeatWrapping
-                    roughness.repeat.set(2.5, 2.5)
+                    roughness.repeat.set(2, 2)
 
                     child.material = new THREE.MeshStandardMaterial({
                         map: texture,
