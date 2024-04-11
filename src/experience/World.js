@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
+import Lights from "./World/Lights";
+import Attic from "./World/Attic";
 
 export default class World {
     constructor(_options) {
@@ -7,28 +9,32 @@ export default class World {
         this.config = this.experience.config
         this.scene = this.experience.scene
         this.resources = this.experience.resources
+        this.time = this.experience.time
 
         this.resources.on('groupEnd', (_group) => {
             if (_group.name === 'base') {
-                this.setDummy()
+
+                this.lights = new Lights()
+                this.attic = new Attic()
+
+                this.setupGridHelper()
+
             }
         })
     }
 
-    setDummy() {
-        this.resources.items.lennaTexture.encoding = THREE.sRGBEncoding
-
-        const cube = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshBasicMaterial({map: this.resources.items.lennaTexture})
-        )
-        this.scene.add(cube)
+    setupGridHelper() {
+        const gridHelper = new THREE.GridHelper(10, 10)
+        this.scene.add(gridHelper)
+        const axesHelper = new THREE.AxesHelper(5)
+        this.scene.add(axesHelper)
     }
 
     resize() {
     }
 
     update() {
+
     }
 
     destroy() {

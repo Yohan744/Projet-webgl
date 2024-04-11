@@ -13,8 +13,10 @@ export default class Camera {
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
 
-        // Set up
-        this.mode = 'debug' // defaultCamera \ debugCamera
+
+        this.mode = 'debug' // 'default' for production, 'debug' for development
+
+        this.startLookingPoint = new THREE.Vector3(0, 0, -3)
 
         this.setInstance()
         this.setModes()
@@ -22,7 +24,7 @@ export default class Camera {
 
     setInstance() {
         // Set up
-        this.instance = new THREE.PerspectiveCamera(25, this.config.width / this.config.height, 0.1, 150)
+        this.instance = new THREE.PerspectiveCamera(45, this.config.width / this.config.height, 0.1, 150)
         this.instance.rotation.reorder('YXZ')
 
         this.scene.add(this.instance)
@@ -35,12 +37,14 @@ export default class Camera {
         this.modes.default = {}
         this.modes.default.instance = this.instance.clone()
         this.modes.default.instance.rotation.reorder('YXZ')
+        this.modes.default.instance.position.set(0, 1, 0)
+        this.modes.default.instance.lookAt(this.startLookingPoint)
 
         // Debug
         this.modes.debug = {}
         this.modes.debug.instance = this.instance.clone()
         this.modes.debug.instance.rotation.reorder('YXZ')
-        this.modes.debug.instance.position.set(5, 5, 5)
+        this.modes.debug.instance.position.set(0, 5, 5)
 
         this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
         this.modes.debug.orbitControls.enabled = this.modes.debug.active
@@ -50,7 +54,6 @@ export default class Camera {
         this.modes.debug.orbitControls.enableDamping = true
         this.modes.debug.orbitControls.update()
     }
-
 
     resize() {
         this.instance.aspect = this.config.width / this.config.height

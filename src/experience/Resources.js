@@ -6,7 +6,7 @@ export default class Resources extends EventEmitter {
     constructor(_assets) {
         super()
 
-        // Items (will contain every resources)
+        // Items (will contain every resource)
         this.items = {}
 
         // Loader
@@ -22,12 +22,13 @@ export default class Resources extends EventEmitter {
         this.loader.on('fileEnd', (_resource, _data) => {
             let data = _data
 
-            // Convert to texture
-            if (_resource.type === 'texture') {
-                if (!(data instanceof THREE.Texture)) {
-                    data = new THREE.Texture(_data)
+            if (_resource.textures) {
+                for (const textureType in _resource.textures) {
+                    const texturePath = _resource.textures[textureType];
+                    data[textureType] = new THREE.TextureLoader().load(texturePath);
+                    data[textureType].encoding = THREE.sRGBEncoding;
+                    data[textureType].needsUpdate = true;
                 }
-                data.needsUpdate = true
             }
 
             this.items[_resource.name] = data
@@ -35,6 +36,7 @@ export default class Resources extends EventEmitter {
             // Progress and event
             this.groups.current.loaded++
             this.trigger('progress', [this.groups.current, _resource, data])
+
         })
 
         // Loader all end event

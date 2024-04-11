@@ -31,7 +31,7 @@ export default class Renderer {
         // Renderer
         this.instance = new THREE.WebGLRenderer({
             alpha: false,
-            antialias: true
+            antialias: true,
         })
         this.instance.domElement.style.position = 'absolute'
         this.instance.domElement.style.top = 0
@@ -46,8 +46,8 @@ export default class Renderer {
         this.instance.physicallyCorrectLights = true
         // this.instance.gammaOutPut = true
         this.instance.outputEncoding = THREE.sRGBEncoding
-        // this.instance.shadowMap.type = THREE.PCFSoftShadowMap
-        // this.instance.shadowMap.enabled = false
+        this.instance.shadowMap.type = THREE.PCFSoftShadowMap
+        this.instance.shadowMap.enabled = true
         this.instance.toneMapping = THREE.NoToneMapping
         this.instance.toneMappingExposure = 1
 

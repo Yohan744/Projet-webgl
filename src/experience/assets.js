@@ -4,7 +4,16 @@ export default [
         data: {},
         items:
             [
-                {name: 'lennaTexture', source: '/assets/lenna.png', type: 'texture'},
+                {
+                    name: 'atticModel',
+                    source: '/assets/models/attic.glb',
+                    type: 'model',
+                    textures: {
+                        diffuse: 'assets/textures/attic/diffuse.webp',
+                        displacement: 'assets/textures/attic/displacement.webp',
+                        roughness: 'assets/textures/attic/roughness.webp',
+                    },
+                }
             ]
     }
 ]

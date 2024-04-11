@@ -1,9 +1,10 @@
 import EventEmitter from './EventEmitter.js'
 import Experience from '../Experience.js'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
-import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader.js'
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js'
 import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js'
+import {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader.js'
+import {EXRLoader} from "three/addons";
 
 export default class Resources extends EventEmitter {
     /**
@@ -30,7 +31,7 @@ export default class Resources extends EventEmitter {
 
         // Images
         this.loaders.push({
-            extensions: ['jpg', 'png'],
+            extensions: ['jpg', 'png', 'webp'],
             action: (_resource) => {
                 const image = new Image()
 
@@ -48,8 +49,10 @@ export default class Resources extends EventEmitter {
 
         // Draco
         const dracoLoader = new DRACOLoader()
-        dracoLoader.setDecoderPath('draco/')
+        // dracoLoader.setDecoderPath('draco/');
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
         dracoLoader.setDecoderConfig({type: 'js'})
+        dracoLoader.preload();
 
         this.loaders.push({
             extensions: ['drc'],
@@ -69,31 +72,33 @@ export default class Resources extends EventEmitter {
         this.loaders.push({
             extensions: ['glb', 'gltf'],
             action: (_resource) => {
+                console.log("Loading done: ", _resource.name);
                 gltfLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
                 })
             }
         })
 
-        // FBX
-        const fbxLoader = new FBXLoader()
-
+        // HDR
+        const rgbeLoader = new RGBELoader()
         this.loaders.push({
-            extensions: ['fbx'],
-            action: (_resource) => {
-                fbxLoader.load(_resource.source, (_data) => {
+            extensions: ['hdr'],
+            action: (_resource) =>
+            {
+                rgbeLoader.load(_resource.source, (_data) =>
+                {
                     this.fileLoadEnd(_resource, _data)
                 })
             }
         })
 
-        // RGBE | HDR
-        const rgbeLoader = new RGBELoader()
-
+        const ktxLoader = new KTX2Loader();
+        ktxLoader.setTranscoderPath('/basis/');
+        ktxLoader.detectSupport(this.renderer);
         this.loaders.push({
-            extensions: ['hdr'],
+            extensions: ['ktx2'],
             action: (_resource) => {
-                rgbeLoader.load(_resource.source, (_data) => {
+                ktxLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
                 })
             }
@@ -106,7 +111,7 @@ export default class Resources extends EventEmitter {
     load(_resources = []) {
         for (const _resource of _resources) {
             this.toLoad++
-            const extensionMatch = _resource.source.match(/\.([a-z]+)$/)
+            const extensionMatch = _resource.source.match(/\.([a-z0-9]+)$/)
 
             if (typeof extensionMatch[1] !== 'undefined') {
                 const extension = extensionMatch[1]
