@@ -1,16 +1,14 @@
 {
   "repository": "#",
   "license": "",
-  "scripts":
-  {
+  "scripts": {
     "dev": "vite serve --host",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "dependencies":
-  {
+  "dependencies": {
     "lil-gui": "^0.19.2",
-    "stats.js": "^1.0.0",
+    "stats.js": "^0.17.0",
     "three": "^0.163.0",
     "sass": "^1.74.1",
     "vite": "^5.2.8",

@@ -11,8 +11,8 @@ export default class Dust {
         this.config = this.experience.config
         this.scene = this.experience.scene
 
-        this.dustNumber = 300
-        this.size = 35
+        this.dustNumber = 1350
+        this.size = 32
 
         this.init()
 
@@ -40,7 +40,7 @@ export default class Dust {
             uniforms: {
                 uTime: {value: 0},
                 uPixelRatio: {value: this.config.pixelRatio},
-                uSize: {value: this.size},
+                uSize: {value: this.size}
             },
             vertexShader: dustVertexShader,
             fragmentShader: dustFragmentShader,

@@ -22,16 +22,19 @@ export default class Renderer {
         this.usePostprocess = false
 
         this.setInstance()
-        this.setPostProcess()
+        // this.setPostProcess()
     }
 
     setInstance() {
-        this.clearColor = '#010101'
+        this.clearColor = '#0d719e'
 
         // Renderer
         this.instance = new THREE.WebGLRenderer({
-            alpha: false,
             antialias: true,
+            stencil: false,
+            depth: false,
+            alpha: false,
+            powerPreference: 'high-performance',
         })
         this.instance.domElement.style.position = 'absolute'
         this.instance.domElement.style.top = 0
