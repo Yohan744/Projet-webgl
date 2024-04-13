@@ -60,14 +60,6 @@ export default class Renderer {
 
         // Debug
         if (this.debug) {
-            this.debugFolder
-                .addColor(
-                    this,
-                    'clearColor'
-                )
-                .onChange(() => {
-                    this.instance.setClearColor(this.clearColor)
-                })
 
             this.debugFolder
                 .add(

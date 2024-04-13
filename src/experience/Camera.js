@@ -16,6 +16,10 @@ export default class Camera {
 
         this.mode = 'default' // 'default' for production, 'debug' for development
 
+        if (this.debug) {
+            this.debugFolder = this.debug.addFolder('camera')
+        }
+
         this.startLookingPoint = new THREE.Vector3(0, 1, -3)
 
         this.setInstance()
@@ -29,6 +33,18 @@ export default class Camera {
         this.instance.lookAt(this.startLookingPoint)
 
         this.scene.add(this.instance)
+
+        if (this.debug) {
+            this.debugFolder
+                .add(
+                    this, 'mode',
+                    {
+                        'Default': "default",
+                        'Debug': "debug",
+                    }
+                )
+        }
+
     }
 
     setModes() {
