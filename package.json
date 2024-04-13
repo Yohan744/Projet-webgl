@@ -2,9 +2,10 @@
   "repository": "#",
   "license": "",
   "scripts": {
-    "dev": "vite serve --host",
+    "dev": "vite serve --host --force",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clear-cache": "rm -rf node_modules/.vite/"
   },
   "dependencies": {
     "lil-gui": "^0.19.2",

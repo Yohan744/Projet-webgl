@@ -38,9 +38,9 @@ export default class Lights {
     }
 
     setupPointLight() {
-        const pointLight = new THREE.PointLight(0xffffff, 1, 3)
-        pointLight.position.set(0, 0, 0)
-        pointLight.shadow.camera.far = 4
+        const pointLight = new THREE.PointLight(0xffffff, 10)
+        pointLight.position.set(0, 3, 0)
+        pointLight.shadow.camera.far = 400
         pointLight.shadow.mapSize.set(1024, 1024)
         this.scene.add(pointLight)
     }

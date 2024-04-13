@@ -22,11 +22,11 @@ export default class Renderer {
         this.usePostprocess = false
 
         this.setInstance()
-        // this.setPostProcess()
+        //this.setPostProcess()
     }
 
     setInstance() {
-        this.clearColor = '#0d719e'
+        this.clearColor = '#000000'
 
         // Renderer
         this.instance = new THREE.WebGLRenderer({
@@ -51,7 +51,7 @@ export default class Renderer {
         this.instance.outputEncoding = THREE.sRGBEncoding
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = true
-        this.instance.toneMapping = THREE.NoToneMapping
+        this.instance.toneMapping = THREE.ACESFilmicToneMapping
         this.instance.toneMappingExposure = 1
 
         this.context = this.instance.getContext()
@@ -137,8 +137,10 @@ export default class Renderer {
         this.instance.setPixelRatio(this.config.pixelRatio)
 
         // Post process
-        this.postProcess.composer.setSize(this.config.width, this.config.height)
-        this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
+        if (this.usePostprocess) {
+            this.postProcess.composer.setSize(this.config.width, this.config.height)
+            this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
+        }
     }
 
     update() {

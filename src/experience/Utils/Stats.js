@@ -30,7 +30,7 @@ export default class Stats {
         this.render = {}
         this.render.context = _context
         this.render.extension = this.render.context.getExtension('EXT_disjoint_timer_query_webgl2')
-        this.render.panel = this.instance.addPanel(new StatsJs.Panel('Render (ms)', '#f8f', '#212'))
+        //this.render.panel = this.instance.addPanel(new StatsJs.Panel('Render (ms)', '#f8f', '#212'))
 
         const webGL2 = typeof WebGL2RenderingContext !== 'undefined' && _context instanceof WebGL2RenderingContext
 
@@ -51,6 +51,8 @@ export default class Stats {
         // Test if query result available
         if (this.render.query) {
             queryResultAvailable = this.render.context.getQueryParameter(this.render.query, this.render.context.QUERY_RESULT_AVAILABLE)
+
+            /*
             const disjoint = this.render.context.getParameter(this.render.extension.GPU_DISJOINT_EXT)
 
             if (queryResultAvailable && !disjoint) {
@@ -60,9 +62,10 @@ export default class Stats {
                 if (panelValue === this.max && this.ignoreMaxed) {
 
                 } else {
-                    this.render.panel.update(panelValue, this.max)
+                    //this.render.panel.update(panelValue, this.max)
                 }
             }
+            */
         }
 
         // If query result available or no query yet

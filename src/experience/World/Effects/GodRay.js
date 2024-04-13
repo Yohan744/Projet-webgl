@@ -24,10 +24,10 @@ export default class GodRay {
                 uGlowColor: { value: new THREE.Color('#fff4cc') },
                 uBlurOffset: { value: 0.93 },
                 uAlphaBase: { value: 0.25 },
-                uAlphaRays: { value: 0.05 },
-                uFrequency: { value: 0.95 }
+                uAlphaRays: { value: 0.1 },
+                uFrequency: { value: 0.4 },
             },
-            side: THREE.DoubleSide,
+            side: THREE.BackSide,
             transparent: true,
             blending: THREE.AdditiveBlending,
             depthWrite: false
