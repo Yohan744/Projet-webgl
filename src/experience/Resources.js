@@ -28,7 +28,6 @@ export default class Resources extends EventEmitter {
                     data[textureType] = new THREE.TextureLoader().load(texturePath);
                     data[textureType].encoding = THREE.sRGBEncoding;
                     data[textureType].flipY = false;
-                    data[textureType].needsUpdate = true;
                 }
             }
 
