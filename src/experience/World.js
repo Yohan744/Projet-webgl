@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Experience from './Experience.js'
 import Lights from "./World/Lights";
 import Attic from "./World/Attic";
+import Background from "./World/Background";
 
 export default class World {
     constructor(_options) {
@@ -16,6 +17,7 @@ export default class World {
 
                 this.lights = new Lights()
                 this.attic = new Attic()
+                this.background = new Background()
 
             }
         })

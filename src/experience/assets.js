@@ -12,7 +12,12 @@ export default [
                         diffuse: 'assets/textures/attic/diffuse.webp',
                         displacement: 'assets/textures/attic/displacement.webp',
                         roughness: 'assets/textures/attic/roughness.webp',
-                    },
+                    }
+                },
+                {
+                    name: 'backgroundTreeTexture',
+                    source: '/assets/textures/background/backgroundTree.webp',
+                    type: 'texture',
                 }
             ]
     }

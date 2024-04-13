@@ -22,13 +22,19 @@ export default class Resources extends EventEmitter {
         this.loader.on('fileEnd', (_resource, _data) => {
             let data = _data
 
-            if (_resource.textures) {
-                for (const textureType in _resource.textures) {
-                    const texturePath = _resource.textures[textureType];
-                    data[textureType] = new THREE.TextureLoader().load(texturePath);
-                    data[textureType].encoding = THREE.sRGBEncoding;
-                    data[textureType].flipY = false;
+            if (_resource.type === 'model') {
+                if (_resource.textures) {
+                    for (const textureType in _resource.textures) {
+                        const texturePath = _resource.textures[textureType];
+                        data[textureType] = new THREE.TextureLoader().load(texturePath);
+                        data[textureType].encoding = THREE.sRGBEncoding;
+                        data[textureType].flipY = false;
+                    }
                 }
+            } else if (_resource.type === 'texture') {
+                data = new THREE.TextureLoader().load(_resource.source)
+                data.encoding = THREE.sRGBEncoding
+                // data.flipY = false
             }
 
             this.items[_resource.name] = data

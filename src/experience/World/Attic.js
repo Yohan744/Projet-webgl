@@ -1,5 +1,5 @@
 import Experience from "../Experience";
-import * as THREE from "three";
+import { MeshStandardMaterial, DoubleSide, RepeatWrapping } from "three";
 import GodRay from "./Effects/GodRay";
 import Dust from "./Effects/Dust";
 
@@ -30,19 +30,19 @@ export default class Attic {
                 } else {
 
                     const texture = this.resources.items.atticModel.diffuse
-                    texture.wrapS = THREE.RepeatWrapping
-                    texture.wrapT = THREE.RepeatWrapping
+                    texture.wrapS = RepeatWrapping
+                    texture.wrapT = RepeatWrapping
                     texture.repeat.set(2, 2)
 
                     const roughness = this.resources.items.atticModel.roughness
-                    roughness.wrapS = THREE.RepeatWrapping
-                    roughness.wrapT = THREE.RepeatWrapping
+                    roughness.wrapS = RepeatWrapping
+                    roughness.wrapT = RepeatWrapping
                     roughness.repeat.set(2, 2)
 
-                    child.material = new THREE.MeshStandardMaterial({
+                    child.material = new MeshStandardMaterial({
                         map: texture,
                         roughnessMap: roughness,
-                        side: THREE.DoubleSide
+                        side: DoubleSide
                     })
 
                     child.castShadow = true

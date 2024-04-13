@@ -31,9 +31,6 @@ export default class Renderer {
         // Renderer
         this.instance = new THREE.WebGLRenderer({
             antialias: true,
-            stencil: false,
-            depth: false,
-            alpha: false,
             powerPreference: 'high-performance',
         })
         this.instance.domElement.style.position = 'absolute'
