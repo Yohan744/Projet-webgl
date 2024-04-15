@@ -12,6 +12,7 @@ export default class Camera {
         this.sizes = this.experience.sizes
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
+        this.pointer = this.experience.pointer
 
 
         this.mode = 'default' // 'default' for production, 'debug' for development
@@ -84,8 +85,9 @@ export default class Camera {
     }
 
     update() {
-        // Update debug orbit controls
-        this.modes.debug.orbitControls.update()
+
+        if (this.debug)
+            this.modes.debug.orbitControls.update()
 
         // Apply coordinates
         this.instance.position.copy(this.modes[this.mode].instance.position)

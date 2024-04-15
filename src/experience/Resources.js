@@ -27,13 +27,21 @@ export default class Resources extends EventEmitter {
                     for (const textureType in _resource.textures) {
                         const texturePath = _resource.textures[textureType];
                         data[textureType] = new THREE.TextureLoader().load(texturePath);
-                        data[textureType].encoding = THREE.sRGBEncoding;
                         data[textureType].flipY = false;
+
+                        if (_resource.textures[textureType].includes('diffuse')) {
+                            data[textureType].colorSpace = THREE.SRGBColorSpace;
+                            data[textureType].encoding = THREE.sRGBEncoding;
+                        } else {
+                            data[textureType].colorSpace = THREE.LinearSRGBColorSpace;
+                            data[textureType].encoding = THREE.LinearEncoding;
+                        }
+
                     }
                 }
             } else if (_resource.type === 'texture') {
                 data = new THREE.TextureLoader().load(_resource.source)
-                data.encoding = THREE.sRGBEncoding
+                data.colorSpace = THREE.SRGBColorSpace
                 // data.flipY = false
             }
 

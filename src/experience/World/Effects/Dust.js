@@ -12,7 +12,7 @@ export default class Dust {
         this.scene = this.experience.scene
 
         this.dustNumber = 1300
-        this.size = 30
+        this.size = 33
 
         this.init()
 

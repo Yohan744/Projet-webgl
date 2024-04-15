@@ -5,15 +5,23 @@ export default class Lights {
 
     constructor(_options) {
         this.experience = new Experience()
+        this.debug = this.experience.debug
         this.scene = this.experience.scene
 
         this.spotLightPosition = new THREE.Vector3(-6, 9, -12)
         this.spotLightTarget = new THREE.Vector3(1, 0, -2.25)
 
+        this.pointLightPosition = new THREE.Vector3(-1, 1.75, -2.5)
+
         this.setupAmbientLight()
         this.setupSpotLight()
-        // this.setupPointLight()
-        // this.setupLightHelper()
+        this.setupPointLight()
+
+        if (this.debug) {
+            this.setupPointLightHelper()
+        }
+
+        // this.setupSpotLightHelper()
         // this.setupSpotLightShadowHelper()
 
     }
@@ -38,14 +46,28 @@ export default class Lights {
     }
 
     setupPointLight() {
-        const pointLight = new THREE.PointLight(0xffffff, 10)
-        pointLight.position.set(0, 3, 0)
-        pointLight.shadow.camera.far = 400
+        const pointLight = new THREE.PointLight(0xffffff, 3)
+        pointLight.position.copy(this.pointLightPosition)
+        pointLight.shadow.camera.far = 10
         pointLight.shadow.mapSize.set(1024, 1024)
         this.scene.add(pointLight)
+
+        // sphere just for now
+        const sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(0.115, 8, 8),
+            new THREE.MeshBasicMaterial({ color: "#fff4cc" })
+        )
+        sphere.position.copy(this.pointLightPosition)
+        this.scene.add(sphere)
+
     }
 
-    setupLightHelper() {
+    setupPointLightHelper() {
+        const lightHelper = new THREE.PointLightHelper(this.scene.children.find(child => child.type === 'PointLight'))
+        this.scene.add(lightHelper)
+    }
+
+    setupSpotLightHelper() {
         const lightHelper = new THREE.SpotLightHelper(this.scene.children.find(child => child.type === 'SpotLight'))
         this.scene.add(lightHelper)
     }

@@ -11,6 +11,7 @@ import Camera from './Camera.js'
 import World from './World.js'
 
 import assets from './assets.js'
+import Pointer from "./Utils/Pointer";
 
 export default class Experience {
     static instance
@@ -39,6 +40,7 @@ export default class Experience {
         this.setRenderer()
         this.setResources()
         this.setWorld()
+        this.setPointer()
 
         this.sizes.on('resize', () => {
             this.resize()
@@ -96,17 +98,25 @@ export default class Experience {
         this.world = new World()
     }
 
+    setPointer() {
+        this.pointer = new Pointer()
+    }
+
     update() {
         if (this.stats)
             this.stats.update()
 
-        this.camera.update()
+        if (this.camera)
+            this.camera.update()
 
         if (this.world)
             this.world.update()
 
         if (this.renderer)
             this.renderer.update()
+
+        if (this.pointer)
+            this.pointer.update()
 
         window.requestAnimationFrame(() => {
             this.update()
