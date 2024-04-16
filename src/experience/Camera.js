@@ -4,7 +4,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
 export default class Camera {
     constructor(_options) {
-        // Options
+
         this.experience = new Experience()
         this.config = this.experience.config
         this.debug = this.experience.debug
@@ -15,13 +15,21 @@ export default class Camera {
         this.pointer = this.experience.pointer
 
 
+        this.prevTarget = new THREE.Vector3();
+
+        this.upVector = new THREE.Vector3(0, 1, 0);
+        this.lerpCamera = 0.975
+        this.cameraAmplitude = 1
+
+
         this.mode = 'default' // 'default' for production, 'debug' for development
 
         if (this.debug) {
             this.debugFolder = this.debug.addFolder('camera')
+            this.setDebug()
         }
 
-        this.startLookingPoint = new THREE.Vector3(0, 1, -3)
+        this.lookingPoint = new THREE.Vector3(0, 1, -3)
 
         this.setInstance()
         this.setModes()
@@ -31,21 +39,9 @@ export default class Camera {
         const width = this.config.width === null ? window.innerWidth : this.config.width
         this.instance = new THREE.PerspectiveCamera(55, width / this.config.height, 0.1, 150)
         this.instance.rotation.reorder('YXZ')
-        this.instance.lookAt(this.startLookingPoint)
+        this.instance.lookAt(this.lookingPoint)
 
         this.scene.add(this.instance)
-
-        if (this.debug) {
-            this.debugFolder
-                .add(
-                    this, 'mode',
-                    {
-                        'Default': "default",
-                        'Debug': "debug",
-                    }
-                )
-        }
-
     }
 
     setModes() {
@@ -56,7 +52,7 @@ export default class Camera {
         this.modes.default.instance = this.instance.clone()
         this.modes.default.instance.rotation.reorder('YXZ')
         this.modes.default.instance.position.set(0, 1.25, 2)
-        this.modes.default.instance.lookAt(this.startLookingPoint)
+        this.modes.default.instance.lookAt(this.lookingPoint)
 
         // Debug
         this.modes.debug = {}
@@ -73,6 +69,23 @@ export default class Camera {
         this.modes.debug.orbitControls.update()
     }
 
+    setDebug() {
+        if (this.debug) {
+
+            this.debugFolder.add(
+                this, 'mode', {
+                    'Default': "default",
+                    'Debug': "debug",
+                }
+            )
+
+            this.debugFolder.add(this, 'cameraAmplitude').min(0).max(3).step(0.001).name('Camera amplitude')
+
+            this.debugFolder.add(this, 'lerpCamera').min(0).max(0.99).step(0.001).name('Camera smoothness')
+
+        }
+    }
+
     resize() {
         this.instance.aspect = this.config.width / this.config.height
         this.instance.updateProjectionMatrix()
@@ -86,14 +99,31 @@ export default class Camera {
 
     update() {
 
-        if (this.debug)
-            this.modes.debug.orbitControls.update()
+        if (this.pointer && this.mode === 'default') {
 
-        // Apply coordinates
-        this.instance.position.copy(this.modes[this.mode].instance.position)
-        this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion)
-        this.instance.updateMatrixWorld() // To be used in projection
+            const direction = new THREE.Vector3();
+            this.instance.getWorldDirection(direction);
+            const side = new THREE.Vector3().crossVectors(direction, this.upVector).normalize();
+
+            const mousePos = this.pointer.getMousePosition();
+
+            let lookAtTarget = new THREE.Vector3().copy(this.lookingPoint);
+            lookAtTarget.addScaledVector(side, mousePos.x * this.cameraAmplitude);
+            lookAtTarget.addScaledVector(this.upVector, -mousePos.y * -this.cameraAmplitude);
+
+            this.modes.default.instance.lookAt(lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
+            this.prevTarget.copy(lookAtTarget);
+        }
+
+        if (this.debug) {
+            this.modes.debug.orbitControls.update();
+        }
+
+        this.instance.position.copy(this.modes[this.mode].instance.position);
+        this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
+        this.instance.updateMatrixWorld();
     }
+
 
     destroy() {
         this.modes.debug.orbitControls.destroy()

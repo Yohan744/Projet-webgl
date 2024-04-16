@@ -2,16 +2,13 @@ import Experience from "../Experience";
 import { Raycaster } from "three";
 
 export default class Pointer {
-    static instance
 
     constructor() {
 
-        if (Pointer.instance) {
-            return Pointer.instance
-        }
-        Pointer.instance = this
+        this.instance = this
 
         this.experience = new Experience()
+        this.config = this.experience.config
         this.raycaster = new Raycaster()
         this.intersects = []
 
@@ -30,13 +27,8 @@ export default class Pointer {
     }
 
     setEvents() {
-        const element = this.experience.targetElement
-        const canva = element.querySelector("canvas")
-        if (canva) {
-            canva.addEventListener("mousemove", (_event) => this.onMovement(_event), {passive: true})
-            canva.addEventListener("touchmove", (_event) => this.onMovement(_event), {passive: true})
-
-        }
+        window.addEventListener("mousemove", (_event) => this.onMovement(_event), {passive: true})
+        window.addEventListener("touchmove", (_event) => this.onMovement(_event), {passive: true})
     }
 
     onMovement(_event) {
@@ -53,6 +45,10 @@ export default class Pointer {
 
     getMousePosition() {
         return this.mouse
+    }
+
+    getOldMousePosition() {
+        return this.oldMouse
     }
 
     update() {

@@ -32,6 +32,7 @@ export default class Experience {
 
         this.time = new Time()
         this.sizes = new Sizes()
+        this.pointer = new Pointer().instance
         this.setConfig()
         this.setDebug()
         this.setStats()
@@ -40,7 +41,6 @@ export default class Experience {
         this.setRenderer()
         this.setResources()
         this.setWorld()
-        this.setPointer()
 
         this.sizes.on('resize', () => {
             this.resize()
@@ -98,16 +98,11 @@ export default class Experience {
         this.world = new World()
     }
 
-    setPointer() {
-        this.pointer = new Pointer()
-    }
-
     update() {
         if (this.stats)
             this.stats.update()
 
-        if (this.camera)
-            this.camera.update()
+        this.camera.update()
 
         if (this.world)
             this.world.update()
