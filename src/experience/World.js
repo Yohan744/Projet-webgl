@@ -3,6 +3,8 @@ import Experience from './Experience.js'
 import Lights from "./World/Lights";
 import Attic from "./World/Attic";
 import Background from "./World/Background";
+import Locations from "./World/Locations";
+import Pointer from "./Utils/Pointer";
 
 export default class World {
     constructor(_options) {
@@ -18,6 +20,7 @@ export default class World {
                 this.lights = new Lights()
                 this.attic = new Attic()
                 this.background = new Background()
+                this.locations = new Locations().instance
 
             }
         })

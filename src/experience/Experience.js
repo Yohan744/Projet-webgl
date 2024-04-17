@@ -12,11 +12,15 @@ import World from './World.js'
 
 import assets from './assets.js'
 import Pointer from "./Utils/Pointer";
+import Locations from "./World/Locations";
+import EventEmitter from "./Utils/EventEmitter";
 
-export default class Experience {
+export default class Experience extends EventEmitter{
     static instance
 
     constructor(_options = {}) {
+        super()
+
         if (Experience.instance) {
             return Experience.instance
         }
@@ -46,6 +50,7 @@ export default class Experience {
             this.resize()
         })
 
+        this.trigger('ready')
         this.update()
     }
 
@@ -109,9 +114,6 @@ export default class Experience {
 
         if (this.renderer)
             this.renderer.update()
-
-        if (this.pointer)
-            this.pointer.update()
 
         window.requestAnimationFrame(() => {
             this.update()
