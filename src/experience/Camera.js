@@ -109,13 +109,25 @@ export default class Camera {
     moveToSpot(spot) {
 
         const position = spot.object.position.clone()
-        const rotation = spot.object.rotation.clone()
+
+        const direction = new THREE.Vector3().copy(spot.object.data.lookingPoint);
+        direction.normalize();
+        const lookingPoint = position.clone().add(direction.multiplyScalar(5));
+
 
         gsap.to(this.modes.default.instance.position, {
             x: position.x,
             y: position.y + this.offsetPosition.y,
             z: position.z,
-            duration: 3,
+            duration: 4,
+            ease: 'power2.inOut'
+        })
+
+        gsap.to(this.lookingPoint, {
+            x: lookingPoint.x,
+            y: lookingPoint.y,
+            z: lookingPoint.z,
+            duration: 4,
             ease: 'power2.inOut'
         })
 

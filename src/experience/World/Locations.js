@@ -15,13 +15,11 @@ export default class Locations {
         this.locationsPositions = [
             new THREE.Vector3(-1, 0, -2),
             new THREE.Vector3(0, 0, -1),
-            new THREE.Vector3(1, 0, -3),
         ]
 
-        this.locationsRotations = [
-            new THREE.Euler(0, 0, 0),
-            new THREE.Euler(0, 0, 0),
-            new THREE.Euler(0, 0, 0),
+        this.locationsLookingPoint = [
+            new THREE.Vector3(-3, 1, -2),
+            new THREE.Vector3(3.75, 1, -3),
         ]
 
         this.experience.on('ready', () => {
@@ -35,13 +33,21 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
+            const geometry = new THREE.PlaneGeometry(0.3, 0.3)
+            geometry.rotateX(Math.PI * 0.5)
+
             const location = new THREE.Mesh(
-                new THREE.BoxGeometry(0.1, 0.1, 0.1),
-                new THREE.MeshBasicMaterial({color: 0xff0000})
+                geometry,
+                new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    side: THREE.DoubleSide,
+                })
             )
 
-            location.position.copy(this.locationsPositions[i])
-            location.rotation.copy(this.locationsRotations[i])
+            location.position.copy(this.locationsPositions[i]).add(new THREE.Vector3(0, 0.03, 0))
+            location.data = {
+                lookingPoint: this.locationsLookingPoint[i]
+            };
 
             this.spots.push(location)
             this.scene.add(location)
