@@ -1,14 +1,19 @@
 import Experience from "../Experience";
-import { Raycaster } from "three";
+import {Raycaster} from "three";
+import Locations from "../World/Locations";
+import EventEmitter from "./EventEmitter";
 
-export default class Pointer {
+export default class Pointer extends EventEmitter {
 
     constructor() {
+
+        super()
 
         this.instance = this
 
         this.experience = new Experience()
-        this.config = this.experience.config
+        this.locations = new Locations().instance
+
         this.raycaster = new Raycaster()
         this.intersects = []
 
@@ -22,13 +27,18 @@ export default class Pointer {
             y: 0
         }
 
-        this.setEvents()
+        this.experience.on('ready', () => {
+            this.locations = this.locations.getLocations()
+            this.scene = this.experience.scene
+            this.setEvents()
+        })
 
     }
 
     setEvents() {
-        window.addEventListener("mousemove", (_event) => this.onMovement(_event), {passive: true})
-        window.addEventListener("touchmove", (_event) => this.onMovement(_event), {passive: true})
+        window.addEventListener("mousemove", (_event) => this.onMovement(_event),)
+        window.addEventListener("touchmove", (_event) => this.onMovement(_event),)
+        window.addEventListener('click', this.onClick.bind(this), false);
     }
 
     onMovement(_event) {
@@ -37,6 +47,15 @@ export default class Pointer {
 
         this.oldMouse.x = this.mouse.x
         this.oldMouse.y = this.mouse.y
+    }
+
+    onClick(event) {
+        event.preventDefault();
+        this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
+        const intersects = this.raycaster.intersectObjects(this.locations, false);
+        if (intersects.length > 0) {
+            this.trigger('spot-clicked', [intersects[0]])
+        }
     }
 
     getIntersects() {
@@ -49,11 +68,6 @@ export default class Pointer {
 
     getOldMousePosition() {
         return this.oldMouse
-    }
-
-    update() {
-        this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance)
-        this.intersects = this.raycaster.intersectObjects(this.experience.scene.children, true)
     }
 
 }

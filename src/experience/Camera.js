@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+import gsap from "gsap"
 
 export default class Camera {
     constructor(_options) {
@@ -14,13 +15,21 @@ export default class Camera {
         this.scene = this.experience.scene
         this.pointer = this.experience.pointer
 
+        this.isFocused = false
 
+        this.basicCameraPosition = new THREE.Vector3(0, 0, 2)
+        this.offsetPosition = new THREE.Vector3(0, 1.25, 0)
+
+        this.lookingPoint = new THREE.Vector3(0, 1, -3)
         this.prevTarget = new THREE.Vector3();
-
         this.upVector = new THREE.Vector3(0, 1, 0);
+
         this.lerpCamera = 0.975
         this.cameraAmplitude = 1
-
+        this.lerpCameraNormal = 0.975
+        this.cameraAmplitudeNormal = 1
+        this.lerpCameraFocus = 0.99
+        this.cameraAmplitudeFocus = 0.25
 
         this.mode = 'default' // 'default' for production, 'debug' for development
 
@@ -29,7 +38,9 @@ export default class Camera {
             this.setDebug()
         }
 
-        this.lookingPoint = new THREE.Vector3(0, 1, -3)
+        this.pointer.on('spot-clicked', (spot) => {
+            this.moveToSpot(spot)
+        })
 
         this.setInstance()
         this.setModes()
@@ -42,6 +53,7 @@ export default class Camera {
         this.instance.lookAt(this.lookingPoint)
 
         this.scene.add(this.instance)
+
     }
 
     setModes() {
@@ -51,7 +63,7 @@ export default class Camera {
         this.modes.default = {}
         this.modes.default.instance = this.instance.clone()
         this.modes.default.instance.rotation.reorder('YXZ')
-        this.modes.default.instance.position.set(0, 1.25, 2)
+        this.modes.default.instance.position.copy(this.basicCameraPosition).add(this.offsetPosition)
         this.modes.default.instance.lookAt(this.lookingPoint)
 
         // Debug
@@ -71,18 +83,15 @@ export default class Camera {
 
     setDebug() {
         if (this.debug) {
-
-            this.debugFolder.add(
-                this, 'mode', {
-                    'Default': "default",
-                    'Debug': "debug",
-                }
-            )
+            this.debugFolder.add(this, 'mode', {'Default': "default", 'Debug': "debug",})
 
             this.debugFolder.add(this, 'cameraAmplitude').min(0).max(3).step(0.001).name('Camera amplitude')
 
             this.debugFolder.add(this, 'lerpCamera').min(0).max(0.99).step(0.001).name('Camera smoothness')
 
+            this.debugFolder.add(this, 'isFocused').name('Camera focus object').onFinishChange(() => {
+                this.updateFocusMode(this.isFocused)
+            })
         }
     }
 
@@ -97,6 +106,33 @@ export default class Camera {
         this.modes.debug.instance.updateProjectionMatrix()
     }
 
+    moveToSpot(spot) {
+
+        const position = spot.object.position.clone()
+
+        const direction = new THREE.Vector3().copy(spot.object.data.lookingPoint);
+        direction.normalize();
+        const lookingPoint = position.clone().add(direction.multiplyScalar(5));
+
+
+        gsap.to(this.modes.default.instance.position, {
+            x: position.x,
+            y: position.y + this.offsetPosition.y,
+            z: position.z,
+            duration: 4,
+            ease: 'power2.inOut'
+        })
+
+        gsap.to(this.lookingPoint, {
+            x: lookingPoint.x,
+            y: lookingPoint.y,
+            z: lookingPoint.z,
+            duration: 4,
+            ease: 'power2.inOut'
+        })
+
+    }
+
     update() {
 
         if (this.pointer && this.mode === 'default') {
@@ -109,8 +145,8 @@ export default class Camera {
 
             let lookAtTarget = new THREE.Vector3().copy(this.lookingPoint);
             lookAtTarget.addScaledVector(side, mousePos.x * this.cameraAmplitude);
-            lookAtTarget.addScaledVector(this.upVector, -mousePos.y * -this.cameraAmplitude);
 
+            lookAtTarget.addScaledVector(this.upVector, -mousePos.y * -this.cameraAmplitude);
             this.modes.default.instance.lookAt(lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
             this.prevTarget.copy(lookAtTarget);
         }
@@ -124,6 +160,17 @@ export default class Camera {
         this.instance.updateMatrixWorld();
     }
 
+    updateFocusMode(value) {
+        this.isFocused = value
+
+        if (this.isFocused) {
+            this.cameraAmplitude = this.cameraAmplitudeFocus
+            this.lerpCamera = this.lerpCameraFocus
+        } else {
+            this.cameraAmplitude = this.cameraAmplitudeNormal
+            this.lerpCamera = this.lerpCameraNormal
+        }
+    }
 
     destroy() {
         this.modes.debug.orbitControls.destroy()
