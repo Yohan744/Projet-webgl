@@ -9,6 +9,7 @@ export default class GodRay {
 
         this.experience = new Experience()
         this.godRay = mesh
+        this.godRay.matrixAutoUpdate = false
         this.scene = this.experience.scene
 
         this.setGodRay()

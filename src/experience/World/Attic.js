@@ -2,6 +2,7 @@ import Experience from "../Experience";
 import { MeshStandardMaterial, DoubleSide, RepeatWrapping } from "three";
 import GodRay from "./Effects/GodRay";
 import Dust from "./Effects/Dust";
+import MaterialLibrary from "../MaterialLibrary";
 
 export default class Attic {
 
@@ -9,6 +10,7 @@ export default class Attic {
         this.experience = new Experience()
         this.resources = this.experience.resources
         this.scene = this.experience.scene
+        this.materialLibrary = new MaterialLibrary()
 
         this.godRayMesh = null
 
@@ -28,27 +30,11 @@ export default class Attic {
                 if (name.includes("godray")) {
                     this.godRayMesh = child
                 } else {
-
-                    const texture = this.resources.items.atticModel.diffuse
-                    texture.wrapS = RepeatWrapping
-                    texture.wrapT = RepeatWrapping
-                    texture.repeat.set(2, 2)
-
-                    const roughness = this.resources.items.atticModel.roughness
-                    roughness.wrapS = RepeatWrapping
-                    roughness.wrapT = RepeatWrapping
-                    roughness.repeat.set(2, 2)
-
-                    child.material = new MeshStandardMaterial({
-                        map: texture,
-                        roughnessMap: roughness,
-                        side: DoubleSide
-                    })
-
+                    child.material = this.materialLibrary.getGroundMaterial()
+                    child.matrixAutoUpdate = false
                     child.castShadow = true
                     child.receiveShadow = true
                     child.material.needsUpdate = true
-
                 }
 
             }
