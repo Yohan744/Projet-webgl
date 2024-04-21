@@ -1,12 +1,10 @@
 import glsl from 'vite-plugin-glsl';
 import { defineConfig } from 'vite'
-import path from 'path'
-
-const dirname = path.resolve()
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-    root: 'src',
-    publicDir: '../public',
+    root: '.',
+    publicDir: 'public',
     build:
     {
         outDir: '../dist',
@@ -14,6 +12,7 @@ export default defineConfig({
         sourcemap: true
     },
     plugins: [
-        glsl()
+        glsl(),
+        vue()
     ]
 })

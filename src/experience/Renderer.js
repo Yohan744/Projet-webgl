@@ -149,10 +149,16 @@ export default class Renderer {
     }
 
     destroy() {
-        this.instance.renderLists.dispose()
-        this.instance.dispose()
-        this.renderTarget.dispose()
-        this.postProcess.composer.renderTarget1.dispose()
-        this.postProcess.composer.renderTarget2.dispose()
+        if (this.instance) {
+            this.instance.dispose()
+            if (this.instance.renderLists)  this.instance.renderLists.dispose()
+        }
+        if (this.renderTarget) this.renderTarget.dispose()
+        if (this.postProcess) {
+            this.postProcess.renderPass.dispose()
+            this.postProcess.composer.dispose()
+            this.postProcess.composer.renderTarget1.dispose()
+            this.postProcess.composer.renderTarget2.dispose()
+        }
     }
 }

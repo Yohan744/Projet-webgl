@@ -12,7 +12,6 @@ import World from './World.js'
 
 import assets from './assets.js'
 import Pointer from "./Utils/Pointer";
-import Locations from "./World/Locations";
 import EventEmitter from "./Utils/EventEmitter";
 
 export default class Experience extends EventEmitter{
@@ -136,16 +135,24 @@ export default class Experience extends EventEmitter{
     }
 
     destroy() {
+
+        Experience.instance = null
+
         if (this.stats)
             this.stats.destroy()
 
-        if (this.renderer)
+        if (this.renderer) {
+            this.renderer.instance.domElement.remove();
             this.renderer.destroy()
+        }
 
         if (this.world)
             this.world.destroy()
 
         if (this.debug)
             this.debug.destroy()
+
+        window.cancelAnimationFrame(this.update)
+
     }
 }

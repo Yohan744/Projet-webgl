@@ -32,7 +32,9 @@ export default class MaterialLibrary {
 
         this.experience = new Experience()
         this.resources = this.experience.resources
-        this.debug = this.experience.debug
+        this.debug = this.experience.config.debug
+
+        this.materialsUsed = []
 
     }
 
@@ -63,8 +65,10 @@ export default class MaterialLibrary {
                 roughnessMap: this.resources.items.ground.roughness,
                 normalMap: this.resources.items.ground.normal,
                 specularMap: this.resources.items.ground.specular,
-                side: this.debug ? DoubleSide : BackSide
+                side: DoubleSide
             })
+
+            this.materialsUsed.push(groundMaterial)
         }
 
         return groundMaterial
@@ -81,6 +85,8 @@ export default class MaterialLibrary {
                 normalMap: this.resources.items.windowWall.normal,
                 side: this.debug ? DoubleSide : BackSide
             })
+
+            this.materialsUsed.push(windowWallMaterial)
         }
 
         return windowWallMaterial
@@ -98,6 +104,8 @@ export default class MaterialLibrary {
                 aoMap: this.resources.items.walls.ao,
                 side: this.debug ? DoubleSide : BackSide
             })
+
+            this.materialsUsed.push(wallsMaterial)
         }
 
         return wallsMaterial
@@ -111,6 +119,8 @@ export default class MaterialLibrary {
                 opacity: 0.7,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(windowMaterial)
         }
 
         return windowMaterial
@@ -125,6 +135,8 @@ export default class MaterialLibrary {
                 aoMap: this.resources.items.walls.ao,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(sideWindowMaterial)
         }
 
         return sideWindowMaterial
@@ -136,6 +148,8 @@ export default class MaterialLibrary {
                 color: '#683e1a',
                 side: DoubleSide
             })
+
+            this.materialsUsed.push(beamMaterial)
         }
 
         return beamMaterial
@@ -152,6 +166,8 @@ export default class MaterialLibrary {
                 specularMap: this.resources.items.sideMirror.specular,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(sideMirrorMaterial)
         }
 
         return sideMirrorMaterial
@@ -165,6 +181,8 @@ export default class MaterialLibrary {
                 roughnessMap: this.resources.items.mirror.roughness,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(mirrorMaterial)
         }
 
         return mirrorMaterial
@@ -176,6 +194,8 @@ export default class MaterialLibrary {
                 color: '#a77331',
                 side: DoubleSide
             })
+
+            this.materialsUsed.push(cardBoardMaterial)
         }
 
         return cardBoardMaterial
@@ -187,9 +207,18 @@ export default class MaterialLibrary {
                 color: '#ff0000',
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(tmpInteractionMaterial)
         }
 
         return tmpInteractionMaterial
+    }
+
+    destroy() {
+        MaterialLibrary.instance = null
+        this.materialsUsed.forEach(material => {
+            material.dispose()
+        })
     }
 
 }

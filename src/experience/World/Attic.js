@@ -85,12 +85,14 @@ export default class Attic {
     }
 
     destroy() {
-        this.atticModel.traverse(child => {
-            if (child.isMesh) {
-                child.material.dispose()
-            }
-        })
-        this.scene.remove(this.atticModel)
+        if (this.atticModel) {
+            this.atticModel.traverse(child => {
+                if (child.isMesh) {
+                    child.material.dispose()
+                }
+            })
+            this.scene.remove(this.atticModel)
+        }
         if (this.godRay) this.godRay.destroy()
         if (this.dust) this.dust.destroy()
     }
