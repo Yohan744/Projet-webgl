@@ -63,4 +63,10 @@ export default class Dust {
 
     }
 
+    destroy() {
+        this.dustMaterial.dispose()
+        this.dustGeometry.dispose()
+        this.scene.remove(this.dust)
+    }
+
 }

@@ -9,23 +9,20 @@ export default class Camera {
         this.experience = new Experience()
         this.config = this.experience.config
         this.debug = this.experience.debug
-        this.time = this.experience.time
-        this.sizes = this.experience.sizes
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
         this.pointer = this.experience.pointer
 
         this.isFocused = false
 
-        this.basicCameraPosition = new THREE.Vector3(0, 0, 2)
-        this.offsetPosition = new THREE.Vector3(0, 1.25, 0)
+        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 11)
 
-        this.lookingPoint = new THREE.Vector3(0, 1, -3)
+        this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, new THREE.Vector3(0, 0, -3))
         this.prevTarget = new THREE.Vector3();
         this.upVector = new THREE.Vector3(0, 1, 0);
 
         this.lerpCamera = 0.975
-        this.cameraAmplitude = 1
+        this.cameraAmplitude = 1.75
         this.lerpCameraNormal = 0.975
         this.cameraAmplitudeNormal = 1
         this.lerpCameraFocus = 0.99
@@ -48,7 +45,7 @@ export default class Camera {
 
     setInstance() {
         const width = this.config.width === null ? window.innerWidth : this.config.width
-        this.instance = new THREE.PerspectiveCamera(55, width / this.config.height, 0.1, 150)
+        this.instance = new THREE.PerspectiveCamera(60, width / this.config.height, 0.1, 150)
         this.instance.rotation.reorder('YXZ')
         this.instance.lookAt(this.lookingPoint)
 
@@ -63,7 +60,7 @@ export default class Camera {
         this.modes.default = {}
         this.modes.default.instance = this.instance.clone()
         this.modes.default.instance.rotation.reorder('YXZ')
-        this.modes.default.instance.position.copy(this.basicCameraPosition).add(this.offsetPosition)
+        this.modes.default.instance.position.copy(this.basicCameraPosition)
         this.modes.default.instance.lookAt(this.lookingPoint)
 
         // Debug
@@ -109,15 +106,11 @@ export default class Camera {
     moveToSpot(spot) {
 
         const position = spot.object.position.clone()
-
-        const direction = new THREE.Vector3().copy(spot.object.data.lookingPoint);
-        direction.normalize();
-        const lookingPoint = position.clone().add(direction.multiplyScalar(5));
-
+        const lookingPoint = this.getNormalizedLookingPoint(position, spot.object.data.lookingPoint)
 
         gsap.to(this.modes.default.instance.position, {
             x: position.x,
-            y: position.y + this.offsetPosition.y,
+            y: position.y + this.basicCameraPosition.y,
             z: position.z,
             duration: 4,
             ease: 'power2.inOut'
@@ -170,6 +163,12 @@ export default class Camera {
             this.cameraAmplitude = this.cameraAmplitudeNormal
             this.lerpCamera = this.lerpCameraNormal
         }
+    }
+
+    getNormalizedLookingPoint(position, point) {
+        const direction = new THREE.Vector3().copy(point);
+        direction.normalize();
+        return position.clone().add(direction.multiplyScalar(10));
     }
 
     destroy() {
