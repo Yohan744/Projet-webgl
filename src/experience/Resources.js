@@ -22,7 +22,7 @@ export default class Resources extends EventEmitter {
         this.loader.on('fileEnd', (_resource, _data) => {
             let data = _data
 
-            if (_resource.type === 'model') {
+            if (_resource.type === 'group') {
                 if (_resource.textures) {
                     for (const textureType in _resource.textures) {
                         const texturePath = _resource.textures[textureType];
@@ -31,10 +31,6 @@ export default class Resources extends EventEmitter {
 
                         if (_resource.textures[textureType].includes('diffuse')) {
                             data[textureType].colorSpace = THREE.SRGBColorSpace;
-                            data[textureType].encoding = THREE.sRGBEncoding;
-                        } else {
-                            data[textureType].colorSpace = THREE.LinearSRGBColorSpace;
-                            data[textureType].encoding = THREE.LinearEncoding;
                         }
 
                     }

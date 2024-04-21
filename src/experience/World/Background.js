@@ -17,32 +17,23 @@ export default class Background {
 
     init() {
 
-        const planeGeometry = new PlaneGeometry(10, 10, 1, 1)
+        this.planeGeometry = new PlaneGeometry(10, 10, 1, 1)
 
-        const planeMaterial = new MeshStandardMaterial({
+        this.planeMaterial = new MeshStandardMaterial({
             map: this.resources.items.backgroundTreeTexture,
         })
 
-        const background = new Mesh(planeGeometry, planeMaterial)
-        background.position.copy(this.planePosition)
-        background.rotation.set(0, 0, 0)
-        this.scene.add(background)
+        this.background = new Mesh(this.planeGeometry, this.planeMaterial)
+        this.background.position.copy(this.planePosition)
+        this.background.rotation.set(0, 0, 0)
+        this.scene.add(this.background)
 
-        // Adding blurry window just for now
+    }
 
-        const window = new Mesh(
-            new PlaneGeometry(3, 3, 1, 1),
-            new MeshStandardMaterial({
-                transparent: true,
-                opacity: 0.35,
-                color: "white",
-            })
-        )
-
-        window.position.set(0, 1.3, -4.1)
-        window.rotation.set(0, 0, 0)
-        this.scene.add(window)
-
+    destroy() {
+        this.planeGeometry.dispose()
+        this.planeMaterial.dispose()
+        this.scene.remove(this.background)
     }
 
 }

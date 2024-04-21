@@ -26,17 +26,15 @@ export default class Experience extends EventEmitter{
         }
         Experience.instance = this
 
-        // Options
         this.targetElement = _options.targetElement
-
         if (!this.targetElement) {
             console.warn('Missing \'targetElement\' property')
             return
         }
 
+        this.pointer = new Pointer().instance
         this.time = new Time()
         this.sizes = new Sizes()
-        this.pointer = new Pointer().instance
         this.setConfig()
         this.setDebug()
         this.setStats()
@@ -91,7 +89,6 @@ export default class Experience extends EventEmitter{
 
     setRenderer() {
         this.renderer = new Renderer({rendererInstance: this.rendererInstance})
-
         this.targetElement.appendChild(this.renderer.instance.domElement)
     }
 
@@ -139,6 +136,16 @@ export default class Experience extends EventEmitter{
     }
 
     destroy() {
+        if (this.stats)
+            this.stats.destroy()
 
+        if (this.renderer)
+            this.renderer.destroy()
+
+        if (this.world)
+            this.world.destroy()
+
+        if (this.debug)
+            this.debug.destroy()
     }
 }

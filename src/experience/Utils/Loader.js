@@ -80,6 +80,7 @@ export default class Resources extends EventEmitter {
         })
 
         // HDR
+        /*
         const rgbeLoader = new RGBELoader()
         this.loaders.push({
             extensions: ['hdr'],
@@ -90,7 +91,7 @@ export default class Resources extends EventEmitter {
                     this.fileLoadEnd(_resource, _data)
                 })
             }
-        })
+        }) */
 
         const ktxLoader = new KTX2Loader();
         ktxLoader.setTranscoderPath('/basis/');
@@ -111,7 +112,21 @@ export default class Resources extends EventEmitter {
     load(_resources = []) {
         for (const _resource of _resources) {
             this.toLoad++
-            const extensionMatch = _resource.source.match(/\.([a-z0-9]+)$/)
+
+            let extensionMatch;
+
+            if (_resource.type === 'texture' || _resource.type === 'model') {
+
+                extensionMatch = _resource.source.match(/\.([a-z0-9]+)$/)
+
+            } else if (_resource.type === 'group') {
+
+                for (const textureType in _resource.textures) {
+                    const texturePath = _resource.textures[textureType];
+                    extensionMatch = texturePath.match(/\.([a-z0-9]+)$/);
+                }
+
+            }
 
             if (typeof extensionMatch[1] !== 'undefined') {
                 const extension = extensionMatch[1]

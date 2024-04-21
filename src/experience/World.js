@@ -27,6 +27,7 @@ export default class World {
     }
 
     resize() {
+
     }
 
     update() {
@@ -36,5 +37,9 @@ export default class World {
     }
 
     destroy() {
+        if (this.lights) this.lights.destroy()
+        if (this.attic) this.attic.destroy()
+        if (this.background) this.background.destroy()
+        if (this.locations) this.locations.destroy()
     }
 }

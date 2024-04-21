@@ -44,7 +44,7 @@ export default class Locations {
                 })
             )
 
-            location.position.copy(this.locationsPositions[i]).add(new THREE.Vector3(0, 0.03, 0))
+            location.position.copy(this.locationsPositions[i]).add(new THREE.Vector3(0, 0.075, 0))
             location.data = {
                 lookingPoint: this.locationsLookingPoint[i]
             };
@@ -57,6 +57,12 @@ export default class Locations {
 
     getLocations() {
         return this.spots
+    }
+
+    destroy() {
+        this.spots.forEach((spot) => {
+            this.scene.remove(spot)
+        })
     }
 
 }

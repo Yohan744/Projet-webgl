@@ -12,6 +12,12 @@ export default class GodRay {
         this.godRay.matrixAutoUpdate = false
         this.scene = this.experience.scene
 
+        this.debug = this.experience.debug
+
+        if (this.debug) {
+            this.debugFolder = this.debug.addFolder("GodRay")
+        }
+
         this.setGodRay()
 
     }
@@ -22,21 +28,35 @@ export default class GodRay {
             vertexShader: godRayVertexShader,
             fragmentShader: godRayFragmentShader,
             uniforms: {
+                c: { value: 0.44 },
+                p: { value: 0.5 },
                 uGlowColor: { value: new THREE.Color('#fff4cc') },
-                uBlurOffset: { value: 0.93 },
-                uAlphaBase: { value: 0.25 },
-                uAlphaRays: { value: 0.1 },
-                uFrequency: { value: 0.4 },
+                viewVector: { value: this.experience.camera.instance.position },
+                op: { value: 0.22 },
             },
-            side: THREE.BackSide,
+            side: THREE.FrontSide,
             transparent: true,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         })
 
+        if (this.debugFolder) {
+
+            this.debugFolder.add(this.godRayMaterial.uniforms.c, "value").name("c").min(-1).max(1).step(0.01)
+            this.debugFolder.add(this.godRayMaterial.uniforms.p, "value").name("p").min(-1).max(6).step(0.01)
+            this.debugFolder.addColor(this.godRayMaterial.uniforms.uGlowColor, "value").name("glowColor")
+            this.debugFolder.add(this.godRayMaterial.uniforms.op, "value").name("op").min(-1).max(1).step(0.01)
+
+        }
+
         this.godRay.material = this.godRayMaterial
 
         this.scene.add(this.godRay)
+    }
+
+    destroy() {
+        this.godRayMaterial.dispose()
+        this.scene.remove(this.godRay)
     }
 
 }

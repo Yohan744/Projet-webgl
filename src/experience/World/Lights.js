@@ -46,7 +46,7 @@ export default class Lights {
     }
 
     setupPointLight() {
-        const pointLight = new THREE.PointLight(0xffffff, 3)
+        const pointLight = new THREE.PointLight(0xffffff, 10)
         pointLight.position.copy(this.pointLightPosition)
         pointLight.shadow.camera.far = 10
         pointLight.shadow.mapSize.set(1024, 1024)
@@ -75,6 +75,15 @@ export default class Lights {
     setupSpotLightShadowHelper() {
         const shadowCameraHelper = new THREE.CameraHelper(this.scene.children.find(child => child.type === 'SpotLight').shadow.camera)
         this.scene.add(shadowCameraHelper)
+    }
+
+    destroy() {
+        this.scene.remove(this.scene.children.find(child => child.type === 'AmbientLight'))
+        this.scene.remove(this.scene.children.find(child => child.type === 'SpotLight'))
+        this.scene.remove(this.scene.children.find(child => child.type === 'PointLight'))
+        this.scene.remove(this.scene.children.find(child => child.type === 'SpotLightHelper'))
+        this.scene.remove(this.scene.children.find(child => child.type === 'PointLightHelper'))
+        this.scene.remove(this.scene.children.find(child => child.type === 'CameraHelper'))
     }
 
 }
