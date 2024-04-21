@@ -27,6 +27,7 @@ export default class Camera {
         this.cameraAmplitudeNormal = 1
         this.lerpCameraFocus = 0.99
         this.cameraAmplitudeFocus = 0.25
+        this.movingSpeedMultiplier = 0.65
 
         this.mode = 'default' // 'default' for production, 'debug' for development
 
@@ -107,21 +108,22 @@ export default class Camera {
 
         const position = spot.object.position.clone()
         const lookingPoint = this.getNormalizedLookingPoint(position, spot.object.data.lookingPoint)
+        const distanceToPoint = Math.round(position.distanceTo(this.modes.default.instance.position))
 
         gsap.to(this.modes.default.instance.position, {
             x: position.x,
             y: position.y + this.basicCameraPosition.y,
             z: position.z,
-            duration: 4,
-            ease: 'power2.inOut'
+            duration: distanceToPoint * this.movingSpeedMultiplier,
+            ease: 'power1.inOut'
         })
 
         gsap.to(this.lookingPoint, {
             x: lookingPoint.x,
             y: lookingPoint.y,
             z: lookingPoint.z,
-            duration: 4,
-            ease: 'power2.inOut'
+            duration: distanceToPoint * this.movingSpeedMultiplier,
+            ease: 'sine.in'
         })
 
     }
