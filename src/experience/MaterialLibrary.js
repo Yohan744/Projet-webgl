@@ -174,7 +174,7 @@ export default class MaterialLibrary {
         if (!cardBoardMaterial) {
             cardBoardMaterial = new MeshStandardMaterial({
                 color: '#a77331',
-                side: this.debug ? DoubleSide : FrontSide
+                side: DoubleSide
             })
         }
 

@@ -28,8 +28,6 @@ export default class Attic {
                 child.material.dispose()
                 child.matrixAutoUpdate = false
 
-                console.log(name)
-
                 if (name.includes("sol")) {
                     child.material = this.materialLibrary.getGroundMaterial()
                     child.castShadow = true

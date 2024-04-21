@@ -22,7 +22,7 @@ export default class Camera {
         this.upVector = new THREE.Vector3(0, 1, 0);
 
         this.lerpCamera = 0.975
-        this.cameraAmplitude = 1.25
+        this.cameraAmplitude = 1.75
         this.lerpCameraNormal = 0.975
         this.cameraAmplitudeNormal = 1
         this.lerpCameraFocus = 0.99
@@ -168,7 +168,7 @@ export default class Camera {
     getNormalizedLookingPoint(position, point) {
         const direction = new THREE.Vector3().copy(point);
         direction.normalize();
-        return position.clone().add(direction.multiplyScalar(5));
+        return position.clone().add(direction.multiplyScalar(10));
     }
 
     destroy() {
