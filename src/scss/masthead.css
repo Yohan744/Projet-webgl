@@ -1,0 +1,15 @@
+#masthead {
+  position: relative;
+  height: 100dvh;
+  width: 100dvw;
+  background: #ffdbc6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#masthead a {
+  position: relative;
+  background: red;
+}
+
+/*# sourceMappingURL=masthead.css.map */

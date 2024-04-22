@@ -1,9 +1,14 @@
 <template>
-    <router-link to="/experience">Experience</router-link>
+    <Masthead />
 </template>
 
 <script>
+import Masthead from "../components/Masthead.vue";
+
 export default {
   name: 'Index',
+  components: {
+    Masthead
+  },
 }
 </script>
