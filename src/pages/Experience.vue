@@ -15,6 +15,11 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.initExperience();
+      this.$nextTick(() => {
+        if (this.experience.camera) {
+          this.experience.camera.updateLerpCameraAfterFirstFrame()
+        }
+      });
     });
   },
   beforeUnmount() {

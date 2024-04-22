@@ -1,5 +1,5 @@
 import Experience from "../Experience";
-import {MeshStandardMaterial, DoubleSide, RepeatWrapping, Vector3} from "three";
+import {Vector3} from "three";
 import GodRay from "./Effects/GodRay";
 import Dust from "./Effects/Dust";
 import MaterialLibrary from "../MaterialLibrary";
@@ -7,6 +7,7 @@ import MaterialLibrary from "../MaterialLibrary";
 export default class Attic {
 
     constructor() {
+
         this.experience = new Experience()
         this.resources = this.experience.resources
         this.scene = this.experience.scene
