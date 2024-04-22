@@ -38,15 +38,6 @@ export default {
       });
     }
   },
-  activated() {
-    this.initExperience();
-  },
-  deactivated() {
-    if (this.experience) {
-      this.experience.destroy();
-      this.experience = null;
-    }
-  }
 }
 </script>
 
