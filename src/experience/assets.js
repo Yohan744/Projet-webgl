@@ -6,7 +6,7 @@ export default [
             [
                 {
                     name: 'atticModel',
-                    source: '/assets/models/newAttic.glb',
+                    source: '/assets/models/v4.glb',
                     type: 'model',
                 },
 
@@ -44,7 +44,17 @@ export default [
                         diffuse: 'assets/textures/attic/walls/diffuse.webp',
                         roughness: 'assets/textures/attic/walls/roughness.webp',
                         normal: 'assets/textures/attic/walls/normal.webp',
-                        ao: 'assets/textures/attic/walls/occlusion.webp',
+                    }
+                },
+
+                {
+                    name: 'beam',
+                    type: 'group',
+                    textures: {
+                        diffuse: 'assets/textures/attic/beam/diffuse.webp',
+                        roughness: 'assets/textures/attic/beam/roughness.webp',
+                        normal: 'assets/textures/attic/beam/normal.webp',
+                        displacement: 'assets/textures/attic/beam/displacement.webp',
                     }
                 },
 
@@ -52,7 +62,11 @@ export default [
                     name: 'window',
                     type: 'group',
                     textures: {
+                        diffuse: 'assets/textures/attic/window/diffuse.webp',
                         roughness: 'assets/textures/attic/window/roughness.webp',
+                        normal: 'assets/textures/attic/window/normal.webp',
+                        alpha: 'assets/textures/attic/window/alpha.webp',
+                        ao: 'assets/textures/attic/window/ao.webp',
                     }
                 },
 
@@ -74,6 +88,27 @@ export default [
                     type: 'group',
                     textures: {
                         roughness: 'assets/textures/objects/mirror/glass/roughness.webp',
+                    }
+                },
+
+                {
+                    name: 'carpet',
+                    type: 'group',
+                    textures: {
+                        diffuse: 'assets/textures/objects/carpet/diffuse.webp',
+                        roughness: 'assets/textures/objects/carpet/roughness.webp',
+                        normal: 'assets/textures/objects/carpet/normal.webp',
+                    }
+                },
+
+                {
+                    name: 'cardboard',
+                    type: 'group',
+                    textures: {
+                        diffuse: 'assets/textures/objects/cardboard/diffuse.webp',
+                        roughness: 'assets/textures/objects/cardboard/roughness.webp',
+                        normal: 'assets/textures/objects/cardboard/normal.webp',
+                        ao: 'assets/textures/objects/cardboard/ao.webp',
                     }
                 },
 

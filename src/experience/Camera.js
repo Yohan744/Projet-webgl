@@ -14,14 +14,15 @@ export default class Camera {
         this.pointer = this.experience.pointer
 
         this.isFocused = false
+        this.isMoving = false
 
-        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 11)
+        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 10)
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, new THREE.Vector3(0, 0, -3))
         this.prevTarget = new THREE.Vector3();
         this.upVector = new THREE.Vector3(0, 1, 0);
 
-        this.lerpCamera = 0.975
+        this.lerpCamera = 0
         this.cameraAmplitude = 1.75
         this.lerpCameraNormal = 0.975
         this.cameraAmplitudeNormal = 1
@@ -106,6 +107,10 @@ export default class Camera {
 
     moveToSpot(spot) {
 
+        if (this.isMoving) return
+
+        this.isMoving = true
+
         const position = spot.object.position.clone()
         const lookingPoint = this.getNormalizedLookingPoint(position, spot.object.data.lookingPoint)
         const distanceToPoint = Math.round(position.distanceTo(this.modes.default.instance.position))
@@ -115,7 +120,10 @@ export default class Camera {
             y: position.y + this.basicCameraPosition.y,
             z: position.z,
             duration: distanceToPoint * this.movingSpeedMultiplier,
-            ease: 'power1.inOut'
+            ease: 'power1.inOut',
+            onComplete: () => {
+                this.isMoving = false
+            }
         })
 
         gsap.to(this.lookingPoint, {
@@ -123,7 +131,7 @@ export default class Camera {
             y: lookingPoint.y,
             z: lookingPoint.z,
             duration: distanceToPoint * this.movingSpeedMultiplier,
-            ease: 'sine.in'
+            ease: 'power1.inOut'
         })
 
     }
@@ -171,6 +179,10 @@ export default class Camera {
         const direction = new THREE.Vector3().copy(point);
         direction.normalize();
         return position.clone().add(direction.multiplyScalar(10));
+    }
+
+    updateLerpCameraAfterFirstFrame() {
+        this.lerpCamera = this.lerpCameraNormal
     }
 
     destroy() {

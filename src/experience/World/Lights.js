@@ -11,10 +11,10 @@ export default class Lights {
         this.spotLightPosition = new THREE.Vector3(-6, 9, -12)
         this.spotLightTarget = new THREE.Vector3(1, 0, -2.25)
 
-        this.pointLightPosition = new THREE.Vector3(-1, 1.75, -2.5)
+        this.pointLightPosition = new THREE.Vector3(-0.175,  3.25, 0.5)
 
         this.setupAmbientLight()
-        this.setupSpotLight()
+        // this.setupSpotLight()
         this.setupPointLight()
 
         if (this.debug) {

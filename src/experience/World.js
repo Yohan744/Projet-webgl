@@ -31,9 +31,7 @@ export default class World {
     }
 
     update() {
-
         if (this.attic) this.attic.update()
-
     }
 
     destroy() {

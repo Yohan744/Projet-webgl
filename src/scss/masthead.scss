@@ -1,0 +1,24 @@
+#masthead {
+  position: relative;
+  height: 100dvh;
+  width: 100dvw;
+  background: #f8e7d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    position: relative;
+    font-size: 30px;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    cursor: pointer;
+    transition: text-underline-offset 0.35s;
+
+    &:hover {
+      text-underline-offset: 2px;
+    }
+
+  }
+
+}

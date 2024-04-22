@@ -31,9 +31,11 @@ export default class Background {
     }
 
     destroy() {
-        this.planeGeometry.dispose()
-        this.planeMaterial.dispose()
-        this.scene.remove(this.background)
+        if (this.planeGeometry) this.planeGeometry.dispose()
+        if (this.planeMaterial) this.planeMaterial.dispose()
+        if (this.scene) {
+            if (this.background) this.scene.remove(this.background)
+        }
     }
 
 }

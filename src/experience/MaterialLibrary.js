@@ -17,7 +17,8 @@ let groundMaterial,
 let sideMirrorMaterial,
     mirrorMaterial,
     cardBoardMaterial,
-    tmpInteractionMaterial;
+    tmpInteractionMaterial,
+    carpetMaterial;
 
 export default class MaterialLibrary {
 
@@ -32,7 +33,9 @@ export default class MaterialLibrary {
 
         this.experience = new Experience()
         this.resources = this.experience.resources
-        this.debug = this.experience.debug
+        this.debug = this.experience.config.debug
+
+        this.materialsUsed = []
 
     }
 
@@ -63,8 +66,10 @@ export default class MaterialLibrary {
                 roughnessMap: this.resources.items.ground.roughness,
                 normalMap: this.resources.items.ground.normal,
                 specularMap: this.resources.items.ground.specular,
-                side: this.debug ? DoubleSide : BackSide
+                side: DoubleSide
             })
+
+            this.materialsUsed.push(groundMaterial)
         }
 
         return groundMaterial
@@ -81,6 +86,8 @@ export default class MaterialLibrary {
                 normalMap: this.resources.items.windowWall.normal,
                 side: this.debug ? DoubleSide : BackSide
             })
+
+            this.materialsUsed.push(windowWallMaterial)
         }
 
         return windowWallMaterial
@@ -89,28 +96,40 @@ export default class MaterialLibrary {
     getWallsMaterial() {
         if (!wallsMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal', 'ao'], 'walls', 7, 1)
+            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'walls', 7, 1)
 
             wallsMaterial = new MeshStandardMaterial({
                 map: this.resources.items.walls.diffuse,
                 roughnessMap: this.resources.items.walls.roughness,
                 normalMap: this.resources.items.walls.normal,
-                aoMap: this.resources.items.walls.ao,
                 side: this.debug ? DoubleSide : BackSide
             })
+
+            this.materialsUsed.push(wallsMaterial)
         }
 
         return wallsMaterial
     }
 
+    getRoofMaterial() {
+        return wallsMaterial
+    }
+
     getWindowMaterial() {
         if (!windowMaterial) {
+
+            this.repeatTextures(['diffuse', 'roughness', 'normal',], 'window', 1.5, 1.5)
+
             windowMaterial = new MeshStandardMaterial({
+                map: this.resources.items.window.diffuse,
                 roughnessMap: this.resources.items.window.roughness,
-                transparent: true,
-                opacity: 0.7,
+                alphaMap: this.resources.items.window.alpha,
+                aoMap: this.resources.items.window.ao,
+                normalMap: this.resources.items.window.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(windowMaterial)
         }
 
         return windowMaterial
@@ -125,6 +144,8 @@ export default class MaterialLibrary {
                 aoMap: this.resources.items.walls.ao,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(sideWindowMaterial)
         }
 
         return sideWindowMaterial
@@ -132,10 +153,17 @@ export default class MaterialLibrary {
 
     getBeamMaterial() {
         if (!beamMaterial) {
+
+            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'beam', 1, 3)
+
             beamMaterial = new MeshStandardMaterial({
-                color: '#683e1a',
+                map: this.resources.items.beam.diffuse,
+                roughnessMap: this.resources.items.beam.roughness,
+                normalMap: this.resources.items.beam.normal,
                 side: DoubleSide
             })
+
+            this.materialsUsed.push(beamMaterial)
         }
 
         return beamMaterial
@@ -152,6 +180,8 @@ export default class MaterialLibrary {
                 specularMap: this.resources.items.sideMirror.specular,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(sideMirrorMaterial)
         }
 
         return sideMirrorMaterial
@@ -165,6 +195,8 @@ export default class MaterialLibrary {
                 roughnessMap: this.resources.items.mirror.roughness,
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(mirrorMaterial)
         }
 
         return mirrorMaterial
@@ -173,12 +205,35 @@ export default class MaterialLibrary {
     getCardBoardMaterial() {
         if (!cardBoardMaterial) {
             cardBoardMaterial = new MeshStandardMaterial({
-                color: '#a77331',
+                map: this.resources.items.cardboard.diffuse,
+                roughnessMap: this.resources.items.cardboard.roughness,
+                normalMap: this.resources.items.cardboard.normal,
+                aoMap: this.resources.items.cardboard.ao,
                 side: DoubleSide
             })
+
+            this.materialsUsed.push(cardBoardMaterial)
         }
 
         return cardBoardMaterial
+    }
+
+    getCarpetMaterial() {
+        if (!carpetMaterial) {
+
+            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'carpet', 1.75, 1.75)
+
+            carpetMaterial = new MeshStandardMaterial({
+                map: this.resources.items.carpet.diffuse,
+                roughnessMap: this.resources.items.carpet.roughness,
+                normalMap: this.resources.items.carpet.normal,
+                side: DoubleSide
+            })
+
+            this.materialsUsed.push(carpetMaterial)
+        }
+
+        return carpetMaterial
     }
 
     getTmpInteractionMaterial() {
@@ -187,9 +242,18 @@ export default class MaterialLibrary {
                 color: '#ff0000',
                 side: this.debug ? DoubleSide : FrontSide
             })
+
+            this.materialsUsed.push(tmpInteractionMaterial)
         }
 
         return tmpInteractionMaterial
+    }
+
+    destroy() {
+        MaterialLibrary.instance = null
+        this.materialsUsed.forEach(material => {
+            material.dispose()
+        })
     }
 
 }
