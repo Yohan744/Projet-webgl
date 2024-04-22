@@ -13,10 +13,10 @@ export default class Locations {
         this.spots = []
 
         this.locationsPositions = [
-            new THREE.Vector3(-1.75, 0, 5.1),
-            new THREE.Vector3(-2.5, 0, -2.25),
-            new THREE.Vector3(1.5, 0, -1.75),
-            new THREE.Vector3(1.5, 0, 2),
+            new THREE.Vector3(-1.75, 0, 4.1),
+            new THREE.Vector3(-2.5, 0, -3.25),
+            new THREE.Vector3(1.5, 0, -2.75),
+            new THREE.Vector3(1.5, 0, 1),
         ]
 
         this.locationsLookingPoint = [
@@ -27,10 +27,10 @@ export default class Locations {
         ]
 
         this.locationsOffset = [
-            new THREE.Vector3(0, 0.115, 0),
-            new THREE.Vector3(0, 0.075, 0),
-            new THREE.Vector3(0, 0.075, 0),
-            new THREE.Vector3(0, 0.075, 0),
+            new THREE.Vector3(0, 0.35, 0),
+            new THREE.Vector3(0, 0.3, 0),
+            new THREE.Vector3(0, 0.35, 0),
+            new THREE.Vector3(0, 0.35, 0),
         ]
 
         this.experience.on('ready', () => {
@@ -44,7 +44,7 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
-            const geometry = new THREE.PlaneGeometry(0.5, 0.5)
+            const geometry = new THREE.PlaneGeometry(0.65, 0.65)
             geometry.rotateX(Math.PI * 0.5)
 
             const location = new THREE.Mesh(

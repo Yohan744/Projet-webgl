@@ -15,7 +15,7 @@ export default class Camera {
 
         this.isFocused = false
 
-        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 11)
+        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 10)
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, new THREE.Vector3(0, 0, -3))
         this.prevTarget = new THREE.Vector3();
@@ -123,7 +123,7 @@ export default class Camera {
             y: lookingPoint.y,
             z: lookingPoint.z,
             duration: distanceToPoint * this.movingSpeedMultiplier,
-            ease: 'sine.in'
+            ease: 'power1.inOut'
         })
 
     }
