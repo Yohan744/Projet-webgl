@@ -70,4 +70,10 @@ export default class Pointer extends EventEmitter {
         return this.oldMouse
     }
 
+    destroy() {
+        window.removeEventListener("mousemove", (_event) => this.onMovement(_event),)
+        window.removeEventListener("touchmove", (_event) => this.onMovement(_event),)
+        window.removeEventListener('click', this.onClick.bind(this), false);
+    }
+
 }

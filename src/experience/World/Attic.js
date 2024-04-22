@@ -93,6 +93,7 @@ export default class Attic {
             })
             this.scene.remove(this.atticModel)
         }
+        if (this.materialLibrary) this.materialLibrary.destroy()
         if (this.godRay) this.godRay.destroy()
         if (this.dust) this.dust.destroy()
     }

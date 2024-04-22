@@ -14,7 +14,7 @@ import assets from './assets.js'
 import Pointer from "./Utils/Pointer";
 import EventEmitter from "./Utils/EventEmitter";
 
-export default class Experience extends EventEmitter{
+export default class Experience extends EventEmitter {
     static instance
 
     constructor(_options = {}) {
@@ -138,6 +138,9 @@ export default class Experience extends EventEmitter{
 
         Experience.instance = null
 
+        if (this.pointer)
+            this.pointer.destroy()
+
         if (this.stats)
             this.stats.destroy()
 
@@ -151,6 +154,9 @@ export default class Experience extends EventEmitter{
 
         if (this.debug)
             this.debug.destroy()
+
+        if (this.time)
+            this.time.stop()
 
         window.cancelAnimationFrame(this.update)
 
