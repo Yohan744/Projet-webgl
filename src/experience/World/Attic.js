@@ -16,7 +16,9 @@ export default class Attic {
         this.godRayMeshs = []
         this.godRays = []
 
-        this.init()
+        if (this.scene) {
+            this.init()
+        }
     }
 
     init() {

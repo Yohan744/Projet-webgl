@@ -38,7 +38,7 @@ export default class Resources extends EventEmitter {
             } else if (_resource.type === 'texture') {
                 data = new THREE.TextureLoader().load(_resource.source)
                 data.colorSpace = THREE.SRGBColorSpace
-                // data.flipY = false
+                data.flipY = false
             }
 
             this.items[_resource.name] = data
@@ -101,6 +101,9 @@ export default class Resources extends EventEmitter {
         for (const _itemKey in this.items) {
             const item = this.items[_itemKey]
             if (item instanceof THREE.Texture) {
+                item.dispose()
+            }
+            if (item instanceof THREE.BufferGeometry) {
                 item.dispose()
             }
         }

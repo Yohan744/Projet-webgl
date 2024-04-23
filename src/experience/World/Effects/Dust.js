@@ -12,7 +12,7 @@ export default class Dust {
         this.scene = this.experience.scene
 
         this.dustNumber = 1300
-        this.size = 33
+        this.size = 45
 
         this.init()
 
@@ -25,10 +25,10 @@ export default class Dust {
         this.scaleArray = new Float32Array(this.dustNumber)
 
         for (let i = 0; i < this.dustNumber; i++) {
-            this.positionArray[i * 3] = (Math.random() - 0.5) * 4
-            this.positionArray[i * 3 + 1] = Math.random() * 2 + 0.15
-            this.positionArray[i * 3 + 2] = (Math.random() - 0.5) * 5
-            this.scaleArray[i] = Math.random() * 0.5
+            this.positionArray[i * 3] = (Math.random() - 0.5) * 8
+            this.positionArray[i * 3 + 1] = Math.random() * 4
+            this.positionArray[i * 3 + 2] = (Math.random() - 0.5) * 14
+            this.scaleArray[i] = Math.random()
 
         }
 
@@ -50,7 +50,7 @@ export default class Dust {
         })
 
         this.dust = new THREE.Points(this.dustGeometry, this.dustMaterial)
-        this.dust.position.set(0, 0, -1)
+        this.dust.position.set(0, 0.8, 2)
         this.scene.add(this.dust)
 
     }

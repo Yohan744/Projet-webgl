@@ -2,11 +2,9 @@ import EventEmitter from './EventEmitter.js'
 import Experience from '../Experience.js'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader.js'
-import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader.js'
 import {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader.js'
-import {EXRLoader} from "three/addons";
 
-export default class Resources extends EventEmitter {
+export default class Loader extends EventEmitter {
     /**
      * Constructor
      */
@@ -60,7 +58,7 @@ export default class Resources extends EventEmitter {
                 dracoLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
 
-                    DRACOLoader.releaseDecoderModule()
+                    DRACOLoader.dispose()
                 })
             }
         })

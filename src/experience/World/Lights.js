@@ -5,13 +5,13 @@ export default class Lights {
 
     constructor(_options) {
         this.experience = new Experience()
-        this.debug = this.experience.debug
+        this.debug = this.experience.config?.debug
         this.scene = this.experience.scene
 
         this.spotLightPosition = new THREE.Vector3(-6, 9, -12)
         this.spotLightTarget = new THREE.Vector3(1, 0, -2.25)
 
-        this.pointLightPosition = new THREE.Vector3(-0.175,  3.25, 0.5)
+        this.pointLightPosition = new THREE.Vector3(-0.175, 3.25, 0.5)
 
         this.setupAmbientLight()
         // this.setupSpotLight()
@@ -55,7 +55,7 @@ export default class Lights {
         // sphere just for now
         const sphere = new THREE.Mesh(
             new THREE.SphereGeometry(0.115, 8, 8),
-            new THREE.MeshBasicMaterial({ color: "#fff4cc" })
+            new THREE.MeshBasicMaterial({color: "#fff4cc"})
         )
         sphere.position.copy(this.pointLightPosition)
         this.scene.add(sphere)

@@ -15,7 +15,7 @@ export default class World {
         this.time = this.experience.time
 
         this.resources.on('ready', (_group) => {
-            if (_group.name === 'base') {
+            if (_group.name === 'base' && this.scene) {
 
                 this.lights = new Lights()
                 this.attic = new Attic()

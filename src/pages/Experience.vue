@@ -41,7 +41,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
 .experience {
   position: fixed;
   width: 100vw;
