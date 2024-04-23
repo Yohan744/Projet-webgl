@@ -2,14 +2,21 @@
   position: relative;
   height: 100dvh;
   width: 100dvw;
-  background: #ffdbc6;
+  background: #f8e7d9;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 #masthead a {
   position: relative;
-  background: red;
+  font-size: 30px;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  cursor: pointer;
+  transition: text-underline-offset 0.35s;
+}
+#masthead a:hover {
+  text-underline-offset: 2px;
 }
 
 /*# sourceMappingURL=masthead.css.map */
