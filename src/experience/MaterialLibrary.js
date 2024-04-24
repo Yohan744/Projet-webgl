@@ -59,13 +59,12 @@ export default class MaterialLibrary {
     getGroundMaterial() {
         if (!groundMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal', 'specular'], 'ground', 2, 2)
+            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'ground', 2, 2)
 
             groundMaterial = new MeshStandardMaterial({
                 map: this.resources.items.ground.diffuse,
                 roughnessMap: this.resources.items.ground.roughness,
                 normalMap: this.resources.items.ground.normal,
-                specularMap: this.resources.items.ground.specular,
                 side: DoubleSide
             })
 
@@ -124,7 +123,7 @@ export default class MaterialLibrary {
                 map: this.resources.items.window.diffuse,
                 roughnessMap: this.resources.items.window.roughness,
                 alphaMap: this.resources.items.window.alpha,
-                aoMap: this.resources.items.window.ao,
+                ao: this.resources.items.window.ao,
                 normalMap: this.resources.items.window.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -177,7 +176,6 @@ export default class MaterialLibrary {
                 map: this.resources.items.sideMirror.diffuse,
                 roughnessMap: this.resources.items.sideMirror.roughness,
                 normalMap: this.resources.items.sideMirror.normal,
-                specularMap: this.resources.items.sideMirror.specular,
                 side: this.debug ? DoubleSide : FrontSide
             })
 

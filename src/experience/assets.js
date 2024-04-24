@@ -23,7 +23,6 @@ export default [
                         diffuse: 'assets/textures/attic/ground/diffuse.webp',
                         roughness: 'assets/textures/attic/ground/roughness.webp',
                         normal: 'assets/textures/attic/ground/normal.webp',
-                        specular: 'assets/textures/attic/ground/specular.webp',
                     }
                 },
 
@@ -54,7 +53,6 @@ export default [
                         diffuse: 'assets/textures/attic/beam/diffuse.webp',
                         roughness: 'assets/textures/attic/beam/roughness.webp',
                         normal: 'assets/textures/attic/beam/normal.webp',
-                        displacement: 'assets/textures/attic/beam/displacement.webp',
                     }
                 },
 
@@ -79,7 +77,6 @@ export default [
                         diffuse: 'assets/textures/objects/mirror/side/diffuse.webp',
                         roughness: 'assets/textures/objects/mirror/side/roughness.webp',
                         normal: 'assets/textures/objects/mirror/side/normal.webp',
-                        specular: 'assets/textures/objects/mirror/side/specular.webp',
                     }
                 },
 

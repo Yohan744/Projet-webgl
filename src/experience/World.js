@@ -17,13 +17,17 @@ export default class World {
         this.resources.on('ready', (_group) => {
             if (_group.name === 'base' && this.scene) {
 
-                this.lights = new Lights()
-                this.attic = new Attic()
-                this.background = new Background()
-                this.locations = new Locations().instance
+                this.init()
 
             }
         })
+    }
+
+    async init() {
+        this.lights = new Lights()
+        this.attic = new Attic()
+        this.background = new Background()
+        this.locations = new Locations().instance
     }
 
     resize() {
