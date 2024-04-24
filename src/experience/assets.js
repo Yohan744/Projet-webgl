@@ -17,6 +17,12 @@ export default [
                 },
 
                 {
+                    name: 'test',
+                    source: '/assets/textures/test.png',
+                    type: 'texture',
+                },
+
+                {
                     name: 'ground',
                     type: 'group',
                     textures: {

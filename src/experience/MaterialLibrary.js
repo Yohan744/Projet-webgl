@@ -123,7 +123,7 @@ export default class MaterialLibrary {
                 map: this.resources.items.window.diffuse,
                 roughnessMap: this.resources.items.window.roughness,
                 alphaMap: this.resources.items.window.alpha,
-                ao: this.resources.items.window.ao,
+                aoMap: this.resources.items.window.ao,
                 normalMap: this.resources.items.window.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -140,7 +140,6 @@ export default class MaterialLibrary {
                 map: this.resources.items.walls.diffuse,
                 roughnessMap: this.resources.items.walls.roughness,
                 normalMap: this.resources.items.walls.normal,
-                aoMap: this.resources.items.walls.ao,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
