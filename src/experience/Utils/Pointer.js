@@ -36,8 +36,8 @@ export default class Pointer extends EventEmitter {
     }
 
     setEvents() {
-        window.addEventListener("pointermove", (_event) => this.onMovement(_event),)
-        window.addEventListener('click', this.onClick.bind(this), false);
+        window.addEventListener("pointermove", (_event) => this.onMovement(_event))
+        window.addEventListener('pointerdown', this.onClick.bind(this), false);
     }
 
     onMovement(_event) {
@@ -70,8 +70,8 @@ export default class Pointer extends EventEmitter {
     }
 
     destroy() {
-        window.removeEventListener("pointermove", (_event) => this.onMovement(_event),)
-        window.removeEventListener('click', this.onClick.bind(this), false);
+        window.removeEventListener("pointermove", (_event) => this.onMovement(_event))
+        window.removeEventListener('pointerdown', this.onClick.bind(this), false);
     }
 
 }

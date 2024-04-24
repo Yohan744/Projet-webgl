@@ -12,6 +12,7 @@ export default class Camera {
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
         this.pointer = this.experience.pointer
+        this.isMobile = this.experience.config.isMobile
 
         this.isFocused = false
         this.isMoving = false
@@ -26,9 +27,9 @@ export default class Camera {
         this.upVector = new THREE.Vector3(0, 1, 0);
 
         this.lerpCamera = 0
-        this.cameraAmplitude = 1.75
+        this.cameraAmplitude = this.isMobile ? 2 : 1.75
         this.lerpCameraNormal = 0.975
-        this.cameraAmplitudeNormal = 1
+        this.cameraAmplitudeNormal = this.isMobile ? 2 : 1.75
         this.lerpCameraFocus = 0.99
         this.cameraAmplitudeFocus = 0.25
         this.movingSpeedMultiplier = 0.65

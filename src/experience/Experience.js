@@ -57,6 +57,8 @@ export default class Experience extends EventEmitter {
         // Debug
         this.config.debug = window.location.hash === '#debug'
 
+        this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
+
         // Pixel ratio
         this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
 
@@ -99,23 +101,6 @@ export default class Experience extends EventEmitter {
         this.world = new World()
     }
 
-    update() {
-        if (this.stats)
-            this.stats.update()
-
-        this.camera.update()
-
-        if (this.world)
-            this.world.update()
-
-        if (this.renderer)
-            this.renderer.update()
-
-        window.requestAnimationFrame(() => {
-            this.update()
-        })
-    }
-
     resize() {
         // Config
         const boundings = this.targetElement.getBoundingClientRect()
@@ -132,6 +117,23 @@ export default class Experience extends EventEmitter {
 
         if (this.world)
             this.world.resize()
+    }
+
+    update() {
+        if (this.stats)
+            this.stats.update()
+
+        this.camera.update()
+
+        if (this.world)
+            this.world.update()
+
+        if (this.renderer)
+            this.renderer.update()
+
+        window.requestAnimationFrame(() => {
+            this.update()
+        })
     }
 
     destroy() {
