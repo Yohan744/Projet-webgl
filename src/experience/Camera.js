@@ -20,6 +20,9 @@ export default class Camera {
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, new THREE.Vector3(0, 0, -3))
         this.prevTarget = new THREE.Vector3();
+        this.direction = new THREE.Vector3();
+        this.side = new THREE.Vector3();
+        this.lookAtTarget = new THREE.Vector3();
         this.upVector = new THREE.Vector3(0, 1, 0);
 
         this.lerpCamera = 0
@@ -136,33 +139,6 @@ export default class Camera {
 
     }
 
-    update() {
-
-        if (this.pointer && this.mode === 'default') {
-
-            const direction = new THREE.Vector3();
-            this.instance.getWorldDirection(direction);
-            const side = new THREE.Vector3().crossVectors(direction, this.upVector).normalize();
-
-            const mousePos = this.pointer.getMousePosition();
-
-            let lookAtTarget = new THREE.Vector3().copy(this.lookingPoint);
-            lookAtTarget.addScaledVector(side, mousePos.x * this.cameraAmplitude);
-
-            lookAtTarget.addScaledVector(this.upVector, -mousePos.y * -this.cameraAmplitude);
-            this.modes.default.instance.lookAt(lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
-            this.prevTarget.copy(lookAtTarget);
-        }
-
-        if (this.debug) {
-            this.modes.debug.orbitControls.update();
-        }
-
-        this.instance.position.copy(this.modes[this.mode].instance.position);
-        this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
-        this.instance.updateMatrixWorld();
-    }
-
     updateFocusMode(value) {
         this.isFocused = value
 
@@ -183,6 +159,33 @@ export default class Camera {
 
     updateLerpCameraAfterFirstFrame() {
         this.lerpCamera = this.lerpCameraNormal
+    }
+
+    update() {
+
+        if (this.pointer && this.mode === 'default') {
+
+            this.direction.set(0, 0, 0);
+            this.instance.getWorldDirection(this.direction);
+            this.side.set(0, 0, 0).crossVectors(this.direction, this.upVector).normalize();
+
+            const mousePos = this.pointer.getMousePosition();
+
+            this.lookAtTarget.set(0, 0, 0).copy(this.lookingPoint);
+            this.lookAtTarget.addScaledVector(this.side, mousePos.x * this.cameraAmplitude);
+
+            this.lookAtTarget.addScaledVector(this.upVector, -mousePos.y * -this.cameraAmplitude);
+            this.modes.default.instance.lookAt(this.lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
+            this.prevTarget.copy(this.lookAtTarget);
+        }
+
+        if (this.debug) {
+            this.modes.debug.orbitControls.update();
+        }
+
+        this.instance.position.copy(this.modes[this.mode].instance.position);
+        this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
+        this.instance.updateMatrixWorld();
     }
 
     destroy() {
