@@ -109,6 +109,8 @@ export default class Experience extends EventEmitter {
 
         this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
 
+        this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
+
         if (this.camera)
             this.camera.resize()
 

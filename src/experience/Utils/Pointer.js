@@ -37,7 +37,8 @@ export default class Pointer extends EventEmitter {
 
     setEvents() {
         window.addEventListener("pointermove", (_event) => this.onMovement(_event))
-        window.addEventListener('pointerdown', this.onClick.bind(this), false);
+        window.addEventListener('pointerdown', this.onClick.bind(this));
+
     }
 
     onMovement(_event) {
