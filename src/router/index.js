@@ -11,8 +11,9 @@ const routes = [
     {
         path: '/experience',
         name: 'Experience',
-        component: Experience
-    }
+        component: Experience,
+        alias: '/experience/'
+    },
 ];
 
 const router = createRouter({
