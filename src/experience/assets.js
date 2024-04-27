@@ -6,7 +6,13 @@ export default [
             [
                 {
                     name: 'atticModel',
-                    source: '/assets/models/v4.glb',
+                    source: '/assets/models/attic.glb',
+                    type: 'model',
+                },
+
+                {
+                    name: 'objectsModel',
+                    source: '/assets/models/objects.glb',
                     type: 'model',
                 },
 

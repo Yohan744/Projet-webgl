@@ -16,6 +16,7 @@ export default class Pointer extends EventEmitter {
 
         this.raycaster = new Raycaster()
         this.intersects = []
+        this.triggerTreshold = 0.035
 
         this.mouse = {
             x: 0,
@@ -27,10 +28,10 @@ export default class Pointer extends EventEmitter {
             y: 0
         }
 
-        this.experience.on('ready', () => {
+        this.experience.on('ready', async () => {
             this.locations = this.locations.getLocations()
             this.scene = this.experience.scene
-            this.setEvents()
+            await this.setEvents()
         })
 
     }
@@ -38,15 +39,22 @@ export default class Pointer extends EventEmitter {
     setEvents() {
         window.addEventListener("pointermove", (_event) => this.onMovement(_event))
         window.addEventListener('pointerdown', this.onClick.bind(this));
-
     }
 
     onMovement(_event) {
+        this.oldMouse.x = this.mouse.x
+        this.oldMouse.y = this.mouse.y
+
         this.mouse.x = (_event.clientX / window.innerWidth) * 2 - 1
         this.mouse.y = -(_event.clientY / window.innerHeight) * 2 + 1
 
-        this.oldMouse.x = this.mouse.x
-        this.oldMouse.y = this.mouse.y
+        const deltaX = Math.abs(this.mouse.x - this.oldMouse.x);
+        const deltaY = Math.abs(this.mouse.y - this.oldMouse.y);
+
+        if (deltaX > this.triggerTreshold || deltaY > this.triggerTreshold) {
+            this.trigger('movement', [this.mouse]);
+        }
+
     }
 
     onClick(event) {

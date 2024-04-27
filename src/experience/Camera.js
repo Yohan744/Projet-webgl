@@ -16,6 +16,10 @@ export default class Camera {
 
         this.isFocused = false
         this.isMoving = false
+        this.mousePos = {
+            x: null,
+            y: null
+        }
 
         this.basicCameraPosition = new THREE.Vector3(0, 2.25, 10)
 
@@ -44,6 +48,13 @@ export default class Camera {
         this.pointer.on('spot-clicked', (spot) => {
             this.moveToSpot(spot)
         })
+
+        if (this.pointer && this.mode === 'default') {
+            this.pointer.on('movement', (mouse) => {
+                this.mousePos = mouse
+                this.onMovement()
+            })
+        }
 
         this.setInstance()
         this.setModes()
@@ -162,32 +173,32 @@ export default class Camera {
         this.lerpCamera = this.lerpCameraNormal
     }
 
+    onMovement() {
+        this.direction.set(0, 0, 0);
+        this.instance.getWorldDirection(this.direction);
+        this.side.set(0, 0, 0).crossVectors(this.direction, this.upVector).normalize();
+    }
+
     update() {
 
-        if (this.pointer && this.mode === 'default') {
-
-            this.direction.set(0, 0, 0);
-            this.instance.getWorldDirection(this.direction);
-            this.side.set(0, 0, 0).crossVectors(this.direction, this.upVector).normalize();
-
-            const mousePos = this.pointer.getMousePosition();
-
+        if (this.mode === 'default') {
             this.lookAtTarget.set(0, 0, 0).copy(this.lookingPoint);
-            this.lookAtTarget.addScaledVector(this.side, mousePos.x * this.cameraAmplitude);
+            this.lookAtTarget.addScaledVector(this.side, this.mousePos.x * this.cameraAmplitude);
+            this.lookAtTarget.addScaledVector(this.upVector, this.mousePos.y * this.cameraAmplitude);
 
-            this.lookAtTarget.addScaledVector(this.upVector, -mousePos.y * -this.cameraAmplitude);
             this.modes.default.instance.lookAt(this.lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
             this.prevTarget.copy(this.lookAtTarget);
-        }
-
-        if (this.debug) {
-            this.modes.debug.orbitControls.update();
+        } else {
+            if (this.debug) {
+                this.modes.debug.orbitControls.update();
+            }
         }
 
         this.instance.position.copy(this.modes[this.mode].instance.position);
         this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
         this.instance.updateMatrixWorld();
     }
+
 
     destroy() {
         this.modes.debug.orbitControls.destroy()

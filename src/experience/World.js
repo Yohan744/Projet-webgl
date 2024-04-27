@@ -5,6 +5,8 @@ import Attic from "./World/Attic";
 import Background from "./World/Background";
 import Locations from "./World/Locations";
 import Pointer from "./Utils/Pointer";
+import Objects from "./World/Objects";
+import MaterialLibrary from "./MaterialLibrary";
 
 export default class World {
     constructor(_options) {
@@ -14,18 +16,18 @@ export default class World {
         this.resources = this.experience.resources
         this.time = this.experience.time
 
-        this.resources.on('ready', (_group) => {
+        this.resources.on('ready', async (_group) => {
             if (_group.name === 'base' && this.scene) {
-
-                this.init()
-
+                await this.init()
             }
         })
     }
 
     async init() {
+        this.materialLibrary = new MaterialLibrary()
         this.lights = new Lights()
-        this.attic = new Attic()
+        this.attic = new Attic(this.materialLibrary)
+        this.objects = new Objects(this.materialLibrary)
         this.background = new Background()
         this.locations = new Locations().instance
     }
@@ -36,11 +38,15 @@ export default class World {
 
     update() {
         if (this.attic) this.attic.update()
+        if (this.objects) this.objects.update()
+
     }
 
     destroy() {
+        if (this.materialLibrary) this.materialLibrary.destroy()
         if (this.lights) this.lights.destroy()
         if (this.attic) this.attic.destroy()
+        if (this.objects) this.objects.destroy()
         if (this.background) this.background.destroy()
         if (this.locations) this.locations.destroy()
     }

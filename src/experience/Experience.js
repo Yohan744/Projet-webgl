@@ -47,15 +47,17 @@ export default class Experience extends EventEmitter {
             this.resize()
         })
 
-        this.trigger('ready')
-        this.update()
+        this.resources.on('ready', () => {
+            this.trigger('ready')
+            this.update()
+        })
     }
 
     setConfig() {
         this.config = {}
 
         // Debug
-        this.config.debug = window.location.hash.includes('#debug')
+        this.config.debug = window.location.hash === '#debug'
 
         this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
 

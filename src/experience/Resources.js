@@ -53,13 +53,10 @@ export default class Resources extends EventEmitter {
         this.loader.on('end', () => {
             this.groups.loaded.push(this.groups.current)
 
-            // Trigger
-            this.trigger('ready', [this.groups.current])
-
             if (this.groups.assets.length > 0) {
                 this.loadNextGroup()
             } else {
-                this.trigger('end')
+                this.trigger('ready', [this.groups.current])
             }
 
             console.log(" ")

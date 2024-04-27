@@ -1,17 +1,15 @@
 import Experience from "../Experience";
-import {Vector3} from "three";
 import GodRay from "./Effects/GodRay";
 import Dust from "./Effects/Dust";
-import MaterialLibrary from "../MaterialLibrary";
 
 export default class Attic {
 
-    constructor() {
+    constructor(materialLibrary) {
 
         this.experience = new Experience()
         this.resources = this.experience.resources
         this.scene = this.experience.scene
-        this.materialLibrary = new MaterialLibrary()
+        this.materialLibrary = materialLibrary
 
         this.godRayMeshs = []
         this.godRays = []
@@ -56,24 +54,6 @@ export default class Attic {
                     child.material = this.materialLibrary.getBeamMaterial()
                 }
 
-                /////// OBJECTS ///////
-
-                else if (name.includes("tour_miroir")) {
-                    child.material = this.materialLibrary.getSideMirrorMaterial()
-                } else if (name.includes("miroir001")) {
-                    child.position.add(new Vector3(0, 0, 0.5))
-                    child.material = this.materialLibrary.getMirrorMaterial()
-                } else if (name.includes("carton")) {
-                    child.material = this.materialLibrary.getCardBoardMaterial()
-                } else if (name.includes("tapis")) {
-                    child.material = this.materialLibrary.getCarpetMaterial()
-                } else if (name.includes("walkman") || name.includes("tv") || name.includes("cassette") || name.includes("cartes_postales") || name.includes("projecteur")) {
-                    child.material = this.materialLibrary.getTmpInteractionMaterial()
-                }  else if (name.includes("disque") || name.includes("drap")) {
-                    // this.godRayMeshs.push(child)
-                    child.visible = false
-                }
-
                 child.material.needsUpdate = true
 
             }
@@ -102,12 +82,12 @@ export default class Attic {
         if (this.atticModel) {
             this.atticModel.traverse(child => {
                 if (child.isMesh) {
+                    child.geometry.dispose()
                     child.material.dispose()
                 }
             })
             this.scene.remove(this.atticModel)
         }
-        if (this.materialLibrary) this.materialLibrary.destroy()
         if (this.godRays.length > 0) {
             this.godRays.forEach(godRay => {
                 godRay.destroy()
