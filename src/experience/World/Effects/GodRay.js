@@ -59,7 +59,6 @@ export default class GodRay {
         this.godRaysArray.forEach(godRay => {
             godRay.geometry.dispose()
             godRay.material.dispose()
-            godRay.dispose()
             this.scene.remove(godRay)
         })
     }

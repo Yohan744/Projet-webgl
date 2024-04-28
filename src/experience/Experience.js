@@ -50,6 +50,7 @@ export default class Experience extends EventEmitter {
         this.resources.on('ready', () => {
             this.trigger('ready')
             this.update()
+            this.camera.updateLerpCameraAfterFirstFrame()
         })
     }
 

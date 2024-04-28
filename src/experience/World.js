@@ -7,6 +7,7 @@ import Locations from "./World/Locations";
 import Pointer from "./Utils/Pointer";
 import Objects from "./World/Objects";
 import MaterialLibrary from "./MaterialLibrary";
+import Props from "./World/Props";
 
 export default class World {
     constructor(_options) {
@@ -28,6 +29,7 @@ export default class World {
         this.materialLibrary = new MaterialLibrary()
         this.attic = new Attic(this.materialLibrary)
         this.objects = new Objects(this.materialLibrary)
+        this.props = new Props()
         this.background = new Background()
         this.locations = new Locations().instance
     }
@@ -39,6 +41,7 @@ export default class World {
     update() {
         if (this.attic) this.attic.update()
         if (this.objects) this.objects.update()
+        if (this.props) this.props.update()
 
     }
 
@@ -47,6 +50,7 @@ export default class World {
         if (this.lights) this.lights.destroy()
         if (this.attic) this.attic.destroy()
         if (this.objects) this.objects.destroy()
+        if (this.props) this.props.destroy()
         if (this.background) this.background.destroy()
         if (this.locations) this.locations.destroy()
     }

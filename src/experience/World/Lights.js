@@ -13,16 +13,15 @@ export default class Lights {
 
         this.pointLightPosition = new THREE.Vector3(-0.175, 3.25, 0.5)
 
-        this.setupAmbientLight()
-        // this.setupSpotLight()
-        this.setupPointLight()
+        if (this.scene) {
+            this.setupAmbientLight()
+            // this.setupSpotLight()
+            this.setupPointLight()
 
-        if (this.debug) {
-            this.setupPointLightHelper()
+            if (this.debug) {
+                this.setupPointLightHelper()
+            }
         }
-
-        // this.setupSpotLightHelper()
-        // this.setupSpotLightShadowHelper()
 
     }
 
