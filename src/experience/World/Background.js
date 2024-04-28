@@ -19,8 +19,11 @@ export default class Background {
 
         this.planeGeometry = new PlaneGeometry(10, 10, 1, 1)
 
+        const t = this.resources.items.backgroundTreeTexture
+        t.flipY = true
+
         this.planeMaterial = new MeshStandardMaterial({
-            map: this.resources.items.backgroundTreeTexture,
+            map: t,
         })
 
         this.background = new Mesh(this.planeGeometry, this.planeMaterial)

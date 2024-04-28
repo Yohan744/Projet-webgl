@@ -24,8 +24,8 @@ export default class World {
     }
 
     async init() {
-        this.materialLibrary = new MaterialLibrary()
         this.lights = new Lights()
+        this.materialLibrary = new MaterialLibrary()
         this.attic = new Attic(this.materialLibrary)
         this.objects = new Objects(this.materialLibrary)
         this.background = new Background()

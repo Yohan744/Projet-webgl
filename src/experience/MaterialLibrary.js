@@ -1,4 +1,5 @@
 import {
+    AdditiveBlending,
     BackSide,
     DoubleSide,
     FrontSide,
@@ -120,11 +121,14 @@ export default class MaterialLibrary {
             this.repeatTextures(['diffuse', 'roughness', 'normal',], 'window', 1.5, 1.5)
 
             windowMaterial = new MeshStandardMaterial({
-                map: this.resources.items.window.diffuse,
-                roughnessMap: this.resources.items.window.roughness,
-                alphaMap: this.resources.items.window.alpha,
-                aoMap: this.resources.items.window.ao,
-                normalMap: this.resources.items.window.normal,
+                // map: this.resources.items.window.diffuse,
+                // roughnessMap: this.resources.items.window.roughness,
+                // alphaMap: this.resources.items.window.alpha,
+                // aoMap: this.resources.items.window.ao,
+                // normalMap: this.resources.items.window.normal,
+                color: '#ffefb0',
+                transparent: true,
+                blending: AdditiveBlending,
                 side: this.debug ? DoubleSide : FrontSide
             })
 

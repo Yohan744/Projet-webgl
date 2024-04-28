@@ -6,7 +6,7 @@ export default [
             [
                 {
                     name: 'atticModel',
-                    source: '/assets/models/attic.glb',
+                    source: '/assets/models/attic_ray.glb',
                     type: 'model',
                 },
 
@@ -18,13 +18,19 @@ export default [
 
                 {
                     name: 'backgroundTreeTexture',
-                    source: '/assets/textures/background/backgroundTree.webp',
+                    source: '/assets/textures/attic/background/backgroundTree.webp',
                     type: 'texture',
                 },
 
                 {
-                    name: 'test',
-                    source: '/assets/textures/test.png',
+                    name: 'particleTexture',
+                    source: '/assets/textures/particle.png',
+                    type: 'texture',
+                },
+
+                {
+                    name: 'testTexture',
+                    source: '/assets/textures/attic/background/test.png',
                     type: 'texture',
                 },
 

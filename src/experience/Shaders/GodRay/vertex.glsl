@@ -1,20 +1,12 @@
-uniform vec3 viewVector;
-uniform float c;
-uniform float p;
-uniform float op;
+uniform float uSeed;
+uniform float uTime;
 
-varying float opacity;
-varying float intensity;
-
+varying vec2 vUv;
 
 void main() {
-    opacity = 1.0;
-
-    vec3 vNormal = normalize(normalMatrix * normal * 2.0);
-    vec3 vNormel = normalize(normalMatrix * viewVector);
-
-    intensity = pow(c - dot(vNormal, vNormel), p);
-    opacity = op;
-
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vec3 newPos = position;
+    newPos.z += sin(uTime + position.z * 10.0 + uSeed) * 0.1;
+    newPos.x += sin(uTime + position.x * 10.0 + uSeed * 3.0) * 0.1;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+    vUv = uv;
 }

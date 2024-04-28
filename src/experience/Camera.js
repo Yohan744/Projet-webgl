@@ -21,6 +21,8 @@ export default class Camera {
             y: null
         }
 
+        this.mode = 'default' // 'default' for production, 'debug' for development
+
         this.basicCameraPosition = new THREE.Vector3(0, 2.25, 10)
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, new THREE.Vector3(0, 0, -3))
@@ -37,8 +39,6 @@ export default class Camera {
         this.lerpCameraFocus = 0.99
         this.cameraAmplitudeFocus = 0.25
         this.movingSpeedMultiplier = 0.65
-
-        this.mode = 'default' // 'default' for production, 'debug' for development
 
         if (this.debug) {
             this.debugFolder = this.debug.addFolder('camera')
@@ -84,13 +84,13 @@ export default class Camera {
         this.modes.debug = {}
         this.modes.debug.instance = this.instance.clone()
         this.modes.debug.instance.rotation.reorder('YXZ')
-        this.modes.debug.instance.position.set(0, 5, 5)
+        this.modes.debug.instance.position.set(0, 4, 4)
 
         this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
         this.modes.debug.orbitControls.enabled = this.modes.debug.active
         this.modes.debug.orbitControls.screenSpacePanning = true
         this.modes.debug.orbitControls.enableKeys = false
-        this.modes.debug.orbitControls.zoomSpeed = 0.25
+        this.modes.debug.orbitControls.zoomSpeed = 0.75
         this.modes.debug.orbitControls.enableDamping = true
         this.modes.debug.orbitControls.update()
     }

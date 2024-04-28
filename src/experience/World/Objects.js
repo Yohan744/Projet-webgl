@@ -36,9 +36,6 @@ export default class Objects {
                     child.material = this.materialLibrary.getCarpetMaterial()
                 } else if (name.includes("walkman") || name.includes("tv") || name.includes("cassette") || name.includes("cartes_postales") || name.includes("projecteur")) {
                     child.material = this.materialLibrary.getTmpInteractionMaterial()
-                }  else if (name.includes("disque") || name.includes("drap")) {
-                    // this.godRayMeshs.push(child)
-                    child.visible = false
                 }
 
                 child.material.needsUpdate = true

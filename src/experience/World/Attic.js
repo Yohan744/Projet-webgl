@@ -12,7 +12,6 @@ export default class Attic {
         this.materialLibrary = materialLibrary
 
         this.godRayMeshs = []
-        this.godRays = []
 
         if (this.scene) {
             this.init()
@@ -52,6 +51,8 @@ export default class Attic {
                     child.material = this.materialLibrary.getSideWindowMaterial()
                 }  else if (name.includes("poutres")) {
                     child.material = this.materialLibrary.getBeamMaterial()
+                }  else if (name.includes("godray")) {
+                    this.godRayMeshs.push(child)
                 }
 
                 child.material.needsUpdate = true
@@ -66,16 +67,13 @@ export default class Attic {
     }
 
     initEffects() {
-        if (this.godRayMeshs.length > 0) {
-            this.godRayMeshs.forEach(mesh => {
-                this.godRays.push(new GodRay(mesh))
-            })
-        }
         this.dust = new Dust()
+        this.godRays = new GodRay(this.godRayMeshs)
     }
 
     update() {
         if (this.dust) this.dust.update()
+        if (this.godRays) this.godRays.update()
     }
 
     destroy() {
@@ -88,12 +86,8 @@ export default class Attic {
             })
             this.scene.remove(this.atticModel)
         }
-        if (this.godRays.length > 0) {
-            this.godRays.forEach(godRay => {
-                godRay.destroy()
-            })
-        }
         if (this.dust) this.dust.destroy()
+        if (this.godRays) this.godRays.destroy()
     }
 
 
