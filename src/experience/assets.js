@@ -17,6 +17,31 @@ export default [
                 },
 
                 {
+                    name: 'cassetteModel',
+                    source: '/assets/models/cassette_V2.glb',
+                    type: 'model',
+                    textures: {
+                        diffuse: 'assets/textures/cassette/Cassette.webp',
+                    }
+                },
+                {
+                    name: 'walkmanModel',
+                    source: '/assets/models/walkmanv2.glb',
+                    type: 'model',
+                    textures: {
+                        diffuse: 'assets/textures/cassette/Cassette.webp',
+                    }
+               },
+                {
+                    name: 'visionneuseModel',
+                    source: '/assets/models/VisionneuseDiapoAnim_VDEF.glb',
+                    type: 'model',
+                    textures: {
+                        diffuse: 'assets/textures/cassette/Cassette.webp',
+                    }
+                },
+
+                {
                     name: 'backgroundTreeTexture',
                     source: '/assets/textures/attic/background/backgroundTree.webp',
                     type: 'texture',
@@ -128,5 +153,5 @@ export default [
                 },
 
             ]
-    }
+    },
 ]
