@@ -1,6 +1,7 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
     <VideoIntro v-if="!isVideoIntroWatched"/>
+    <Loading v-if="!isLoaded && isVideoIntroWatched"/>
     <div ref="experienceContainer" class="experience"></div>
   </main>
 </template>
@@ -10,28 +11,47 @@ import VideoIntro from "../components/VideoIntro.vue";
 import Experience from '../experience/Experience';
 import {useAppStore} from "../stores/appStore";
 import {watch} from "vue";
+import Loading from "../components/Loading.vue";
+import {useRouter} from "vue-router";
 
 export default {
   name: 'ExperiencePage',
-  components: {VideoIntro},
+  components: {Loading, VideoIntro},
   data() {
     const appStore = useAppStore();
+    const router = useRouter()
     return {
       appStore,
+      router,
+      routeCheck: false,
+      isLoaded: false,
       experience: null,
-      isVideoIntroWatched: appStore.isVideoIntroWatched
+      isVideoIntroWatched: appStore.isVideoIntroWatched,
     };
   },
+  beforeMount() {
+    if (this.appStore.lastVisitedRoute !== '/' && !this.appStore.isVideoIntroWatched) {
+      this.router.push('/');
+    } else {
+      this.routeCheck = true;
+    }
+  },
   mounted() {
-    this.$nextTick(() => {
-      this.initExperience();
-      this.setExperienceOpacity(this.isVideoIntroWatched ? 1 : 0);
 
-      watch(() => this.appStore.isVideoIntroWatched, (value) => {
-        this.setExperienceOpacity(value ? 1 : 0);
+    if (this.routeCheck) {
+
+      this.$refs.videoElement?.load();
+
+      this.$nextTick(() => {
+        this.initExperience();
+        watch(() => this.appStore.isVideoIntroWatched, () => {
+          if (this.isLoaded) {
+            this.setExperienceOpacity(1);
+          }
+        });
       });
 
-    });
+    }
   },
   beforeUnmount() {
     if (this.experience) {
@@ -41,15 +61,21 @@ export default {
   },
   methods: {
     initExperience() {
-      if (this.experience) {
-        this.experience.destroy();
-      }
+      this.experience?.destroy();
       this.experience = new Experience({
         targetElement: this.$refs.experienceContainer
       });
+      this.experience.resources.on('ready', () => {
+        this.isLoaded = true;
+        if (this.isVideoIntroWatched) {
+          this.setExperienceOpacity(1);
+        }
+      });
     },
     setExperienceOpacity(opacity) {
-      this.$refs.experienceContainer.style.opacity = opacity;
+      if (this.$refs.experienceContainer) {
+        this.$refs.experienceContainer.style.opacity = opacity;
+      }
     }
   },
 }
@@ -61,8 +87,8 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100dvw;
 
   .experience {
     position: absolute;

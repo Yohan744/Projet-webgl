@@ -4,6 +4,7 @@ export const useAppStore = defineStore({
     id: "app",
     state: () => ({
         muted: false,
+        lastVisitedRoute: null,
         isVideoIntroWatched: false
     }),
     getters: {
@@ -12,6 +13,9 @@ export const useAppStore = defineStore({
     actions: {
         toggleMute(state) {
             this.muted = state
+        },
+        setLastVisitedRoute(route) {
+            this.lastVisitedRoute = route
         },
         setVideoIntroWatched() {
             this.isVideoIntroWatched = true

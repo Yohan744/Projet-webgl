@@ -16,43 +16,59 @@ import {useAppStore} from "../stores/appStore";
 export default {
   name: 'VideoIntro',
   data() {
+    const appStore = useAppStore();
     const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
-    const videoUrl = `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/videoplayback_mwcxl6.mp4`;
     return {
-      videoUrl,
+      appStore,
+      videoUrl: `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/videoplayback_mwcxl6.mp4`,
     };
   },
   methods: {
     playVideo() {
       this.updateOpacityTo(1, () => {
-        this.$refs.videoElement.play();
+        this.$refs.videoElement?.play();
       });
     },
     onVideoEnded() {
       this.markVideoWatched();
     },
     markVideoWatched() {
-      const appStore = useAppStore();
-
       this.updateOpacityTo(0, () => {
-        this.$refs.videoWrapper.remove();
-        appStore.setVideoIntroWatched();
+        this.$refs.videoWrapper?.remove();
+        this.appStore.setVideoIntroWatched();
       });
 
     },
     updateOpacityTo(opacity, callback) {
-      this.$refs.videoElement.style.opacity = opacity;
+      if (this.$refs.videoElement) {
+        this.$refs.videoElement.style.opacity = opacity;
+      }
       setTimeout(() => {
         if (callback) {
           callback();
         }
       }, 2000);
-    }
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
+
+.noInteractionBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 10;
+
+  p {
+    position: relative;
+    color: white;
+  }
+
+}
 
 .video-intro {
   position: absolute;
@@ -68,7 +84,7 @@ export default {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    z-index: 10;
+    z-index: 5;
     opacity: 0;
     transition: opacity 1s ease-in-out;
   }

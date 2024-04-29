@@ -10,8 +10,8 @@ export default class Sizes extends EventEmitter {
         // Viewport size
         this.viewport = {}
         this.$sizeViewport = document.createElement('div')
-        this.$sizeViewport.style.width = '100vw'
-        this.$sizeViewport.style.height = '100vh'
+        this.$sizeViewport.style.width = '100dvw'
+        this.$sizeViewport.style.height = '100dvh'
         this.$sizeViewport.style.position = 'absolute'
         this.$sizeViewport.style.top = 0
         this.$sizeViewport.style.left = 0

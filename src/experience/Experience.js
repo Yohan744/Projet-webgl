@@ -26,10 +26,6 @@ export default class Experience extends EventEmitter {
         Experience.instance = this
 
         this.targetElement = _options.targetElement
-        if (!this.targetElement) {
-            console.warn('Missing \'targetElement\' property')
-            return
-        }
 
         this.pointer = new Pointer()
         this.time = new Time()
