@@ -31,7 +31,7 @@ export default class Experience extends EventEmitter {
             return
         }
 
-        this.pointer = new Pointer().instance
+        this.pointer = new Pointer()
         this.time = new Time()
         this.sizes = new Sizes()
         this.setConfig()

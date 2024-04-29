@@ -4,12 +4,15 @@ import Locations from "../World/Locations";
 import EventEmitter from "./EventEmitter";
 
 export default class Pointer extends EventEmitter {
+    static instance
 
     constructor() {
-
         super()
 
-        this.instance = this
+        if (Pointer.instance) {
+            return Pointer.instance
+        }
+        Pointer.instance = this
 
         this.experience = new Experience()
         this.locations = new Locations().instance
