@@ -2,11 +2,17 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router/index.js';
 import { createPinia } from 'pinia'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import { createPersistedState } from 'pinia-plugin-persistedstate';
 import './assets/scss/main.css';
 
 const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
+pinia.use(createPersistedState({
+    storage: {
+        getItem: (key) => sessionStorage.getItem(key),
+        setItem: (key, value) => sessionStorage.setItem(key, value),
+        removeItem: (key) => sessionStorage.removeItem(key),
+    },
+}));
 
 createApp(App)
     .use(router)

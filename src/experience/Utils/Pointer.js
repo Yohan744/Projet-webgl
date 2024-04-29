@@ -4,12 +4,15 @@ import Locations from "../World/Locations";
 import EventEmitter from "./EventEmitter";
 
 export default class Pointer extends EventEmitter {
+    static instance
 
     constructor() {
-
         super()
 
-        this.instance = this
+        if (Pointer.instance) {
+            return Pointer.instance
+        }
+        Pointer.instance = this
 
         this.experience = new Experience()
         this.locations = new Locations().instance
@@ -39,6 +42,7 @@ export default class Pointer extends EventEmitter {
     setEvents() {
         window.addEventListener("pointermove", (_event) => this.onMovement(_event))
         window.addEventListener('pointerdown', this.onClick.bind(this));
+        window.addEventListener('pointerup', this.onClickRelease.bind(this));
     }
 
     onMovement(_event) {
@@ -52,6 +56,7 @@ export default class Pointer extends EventEmitter {
         const deltaY = Math.abs(this.mouse.y - this.oldMouse.y);
 
         if (deltaX > this.triggerTreshold || deltaY > this.triggerTreshold) {
+            this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
             this.trigger('movement', [this.mouse]);
         }
 
@@ -60,10 +65,15 @@ export default class Pointer extends EventEmitter {
     onClick(event) {
         event.preventDefault();
         this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
+        this.trigger('click')
         const intersects = this.raycaster.intersectObjects(this.locations, false);
         if (intersects.length > 0) {
             this.trigger('spot-clicked', [intersects[0]])
         }
+    }
+
+    onClickRelease() {
+        this.trigger('click-release')
     }
 
     getIntersects() {
@@ -81,6 +91,7 @@ export default class Pointer extends EventEmitter {
     destroy() {
         window.removeEventListener("pointermove", (_event) => this.onMovement(_event))
         window.removeEventListener('pointerdown', this.onClick.bind(this), false);
+        window.removeEventListener('pointerup', this.onClickRelease.bind(this), false);
     }
 
 }
