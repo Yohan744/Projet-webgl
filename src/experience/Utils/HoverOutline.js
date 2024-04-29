@@ -35,4 +35,23 @@ export class HoverOutline {
             this.outlineMesh = null;
         }
     }
+
+    destroy() {
+        if (this.outlineMesh) {
+            this.scene.remove(this.outlineMesh);
+
+            if (this.outlineMesh.geometry) {
+                this.outlineMesh.geometry.dispose();
+            }
+            if (this.outlineMesh.material) {
+                this.outlineMesh.material.dispose();
+            }
+
+            this.outlineMesh = null;
+        }
+
+        this.model = null;
+        this.scene = null;
+    }
+
 }

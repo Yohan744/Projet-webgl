@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import gsap from "gsap";
-import { FloatAnimation } from "./FloatAnimation";
 
 export class CameraUtils {
-    static animateToCamera(model, camera, floatAnimation) {
+    static animateToCamera(model, camera) {
         const distance = 1;
         const planeDistance = 0.1;
 
@@ -24,7 +23,6 @@ export class CameraUtils {
             onComplete: () => {
                 model.position.copy(targetPosition);
                 model.quaternion.copy(finalQuaternion);
-                floatAnimation.start();
             }
         })
             .to(model.position, {
@@ -42,5 +40,12 @@ export class CameraUtils {
                 duration: 1,
                 ease: "power2.inOut"
             }, "<");
+    }
+
+    static destroy() {
+        if (CameraUtils.currentAnimation) {
+            CameraUtils.currentAnimation.kill();
+            CameraUtils.currentAnimation = null;
+        }
     }
 }

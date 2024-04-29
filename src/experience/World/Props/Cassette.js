@@ -1,13 +1,9 @@
 import Experience from "../../Experience";
 import * as THREE from "three";
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import vertexShader from '../../Shaders/Blur/blur.glsl';
-import fragmentShader from '../../Shaders/Blur/fragment.glsl';
 import {HoverOutline} from "../../Utils/HoverOutline";
 import { CameraUtils } from "../../Utils/CameraUtils";
 import {MouseUtils} from "../../Utils/MouseUtils";
+import Pointer from "../../Utils/Pointer";
 
 export default class Cassette {
     constructor() {
@@ -18,15 +14,13 @@ export default class Cassette {
         this.camera = this.experience.camera.instance;
 
         this.mouse = new THREE.Vector2();
-        this.raycaster = new THREE.Raycaster();
+        this.pointer = new Pointer();
 
         this.init();
         this.setupMouseEvents();
         this.animate = this.animate.bind(this);
         this.hasAnimatedToCamera = false;
         this.showOutline = true;
-        this.isDragging = false;
-        this.initPostProcessing();
         this.animate();
         this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera);
     }
@@ -42,28 +36,41 @@ export default class Cassette {
     }
 
     setupMouseEvents() {
-        window.addEventListener('mousemove', this.mousemove.bind(this));
+        window.addEventListener('pointermove', this.mousemove.bind(this));
         window.addEventListener('click', this.handleClick.bind(this));
-        window.addEventListener('mousedown', (event) => this.interactiveCassette.onMouseDown(event));
-        window.addEventListener('mousemove', (event) => this.interactiveCassette.onMouseMove(event));
-        window.addEventListener('mouseup', () => this.interactiveCassette.onMouseUp());
+        window.addEventListener('pointerdown', this.onMouseDown.bind(this));
+        window.addEventListener('pointerup', this.onMouseUp.bind(this));
     }
 
-    mousemove(event) {
+    onMouseDown(event) {
+        const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel]);
+
+        if (intersects.length > 0) {
+            this.interactiveCassette.onMouseDown(this.pointer.getMousePosition());
+        }
+    }
+
+    onMouseUp(event) {
+        this.interactiveCassette.onMouseUp();
+    }
+
+    mousemove = (event) => {
         this.mouse.x = (event.clientX / this.renderer.domElement.clientWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / this.renderer.domElement.clientHeight) * 2 + 1;
+
         this.updateHover();
+        const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
+        if (intersects.length > 0) {
+            this.interactiveCassette.onMouseMove(event);
+        }
     }
 
-    handleClick(event) {
-        this.updateClick();
-    }
 
     updateHover() {
-        this.raycaster.setFromCamera(this.mouse, this.camera);
-        const intersects = this.raycaster.intersectObjects([this.cassetteModel], true);
+        this.pointer.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
         if (intersects.length > 0) {
-            if (!this.isDragging && this.showOutline) {
+            if (!this.interactiveCassette.isDragging && this.showOutline) {
                 if (!this.outlineMesh) {
                     this.outlineMesh = this.modelHover.onHover(intersects[0], this.scene);
                 }
@@ -72,10 +79,14 @@ export default class Cassette {
             this.onHoverExit();
         }
     }
-    updateClick() {
-        this.raycaster.setFromCamera(this.mouse, this.camera);
-        const intersects = this.raycaster.intersectObjects([this.cassetteModel], true);
 
+    handleClick(event) {
+        this.updateClick();
+    }
+
+    updateClick() {
+        this.pointer.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
         if (intersects.length > 0) {
             if (this.outlineMesh) {
                 this.onHoverExit();
@@ -84,17 +95,25 @@ export default class Cassette {
             if (!this.hasAnimatedToCamera) {
                 CameraUtils.animateToCamera(this.cassetteModel, this.camera);
                 this.hasAnimatedToCamera = true;
+
+                let rembobinageProgress = rotationProgress / maxRotation;
+                rembobinageProgress = Math.min(rembobinageProgress, 1);
+
+                this.cassetteModel.traverse(function(child) {
+                    if (child.isMesh && child.morphTargetInfluences) {
+                        for (let i = 0; i < child.morphTargetInfluences.length; i++) {
+                            child.morphTargetInfluences[i] = 1 - rembobinageProgress;
+                        }
+                    }
+                });
             }
         }
     }
 
-
     animate() {
         requestAnimationFrame(this.animate);
-
         this.renderer.render(this.scene, this.camera);
     }
-
 
     onHoverExit() {
         if (this.outlineMesh) {
@@ -102,5 +121,29 @@ export default class Cassette {
             this.outlineMesh = null;
         }
     }
+
+    destroy() {
+        window.removeEventListener('mousemove', this.mousemove);
+        window.removeEventListener('click', this.handleClick);
+        window.removeEventListener('mousedown', this.onMouseDown);
+        window.removeEventListener('mouseup', this.onMouseUp);
+
+        if (this.outlineMesh) {
+            this.scene.remove(this.outlineMesh);
+            this.outlineMesh.geometry.dispose();
+            this.outlineMesh.material.dispose();
+            this.outlineMesh = null;
+        }
+
+        if (this.cassetteModel) {
+            this.scene.remove(this.cassetteModel);
+        }
+
+        if (this.interactiveCassette) {
+            this.interactiveCassette.destroy();
+        }
+    }
+
+
 
 }

@@ -25,9 +25,6 @@ export default class World {
                 this.attic = new Attic()
                 this.background = new Background()
                 this.locations = new Locations().instance
-                this.cassette = new Cassette()
-                this.walkman = new Walkman()
-                this.visionneuse = new Visionneuse()
             }
         })
     }
