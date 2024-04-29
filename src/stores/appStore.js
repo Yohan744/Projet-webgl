@@ -15,6 +15,10 @@ export const useAppStore = defineStore({
         },
         setVideoIntroWatched() {
             this.isVideoIntroWatched = true
+        },
+        resetAll() {
+            this.muted = false
+            this.isVideoIntroWatched = false
         }
     },
     persist: true
