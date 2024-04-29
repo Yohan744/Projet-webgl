@@ -14,7 +14,7 @@ export default {
   setup() {
     const appStore = useAppStore();
 
-    const onBeforeUnload = (event) => {
+    const onBeforeUnload = () => {
       appStore.setLastVisitedRoute(null);
     };
 
