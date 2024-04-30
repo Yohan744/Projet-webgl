@@ -1,0 +1,24 @@
+#errorWrapper {
+  position: relative;
+  height: 100dvh;
+  width: 100dvw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+
+  h1 {
+    position: relative;
+    font-size: 60px;
+    color: black;
+  }
+
+  a {
+    position: relative;
+    margin-top: 50px;
+    font-size: 20px;
+    color: black;
+  }
+
+}
