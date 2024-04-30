@@ -45,9 +45,7 @@ export default class Camera {
             this.setDebug()
         }
 
-        this.pointer.on('spot-clicked', (spot) => {
-            this.moveToSpot(spot)
-        })
+        this.pointer.on('spot-clicked', (spot) => this.moveToSpot(spot))
 
         if (this.pointer && this.mode === 'default') {
             this.pointer.on('movement', (mouse) => {
@@ -202,5 +200,8 @@ export default class Camera {
 
     destroy() {
         this.modes.debug.orbitControls.destroy()
+        this.scene.remove(this.instance)
+        this.pointer.off('spot-clicked', this.moveToSpot)
+        this.pointer.off('movement', this.onMovement)
     }
 }

@@ -56,7 +56,6 @@ export default class Pointer extends EventEmitter {
         const deltaY = Math.abs(this.mouse.y - this.oldMouse.y);
 
         if (deltaX > this.triggerTreshold || deltaY > this.triggerTreshold) {
-            this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
             this.trigger('movement', [this.mouse]);
         }
 
