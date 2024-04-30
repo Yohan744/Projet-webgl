@@ -62,7 +62,6 @@ export default class Camera {
         const width = this.config.width === null ? window.innerWidth : this.config.width
         this.instance = new THREE.PerspectiveCamera(50, width / this.config.height, 0.1, 25)
         this.instance.rotation.reorder('YXZ')
-
         this.instance.lookAt(this.lookingPoint)
 
         this.scene.add(this.instance)
@@ -148,34 +147,6 @@ export default class Camera {
             ease: 'power1.inOut'
         })
 
-    }
-
-
-    update() {
-
-        if (this.pointer && this.mode === 'default') {
-
-            const direction = new THREE.Vector3();
-            this.instance.getWorldDirection(direction);
-            const side = new THREE.Vector3().crossVectors(direction, this.upVector).normalize();
-
-            const mousePos = this.pointer.getMousePosition();
-
-            let lookAtTarget = new THREE.Vector3().copy(this.lookingPoint);
-            lookAtTarget.addScaledVector(side, mousePos.x * this.cameraAmplitude);
-
-            lookAtTarget.addScaledVector(this.upVector, -mousePos.y * -this.cameraAmplitude);
-            this.modes.default.instance.lookAt(lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
-            this.prevTarget.copy(lookAtTarget);
-        }
-
-        if (this.debug) {
-            this.modes.debug.orbitControls.update();
-        }
-
-        this.instance.position.copy(this.modes[this.mode].instance.position);
-        this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
-        this.instance.updateMatrixWorld();
     }
 
     updateFocusMode(value) {
