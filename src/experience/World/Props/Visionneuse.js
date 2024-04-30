@@ -1,7 +1,4 @@
 import Experience from "../../Experience";
-import * as THREE from "three";
-import gsap from "gsap";
-import Pointer from "../../Utils/Pointer";
 import Outline from "../Effects/Outline";
 
 export default class Visionneuse {

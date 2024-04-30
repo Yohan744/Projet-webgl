@@ -198,7 +198,38 @@ export default class Camera {
         })
 
     }
+    moveToVisionneuse(targetPosition) {
 
+        gsap.to(this.modes.default.instance.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 2,
+            ease: "power2.inOut",
+            onUpdate: () => {
+                this.modes.default.instance.lookAt(targetPosition);
+            },
+            onComplete: () => {
+                console.log(targetPosition)
+                const position = targetPosition.clone()
+
+                gsap.to(this.lookingPoint, {
+                    x: -1,
+                    y: 1.9,
+                    z: 4.4,
+                    duration: 2,
+                    ease: 'power1.inOut',
+                    onComplete: () => {
+                        console.log(this.lookingPoint)
+
+                        this.isFocused = true
+                        this.updateFocusMode(this.isFocused)
+                        this.appStore.updateCameraOnSpot(true)
+                    }
+                });
+            }
+        });
+    }
     lookAtSheet() {
 
         const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
