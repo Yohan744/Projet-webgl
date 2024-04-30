@@ -1,8 +1,9 @@
 import {MouseUtils} from "../Utils/MouseUtils";
 import Pointer from "../../Utils/Pointer";
-import {Outline} from "../Utils/Outline";
 import {CameraUtils} from "../Utils/CameraUtils";
 import Experience from "../../Experience";
+import Outline from "../Effects/Outline";
+import * as THREE from "three";
 
 export default class Cassette {
     constructor() {
@@ -13,7 +14,6 @@ export default class Cassette {
         this.camera = this.experience.camera.instance;
 
         this.pointer = new Pointer();
-
         this.init();
         this.setupMouseEvents();
         this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
@@ -24,27 +24,28 @@ export default class Cassette {
         this.scene.add(this.cassetteModel);
         this.cassetteModel.scale.set(0.09, 0.09, 0.09);
         this.cassetteModel.position.set(3.8, 1.3, -2.5);
-        this.modelHover = new Outline(this.cassetteModel, this.scene);
+        this.outline = new Outline(this.scene, this.cassetteModel, 0.05, 0xffffff);
     }
 
     setupMouseEvents() {
         this.pointer.on("click", this.handleClick.bind(this));
     }
 
-    handleClick(event) {
+    handleClick() {
         this.updateClick();
     }
 
     updateClick() {
         const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
         if (intersects.length > 0 && !this.hasAnimatedToCamera) {
+            this.outline.removeOutline();
             CameraUtils.animateToCamera(this.cassetteModel, this.camera);
             this.hasAnimatedToCamera = true;
         }
     }
 
     animate() {
-        requestAnimationFrame(this.animate);
+        requestAnimationFrame(this.animate.bind(this));
         this.renderer.render(this.scene, this.camera);
     }
 
