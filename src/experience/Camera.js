@@ -23,7 +23,7 @@ export default class Camera {
 
         this.mode = 'default' // 'default' for production, 'debug' for development
 
-        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 10)
+        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 9.5)
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, new THREE.Vector3(0, 0, -3))
         this.prevTarget = new THREE.Vector3();
@@ -33,11 +33,11 @@ export default class Camera {
         this.upVector = new THREE.Vector3(0, 1, 0);
 
         this.lerpCamera = 0
-        this.cameraAmplitude = this.isMobile ? 3.5 : 1.75
+        this.cameraAmplitude = this.isMobile ? {x: 2, y: 3.5} : {x: 1.75, y: 1.75}
         this.lerpCameraNormal = 0.975
-        this.cameraAmplitudeNormal = this.isMobile ? 3.5 : 1.75
+        this.cameraAmplitudeNormal = this.isMobile ? {x: 2, y: 3.5} : {x: 1.75, y: 1.75}
         this.lerpCameraFocus = 0.99
-        this.cameraAmplitudeFocus = 0.25
+        this.cameraAmplitudeFocus = this.isMobile ? {x: 1, y: 1} : {x: 0.5, y: 0.5}
         this.movingSpeedMultiplier = 0.65
 
         if (this.debug) {
@@ -62,7 +62,7 @@ export default class Camera {
 
     setInstance() {
         const width = this.config.width === null ? window.innerWidth : this.config.width
-        this.instance = new THREE.PerspectiveCamera(60, width / this.config.height, 0.1, 150)
+        this.instance = new THREE.PerspectiveCamera(50, width / this.config.height, 0.1, 25)
         this.instance.rotation.reorder('YXZ')
         this.instance.lookAt(this.lookingPoint)
 
@@ -183,8 +183,8 @@ export default class Camera {
 
         if (this.mode === 'default') {
             this.lookAtTarget.set(0, 0, 0).copy(this.lookingPoint);
-            this.lookAtTarget.addScaledVector(this.side, this.mousePos.x * this.cameraAmplitude);
-            this.lookAtTarget.addScaledVector(this.upVector, this.mousePos.y * this.cameraAmplitude);
+            this.lookAtTarget.addScaledVector(this.side, this.mousePos.x * this.cameraAmplitude.y);
+            this.lookAtTarget.addScaledVector(this.upVector, this.mousePos.y * this.cameraAmplitude.x);
 
             this.modes.default.instance.lookAt(this.lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
             this.prevTarget.copy(this.lookAtTarget);
