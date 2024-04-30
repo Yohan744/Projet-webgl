@@ -4,6 +4,7 @@ import Lights from "./World/Lights";
 import Attic from "./World/Attic";
 import Background from "./World/Background";
 import Locations from "./World/Locations";
+import Pointer from "./Utils/Pointer";
 import Objects from "./World/Objects";
 import MaterialLibrary from "./MaterialLibrary";
 import Props from "./World/Props";
@@ -15,16 +16,10 @@ export default class World {
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.time = this.experience.time
-        this.assetsLoaded = false;
 
         this.resources.on('ready', async (_group) => {
             if (_group.name === 'base' && this.scene) {
                 await this.init()
-
-                this.lights = new Lights()
-                this.attic = new Attic()
-                this.background = new Background()
-                this.locations = new Locations().instance
             }
         })
     }
