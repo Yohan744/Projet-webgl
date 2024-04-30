@@ -20,11 +20,10 @@ export default class Outline {
     }
 
     createOutlineMesh(mesh) {
-        const edgesGeometry = new EdgesGeometry(mesh.geometry, 1); // Threshold angle for edge detection
+        const edgesGeometry = new EdgesGeometry(mesh.geometry, 1);
         const lineMaterial = new LineBasicMaterial({ color: this.outlineColor, linewidth: this.thickness });
         const edgeLines = new LineSegments(edgesGeometry, lineMaterial);
 
-        // Retrieve and apply the world position, rotation, and scale
         const position = new THREE.Vector3();
         const quaternion = new THREE.Quaternion();
         const scale = new THREE.Vector3();
