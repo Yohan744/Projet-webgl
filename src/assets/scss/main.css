@@ -19,6 +19,34 @@
   text-underline-offset: 2px;
 }
 
+#experience-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2.5s ease-in-out;
+}
+#experience-layer .go-back-arrow {
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  height: 35px;
+  width: 35px;
+  display: flex;
+  place-items: center;
+  pointer-events: all;
+  cursor: pointer;
+}
+#experience-layer .go-back-arrow img {
+  position: relative;
+  height: 100%;
+  width: auto;
+}
+
 #errorWrapper {
   position: relative;
   height: 100dvh;

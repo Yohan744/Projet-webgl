@@ -15,7 +15,7 @@ export default {
     const appStore = useAppStore();
 
     const onBeforeUnload = () => {
-      appStore.setLastVisitedRoute(null);
+      appStore.resetSomeStatesOnReload()
     };
 
     window.addEventListener('beforeunload', onBeforeUnload);

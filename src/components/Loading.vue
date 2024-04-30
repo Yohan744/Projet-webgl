@@ -22,7 +22,7 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 5;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 2.5s ease-in-out;
 
   p {
     position: relative;

@@ -1,7 +1,8 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <VideoIntro v-if="!isVideoIntroWatched"/>
     <Loading v-if="!isLoaded && isVideoIntroWatched"/>
+    <VideoIntro v-if="!isVideoIntroWatched"/>
+    <ExperienceLayer/>
     <div ref="experienceContainer" class="experience"></div>
   </main>
 </template>
@@ -13,10 +14,11 @@ import {useAppStore} from "../stores/appStore";
 import {watch} from "vue";
 import Loading from "../components/Loading.vue";
 import {useRouter} from "vue-router";
+import ExperienceLayer from "../components/ExperienceLayer.vue";
 
 export default {
   name: 'ExperiencePage',
-  components: {Loading, VideoIntro},
+  components: {ExperienceLayer, Loading, VideoIntro},
   data() {
     const appStore = useAppStore();
     const router = useRouter()
@@ -46,7 +48,7 @@ export default {
         this.initExperience();
         watch(() => this.appStore.isVideoIntroWatched, () => {
           if (this.isLoaded) {
-            this.setExperienceOpacity(1);
+            this.setExperienceOpacity();
           }
         });
       });
@@ -68,15 +70,16 @@ export default {
       this.experience.resources.on('ready', () => {
         this.isLoaded = true;
         if (this.isVideoIntroWatched) {
-          this.setExperienceOpacity(1);
+          this.setExperienceOpacity();
         }
       });
     },
-    setExperienceOpacity(opacity) {
+    setExperienceOpacity() {
       if (this.$refs.experienceContainer) {
-        this.$refs.experienceContainer.style.opacity = opacity;
+        this.appStore.setExperienceVisible()
+        this.$refs.experienceContainer.style.opacity = 1;
       }
-    }
+    },
   },
 }
 </script>
@@ -97,7 +100,7 @@ export default {
     height: 100%;
     width: 100%;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 2.5s ease-in-out;
   }
 
 }
