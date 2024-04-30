@@ -31,11 +31,10 @@ export class MouseUtils {
 
     onMouseMove(mouse) {
         if (this.isDragging) {
-            // Normalized to pixel movement
             const deltaX = (mouse.x - this.prevMousePosition.x) * window.innerWidth;
             const deltaY = (mouse.y - this.prevMousePosition.y) * window.innerHeight;
 
-            const rotationSpeed = 0.002; // Adjust rotation speed based on your needs
+            const rotationSpeed = 0.002;
             this.model.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), deltaX * rotationSpeed);
             this.model.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -deltaY * rotationSpeed);
 
