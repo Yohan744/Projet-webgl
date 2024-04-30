@@ -40,8 +40,8 @@ export default class Camera {
         this.cameraAmplitude = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
         this.lerpCameraNormal = 0.975
         this.cameraAmplitudeNormal = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
-        this.lerpCameraFocus = 0.99
-        this.cameraAmplitudeFocus = this.isMobile ? {x: 1, y: 1} : {x: 0.5, y: 0.5}
+        this.lerpCameraFocus = 0.85
+        this.cameraAmplitudeFocus = this.isMobile ? {x: 0.20, y: 1} : {x: 0.1, y: 0.5}
         this.movingSpeedMultiplier = 0.65
 
         if (this.debug) {

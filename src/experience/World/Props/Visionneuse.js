@@ -21,20 +21,21 @@ export default class Visionneuse {
 
         this.loadModel();
         this.renderer.domElement.addEventListener('pointerdown', this.handleVisionneuseClick.bind(this));
+        this.isCameraMoved = false;
     }
 
     loadModel() {
         this.visionneuseModel = this.resources.items.visionneuseModel.scene;
-
         this.visionneuseModel.scale.set(1, 1, 1);
-        this.visionneuseModel.position.set(-3.8, 1.4, 4.7);
+        this.visionneuseModel.position.set(-3.8, 1.4, 4.5);
         this.outline = new Outline(this.scene, this.visionneuseModel, 0.05, 0xffffff);
         this.scene.add(this.visionneuseModel);
     }
 
-    handleVisionneuseClick(event) {
-        if (this.visionneuseModel) {
-            const intersects = this.experience.pointer.raycaster.intersectObject(this.visionneuseModel);
+
+    handleVisionneuseClick() {
+        if (!this.isCameraMoved) {
+            const intersects = this.experience.pointer.raycaster.intersectObject(this.visionneuseModel, true);
             if (intersects.length > 0) {
                 this.onModelClicked(intersects[0]);
             }
@@ -48,6 +49,7 @@ export default class Visionneuse {
         const targetPosition = modelPosition.clone().add(offset);
 
         this.experience.camera.moveToVisionneuse(targetPosition);
+        this.isCameraMoved = true;
     }
 
 
