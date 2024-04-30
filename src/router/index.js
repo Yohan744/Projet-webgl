@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Index from '../pages/Index.vue';
 import Experience from '../pages/Experience.vue';
+import ErrorPage from '../pages/Error.vue';
 
 const routes = [
     {
@@ -14,6 +15,11 @@ const routes = [
         component: Experience,
         alias: '/experience/'
     },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'Not-found',
+        component: ErrorPage
+    }
 ];
 
 const router = createRouter({

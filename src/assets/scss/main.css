@@ -19,6 +19,28 @@
   text-underline-offset: 2px;
 }
 
+#errorWrapper {
+  position: relative;
+  height: 100dvh;
+  width: 100dvw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+}
+#errorWrapper h1 {
+  position: relative;
+  font-size: 60px;
+  color: black;
+}
+#errorWrapper a {
+  position: relative;
+  margin-top: 50px;
+  font-size: 20px;
+  color: black;
+}
+
 * {
   margin: 0;
   padding: 0;
