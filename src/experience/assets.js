@@ -28,9 +28,6 @@ export default [
                     name: 'walkmanModel',
                     source: '/assets/models/walkman.glb',
                     type: 'model',
-                    textures: {
-                        diffuse: 'assets/textures/cassette/Cassette.webp',
-                    }
                },
                 {
                     name: 'visionneuseModel',
