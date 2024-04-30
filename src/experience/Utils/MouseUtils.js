@@ -1,63 +1,58 @@
 import * as THREE from "three";
-import Pointer from "./Pointer";
 
 export class MouseUtils {
-    constructor(model, camera) {
+    constructor(model, camera, pointer) {
         this.model = model;
         this.camera = camera;
-        this.pointer = new Pointer();
+        this.pointer = pointer;
         this.isDragging = false;
         this.prevMousePosition = new THREE.Vector2();
 
-        this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
 
+        this.pointer.on("movement", this.onMouseMove);
+        this.pointer.on("pointerdown", this.onMouseDown);
+        this.pointer.on("pointerup", this.onMouseUp);
     }
 
-    onMouseDown(event) {
-        const mouse = new THREE.Vector2(
-            (event.clientX / window.innerWidth) * 2 - 1,
-            -(event.clientY / window.innerHeight) * 2 + 1
-        );
+    onMouseDown(mouse) {
+        console.log("MouseDown", mouse);
         this.pointer.raycaster.setFromCamera(mouse, this.camera);
         const intersects = this.pointer.raycaster.intersectObjects([this.model]);
-        this.isDragging = true;
+        console.log("Intersects", intersects);
         if (intersects.length > 0) {
-            this.prevMousePosition.set(event.clientX, event.clientY);
+            this.isDragging = true;
+            this.prevMousePosition.copy(mouse);
+            console.log("Dragging started");
         }
     }
 
-    onMouseMove(event) {
-            const deltaX = event.clientX - this.prevMousePosition.x;
-            const deltaY = event.clientY - this.prevMousePosition.y;
+    onMouseMove(mouse) {
         if (this.isDragging) {
-            const rotationSpeed = 0.005;
-            this.model.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), deltaX * rotationSpeed);
-            this.model.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), deltaY * rotationSpeed);
+            // Normalized to pixel movement
+            const deltaX = (mouse.x - this.prevMousePosition.x) * window.innerWidth;
+            const deltaY = (mouse.y - this.prevMousePosition.y) * window.innerHeight;
 
-            this.prevMousePosition.set(event.clientX, event.clientY);
+            const rotationSpeed = 0.002; // Adjust rotation speed based on your needs
+            this.model.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), deltaX * rotationSpeed);
+            this.model.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -deltaY * rotationSpeed);
+
+            this.prevMousePosition.copy(mouse);
         }
     }
-
 
     onMouseUp() {
-        this.isDragging = false;
+        if (this.isDragging) {
+            console.log("Dragging stopped");
+            this.isDragging = false;
+        }
     }
 
     destroy() {
-        window.removeEventListener('mousedown', this.onMouseDown);
-         window.removeEventListener('mousemove', this.onMouseMove);
-         window.removeEventListener('mouseup', this.onMouseUp);
-
-        if (this.pointer && this.pointer.destroy) {
-            this.pointer.destroy();
-        }
-
-        this.model = null;
-        this.camera = null;
-        this.pointer = null;
-        this.prevMousePosition = null;
+        this.pointer.off("movement", this.onMouseMove);
+        this.pointer.off("pointerdown", this.onMouseDown);
+        this.pointer.off("pointerup", this.onMouseUp);
     }
-
 }

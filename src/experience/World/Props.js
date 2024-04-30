@@ -16,7 +16,7 @@ export default class Props {
     init() {
         this.cassette = new Cassette()
         this.walkman = new Walkman()
-        this.visionneuse = new Visionneuse()
+        //this.visionneuse = new Visionneuse()
     }
 
     update() {
