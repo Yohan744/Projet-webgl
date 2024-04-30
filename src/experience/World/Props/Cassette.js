@@ -44,11 +44,6 @@ export default class Cassette {
         }
     }
 
-    animate() {
-        requestAnimationFrame(this.animate.bind(this));
-        this.renderer.render(this.scene, this.camera);
-    }
-
     destroy() {
         this.pointer.off("click");
 

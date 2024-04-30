@@ -193,6 +193,40 @@ export default class Camera {
 
     }
 
+    moveToVisionneuse(targetPosition, lookAtPosition) {
+        gsap.to(this.modes.default.instance.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 2,
+            ease: "power3.inOut",
+            onUpdate: () => {
+                this.modes.default.instance.lookAt(lookAtPosition);
+            },
+            onComplete: () => {
+                console.log(targetPosition)
+                const position = targetPosition.clone()
+
+                gsap.to(this.lookingPoint, {
+                    x: position.x * this.basicCameraPosition.x,
+                    y: position.y + 0.4,
+                    z: position.z - 0.4,
+                    duration: 2,
+                    ease: 'power1.inOut',
+                    onComplete: () => {
+                        this.isFocused = true
+                        this.updateFocusMode(this.isFocused)
+                        this.appStore.updateCameraOnSpot(true)
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+
     updateFocusMode(value) {
         this.isFocused = value
 
