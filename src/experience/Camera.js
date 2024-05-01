@@ -41,7 +41,7 @@ export default class Camera {
         this.cameraAmplitude = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
         this.lerpCameraNormal = 0.975
         this.cameraAmplitudeNormal = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
-        this.lerpCameraFocus = 0.98
+        this.lerpCameraFocus = 0.99
         this.cameraAmplitudeFocus = this.isMobile ? {x: 1, y: 1} : {x: 0.5, y: 0.5}
         this.movingSpeedMultiplier = 0.65
 
@@ -94,7 +94,8 @@ export default class Camera {
         if (this.debug) {
             this.debugFolder.add(this, 'mode', {'Default': "default", 'Debug': "debug",})
 
-            this.debugFolder.add(this, 'cameraAmplitude').min(0).max(3).step(0.001).name('Camera amplitude')
+            this.debugFolder.add(this.cameraAmplitude, 'x').min(0).max(5).step(0.001).name('Camera amplitude X')
+            this.debugFolder.add(this.cameraAmplitude, 'y').min(0).max(5).step(0.001).name('Camera amplitude Y')
 
             this.debugFolder.add(this, 'lerpCamera').min(0).max(0.99).step(0.001).name('Camera smoothness')
 
@@ -119,6 +120,9 @@ export default class Camera {
                 this.goBackToDefaultPosition()
             }
         })
+
+        watch(() => this.appStore.isSettingsOpen, (value) => this.updateFocusMode(value))
+
     }
 
     resize() {
