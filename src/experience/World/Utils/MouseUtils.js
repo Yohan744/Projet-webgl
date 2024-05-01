@@ -9,7 +9,6 @@ export class MouseUtils {
         this.prevMousePosition = new THREE.Vector2();
         this.mouse = {x: 0, y: 0};
 
-
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);

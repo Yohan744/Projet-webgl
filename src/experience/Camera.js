@@ -28,6 +28,7 @@ export default class Camera {
 
         this.basicCameraPosition = new THREE.Vector3(0, 2.25, 9.5)
         this.basicLookingPoint = new THREE.Vector3(0, -0.25, -3)
+        this.sheetLookingPoint = new THREE.Vector3(2, 0, 0)
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
         this.prevTarget = new THREE.Vector3();
@@ -40,8 +41,8 @@ export default class Camera {
         this.cameraAmplitude = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
         this.lerpCameraNormal = 0.975
         this.cameraAmplitudeNormal = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
-        this.lerpCameraFocus = 0.85
-        this.cameraAmplitudeFocus = this.isMobile ? {x: 0.20, y: 1} : {x: 0.1, y: 0.5}
+        this.lerpCameraFocus = 0.98
+        this.cameraAmplitudeFocus = this.isMobile ? {x: 1, y: 1} : {x: 0.5, y: 0.5}
         this.movingSpeedMultiplier = 0.65
 
         if (this.debug) {
@@ -56,7 +57,7 @@ export default class Camera {
 
     setInstance() {
         const width = this.config.width === null ? window.innerWidth : this.config.width
-        this.instance = new THREE.PerspectiveCamera(50, width / this.config.height, 0.1, 25)
+        this.instance = new THREE.PerspectiveCamera(50, width / this.config.height, 0.1, 50)
         this.instance.rotation.reorder('YXZ')
         this.instance.lookAt(this.lookingPoint)
 
@@ -170,7 +171,7 @@ export default class Camera {
         this.isMoving = true
 
         const lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
-        const distanceToPoint = Math.round(this.modes.default.instance.position.distanceTo(this.basicCameraPosition))
+        const distanceToPoint = Math.round(this.instance.position.distanceTo(this.basicCameraPosition))
 
         gsap.to(this.modes.default.instance.position, {
             x: this.basicCameraPosition.x,
@@ -193,42 +194,30 @@ export default class Camera {
 
     }
 
-    moveToVisionneuse(targetPosition) {
+    lookAtSheet() {
 
-        gsap.to(this.modes.default.instance.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z,
-            duration: 2,
-            ease: "power2.inOut",
-            onUpdate: () => {
-                this.modes.default.instance.lookAt(targetPosition);
-            },
-            onComplete: () => {
-                console.log(targetPosition)
-                const position = targetPosition.clone()
+        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
+        const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp)
+        const lookingPoint = this.getNormalizedLookingPoint(this.instance.position, this.sheetLookingPoint)
 
-                gsap.to(this.lookingPoint, {
-                    x: -1,
-                    y: 1.9,
-                    z: 4.4,
-                    duration: 2,
-                    ease: 'power1.inOut',
-                    onComplete: () => {
-                        console.log(this.lookingPoint)
+        const tl = gsap.timeline()
 
-                        this.isFocused = true
-                        this.updateFocusMode(this.isFocused)
-                        this.appStore.updateCameraOnSpot(true)
-                    }
-                });
-            }
-        });
+        tl.to(this.lookingPoint, {
+            x: tmpLookingPoint.x,
+            y: tmpLookingPoint.y,
+            z: tmpLookingPoint.z,
+            duration: 1,
+            ease: 'power1.in'
+        })
+
+        tl.to(this.lookingPoint, {
+            x: lookingPoint.x,
+            y: lookingPoint.y,
+            z: lookingPoint.z,
+            duration: 1,
+            ease: 'power1.out'
+        })
     }
-
-
-
-
 
     updateFocusMode(value) {
         this.isFocused = value

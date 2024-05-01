@@ -6,7 +6,7 @@ export default [
             [
                 {
                     name: 'atticModel',
-                    source: '/assets/models/attic_ray.glb',
+                    source: '/assets/models/attic.glb',
                     type: 'model',
                 },
 
@@ -51,12 +51,6 @@ export default [
                 },
 
                 {
-                    name: 'testTexture',
-                    source: '/assets/textures/attic/background/test.png',
-                    type: 'texture',
-                },
-
-                {
                     name: 'ground',
                     type: 'group',
                     textures: {
@@ -93,18 +87,6 @@ export default [
                         diffuse: 'assets/textures/attic/beam/diffuse.webp',
                         roughness: 'assets/textures/attic/beam/roughness.webp',
                         normal: 'assets/textures/attic/beam/normal.webp',
-                    }
-                },
-
-                {
-                    name: 'window',
-                    type: 'group',
-                    textures: {
-                        diffuse: 'assets/textures/attic/window/diffuse.webp',
-                        roughness: 'assets/textures/attic/window/roughness.webp',
-                        normal: 'assets/textures/attic/window/normal.webp',
-                        alpha: 'assets/textures/attic/window/alpha.webp',
-                        ao: 'assets/textures/attic/window/ao.webp',
                     }
                 },
 

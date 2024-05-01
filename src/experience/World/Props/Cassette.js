@@ -12,32 +12,26 @@ export default class Cassette {
         this.resources = this.experience.resources;
         this.renderer = this.experience.renderer.instance;
         this.camera = this.experience.camera.instance;
+        this.appStore = this.experience.appStore;
+        this.pointer = this.experience.pointer
 
-        this.pointer = new Pointer();
+        this.pointer.on("click", this.handleClick.bind(this));
+
         this.init();
-        this.setupMouseEvents();
-        this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
     }
 
     init() {
         this.cassetteModel = this.resources.items.cassetteModel.scene;
-        this.scene.add(this.cassetteModel);
-        this.cassetteModel.scale.set(0.09, 0.09, 0.09);
-        this.cassetteModel.position.set(3.8, 1.3, -2.5);
+        this.cassetteModel.scale.set(0.05, 0.05, 0.05);
+        this.cassetteModel.position.set(3.8, 1.1, -2.5);
         this.outline = new Outline(this.scene, this.cassetteModel, 0.05, 0xffffff);
-    }
-
-    setupMouseEvents() {
-        this.pointer.on("click", this.handleClick.bind(this));
+        this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
+        this.scene.add(this.cassetteModel);
     }
 
     handleClick() {
-        this.updateClick();
-    }
-
-    updateClick() {
         const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
-        if (intersects.length > 0 && !this.hasAnimatedToCamera) {
+        if (intersects.length > 0 && !this.hasAnimatedToCamera && this.appStore.$state.isCameraOnSpot) {
             this.outline.removeOutline();
             CameraUtils.animateToCamera(this.cassetteModel, this.camera);
             this.hasAnimatedToCamera = true;
@@ -48,6 +42,12 @@ export default class Cassette {
         this.pointer.off("click");
 
         if (this.cassetteModel) {
+            this.cassetteModel.traverse(child => {
+                if (child.isMesh) {
+                    child.material.dispose();
+                    child.geometry.dispose();
+                }
+            });
             this.scene.remove(this.cassetteModel);
         }
 
