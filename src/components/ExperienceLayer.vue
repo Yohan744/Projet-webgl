@@ -3,6 +3,12 @@
     <div ref="goBack" @click="goBack" class="go-back-arrow" v-if="isCameraOnSpot">
       <img src="../assets/icons/arrow-left.svg" alt="Go back" />
     </div>
+    <div ref="settings" @click="handleSettingsClick" class="settings">
+      <img src="../assets/icons/settings.svg" alt="Settings" />
+    </div>
+    <div ref="settingsPanel" class="settings-panel">
+
+    </div>
   </section>
 </template>
 
@@ -16,6 +22,7 @@ export default {
     const appStore = useAppStore();
     return {
       appStore,
+      isSettingsVisible: false,
     };
   },
   computed: {
@@ -33,6 +40,13 @@ export default {
   methods: {
     goBack() {
       this.appStore.updateCameraOnSpot(false)
+    },
+    handleSettingsClick() {
+      this.isSettingsVisible = !this.isSettingsVisible;
+      if (this.$refs.settingsPanel) {
+        this.$refs.settingsPanel.classList.toggle('visible');
+        this.appStore.toggleSettings()
+      }
     },
     setExperienceLayerOpacity() {
       if (this.$refs.experienceLayer) {
