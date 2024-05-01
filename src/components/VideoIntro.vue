@@ -1,9 +1,10 @@
 <template>
   <div ref="videoWrapper" class="video-intro-wrapper">
     <video
+        ref="videoElement"
         :src="videoUrl"
         autoplay
-        ref="videoElement"
+        playsinline
         @canplaythrough="playVideo"
         @ended="onVideoEnded"
     ></video>
