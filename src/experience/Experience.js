@@ -13,6 +13,7 @@ import World from './World.js'
 import assets from './assets.js'
 import Pointer from "./Utils/Pointer";
 import EventEmitter from "./Utils/EventEmitter";
+import {useAppStore} from "../stores/appStore";
 
 export default class Experience extends EventEmitter {
     static instance
@@ -30,6 +31,7 @@ export default class Experience extends EventEmitter {
         this.pointer = new Pointer()
         this.time = new Time()
         this.sizes = new Sizes()
+        this.setAppStore()
         this.setConfig()
         this.setDebug()
         this.setStats()
@@ -100,6 +102,10 @@ export default class Experience extends EventEmitter {
         this.world = new World()
     }
 
+    setAppStore() {
+        this.appStore = useAppStore()
+    }
+
     resize() {
         // Config
         const boundings = this.targetElement.getBoundingClientRect()
@@ -154,6 +160,9 @@ export default class Experience extends EventEmitter {
 
         if (this.world)
             this.world.destroy()
+
+        if (this.resources)
+            this.resources.destroy()
 
         if (this.debug)
             this.debug.destroy()

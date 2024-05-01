@@ -1,5 +1,5 @@
 <template>
-  <div ref="videoWrapper" class="video-intro">
+  <div ref="videoWrapper" class="video-intro-wrapper">
     <video
         :src="videoUrl"
         autoplay
@@ -47,7 +47,7 @@ export default {
         if (callback) {
           callback();
         }
-      }, 2000);
+      }, 3000);
     },
   },
 };
@@ -70,7 +70,7 @@ export default {
 
 }
 
-.video-intro {
+.video-intro-wrapper {
   position: absolute;
   top: 0;
   left: 0;
@@ -86,7 +86,7 @@ export default {
     object-fit: cover;
     z-index: 5;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 2.5s ease-in-out;
   }
 
 }

@@ -6,7 +6,7 @@ export default [
             [
                 {
                     name: 'atticModel',
-                    source: '/assets/models/attic_ray.glb',
+                    source: '/assets/models/attic.glb',
                     type: 'model',
                 },
 
@@ -14,6 +14,28 @@ export default [
                     name: 'objectsModel',
                     source: '/assets/models/objects.glb',
                     type: 'model',
+                },
+
+                {
+                    name: 'cassetteModel',
+                    source: '/assets/models/cassette.glb',
+                    type: 'model',
+                    textures: {
+                        diffuse: 'assets/textures/cassette/Cassette.webp',
+                    }
+                },
+                {
+                    name: 'walkmanModel',
+                    source: '/assets/models/walkman.glb',
+                    type: 'model',
+               },
+                {
+                    name: 'visionneuseModel',
+                    source: '/assets/models/visionneuse.glb',
+                    type: 'model',
+                    textures: {
+                        diffuse: 'assets/textures/cassette/Cassette.webp',
+                    }
                 },
 
                 {
@@ -25,12 +47,6 @@ export default [
                 {
                     name: 'particleTexture',
                     source: '/assets/textures/particle.png',
-                    type: 'texture',
-                },
-
-                {
-                    name: 'testTexture',
-                    source: '/assets/textures/attic/background/test.png',
                     type: 'texture',
                 },
 
@@ -71,18 +87,6 @@ export default [
                         diffuse: 'assets/textures/attic/beam/diffuse.webp',
                         roughness: 'assets/textures/attic/beam/roughness.webp',
                         normal: 'assets/textures/attic/beam/normal.webp',
-                    }
-                },
-
-                {
-                    name: 'window',
-                    type: 'group',
-                    textures: {
-                        diffuse: 'assets/textures/attic/window/diffuse.webp',
-                        roughness: 'assets/textures/attic/window/roughness.webp',
-                        normal: 'assets/textures/attic/window/normal.webp',
-                        alpha: 'assets/textures/attic/window/alpha.webp',
-                        ao: 'assets/textures/attic/window/ao.webp',
                     }
                 },
 
@@ -128,5 +132,5 @@ export default [
                 },
 
             ]
-    }
+    },
 ]

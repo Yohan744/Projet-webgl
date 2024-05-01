@@ -5,7 +5,9 @@ export const useAppStore = defineStore({
     state: () => ({
         muted: false,
         lastVisitedRoute: null,
-        isVideoIntroWatched: false
+        isVideoIntroWatched: false,
+        isExperienceVisible: false,
+        isCameraOnSpot: false,
     }),
     getters: {
 
@@ -20,9 +22,23 @@ export const useAppStore = defineStore({
         setVideoIntroWatched() {
             this.isVideoIntroWatched = true
         },
+        setExperienceVisible() {
+            this.isExperienceVisible = true
+        },
+        updateCameraOnSpot(state) {
+            this.isCameraOnSpot = state
+        },
+        resetSomeStatesOnReload() {
+            this.lastVisitedRoute = null
+            this.isExperienceVisible = false
+            this.isCameraOnSpot = false
+        },
         resetAll() {
             this.muted = false
+            this.lastVisitedRoute = null
             this.isVideoIntroWatched = false
+            this.isExperienceVisible = false
+            this.isCameraOnSpot = false
         }
     },
     persist: true

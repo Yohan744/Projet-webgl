@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Experience from './Experience.js'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from "gsap"
+import {watch} from "vue";
 
 export default class Camera {
     constructor(_options) {
@@ -12,10 +13,12 @@ export default class Camera {
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
         this.pointer = this.experience.pointer
+        this.appStore = this.experience.appStore
         this.isMobile = this.experience.config.isMobile
 
         this.isFocused = false
         this.isMoving = false
+
         this.mousePos = {
             x: null,
             y: null
@@ -23,9 +26,11 @@ export default class Camera {
 
         this.mode = 'default' // 'default' for production, 'debug' for development
 
-        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 10)
+        this.basicCameraPosition = new THREE.Vector3(0, 2.25, 9.5)
+        this.basicLookingPoint = new THREE.Vector3(0, -0.25, -3)
+        this.sheetLookingPoint = new THREE.Vector3(2, 0, 0)
 
-        this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, new THREE.Vector3(0, 0, -3))
+        this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
         this.prevTarget = new THREE.Vector3();
         this.direction = new THREE.Vector3();
         this.side = new THREE.Vector3();
@@ -33,11 +38,11 @@ export default class Camera {
         this.upVector = new THREE.Vector3(0, 1, 0);
 
         this.lerpCamera = 0
-        this.cameraAmplitude = this.isMobile ? 3.5 : 1.75
+        this.cameraAmplitude = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
         this.lerpCameraNormal = 0.975
-        this.cameraAmplitudeNormal = this.isMobile ? 3.5 : 1.75
-        this.lerpCameraFocus = 0.99
-        this.cameraAmplitudeFocus = 0.25
+        this.cameraAmplitudeNormal = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
+        this.lerpCameraFocus = 0.98
+        this.cameraAmplitudeFocus = this.isMobile ? {x: 1, y: 1} : {x: 0.5, y: 0.5}
         this.movingSpeedMultiplier = 0.65
 
         if (this.debug) {
@@ -45,24 +50,14 @@ export default class Camera {
             this.setDebug()
         }
 
-        this.pointer.on('spot-clicked', (spot) => {
-            this.moveToSpot(spot)
-        })
-
-        if (this.pointer && this.mode === 'default') {
-            this.pointer.on('movement', (mouse) => {
-                this.mousePos = mouse
-                this.onMovement()
-            })
-        }
-
         this.setInstance()
         this.setModes()
+        this.setWatchers()
     }
 
     setInstance() {
         const width = this.config.width === null ? window.innerWidth : this.config.width
-        this.instance = new THREE.PerspectiveCamera(60, width / this.config.height, 0.1, 150)
+        this.instance = new THREE.PerspectiveCamera(50, width / this.config.height, 0.1, 50)
         this.instance.rotation.reorder('YXZ')
         this.instance.lookAt(this.lookingPoint)
 
@@ -109,6 +104,23 @@ export default class Camera {
         }
     }
 
+    setWatchers() {
+        this.pointer.on('spot-clicked', (spot) => this.moveToSpot(spot))
+
+        if (this.pointer && this.mode === 'default') {
+            this.pointer.on('movement', (mouse) => {
+                this.mousePos = mouse
+                this.onMovement()
+            })
+        }
+
+        watch(() => this.appStore.isCameraOnSpot, (value) => {
+            if (!value) {
+                this.goBackToDefaultPosition()
+            }
+        })
+    }
+
     resize() {
         this.instance.aspect = this.config.width / this.config.height
         this.instance.updateProjectionMatrix()
@@ -138,6 +150,7 @@ export default class Camera {
             ease: 'power1.inOut',
             onComplete: () => {
                 this.isMoving = false
+                this.appStore.updateCameraOnSpot(true)
             }
         })
 
@@ -149,6 +162,61 @@ export default class Camera {
             ease: 'power1.inOut'
         })
 
+    }
+
+    goBackToDefaultPosition() {
+
+        if (this.isMoving) return
+
+        this.isMoving = true
+
+        const lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
+        const distanceToPoint = Math.round(this.instance.position.distanceTo(this.basicCameraPosition))
+
+        gsap.to(this.modes.default.instance.position, {
+            x: this.basicCameraPosition.x,
+            y: this.basicCameraPosition.y,
+            z: this.basicCameraPosition.z,
+            duration: distanceToPoint * this.movingSpeedMultiplier * 0.75,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.isMoving = false
+            }
+        })
+
+        gsap.to(this.lookingPoint, {
+            x: lookingPoint.x,
+            y: lookingPoint.y,
+            z: lookingPoint.z,
+            duration: distanceToPoint * this.movingSpeedMultiplier * 0.35,
+            ease: 'linear'
+        })
+
+    }
+
+    lookAtSheet() {
+
+        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
+        const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp)
+        const lookingPoint = this.getNormalizedLookingPoint(this.instance.position, this.sheetLookingPoint)
+
+        const tl = gsap.timeline()
+
+        tl.to(this.lookingPoint, {
+            x: tmpLookingPoint.x,
+            y: tmpLookingPoint.y,
+            z: tmpLookingPoint.z,
+            duration: 1,
+            ease: 'power1.in'
+        })
+
+        tl.to(this.lookingPoint, {
+            x: lookingPoint.x,
+            y: lookingPoint.y,
+            z: lookingPoint.z,
+            duration: 1,
+            ease: 'power1.out'
+        })
     }
 
     updateFocusMode(value) {
@@ -183,8 +251,8 @@ export default class Camera {
 
         if (this.mode === 'default') {
             this.lookAtTarget.set(0, 0, 0).copy(this.lookingPoint);
-            this.lookAtTarget.addScaledVector(this.side, this.mousePos.x * this.cameraAmplitude);
-            this.lookAtTarget.addScaledVector(this.upVector, this.mousePos.y * this.cameraAmplitude);
+            this.lookAtTarget.addScaledVector(this.side, this.mousePos.x * this.cameraAmplitude.x);
+            this.lookAtTarget.addScaledVector(this.upVector, this.mousePos.y * this.cameraAmplitude.y);
 
             this.modes.default.instance.lookAt(this.lookAtTarget.lerp(this.prevTarget, this.lerpCamera));
             this.prevTarget.copy(this.lookAtTarget);
@@ -202,5 +270,8 @@ export default class Camera {
 
     destroy() {
         this.modes.debug.orbitControls.destroy()
+        this.scene.remove(this.instance)
+        this.pointer.off('spot-clicked', this.moveToSpot)
+        this.pointer.off('movement', this.onMovement)
     }
 }
