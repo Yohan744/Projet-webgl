@@ -48,13 +48,49 @@
     background-color: #fff;
     border-radius: 10px;
     pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     opacity: 0;
     transition: opacity 0.8s $ease-power3-out, transform 0.8s $ease-power3-out;
 
     &.visible {
       pointer-events: all;
-      opacity: 0.8;
+      opacity: 0.95;
       transform: translate(-50%, -50%);
+    }
+
+    div {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      place-items: center;
+      pointer-events: all;
+
+      p {
+        position: relative;
+        margin-right: 12px;
+        font-size: 20px;
+        color: black;
+      }
+
+      input {
+        position: relative;
+      }
+
+    }
+
+    .mute {
+      position: relative;
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: black;
+      cursor: pointer;
+    }
+
+    a {
+      margin-top: 20px;
     }
 
   }
