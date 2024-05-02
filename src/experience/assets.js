@@ -45,12 +45,6 @@ export default [
                 },
 
                 {
-                    name: 'particleTexture',
-                    source: '/assets/textures/particle.png',
-                    type: 'texture',
-                },
-
-                {
                     name: 'ground',
                     type: 'group',
                     textures: {

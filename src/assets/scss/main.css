@@ -63,13 +63,43 @@
   background-color: #fff;
   border-radius: 10px;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   opacity: 0;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .settings-panel.visible {
   pointer-events: all;
-  opacity: 0.8;
+  opacity: 0.95;
   transform: translate(-50%, -50%);
+}
+#experience-layer .settings-panel div {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  place-items: center;
+  pointer-events: all;
+}
+#experience-layer .settings-panel div p {
+  position: relative;
+  margin-right: 12px;
+  font-size: 20px;
+  color: black;
+}
+#experience-layer .settings-panel div input {
+  position: relative;
+}
+#experience-layer .settings-panel .mute {
+  position: relative;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: black;
+  cursor: pointer;
+}
+#experience-layer .settings-panel a {
+  margin-top: 20px;
 }
 
 #errorWrapper {
