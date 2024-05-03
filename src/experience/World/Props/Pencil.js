@@ -21,7 +21,7 @@ export default class Pencil {
         this.pencilModel.scale.set(0.09, 0.09, 0.09);
         this.pencilModel.position.set(-3.2, 1.85, -4.85);
         this.scene.add(this.pencilModel);
-        this.outline = new Outline(this.scene, this.pencilModel, 0.05, 0xffffff);
+        //this.outline = new Outline(this.scene, this.pencilModel, 0.05, 0xffffff);
 
         this.pointer.on("click", (event) => this.handleClick(event));
     }
