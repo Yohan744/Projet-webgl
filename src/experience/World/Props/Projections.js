@@ -1,4 +1,4 @@
-import {MeshStandardMaterial, Mesh, PlaneGeometry, Vector3, FrontSide} from "three";
+import {MeshStandardMaterial, Mesh, PlaneGeometry, Vector3, FrontSide, DoubleSide} from "three";
 import Experience from "../../Experience";
 
 export default class Projections {
@@ -7,23 +7,22 @@ export default class Projections {
         this.experience = new Experience()
         this.resources = this.experience.resources
         this.scene = this.experience.scene
-        this.planePosition = new Vector3(0, 2.25, -8)
+        this.planePosition = new Vector3(0, 1, 2)
         this.init()
     }
     init() {
-        this.planeGeometry = new PlaneGeometry(2, 2, 1, 1)
+        this.planeGeometry = new PlaneGeometry(3, 3)
         const t = this.resources.items.backgroundTreeTexture
         t.flipY = true
 
         this.planeMaterial = new MeshStandardMaterial({
             map: t,
-            transparent:false,
-            side: FrontSide
+            side: DoubleSide
         })
-        this.background = new Mesh(this.planeGeometry, this.planeMaterial)
-        this.background.position.copy(2.45, 1.15, 4.5)
-        this.background.rotation.set(0, 0, 0)
-        this.scene.add(this.background)
+        this.plane = new Mesh(this.planeGeometry, this.planeMaterial)
+        this.plane.position.copy(this.planePosition)
+        this.plane.rotation.set(0, -Math.PI * 0.25, 0)
+        this.scene.add(this.plane)
     }
     destroy() {
         if (this.planeGeometry) this.planeGeometry.dispose()
@@ -32,7 +31,7 @@ export default class Projections {
             this.planeMaterial.dispose()
         }
         if (this.scene) {
-            if (this.background) this.scene.remove(this.background)
+            if (this.plane) this.scene.remove(this.plane)
         }
     }
 }

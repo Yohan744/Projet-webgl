@@ -38,14 +38,11 @@ export default class Projector {
     }
 
     setupSpotlight() {
-        this.spotlight = new THREE.SpotLight(0xffffff, 15.0, 10000, Math.PI / 6, 0.5);
-        this.spotlight.position.copy(this.projectorModel.position);
-        this.spotlight.position.x += 0.1;
-        this.spotlight.position.y += 0.08;
+        this.spotlight = new THREE.SpotLight(0xffffff, 5, 10, Math.PI * 0.2);
+        this.spotlight.position.copy(this.projectorModel.position).add(new THREE.Vector3(0.1, 0.08, 0));
         this.spotlight.target.position.set(this.projectorModel.position.x + 5, this.projectorModel.position.y, this.projectorModel.position.z);
-        this.spotlight.angle = Math.PI / 4;
-        this.scene.add(this.spotlight);
         this.scene.add(this.spotlight.target);
+        this.scene.add(this.spotlight);
     }
 
     handlePointerDown(event) {
