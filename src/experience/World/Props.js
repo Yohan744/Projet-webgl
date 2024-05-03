@@ -1,7 +1,9 @@
 import Experience from "../Experience";
 import Cassette from "./Props/Cassette";
 import Walkman from "./Props/Walkman";
-import Visionneuse from "./Props/Visionneuse";
+import Projector from "./Props/Projector";
+import Pencil from "./Props/Pencil";
+import Malle from "./Props/Malle";
 
 export default class Props {
 
@@ -16,7 +18,9 @@ export default class Props {
     init() {
         this.cassette = new Cassette()
         this.walkman = new Walkman()
-        this.visionneuse = new Visionneuse()
+        this.projector = new Projector()
+        this.pencil = new Pencil()
+        this.malle = new Malle()
     }
 
     update() {
