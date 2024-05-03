@@ -1,9 +1,6 @@
 import {MouseUtils} from "../Utils/MouseUtils";
-import Pointer from "../../Utils/Pointer";
 import {CameraUtils} from "../Utils/CameraUtils";
 import Experience from "../../Experience";
-import Outline from "../Effects/Outline";
-import * as THREE from "three";
 
 export default class Cassette {
     constructor() {
@@ -28,7 +25,6 @@ export default class Cassette {
         // this.outline = new Outline(this.scene, this.cassetteModel, 0.05, 0xffffff);
         // this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
         this.cassetteModel.position.set(-3.4, 1.85, -4.85);
-        this.outline = new Outline(this.scene, this.cassetteModel, 0.05, 0xffffff);
         //this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.renderer);
         this.cassetteModel.traverse(child => {
             if (child.isMesh && Array.isArray(child.morphTargetInfluences)) {
