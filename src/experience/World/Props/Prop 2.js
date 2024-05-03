@@ -8,7 +8,7 @@ import EventEmitter from "../../Utils/EventEmitter";
 export default class Prop extends EventEmitter {
 
     constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05) {
-        super();
+        super(mesh, desiredRotationOnClick);
 
         this.experience = new Experience();
         this.scene = this.experience.scene;
@@ -34,8 +34,7 @@ export default class Prop extends EventEmitter {
         this.pointer.on("click", this.handleClick.bind(this));
         watch(() => this.appStore.$state.isInteractingWithObject, (state) => {
             if (!state) {
-                this.animatePropsToBasicPosition()
-                this.outline?.showOutline()
+                this.animatePropsToBasicPosition(this.mesh)
             }
         })
     }
@@ -45,9 +44,8 @@ export default class Prop extends EventEmitter {
         if (intersects.length > 0 && this.appStore.$state.isCameraOnSpot) {
             this.onClick()
             if (this.animatePropsToCameraOnClick && !this.appStore.$state.isInteractingWithObject) {
-                this.animatePropsToCamera()
+                this.animatePropsToCamera(this.mesh)
                 this.appStore.updateInteractingState(true)
-                this.outline?.removeOutline()
             }
         }
     }
@@ -56,7 +54,7 @@ export default class Prop extends EventEmitter {
         // to be overridden
     }
 
-    animatePropsToCamera() {
+    animatePropsToCamera(mesh) {
 
         const cameraDirection = new THREE.Vector3()
         this.camera.getWorldDirection(cameraDirection)
@@ -64,52 +62,45 @@ export default class Prop extends EventEmitter {
         const targetPosition = new THREE.Vector3()
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
 
-        gsap.to(this.mesh.position, {
+        gsap.to(mesh.position, {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
             duration: 2,
-            ease: "power2.inOut",
-            onUpdate: () => {
-                this.outline?.updateOutlineMeshPosition(this.mesh.position)
-            }
+            ease: "power2.inOut"
         });
 
-        gsap.to(this.mesh.rotation, {
+        gsap.to(mesh.rotation, {
             x: this.desiredRotation.x,
             y: this.desiredRotation.y,
             z: this.desiredRotation.z,
             duration: 2,
-            ease: "power2.inOut",
-            onUpdate: () => {
-                this.outline?.updateOutlineMeshRotation(this.mesh.rotation)
-            }
+            ease: "power2.inOut"
         });
 
     }
 
-    animatePropsToBasicPosition() {
+    animatePropsToBasicPosition(mesh) {
 
-        gsap.to(this.mesh.position, {
+        console.log("lalalalalala")
+
+        console.log(this.propsBasicPosition)
+        console.log(this.mesh.position)
+
+        gsap.to(mesh.position, {
             x: this.propsBasicPosition.x,
             y: this.propsBasicPosition.y,
             z: this.propsBasicPosition.z,
             duration: 2,
-            ease: "power2.inOut",
-            onUpdate: () => {
-                this.outline?.updateOutlineMeshPosition(this.mesh.position)
-            }
+            ease: "power2.inOut"
         });
 
-        gsap.to(this.mesh.rotation, {
+        gsap.to(mesh.rotation, {
             x: this.propsBasicRotation.x,
             y: this.propsBasicRotation.y,
             z: this.propsBasicRotation.z,
             duration: 2,
-            ease: "power2.inOut",
-            onUpdate: () => {
-                this.outline?.updateOutlineMeshRotation(this.mesh.rotation)
-            }
+            ease: "power2.inOut"
         });
 
     }

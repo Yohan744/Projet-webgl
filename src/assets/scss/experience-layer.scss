@@ -17,8 +17,11 @@
     width: 35px;
     display: flex;
     place-items: center;
-    pointer-events: all;
+    pointer-events: none;
     cursor: pointer;
+    opacity: 0;
+    scale: 0.9;
+    transition: opacity 0.8s $ease-power3-out, scale 0.8s $ease-power3-out;
 
     img {
       position: relative;
@@ -26,11 +29,19 @@
       width: auto;
     }
 
+    &.animate {
+      opacity: 1;
+      scale: 1;
+      pointer-events: all;
+    }
+
   }
 
   .settings {
     left: auto;
     right: 35px;
+    opacity: 1;
+    pointer-events: all;
 
     img {
       opacity: 0.3;

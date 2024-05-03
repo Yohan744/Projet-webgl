@@ -25,10 +25,26 @@ export default class Outline {
         this.scene.add(this.clonedModel)
     }
 
+    updateOutlineMeshPosition(position) {
+        this.clonedModel.position.copy(position)
+    }
+
+    updateOutlineMeshRotation(rotation) {
+        this.clonedModel.rotation.copy(rotation)
+    }
+
     removeOutline() {
         gsap.to(this.material, {
             opacity: 0,
-            duration: 0.5,
+            duration: 0.75,
+        })
+    }
+
+    showOutline() {
+        gsap.to(this.material, {
+            opacity: 1,
+            delay: 0.5,
+            duration: 0.75,
         })
     }
 

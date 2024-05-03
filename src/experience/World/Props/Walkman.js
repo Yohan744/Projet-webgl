@@ -17,5 +17,9 @@ export default class Walkman extends Prop {
         console.log("click object")
     }
 
+    destroy() {
+        super.destroy()
+    }
+
 
 }

@@ -38,17 +38,27 @@
   width: 35px;
   display: flex;
   place-items: center;
-  pointer-events: all;
+  pointer-events: none;
   cursor: pointer;
+  opacity: 0;
+  scale: 0.9;
+  transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), scale 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .go-back-arrow img, #experience-layer .settings img {
   position: relative;
   height: 100%;
   width: auto;
 }
+#experience-layer .go-back-arrow.animate, #experience-layer .settings.animate {
+  opacity: 1;
+  scale: 1;
+  pointer-events: all;
+}
 #experience-layer .settings {
   left: auto;
   right: 35px;
+  opacity: 1;
+  pointer-events: all;
 }
 #experience-layer .settings img {
   opacity: 0.3;
