@@ -1,70 +1,47 @@
-import * as THREE from 'three';
-import { LineSegments, LineBasicMaterial, EdgesGeometry } from 'three';
+import Experience from "../../Experience";
+import gsap from "gsap";
 
 export default class Outline {
-    constructor(scene, model, thickness = 0.01, outlineColor = 0xffffff) {
-        this.scene = scene;
-        this.model = model;
-        this.thickness = thickness;
-        this.outlineColor = outlineColor;
-        this.outlineMeshes = [];
-        this.initOutline();
+    constructor(mesh, outlineScale = 1.05) {
+        this.experience = new Experience()
+        this.scene = this.experience.scene
+        this.materialLibrary = this.experience.world.materialLibrary
+        this.mesh = mesh;
+        this.outlineScale = outlineScale;
+        this.init()
     }
 
-    initOutline() {
-        this.model.traverse(child => {
+    init() {
+        this.material = this.materialLibrary.getOutlineMaterial().clone()
+        this.clonedModel = this.mesh.clone();
+        this.clonedModel.scale.setScalar(this.outlineScale)
+        this.clonedModel.traverse(child => {
             if (child.isMesh) {
-                this.createOutlineMesh(child);
+                child.material.dispose()
+                child.material = this.material
             }
-        });
-    }
-
-    createOutlineMesh(mesh) {
-        const edgesGeometry = new EdgesGeometry(mesh.geometry, 1);
-        const lineMaterial = new LineBasicMaterial({ color: this.outlineColor, linewidth: this.thickness });
-        const edgeLines = new LineSegments(edgesGeometry, lineMaterial);
-
-        const position = new THREE.Vector3();
-        const quaternion = new THREE.Quaternion();
-        const scale = new THREE.Vector3();
-
-        mesh.getWorldPosition(position);
-        mesh.getWorldQuaternion(quaternion);
-        mesh.getWorldScale(scale);
-
-        edgeLines.position.copy(position);
-        edgeLines.quaternion.copy(quaternion);
-        edgeLines.scale.copy(scale);
-
-        this.scene.add(edgeLines);
-        this.outlineMeshes.push(edgeLines);
+        })
+        this.mesh.renderOrder = 1
+        this.scene.add(this.clonedModel)
     }
 
     removeOutline() {
-        this.outlineMeshes.forEach(mesh => {
-            this.fadeOutOutline(mesh);
-        });
+        gsap.to(this.material, {
+            opacity: 0,
+            duration: 0.5,
+        })
     }
 
-    fadeOutOutline(mesh) {
-        const duration = 100;
-        const endTime = performance.now() + duration;
-        const startOpacity = mesh.material.opacity;
-
-        const fade = () => {
-            const now = performance.now();
-            const timeLeft = endTime - now;
-
-            if (timeLeft <= 0) {
-                this.scene.remove(mesh);
-                mesh.geometry.dispose();
-                mesh.material.dispose();
-            } else {
-                mesh.material.opacity = startOpacity * (timeLeft / duration);
-                requestAnimationFrame(fade);
+    destroy() {
+        this.scene.remove(this.clonedModel)
+        this.clonedModel.traverse(child => {
+            if (child.isMesh) {
+                child.geometry.dispose()
+                child.material.dispose()
+                child.material = null
             }
-        };
-
-        requestAnimationFrame(fade);
+        })
+        this.material.dispose()
     }
+
 }

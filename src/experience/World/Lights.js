@@ -11,7 +11,7 @@ export default class Lights {
         this.spotLightPosition = new THREE.Vector3(-6, 9, -12)
         this.spotLightTarget = new THREE.Vector3(1, 0, -2.25)
 
-        this.pointLightPosition = new THREE.Vector3(-0.175, 3.25, 0.5)
+        this.pointLightPosition = new THREE.Vector3(-0.164, 3.2, 0.1369)
 
         if (this.scene) {
             this.setupAmbientLight()
@@ -45,20 +45,12 @@ export default class Lights {
     }
 
     setupPointLight() {
-        const pointLight = new THREE.PointLight(0xffffff, 10)
+        const pointLight = new THREE.PointLight("#ffffff", 10)
         pointLight.position.copy(this.pointLightPosition)
+        pointLight.shadow.camera.near = 0.1
         pointLight.shadow.camera.far = 10
         pointLight.shadow.mapSize.set(1024, 1024)
         this.scene.add(pointLight)
-
-        // sphere just for now
-        const sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(0.115, 8, 8),
-            new THREE.MeshBasicMaterial({color: "#fff4cc"})
-        )
-        sphere.position.copy(this.pointLightPosition)
-        this.scene.add(sphere)
-
     }
 
     setupPointLightHelper() {

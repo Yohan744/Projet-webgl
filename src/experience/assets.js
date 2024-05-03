@@ -30,7 +30,17 @@ export default [
                     type: 'model',
                },
                 {
-                    name: 'visionneuseModel',
+                    name: 'malleModel',
+                    source: '/assets/models/malle-ouverture.glb',
+                    type: 'model',
+                },
+                {
+                    name: 'pencilModel',
+                    source: '/assets/models/crayon.gltf',
+                    type: 'model',
+                },
+                {
+                    name: 'projectorModel',
                     source: '/assets/models/visionneuse.glb',
                     type: 'model',
                     textures: {
@@ -43,7 +53,6 @@ export default [
                     source: '/assets/textures/attic/background/backgroundTree.webp',
                     type: 'texture',
                 },
-
                 {
                     name: 'ground',
                     type: 'group',

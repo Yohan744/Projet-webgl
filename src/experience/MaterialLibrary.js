@@ -2,7 +2,7 @@ import {
     AdditiveBlending,
     BackSide,
     DoubleSide,
-    FrontSide,
+    FrontSide, MeshBasicMaterial,
     MeshStandardMaterial, RepeatWrapping,
 } from "three";
 import Experience from "./Experience";
@@ -18,8 +18,9 @@ let groundMaterial,
 let sideMirrorMaterial,
     mirrorMaterial,
     cardBoardMaterial,
-    tmpInteractionMaterial,
     carpetMaterial;
+
+let outlineMaterial;
 
 export default class MaterialLibrary {
 
@@ -60,13 +61,11 @@ export default class MaterialLibrary {
     getGroundMaterial() {
         if (!groundMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'ground', 2, 2)
-
             groundMaterial = new MeshStandardMaterial({
                 map: this.resources.items.ground.diffuse,
                 roughnessMap: this.resources.items.ground.roughness,
                 normalMap: this.resources.items.ground.normal,
-                side: DoubleSide
+                side: this.debug ? DoubleSide : BackSide
             })
 
             this.materialsUsed.push(groundMaterial)
@@ -155,7 +154,7 @@ export default class MaterialLibrary {
                 map: this.resources.items.beam.diffuse,
                 roughnessMap: this.resources.items.beam.roughness,
                 normalMap: this.resources.items.beam.normal,
-                side: DoubleSide
+                side: this.debug ? DoubleSide : FrontSide
             })
 
             this.materialsUsed.push(beamMaterial)
@@ -203,7 +202,7 @@ export default class MaterialLibrary {
                 roughnessMap: this.resources.items.cardboard.roughness,
                 normalMap: this.resources.items.cardboard.normal,
                 aoMap: this.resources.items.cardboard.ao,
-                side: DoubleSide
+                side: this.debug ? DoubleSide : FrontSide
             })
 
             this.materialsUsed.push(cardBoardMaterial)
@@ -221,7 +220,7 @@ export default class MaterialLibrary {
                 map: this.resources.items.carpet.diffuse,
                 roughnessMap: this.resources.items.carpet.roughness,
                 normalMap: this.resources.items.carpet.normal,
-                side: DoubleSide
+                side: this.debug ? DoubleSide : FrontSide
             })
 
             this.materialsUsed.push(carpetMaterial)
@@ -230,24 +229,37 @@ export default class MaterialLibrary {
         return carpetMaterial
     }
 
-    getTmpInteractionMaterial() {
-        if (!tmpInteractionMaterial) {
-            tmpInteractionMaterial = new MeshStandardMaterial({
-                color: '#ff0000',
-                side: this.debug ? DoubleSide : FrontSide
+    getOutlineMaterial() {
+        if (!outlineMaterial) {
+            outlineMaterial = new MeshBasicMaterial({
+                color: 0xffffff,
+                side: BackSide,
+                transparent: true,
+                opacity: 0.5
             })
 
-            this.materialsUsed.push(tmpInteractionMaterial)
+            this.materialsUsed.push(outlineMaterial)
         }
 
-        return tmpInteractionMaterial
+        return outlineMaterial
     }
 
     destroy() {
-        MaterialLibrary.instance = null
         this.materialsUsed.forEach(material => {
-            material.dispose()
-        })
+            material.dispose();
+
+            if (material.map) material.map.dispose();
+            if (material.roughnessMap) material.roughnessMap.dispose();
+            if (material.normalMap) material.normalMap.dispose();
+            if (material.aoMap) material.aoMap.dispose();
+        });
+
+        this.materialsUsed = null;
+
+        this.resources = null;
+        this.experience = null;
+        this.debug = null;
     }
+
 
 }

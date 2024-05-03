@@ -144,6 +144,10 @@ html, body {
   background: black;
 }
 
+.tp-dfwv {
+  width: 280px !important;
+}
+
 .experience {
   position: fixed;
   width: 100dvh;

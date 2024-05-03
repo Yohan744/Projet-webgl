@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import GUI from 'lil-gui'
+import {Pane} from "tweakpane";
 
 import Time from './Utils/Time.js'
 import Sizes from './Utils/Sizes.js'
@@ -71,7 +72,7 @@ export default class Experience extends EventEmitter {
 
     setDebug() {
         if (this.config.debug) {
-            this.debug = new GUI()
+            this.debug = new Pane()
         }
     }
 
@@ -165,7 +166,7 @@ export default class Experience extends EventEmitter {
             this.resources.destroy()
 
         if (this.debug)
-            this.debug.destroy()
+            this.debug.dispose()
 
         if (this.time)
             this.time.stop()
