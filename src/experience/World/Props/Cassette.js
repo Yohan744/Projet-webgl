@@ -24,15 +24,15 @@ export default class Cassette {
         this.cassetteModel = this.resources.items.cassetteModel.scene;
         this.cassetteModel.scale.set(0.05, 0.05, 0.05);
         this.cassetteModel.position.set(3.8, 1.1, -2.5);
-        this.outline = new Outline(this.scene, this.cassetteModel, 0.05, 0xffffff);
-        this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
+        // this.outline = new Outline(this.scene, this.cassetteModel, 0.05, 0xffffff);
+        // this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
         this.scene.add(this.cassetteModel);
     }
 
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
         if (intersects.length > 0 && !this.hasAnimatedToCamera && this.appStore.$state.isCameraOnSpot) {
-            this.outline.removeOutline();
+            // this.outline.removeOutline();
             CameraUtils.animateToCamera(this.cassetteModel, this.camera);
             this.hasAnimatedToCamera = true;
         }

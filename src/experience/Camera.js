@@ -46,7 +46,10 @@ export default class Camera {
         this.movingSpeedMultiplier = 0.65
 
         if (this.debug) {
-            this.debugFolder = this.debug.addFolder('camera')
+            this.debugFolder = this.debug.addFolder({
+                title: 'Camera',
+                expanded: false
+            })
             this.setDebug()
         }
 
@@ -62,7 +65,6 @@ export default class Camera {
         this.instance.lookAt(this.lookingPoint)
 
         this.scene.add(this.instance)
-
     }
 
     setModes() {
@@ -92,16 +94,15 @@ export default class Camera {
 
     setDebug() {
         if (this.debug) {
-            this.debugFolder.add(this, 'mode', {'Default': "default", 'Debug': "debug",})
+            this.debugFolder.addBinding(this, 'mode', {view: 'list', options: {Default: "default", Debug: "debug"}, label: "Camera mode"});
 
-            this.debugFolder.add(this.cameraAmplitude, 'x').min(0).max(5).step(0.001).name('Camera amplitude X')
-            this.debugFolder.add(this.cameraAmplitude, 'y').min(0).max(5).step(0.001).name('Camera amplitude Y')
+            this.debugFolder.addBinding(this.cameraAmplitude, 'x', {view: 'slider', min: 0, max: 5, step: 0.001, label: "Camera amp X"})
+            this.debugFolder.addBinding(this.cameraAmplitude, 'y', {view: 'slider', min: 0, max: 5, step: 0.001, label: "Camera amp Y"})
 
-            this.debugFolder.add(this, 'lerpCamera').min(0).max(0.99).step(0.001).name('Camera smoothness')
+            this.debugFolder.addBinding(this, 'lerpCamera', {view: 'slider', min: 0, max: 0.99, step: 0.001, label: "Camera smooth"})
 
-            this.debugFolder.add(this, 'isFocused').name('Camera focus object').onFinishChange(() => {
-                this.updateFocusMode(this.isFocused)
-            })
+            const isFocusedInput = this.debugFolder.addBinding(this, 'isFocused', {view: 'checkbox', label: "Focus mode"})
+            isFocusedInput.on('change', () => this.updateFocusMode(this.isFocused));
         }
     }
 
@@ -175,7 +176,7 @@ export default class Camera {
         this.isMoving = true
 
         const lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
-        const distanceToPoint = Math.round(this.instance.position.distanceTo(this.basicCameraPosition))
+        const distanceToPoint = Math.round(this.modes.default.instance.position.distanceTo(this.basicCameraPosition))
 
         gsap.to(this.modes.default.instance.position, {
             x: this.basicCameraPosition.x,
@@ -201,8 +202,8 @@ export default class Camera {
     lookAtSheet() {
 
         const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
-        const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp)
-        const lookingPoint = this.getNormalizedLookingPoint(this.instance.position, this.sheetLookingPoint)
+        const tmpLookingPoint = this.getNormalizedLookingPoint(this.modes.default.instance.position, tmp)
+        const lookingPoint = this.getNormalizedLookingPoint(this.modes.default.instance.position, this.sheetLookingPoint)
 
         const tl = gsap.timeline()
 
@@ -274,6 +275,9 @@ export default class Camera {
 
     destroy() {
         this.modes.debug.orbitControls.destroy()
+        this.modes.default.instance.destroy()
+        this.modes.debug.instance.destroy()
+        if (this.debug) this.debugFolder.dispose()
         this.scene.remove(this.instance)
         this.pointer.off('spot-clicked', this.moveToSpot)
         this.pointer.off('movement', this.onMovement)

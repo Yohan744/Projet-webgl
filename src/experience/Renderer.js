@@ -16,7 +16,10 @@ export default class Renderer {
 
         // Debug
         if (this.debug) {
-            this.debugFolder = this.debug.addFolder('renderer')
+            this.debugFolder = this.debug.addFolder({
+                title: 'Renderer',
+                expanded: false
+            })
         }
 
         this.usePostprocess = false
@@ -44,7 +47,6 @@ export default class Renderer {
         this.instance.setPixelRatio(this.config.pixelRatio)
 
         this.instance.physicallyCorrectLights = true
-        // this.instance.gammaOutPut = true
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = true
         this.instance.toneMapping = THREE.ACESFilmicToneMapping
@@ -60,32 +62,29 @@ export default class Renderer {
         // Debug
         if (this.debug) {
 
-            this.debugFolder
-                .add(
-                    this.instance,
-                    'toneMapping',
-                    {
-                        'NoToneMapping': THREE.NoToneMapping,
-                        'LinearToneMapping': THREE.LinearToneMapping,
-                        'ReinhardToneMapping': THREE.ReinhardToneMapping,
-                        'CineonToneMapping': THREE.CineonToneMapping,
-                        'ACESFilmicToneMapping': THREE.ACESFilmicToneMapping
-                    }
-                )
-                .onChange(() => {
-                    this.scene.traverse((_child) => {
-                        if (_child instanceof THREE.Mesh)
-                            _child.material.needsUpdate = true
-                    })
-                })
+            const toneMappingOptions = {
+                NoToneMapping: THREE.NoToneMapping,
+                LinearToneMapping: THREE.LinearToneMapping,
+                ReinhardToneMapping: THREE.ReinhardToneMapping,
+                CineonToneMapping: THREE.CineonToneMapping,
+                ACESFilmicToneMapping: THREE.ACESFilmicToneMapping
+            };
 
-            this.debugFolder
-                .add(
-                    this.instance,
-                    'toneMappingExposure'
-                )
-                .min(0)
-                .max(10)
+            const toneMapping = this.debugFolder.addBinding(this.instance, 'toneMapping', {
+                view: 'list',
+                options: toneMappingOptions,
+                label: "Tone mapping"
+            });
+
+            toneMapping.on('change', () => {
+                this.scene.traverse((_child) => {
+                    if (_child instanceof THREE.Mesh)
+                        _child.material.needsUpdate = true;
+                });
+            });
+
+            this.debugFolder.addBinding(this.instance, 'toneMappingExposure', {min: 0, max: 10, step: 0.01, label: "Exposure"})
+
         }
     }
 
@@ -147,9 +146,10 @@ export default class Renderer {
     }
 
     destroy() {
+        if (this.debug) this.debugFolder.dispose()
         if (this.instance) {
             this.instance.dispose()
-            if (this.instance.renderLists)  this.instance.renderLists.dispose()
+            if (this.instance.renderLists) this.instance.renderLists.dispose()
         }
         if (this.renderTarget) this.renderTarget.dispose()
         if (this.postProcess) {

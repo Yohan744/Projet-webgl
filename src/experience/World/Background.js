@@ -1,4 +1,4 @@
-import { MeshStandardMaterial, Mesh, PlaneGeometry, Vector3 } from "three";
+import { MeshStandardMaterial, Mesh, PlaneGeometry, Vector3, FrontSide } from "three";
 import Experience from "../Experience";
 
 export default class Background {
@@ -9,7 +9,7 @@ export default class Background {
         this.resources = this.experience.resources
         this.scene = this.experience.scene
 
-        this.planePosition = new Vector3(0, 1.55, -15)
+        this.planePosition = new Vector3(0, 2.25, -8)
 
         this.init()
 
@@ -17,13 +17,14 @@ export default class Background {
 
     init() {
 
-        this.planeGeometry = new PlaneGeometry(10, 10, 1, 1)
+        this.planeGeometry = new PlaneGeometry(8, 8, 1, 1)
 
         const t = this.resources.items.backgroundTreeTexture
         t.flipY = true
 
         this.planeMaterial = new MeshStandardMaterial({
             map: t,
+            side: FrontSide
         })
 
         this.background = new Mesh(this.planeGeometry, this.planeMaterial)
@@ -35,7 +36,10 @@ export default class Background {
 
     destroy() {
         if (this.planeGeometry) this.planeGeometry.dispose()
-        if (this.planeMaterial) this.planeMaterial.dispose()
+        if (this.planeMaterial) {
+            this.planeMaterial.map.dispose()
+            this.planeMaterial.dispose()
+        }
         if (this.scene) {
             if (this.background) this.scene.remove(this.background)
         }

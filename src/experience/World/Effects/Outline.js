@@ -1,14 +1,37 @@
 import * as THREE from 'three';
-import { LineSegments, LineBasicMaterial, EdgesGeometry } from 'three';
+import {LineSegments, LineBasicMaterial, EdgesGeometry} from 'three';
 
 export default class Outline {
     constructor(scene, model, thickness = 0.01, outlineColor = 0xffffff) {
         this.scene = scene;
         this.model = model;
-        this.thickness = thickness;
+        this.thickness = 0.2;
         this.outlineColor = outlineColor;
         this.outlineMeshes = [];
-        this.initOutline();
+        this.outlineScale = 1.06;
+        // this.initOutline();
+        this.init()
+    }
+
+    init() {
+
+        const outlineMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            side: THREE.BackSide,
+            transparent: true,
+            opacity: 0.5
+        });
+
+        const clonedModel = this.model.clone();
+        clonedModel.scale.setScalar(this.outlineScale)
+        clonedModel.traverse(child => {
+            if (child.isMesh) {
+                child.material.dispose()
+                child.material = outlineMaterial
+            }
+        })
+        this.model.renderOrder = 1
+        this.scene.add(clonedModel)
     }
 
     initOutline() {
@@ -39,6 +62,7 @@ export default class Outline {
         this.scene.add(edgeLines);
         this.outlineMeshes.push(edgeLines);
     }
+
 
     removeOutline() {
         this.outlineMeshes.forEach(mesh => {

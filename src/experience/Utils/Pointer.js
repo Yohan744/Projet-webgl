@@ -33,14 +33,13 @@ export default class Pointer extends EventEmitter {
 
         this.experience.on('ready', async () => {
             this.locations = this.locations.getLocations()
-            this.scene = this.experience.scene
             await this.setEvents()
         })
 
     }
 
     setEvents() {
-        window.addEventListener("pointermove", (_event) => this.onMovement(_event))
+        window.addEventListener("pointermove", this.onMovement.bind(this))
         window.addEventListener('pointerdown', this.onClick.bind(this));
         window.addEventListener('pointerup', this.onClickRelease.bind(this));
     }
@@ -61,8 +60,7 @@ export default class Pointer extends EventEmitter {
 
     }
 
-    onClick(event) {
-        event.preventDefault();
+    onClick() {
         this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
         this.trigger('click')
         const intersects = this.raycaster.intersectObjects(this.locations, false);
@@ -73,10 +71,6 @@ export default class Pointer extends EventEmitter {
 
     onClickRelease() {
         this.trigger('click-release')
-    }
-
-    getIntersects() {
-        return this.intersects
     }
 
     getMousePosition() {
