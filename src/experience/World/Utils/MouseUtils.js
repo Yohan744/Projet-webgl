@@ -1,29 +1,27 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import Pointer from "../../Utils/Pointer";
 
 export class MouseUtils {
     constructor(model, camera, pointer, renderer) {
         this.model = model;
-        this.fakeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.fakeCamera.position.copy(camera.position);
+        this.camera = camera;
         this.pointer = pointer;
-        this.renderer = renderer
+        this.renderer = renderer;
+
+        this.fakeCamera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.fakeCamera.position.copy(camera.position);
 
         this.controls = new OrbitControls(this.fakeCamera, renderer.domElement);
         this.controls.enableZoom = false;
         this.controls.enablePan = false;
-        this.controls.enabled = false;
+        this.controls.enableRotate = true;
         this.controls.target.copy(model.position);
         this.controls.update();
 
-        this.onMouseMove = this.onMouseMove.bind(this);
-        this.onMouseDown = this.onMouseDown.bind(this);
-        this.onMouseUp = this.onMouseUp.bind(this);
+        this.pointer.on('click', this.onMouseDown.bind(this));
+        this.pointer.on('movement', this.onMouseMove.bind(this));
+        this.pointer.on('click-release', this.onMouseUp.bind(this));
 
-        this.pointer.on("movement", this.onMouseMove);
-        this.pointer.on("click", this.onMouseDown);
-        this.pointer.on("click-release", this.onMouseUp);
         this.isDragging = false;
     }
 
@@ -43,16 +41,13 @@ export class MouseUtils {
     }
 
     onMouseUp() {
-        if (this.isDragging) {
         this.isDragging = false;
-        this.controls.enabled = false;
-        }
     }
 
     destroy() {
         this.controls.dispose();
-        this.pointer.off("movement", this.onMouseMove);
-        this.pointer.off("click", this.onMouseDown);
-        this.pointer.off("click-release", this.onMouseUp);
+        this.pointer.off('click', this.onMouseDown);
+        this.pointer.off('movement', this.onMouseMove);
+        this.pointer.off('click-release', this.onMouseUp);
     }
 }
