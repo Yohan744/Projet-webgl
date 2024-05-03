@@ -28,7 +28,7 @@ export default class Camera {
 
         this.basicCameraPosition = new THREE.Vector3(0, 2.25, 9.5)
         this.basicLookingPoint = new THREE.Vector3(0, -0.25, -3)
-        this.sheetLookingPoint = new THREE.Vector3(2, 0, -1.0)
+        this.sheetLookingPoint = new THREE.Vector3(2, 0, 0)
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
         this.prevTarget = new THREE.Vector3();
@@ -230,7 +230,7 @@ export default class Camera {
             ease: 'power1.out'
         });
         gsap.to(this.instance, {
-            fov: 35,
+            fov: 30,
             ease: "power1.out",
             delay: 2,
             duration: 2,
