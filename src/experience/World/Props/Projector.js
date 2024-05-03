@@ -34,7 +34,7 @@ export default class Projector {
         this.projectorModel = this.resources.items.projectorModel.scene;
         this.projectorModel.scale.set(1, 1, 1);
         this.projectorModel.position.set(-3.8, 1.15, 4.5);
-        this.outline = new Outline(this.scene, this.projectorModel, 0.05, 0xffffff);
+        this.outline = new Outline(this.projectorModel, 1.05);
         this.scene.add(this.projectorModel);
     }
 
@@ -107,7 +107,14 @@ export default class Projector {
 
     destroy() {
         this.pointer.off("click");
+        this.outline.destroy()
         if (this.projectorModel) {
+            this.projectorModel.traverse(child => {
+                if (child.isMesh) {
+                    child.material.dispose();
+                    child.geometry.dispose();
+                }
+            });
             this.scene.remove(this.projectorModel);
         }
     }

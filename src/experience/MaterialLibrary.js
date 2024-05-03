@@ -2,7 +2,7 @@ import {
     AdditiveBlending,
     BackSide,
     DoubleSide,
-    FrontSide,
+    FrontSide, MeshBasicMaterial,
     MeshStandardMaterial, RepeatWrapping,
 } from "three";
 import Experience from "./Experience";
@@ -18,8 +18,9 @@ let groundMaterial,
 let sideMirrorMaterial,
     mirrorMaterial,
     cardBoardMaterial,
-    tmpInteractionMaterial,
     carpetMaterial;
+
+let outlineMaterial;
 
 export default class MaterialLibrary {
 
@@ -228,17 +229,19 @@ export default class MaterialLibrary {
         return carpetMaterial
     }
 
-    getTmpInteractionMaterial() {
-        if (!tmpInteractionMaterial) {
-            tmpInteractionMaterial = new MeshStandardMaterial({
-                color: '#ff0000',
-                side: this.debug ? DoubleSide : FrontSide
+    getOutlineMaterial() {
+        if (!outlineMaterial) {
+            outlineMaterial = new MeshBasicMaterial({
+                color: 0xffffff,
+                side: BackSide,
+                transparent: true,
+                opacity: 0.5
             })
 
-            this.materialsUsed.push(tmpInteractionMaterial)
+            this.materialsUsed.push(outlineMaterial)
         }
 
-        return tmpInteractionMaterial
+        return outlineMaterial
     }
 
     destroy() {

@@ -1,6 +1,7 @@
 import {MouseUtils} from "../Utils/MouseUtils";
 import {CameraUtils} from "../Utils/CameraUtils";
 import Experience from "../../Experience";
+import Outline from "../Effects/Outline";
 
 export default class Cassette {
     constructor() {
@@ -22,7 +23,6 @@ export default class Cassette {
         this.cassetteModel = this.resources.items.cassetteModel.scene;
         this.cassetteModel.scale.set(0.05, 0.05, 0.05);
         this.cassetteModel.position.set(3.8, 1.1, -2.5);
-        // this.outline = new Outline(this.scene, this.cassetteModel, 0.05, 0xffffff);
         // this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
         this.cassetteModel.position.set(-3.4, 1.85, -4.85);
         //this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.renderer);
@@ -32,12 +32,13 @@ export default class Cassette {
             }
         });
         this.scene.add(this.cassetteModel);
+        this.outline = new Outline(this.cassetteModel, 0.055);
     }
 
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
         if (intersects.length > 0 && !this.hasAnimatedToCamera && this.appStore.$state.isCameraOnSpot) {
-            // this.outline.removeOutline();
+            this.outline.removeOutline();
             CameraUtils.animateToCamera(this.cassetteModel, this.camera);
             this.pointer.on('pencilClick', () => this.handlepencilClick());
             this.hasAnimatedToCamera = true;
@@ -60,6 +61,8 @@ export default class Cassette {
 
     destroy() {
         this.pointer.off("click");
+
+        this.outline.destroy()
 
         if (this.cassetteModel) {
             this.cassetteModel.traverse(child => {

@@ -23,7 +23,7 @@ export default class Malle {
         this.malleModel.rotation.y = Math.PI;
 
         this.scene.add(this.malleModel);
-        this.outline = new Outline(this.scene, this.malleModel, 0.05, 0xffffff);
+        this.outline = new Outline(this.malleModel, 1.02);
 
         if (this.malleModel.animations && this.malleModel.animations.length > 0) {
             this.mixer = new THREE.AnimationMixer(this.malleModel);
@@ -40,7 +40,14 @@ export default class Malle {
 
     destroy() {
         this.pointer.off("click");
+        this.outline.destroy()
         if (this.malleModel) {
+            this.malleModel.traverse(child => {
+                if (child.isMesh) {
+                    child.material.dispose();
+                    child.geometry.dispose();
+                }
+            });
             this.scene.remove(this.malleModel);
         }
     }
