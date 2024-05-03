@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {LineSegments, LineBasicMaterial, EdgesGeometry} from 'three';
 
 export default class Outline {
-    constructor(scene, model, thickness = 0.01, outlineColor = 0xffffff) {
+    constructor(scene, model, thickness = 0.9, outlineColor = 0xffffff) {
         this.scene = scene;
         this.model = model;
         this.thickness = 0.2;

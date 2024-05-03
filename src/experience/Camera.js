@@ -198,14 +198,21 @@ export default class Camera {
         })
 
     }
-
-    lookAtSheet() {
+    lookAtSheet(targetPosition) {
 
         const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
-        const tmpLookingPoint = this.getNormalizedLookingPoint(this.modes.default.instance.position, tmp)
-        const lookingPoint = this.getNormalizedLookingPoint(this.modes.default.instance.position, this.sheetLookingPoint)
+        const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp)
+        const lookingPoint = this.getNormalizedLookingPoint(this.instance.position, this.sheetLookingPoint)
 
         const tl = gsap.timeline()
+
+        gsap.to(this.modes.default.instance.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 2,
+            ease: "power2.inOut",
+        });
 
         tl.to(this.lookingPoint, {
             x: tmpLookingPoint.x,
@@ -221,7 +228,16 @@ export default class Camera {
             z: lookingPoint.z,
             duration: 1,
             ease: 'power1.out'
-        })
+        });
+        gsap.to(this.instance, {
+            fov: 30,
+            ease: "power1.out",
+            delay: 2,
+            duration: 2,
+            onUpdate: () => {
+                this.instance.updateProjectionMatrix();
+            }
+        });
     }
 
     updateFocusMode(value) {

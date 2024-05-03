@@ -34,7 +34,7 @@ export default class Objects {
                     child.material = this.materialLibrary.getCardBoardMaterial()
                 } else if (name.includes("tapis")) {
                     child.material = this.materialLibrary.getCarpetMaterial()
-                } else if (name.includes("walkman") || name.includes("tv") || name.includes("cassette") || name.includes("cartes_postales") || name.includes("visionneuse")) {
+                } else if (name.includes("walkman") || name.includes("tv") || name.includes("malle")|| name.includes("cassette") || name.includes("cartes_postales") || name.includes("projector") || name.includes("pencil") ) {
                     child.material = this.materialLibrary.getTmpInteractionMaterial()
                 }
 
