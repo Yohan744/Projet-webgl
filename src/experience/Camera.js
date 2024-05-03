@@ -198,7 +198,13 @@ export default class Camera {
         })
 
     }
-    moveToVisionneuse(targetPosition) {
+    lookAtSheet(targetPosition) {
+
+        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
+        const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp)
+        const lookingPoint = this.getNormalizedLookingPoint(this.instance.position, this.sheetLookingPoint)
+
+        const tl = gsap.timeline()
 
         gsap.to(this.modes.default.instance.position, {
             x: targetPosition.x,
@@ -208,35 +214,8 @@ export default class Camera {
             ease: "power2.inOut",
             onUpdate: () => {
                 this.modes.default.instance.lookAt(targetPosition);
-            },
-            onComplete: () => {
-                console.log(targetPosition)
-                const position = targetPosition.clone()
-
-                gsap.to(this.lookingPoint, {
-                    x: -1,
-                    y: 1.9,
-                    z: 4.4,
-                    duration: 2,
-                    ease: 'power1.inOut',
-                    onComplete: () => {
-                        console.log(this.lookingPoint)
-
-                        this.isFocused = true
-                        this.updateFocusMode(this.isFocused)
-                        this.appStore.updateCameraOnSpot(true)
-                    }
-                });
             }
         });
-    }
-    lookAtSheet() {
-
-        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
-        const tmpLookingPoint = this.getNormalizedLookingPoint(this.modes.default.instance.position, tmp)
-        const lookingPoint = this.getNormalizedLookingPoint(this.modes.default.instance.position, this.sheetLookingPoint)
-
-        const tl = gsap.timeline()
 
         tl.to(this.lookingPoint, {
             x: tmpLookingPoint.x,

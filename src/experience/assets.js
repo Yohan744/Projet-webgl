@@ -43,6 +43,24 @@ export default [
                     source: '/assets/textures/attic/background/backgroundTree.webp',
                     type: 'texture',
                 },
+                {
+                    name: 'images1',
+                    source:
+                        '/assets/images/image1.png',
+                    type: 'texture',
+                },
+                {
+                    name: 'images2',
+                    source:
+                        '/assets/images/image2.png',
+                    type: 'texture',
+                },
+                {
+                    name: 'images3',
+                    source:
+                        '/assets/images/image3.png',
+                    type: 'texture',
+                },
 
                 {
                     name: 'ground',

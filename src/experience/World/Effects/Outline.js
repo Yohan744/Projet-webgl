@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {LineSegments, LineBasicMaterial, EdgesGeometry} from 'three';
 
 export default class Outline {
-    constructor(scene, model, thickness = 0.01, outlineColor = 0xffffff) {
+    constructor(scene, model, thickness = 0.9, outlineColor = 0xffffff) {
         this.scene = scene;
         this.model = model;
         this.thickness = 0.2;
@@ -44,7 +44,7 @@ export default class Outline {
 
     createOutlineMesh(mesh) {
         const edgesGeometry = new EdgesGeometry(mesh.geometry, 1);
-        const lineMaterial = new LineBasicMaterial({ color: this.outlineColor, linewidth: this.thickness });
+        const lineMaterial = new LineBasicMaterial({ color: this.outlineColor, linewidth: 3 });
         const edgeLines = new LineSegments(edgesGeometry, lineMaterial);
 
         const position = new THREE.Vector3();
