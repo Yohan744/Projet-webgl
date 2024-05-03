@@ -96,7 +96,7 @@ export default class Projector {
 
     onModelClicked(intersect) {
         this.outline.removeOutline();
-        const offset = new THREE.Vector3(-0.9, 0.3, 0);
+        const offset = new THREE.Vector3(-1.0, 0.2, 0.5);
         const modelPosition = intersect.object.getWorldPosition(new THREE.Vector3());
         const targetPosition = modelPosition.clone().add(offset);
 
