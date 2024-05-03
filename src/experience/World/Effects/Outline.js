@@ -44,7 +44,7 @@ export default class Outline {
 
     createOutlineMesh(mesh) {
         const edgesGeometry = new EdgesGeometry(mesh.geometry, 1);
-        const lineMaterial = new LineBasicMaterial({ color: this.outlineColor, linewidth: 3 });
+        const lineMaterial = new LineBasicMaterial({ color: this.outlineColor, linewidth: this.thickness });
         const edgeLines = new LineSegments(edgesGeometry, lineMaterial);
 
         const position = new THREE.Vector3();
