@@ -1,6 +1,7 @@
 import {MouseUtils} from "../Utils/MouseUtils";
 import Experience from "../../Experience";
 import Outline from "../Effects/Outline";
+import {CameraUtils} from "../Utils/CameraUtils";
 
 export default class Cassette {
     constructor() {
@@ -39,6 +40,7 @@ export default class Cassette {
             this.outline.removeOutline();
             // CameraUtils.animateToCamera(this.cassetteModel, this.camera);
             // this.cameraUtils.animatePropsToCamera();
+            CameraUtils.animateToCamera(this.cassetteModel, this.camera);
             this.pointer.on('pencilClick', () => this.handlepencilClick());
             this.hasAnimatedToCamera = true;
         }
