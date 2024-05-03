@@ -45,11 +45,7 @@ export default class Pointer extends EventEmitter {
     }
 
     onMovement(_event) {
-        this.oldMouse.x = this.mouse.x
-        this.oldMouse.y = this.mouse.y
-
-        this.mouse.x = (_event.clientX / window.innerWidth) * 2 - 1
-        this.mouse.y = -(_event.clientY / window.innerHeight) * 2 + 1
+        this.updateMousePosition(_event)
 
         const deltaX = Math.abs(this.mouse.x - this.oldMouse.x);
         const deltaY = Math.abs(this.mouse.y - this.oldMouse.y);
@@ -57,20 +53,28 @@ export default class Pointer extends EventEmitter {
         if (deltaX > this.triggerTreshold || deltaY > this.triggerTreshold) {
             this.trigger('movement', [this.mouse]);
         }
-
     }
 
-    onClick() {
+    onClick(_event) {
+        this.updateMousePosition(_event)
         this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
-        this.trigger('click')
         const intersects = this.raycaster.intersectObjects(this.locations, false);
         if (intersects.length > 0) {
             this.trigger('spot-clicked', [intersects[0]])
         }
+        this.trigger('click')
     }
 
     onClickRelease() {
         this.trigger('click-release')
+    }
+
+    updateMousePosition(_event) {
+        this.oldMouse.x = this.mouse.x
+        this.oldMouse.y = this.mouse.y
+
+        this.mouse.x = (_event.clientX / window.innerWidth) * 2 - 1
+        this.mouse.y = -(_event.clientY / window.innerHeight) * 2 + 1
     }
 
     getMousePosition() {
