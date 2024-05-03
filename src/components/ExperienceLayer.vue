@@ -1,13 +1,13 @@
 <template>
   <section ref="experienceLayer" id="experience-layer">
     <div ref="goBack" @click="goBack" class="go-back-arrow" v-if="isCameraOnSpot">
-      <img src="../assets/icons/arrow-left.svg" alt="Go back"/>
+      <img :src="goBackIcon" alt="Go back"/>
     </div>
     <div ref="settings" @click="handleSettingsClick" class="settings">
       <img src="../assets/icons/settings.svg" alt="Settings"/>
     </div>
     <div ref="settingsPanel" class="settings-panel">
-      <p class="mute" @click="toggleMuted">{{isMuted}} sound</p>
+      <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
       <div class="volume-wrapper">
         <p>Global volume</p>
         <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.1" value="0.5">
@@ -20,14 +20,22 @@
 
 <script>
 import {useAppStore} from "../stores/appStore";
-import {watch} from "vue";
+import {watch, computed} from "vue";
+import homeIcon from '../assets/icons/home.svg';
+import arrowLeftIcon from '../assets/icons/arrow-left.svg';
 
 export default {
   name: 'ExperienceLayer',
-  data() {
+  setup() {
     const appStore = useAppStore();
+
+    const goBackIcon = computed(() => {
+      return appStore.$state.isInteractingWithObject ? arrowLeftIcon : homeIcon
+    });
+
     return {
       appStore,
+      goBackIcon,
       isSettingsVisible: false,
     };
   },
@@ -53,7 +61,11 @@ export default {
   },
   methods: {
     goBack() {
-      this.appStore.updateCameraOnSpot(false)
+      if (this.appStore.$state.isInteractingWithObject) {
+        this.appStore.updateInteractingState(false)
+      } else {
+        this.appStore.updateCameraOnSpot(false)
+      }
     },
     handleSettingsClick() {
       this.isSettingsVisible = !this.isSettingsVisible;

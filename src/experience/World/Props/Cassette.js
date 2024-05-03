@@ -1,5 +1,4 @@
 import {MouseUtils} from "../Utils/MouseUtils";
-import {CameraUtils} from "../Utils/CameraUtils";
 import Experience from "../../Experience";
 import Outline from "../Effects/Outline";
 
@@ -12,6 +11,7 @@ export default class Cassette {
         this.camera = this.experience.camera.instance;
         this.appStore = this.experience.appStore;
         this.pointer = this.experience.pointer
+        // this.cameraUtils = new CameraUtils(this.resources.items.cassetteModel.scene);
 
         this.pointer.on("click", this.handleClick.bind(this));
 
@@ -38,7 +38,8 @@ export default class Cassette {
         const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
         if (intersects.length > 0 && !this.hasAnimatedToCamera && this.appStore.$state.isCameraOnSpot) {
             this.outline.removeOutline();
-            CameraUtils.animateToCamera(this.cassetteModel, this.camera);
+            // CameraUtils.animateToCamera(this.cassetteModel, this.camera);
+            // this.cameraUtils.animatePropsToCamera();
             this.pointer.on('pencilClick', () => this.handlepencilClick());
             this.hasAnimatedToCamera = true;
         }

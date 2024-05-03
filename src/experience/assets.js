@@ -17,6 +17,12 @@ export default [
                 },
 
                 {
+                    name: 'objectsInteractableModel',
+                    source: '/assets/models/objectsInteractable.glb',
+                    type: 'model',
+                },
+
+                {
                     name: 'cassetteModel',
                     source: '/assets/models/cassette.glb',
                     type: 'model',

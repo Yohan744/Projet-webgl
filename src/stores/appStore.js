@@ -8,6 +8,7 @@ export const useAppStore = defineStore({
         isVideoIntroWatched: false,
         isExperienceVisible: false,
         isCameraOnSpot: false,
+        isInteractingWithObject: false,
         isSettingsOpen: false
     }),
     getters: {
@@ -29,6 +30,9 @@ export const useAppStore = defineStore({
         updateCameraOnSpot(state) {
             this.isCameraOnSpot = state
         },
+        updateInteractingState(state) {
+            this.isInteractingWithObject = state
+        },
         toggleSettings() {
             this.isSettingsOpen = !this.isSettingsOpen
         },
@@ -36,6 +40,7 @@ export const useAppStore = defineStore({
             this.lastVisitedRoute = null
             this.isExperienceVisible = false
             this.isCameraOnSpot = false
+            this.isInteractingWithObject = false
             this.isSettingsOpen = false
         },
         resetAll() {
@@ -44,6 +49,7 @@ export const useAppStore = defineStore({
             this.isVideoIntroWatched = false
             this.isExperienceVisible = false
             this.isCameraOnSpot = false
+            this.isInteractingWithObject = false
             this.isSettingsOpen = false
         }
     },

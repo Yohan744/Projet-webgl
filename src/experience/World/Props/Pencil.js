@@ -1,7 +1,6 @@
 import Experience from "../../Experience";
 import Outline from "../Effects/Outline";
 import * as THREE from "three";
-import {CameraUtils} from "../Utils/CameraUtils";
 
 export default class Pencil {
     constructor() {
@@ -30,7 +29,7 @@ export default class Pencil {
         const intersects = this.pointer.raycaster.intersectObjects([this.pencilModel], true);
         if (intersects.length > 0) {
             this.outline.removeOutline()
-            CameraUtils.animateToCamera(this.pencilModel, this.camera);
+            // CameraUtils.animateToCamera(this.pencilModel, this.camera);
             this.hasMoved = true;
         }
         if(this.hasMoved) {

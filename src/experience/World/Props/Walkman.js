@@ -1,28 +1,21 @@
+import * as THREE from "three";
 import Experience from "../../Experience";
+import Prop from "./Prop";
 
-export default class Walkman {
-    constructor() {
+export default class Walkman extends Prop {
+
+    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05) {
+        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, isOutlined)
+
         this.experience = new Experience();
-        this.scene = this.experience.scene;
         this.resources = this.experience.resources;
-        this.init();
+        this.scene = this.experience.scene;
+
     }
 
-    init() {
-        this.walkmanModel = this.resources.items.walkmanModel.scene;
-        this.walkmanModel.scale.set(0.04, 0.04, 0.04);
-        this.walkmanModel.position.set(3.8, 1.3, -2.5);
-        this.scene.add(this.walkmanModel);
+    onClick() {
+        console.log("click object")
     }
 
-    destroy() {
-        this.walkmanModel.traverse(child => {
-            if (child.isMesh) {
-                child.material.dispose();
-                child.geometry.dispose();
-            }
-        });
-        this.scene.remove(this.walkmanModel);
-    }
 
 }

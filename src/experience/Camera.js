@@ -116,7 +116,7 @@ export default class Camera {
             })
         }
 
-        watch(() => this.appStore.isCameraOnSpot, (value) => {
+        watch(() => this.appStore.$state.isCameraOnSpot, (value) => {
             if (!value) {
                 this.goBackToDefaultPosition()
             }
