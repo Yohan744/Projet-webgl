@@ -22,8 +22,8 @@ export default class Malle {
 
         this.malleModel.rotation.y = Math.PI;
 
-        this.scene.add(this.malleModel);
-        this.outline = new Outline(this.malleModel, 1.02);
+        // this.scene.add(this.malleModel);
+        // this.outline = new Outline(this.malleModel, 1.02);
 
         if (this.malleModel.animations && this.malleModel.animations.length > 0) {
             this.mixer = new THREE.AnimationMixer(this.malleModel);

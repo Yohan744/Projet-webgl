@@ -14,14 +14,14 @@ export default class Locations {
 
         this.locationsPositions = [
             new THREE.Vector3(-1.75, 0, 4.1),
-            new THREE.Vector3(-2.5, 0, -3.25),
-            new THREE.Vector3(1.5, 0, -2.75),
-            new THREE.Vector3(1.5, 0, 1),
+            new THREE.Vector3(-2.15, 0, -2.8),
+            new THREE.Vector3(0.5, 0, -2),
+            new THREE.Vector3(1.5, 0, 2),
         ]
 
         this.locationsLookingPoint = [
             new THREE.Vector3(-3, -0.5, -0.5),
-            new THREE.Vector3(-12, -0.5, -15),
+            new THREE.Vector3(-9, -0.5, -15),
             new THREE.Vector3(5, -3.5, -15),
             new THREE.Vector3(5, -2, -3),
         ]

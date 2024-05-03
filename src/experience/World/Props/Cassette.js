@@ -22,9 +22,8 @@ export default class Cassette {
     init() {
         this.cassetteModel = this.resources.items.cassetteModel.scene;
         this.cassetteModel.scale.set(0.05, 0.05, 0.05);
-        this.cassetteModel.position.set(3.8, 1.1, -2.5);
         // this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
-        this.cassetteModel.position.set(-3.4, 1.85, -4.85);
+        this.cassetteModel.position.set(-3.65, 1.8, -4.1);
         //this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.renderer);
         this.cassetteModel.traverse(child => {
             if (child.isMesh && Array.isArray(child.morphTargetInfluences)) {
@@ -32,7 +31,7 @@ export default class Cassette {
             }
         });
         this.scene.add(this.cassetteModel);
-        this.outline = new Outline(this.cassetteModel, 0.055);
+        this.outline = new Outline(this.cassetteModel, 0.0525);
     }
 
     handleClick() {
