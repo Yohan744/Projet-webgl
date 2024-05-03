@@ -15,6 +15,27 @@ export default [
                     source: '/assets/models/objects.glb',
                     type: 'model',
                 },
+                {
+                    name: 'chestDrawerModel',
+                    source: '/assets/models/commodeV3.glb',
+                    type: 'model',
+                },
+
+                {
+                    name: 'envelopModel',
+                    source: '/assets/models/enveloppev20.glb',
+                    type: 'model',
+                },
+                {
+                    name: 'dahliaModel',
+                    source: '/assets/models/dahliav10.glb',
+                    type: 'model',
+                },
+                {
+                    name: 'letterModel',
+                    source: '/assets/models/lettrev2.glb',
+                    type: 'model',
+                },
 
                 {
                     name: 'cassetteModel',

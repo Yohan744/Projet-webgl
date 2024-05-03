@@ -4,6 +4,11 @@ import Walkman from "./Props/Walkman";
 import Projector from "./Props/Projector";
 import Pencil from "./Props/Pencil";
 import Malle from "./Props/Malle";
+import ChestDrawer from "./Props/ChestDrawer";
+import Envelop from "./Props/Envelop";
+import Dahlia from "./Props/Dahlia";
+import Letter from "./Props/Letter";
+
 
 export default class Props {
 
@@ -21,6 +26,12 @@ export default class Props {
         this.projector = new Projector()
         this.pencil = new Pencil()
         this.malle = new Malle()
+        this.chestDrawer = new ChestDrawer()
+        this.envelop = new Envelop(this.chestDrawer)
+        this.envelop.chestDrawer = (this.chestDrawer)
+        this.chestDrawer.envelop = (this.envelop)
+        this.dahlia = new Dahlia(this.envelop)
+        this.letter = new Letter(this.envelop)
     }
 
     update() {
