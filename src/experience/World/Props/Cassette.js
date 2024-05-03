@@ -16,7 +16,6 @@ export default class Cassette {
         this.pointer.on("click", this.handleClick.bind(this));
 
         this.init();
-        this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer, this.renderer);
     }
 
     init() {
@@ -24,7 +23,7 @@ export default class Cassette {
         this.cassetteModel.scale.set(0.05, 0.05, 0.05);
         // this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
         this.cassetteModel.position.set(-3.65, 1.8, -4.1);
-        //this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.renderer);
+        this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer, this.renderer);
         this.cassetteModel.traverse(child => {
             if (child.isMesh && Array.isArray(child.morphTargetInfluences)) {
                 child.morphTargetInfluences.forEach((_, i) => child.morphTargetInfluences[i] = 0);
