@@ -91,28 +91,28 @@
   opacity: 0.95;
   transform: translate(-50%, -50%);
 }
-#experience-layer .settings-panel div {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  place-items: center;
-  pointer-events: all;
-}
-#experience-layer .settings-panel div p {
-  position: relative;
-  margin-right: 12px;
-  font-size: 20px;
-  color: black;
-}
-#experience-layer .settings-panel div input {
-  position: relative;
-}
 #experience-layer .settings-panel .mute {
   position: relative;
   margin-bottom: 20px;
   font-size: 20px;
   color: black;
   cursor: pointer;
+}
+#experience-layer .settings-panel .volume-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  place-items: center;
+  pointer-events: all;
+}
+#experience-layer .settings-panel .volume-wrapper p {
+  position: relative;
+  font-size: 20px;
+  color: black;
+}
+#experience-layer .settings-panel .volume-wrapper input {
+  position: relative;
+  margin: 0 12px;
 }
 #experience-layer .settings-panel a {
   margin-top: 20px;

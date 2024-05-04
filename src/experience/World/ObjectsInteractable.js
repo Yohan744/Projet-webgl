@@ -1,6 +1,5 @@
 import Experience from "../Experience";
-import Walkman from "./Props/Walkman";
-import {Vector3} from "three";
+import {objectsData} from "../../data/Objects";
 
 export default class ObjectsInteractable {
 
@@ -10,6 +9,8 @@ export default class ObjectsInteractable {
         this.resources = this.experience.resources
         this.scene = this.experience.scene
         this.materialLibrary = materialLibrary
+
+        this.objects = []
 
         if (this.scene) {
             this.init()
@@ -24,16 +25,25 @@ export default class ObjectsInteractable {
             if (child.isMesh) {
 
                 const name = child.name.toLowerCase()
+                const data = objectsData[name]
                 child.material.dispose()
 
                 if (name.includes("walkman")) {
-                    this.walkman = new Walkman(child, new Vector3(0, 0, 0), true, 1.05)
+                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.objects.push(this.walkman)
                 }
 
                 child.material.needsUpdate = true
 
             }
         })
+
+        // juste for now waiting for final file.glb
+
+        const dataCasetteTemporary = objectsData["cassette"]
+        const cassetteMesh = this.resources.items.cassetteModel.scene
+        this.cassette = new dataCasetteTemporary.file(cassetteMesh, dataCasetteTemporary.rotationOnClick, dataCasetteTemporary.animateToCameraOnClick, dataCasetteTemporary.outlineScale)
+        this.objects.push(this.cassette)
 
         this.scene.add(this.objectsInteractableModel)
 
@@ -53,6 +63,7 @@ export default class ObjectsInteractable {
             })
             this.scene.remove(this.objectsInteractableModel)
         }
+        this.objects.forEach(object => object.destroy())
     }
 
 

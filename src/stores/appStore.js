@@ -4,6 +4,7 @@ export const useAppStore = defineStore({
     id: "app",
     state: () => ({
         muted: false,
+        globalVolume: 0.5,
         lastVisitedRoute: null,
         isVideoIntroWatched: false,
         isExperienceVisible: false,
@@ -17,6 +18,9 @@ export const useAppStore = defineStore({
     actions: {
         toggleMute(state) {
             this.muted = state
+        },
+        setGlobalVolume(volume) {
+            this.globalVolume = volume
         },
         setLastVisitedRoute(route) {
             this.lastVisitedRoute = route
@@ -45,6 +49,7 @@ export const useAppStore = defineStore({
         },
         resetAll() {
             this.muted = false
+            this.globalVolume = 0.5
             this.lastVisitedRoute = null
             this.isVideoIntroWatched = false
             this.isExperienceVisible = false

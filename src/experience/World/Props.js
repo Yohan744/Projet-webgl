@@ -16,8 +16,6 @@ export default class Props {
     }
 
     init() {
-        this.cassette = new Cassette()
-        // this.walkman = new Walkman()
         this.projector = new Projector()
         this.pencil = new Pencil()
         this.malle = new Malle()

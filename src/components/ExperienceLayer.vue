@@ -15,7 +15,8 @@
 
       <div class="volume-wrapper">
         <p>Global volume</p>
-        <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.1" value="0.5">
+        <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
+        <p>{{globalVolume}}</p>
       </div>
 
       <router-link to="/">Go back to home</router-link>
@@ -28,7 +29,6 @@
 
 <script>
 import {useAppStore} from "../stores/appStore";
-import {watch, computed} from "vue";
 import homeIcon from '../assets/icons/home.svg';
 import arrowLeftIcon from '../assets/icons/arrow-left.svg';
 
@@ -36,9 +36,6 @@ export default {
   name: 'ExperienceLayer',
   setup() {
     const appStore = useAppStore();
-
-    // const goBackIcon = computed(() => appStore.$state.isInteractingWithObject ? arrowLeftIcon : homeIcon)
-
     return {
       appStore,
       isSettingsVisible: false,
@@ -47,6 +44,8 @@ export default {
   data() {
     return {
       goBackIcon: homeIcon,
+      globalVolume: this.appStore.$state.globalVolume,
+      smoothGlobalVolume: this.appStore.$state.globalVolume,
     }
   },
   computed: {
@@ -57,29 +56,36 @@ export default {
       return this.appStore.$state.muted ? 'Unmute' : 'Mute'
     }
   },
-  mounted() {
-    watch(() => this.appStore.$state.isExperienceVisible, (state) => state ? this.setExperienceLayerOpacity() : null);
-
-    watch(() => this.appStore.$state.isCameraOnSpot, () => {
-      this.animateGoBackIcon()
-    })
-
-    watch(() => this.appStore.$state.isInteractingWithObject, (state) => {
-      this.animateGoBackIcon()
+  watch: {
+    smoothGlobalVolume(newVal) {
+      this.globalVolume = (Math.round(newVal * 10) / 10).toFixed(1);
+      this.appStore.setGlobalVolume(parseFloat(this.globalVolume));
+    },
+    'appStore.$state.isExperienceVisible': function(state) {
+      state ? this.setExperienceLayerOpacity() : null;
+    },
+    'appStore.$state.globalVolume': function(state) {
+      console.log(state)
+    },
+    'appStore.$state.isCameraOnSpot': function() {
+      this.animateGoBackIcon();
+    },
+    'appStore.$state.isInteractingWithObject': function(state) {
+      this.animateGoBackIcon();
       setTimeout(() => {
         if (state) {
           this.goBackIcon = arrowLeftIcon;
         } else {
           this.goBackIcon = homeIcon;
         }
-        this.animateGoBackIcon()
-      }, 650)
-    })
-
+        this.animateGoBackIcon();
+      }, 650);
+    },
+  },
+  mounted() {
     if (this.appStore.$state.isExperienceVisible) {
       this.setExperienceLayerOpacity();
     }
-
   },
   methods: {
     goBack() {

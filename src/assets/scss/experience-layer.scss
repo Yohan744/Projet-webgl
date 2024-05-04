@@ -79,7 +79,15 @@
       transform: translate(-50%, -50%);
     }
 
-    div {
+    .mute {
+      position: relative;
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: black;
+      cursor: pointer;
+    }
+
+    .volume-wrapper {
       position: relative;
       display: flex;
       flex-direction: row;
@@ -88,23 +96,15 @@
 
       p {
         position: relative;
-        margin-right: 12px;
         font-size: 20px;
         color: black;
       }
 
       input {
         position: relative;
+        margin: 0 12px;
       }
 
-    }
-
-    .mute {
-      position: relative;
-      margin-bottom: 20px;
-      font-size: 20px;
-      color: black;
-      cursor: pointer;
     }
 
     a {

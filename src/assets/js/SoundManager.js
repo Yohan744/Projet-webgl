@@ -1,15 +1,21 @@
 import { Howl, Howler } from 'howler';
 import { data } from '../../data/Sounds.js';
 import { useAppStore } from '../../stores/appStore.js';
+import {watch} from "vue";
 
 const appStore = useAppStore()
 
 const params = {
-    globalVolume: 0.5,
+    globalVolume: appStore.$state.globalVolume,
     backgroundVolume: 0.2,
     dialogueVolume: 0.5,
     isMuted: appStore.$state.isMuted,
 }
+
+watch(() => appStore.$state.globalVolume, (value) => {
+    params.globalVolume = value
+    Howler.volume(params.globalVolume)
+})
 
 Howler.volume(params.globalVolume)
 
