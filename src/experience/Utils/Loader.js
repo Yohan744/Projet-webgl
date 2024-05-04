@@ -146,7 +146,12 @@ export default class Loader extends EventEmitter {
      */
     fileLoadEnd(_resource, _data) {
         this.loaded++
-        this.items[_resource.name] = _data
+        if (_data) {
+            this.items[_resource.name] = {
+                scene: _data.scene,
+                animations: _data.animations
+            };
+        }
 
         this.trigger('fileEnd', [_resource, _data])
 
