@@ -27,6 +27,8 @@
       position: relative;
       height: 100%;
       width: auto;
+      -webkit-user-drag: none;
+      user-select: none;
     }
 
     &.animate {
@@ -42,9 +44,14 @@
     right: 35px;
     opacity: 1;
     pointer-events: all;
+    transition: transform 0.8s $ease-power3-out;
 
     img {
       opacity: 0.3;
+    }
+
+    &:hover {
+      transform: rotate(30deg);
     }
 
   }

@@ -48,6 +48,8 @@
   position: relative;
   height: 100%;
   width: auto;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 #experience-layer .go-back-arrow.animate, #experience-layer .settings.animate {
   opacity: 1;
@@ -59,9 +61,13 @@
   right: 35px;
   opacity: 1;
   pointer-events: all;
+  transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .settings img {
   opacity: 0.3;
+}
+#experience-layer .settings:hover {
+  transform: rotate(30deg);
 }
 #experience-layer .settings-panel {
   position: absolute;
