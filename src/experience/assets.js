@@ -59,7 +59,7 @@ export default [
                 },
                 {
                     name: 'monabouquet',
-                    source: '/assets/images/monabouquet.jpg',
+                    source: '/assets/images/monabouquet.webp',
                     type: 'texture',
                 },
 
@@ -71,7 +71,7 @@ export default [
 
                 {
                     name: 'monasurf',
-                    source: '/assets/images/monasurf.jpg',
+                    source: '/assets/images/monasurf.webp',
                     type: 'texture',
                 },
                 {

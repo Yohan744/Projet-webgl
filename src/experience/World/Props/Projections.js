@@ -12,7 +12,7 @@ export default class Projections {
     }
     init() {
         this.planeGeometry = new PlaneGeometry(3, 3)
-        const t = this.resources.items.backgroundTreeTexture
+        const t = this.resources.items.monabouquet
         t.flipY = true
 
         this.planeMaterial = new MeshStandardMaterial({
