@@ -48,7 +48,7 @@ export default class Camera {
         if (this.debug) {
             this.debugFolder = this.debug.addFolder({
                 title: 'Camera',
-                expanded: false
+                expanded: true
             })
             this.setDebug()
         }
@@ -116,7 +116,7 @@ export default class Camera {
             })
         }
 
-        watch(() => this.appStore.isCameraOnSpot, (value) => {
+        watch(() => this.appStore.$state.isCameraOnSpot, (value) => {
             if (!value) {
                 this.goBackToDefaultPosition()
             }

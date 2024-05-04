@@ -1,13 +1,12 @@
-import * as THREE from 'three'
 import Experience from './Experience.js'
 import Lights from "./World/Lights";
 import Attic from "./World/Attic";
 import Background from "./World/Background";
 import Locations from "./World/Locations";
-import Pointer from "./Utils/Pointer";
 import Objects from "./World/Objects";
 import MaterialLibrary from "./MaterialLibrary";
 import Props from "./World/Props";
+import ObjectsInteractable from "./World/ObjectsInteractable";
 
 export default class World {
     constructor(_options) {
@@ -18,7 +17,7 @@ export default class World {
         this.time = this.experience.time
 
         this.resources.on('ready', async (_group) => {
-            if (_group.name === 'base' && this.scene) {
+            if (this.scene) {
                 await this.init()
             }
         })
@@ -29,6 +28,7 @@ export default class World {
         this.materialLibrary = new MaterialLibrary()
         this.attic = new Attic(this.materialLibrary)
         this.objects = new Objects(this.materialLibrary)
+        this.objectsInteractable = new ObjectsInteractable(this.materialLibrary)
         this.props = new Props()
         this.background = new Background()
         this.locations = new Locations().instance
@@ -41,6 +41,7 @@ export default class World {
     update() {
         if (this.attic) this.attic.update()
         if (this.objects) this.objects.update()
+        if (this.objectsInteractable) this.objectsInteractable.update()
         if (this.props) this.props.update()
 
     }
@@ -50,6 +51,7 @@ export default class World {
         if (this.lights) this.lights.destroy()
         if (this.attic) this.attic.destroy()
         if (this.objects) this.objects.destroy()
+        if (this.objectsInteractable) this.objectsInteractable.destroy()
         if (this.props) this.props.destroy()
         if (this.background) this.background.destroy()
         if (this.locations) this.locations.destroy()

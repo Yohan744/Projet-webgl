@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import Experience from "../../Experience";
 import godRayVertexShader from './../../Shaders/GodRay/vertex.glsl';
 import godRayFragmentShader from './../../Shaders/GodRay/fragment.glsl';
-import {DoubleSide, FrontSide} from "three";
+import {DoubleSide, FrontSide, MeshStandardMaterial} from "three";
 
 export default class GodRay {
 
@@ -15,25 +15,33 @@ export default class GodRay {
         this.resources = this.experience.resources
         this.godRaysArray = godRays
 
-        if (this.debug) {
-            // this.debugFolder = this.debug.addFolder("GodRay")
-        }
-
         this.init()
+
+        if (this.debug) {
+            this.debugFolder = this.debug.addFolder({
+                title: 'GodRay',
+                expanded: true,
+            })
+            this.setDebug()
+        }
 
     }
 
     init() {
+
+        const t = this.resources.items.godRayTexture
+        t.flipY = true
 
         this.godRayMaterial = new THREE.ShaderMaterial({
             vertexShader: godRayVertexShader,
             fragmentShader: godRayFragmentShader,
             uniforms: {
                 uColor: {value: new THREE.Color('#ffefb0')},
-                uAlphaBase: {value: 0.075}, // 0.2
-                uAlphaRays: {value: 0.035}, // 0.05
+                uAlphaBase: {value: 0}, // 0.2
+                uAlphaRays: {value: 0.41}, // 0.05
                 uSeed: {value: Math.random() * 1000},
                 uTime: {value: 0},
+                uTexture: {value: t}
             },
             blending: THREE.AdditiveBlending,
             transparent: true,
@@ -47,6 +55,11 @@ export default class GodRay {
             godRay.material.needsUpdate = true;
             this.scene.add(godRay);
         });
+    }
+
+    setDebug() {
+        this.debugFolder.addBinding(this.godRayMaterial.uniforms.uAlphaBase, 'value', {label: 'uAlphaBase', min: 0, max: 1, step: 0.001})
+        this.debugFolder.addBinding(this.godRayMaterial.uniforms.uAlphaRays, 'value', {label: 'uAlphaRays', min: 0, max: 1, step: 0.001})
     }
 
     update() {

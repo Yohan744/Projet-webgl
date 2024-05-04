@@ -11,7 +11,6 @@
 import VideoIntro from "../components/VideoIntro.vue";
 import Experience from '../experience/Experience';
 import {useAppStore} from "../stores/appStore";
-import {watch} from "vue";
 import Loading from "../components/Loading.vue";
 import {useRouter} from "vue-router";
 import ExperienceLayer from "../components/ExperienceLayer.vue";
@@ -38,19 +37,20 @@ export default {
       this.routeCheck = true;
     }
   },
+  watch: {
+    'appStore.$state.isVideoIntroWatched': function() {
+      if (this.isLoaded) {
+        this.setExperienceOpacity();
+      }
+    }
+  },
   mounted() {
-
     if (this.routeCheck) {
 
       this.$refs.videoElement?.load();
 
       this.$nextTick(() => {
         this.initExperience();
-        watch(() => this.appStore.isVideoIntroWatched, () => {
-          if (this.isLoaded) {
-            this.setExperienceOpacity();
-          }
-        });
       });
 
     }

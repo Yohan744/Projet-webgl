@@ -38,20 +38,36 @@
   width: 35px;
   display: flex;
   place-items: center;
-  pointer-events: all;
+  pointer-events: none;
   cursor: pointer;
+  opacity: 0;
+  scale: 0.9;
+  transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), scale 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .go-back-arrow img, #experience-layer .settings img {
   position: relative;
   height: 100%;
   width: auto;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+#experience-layer .go-back-arrow.animate, #experience-layer .settings.animate {
+  opacity: 1;
+  scale: 1;
+  pointer-events: all;
 }
 #experience-layer .settings {
   left: auto;
   right: 35px;
+  opacity: 1;
+  pointer-events: all;
+  transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .settings img {
   opacity: 0.3;
+}
+#experience-layer .settings:hover {
+  transform: rotate(30deg);
 }
 #experience-layer .settings-panel {
   position: absolute;
@@ -75,28 +91,28 @@
   opacity: 0.95;
   transform: translate(-50%, -50%);
 }
-#experience-layer .settings-panel div {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  place-items: center;
-  pointer-events: all;
-}
-#experience-layer .settings-panel div p {
-  position: relative;
-  margin-right: 12px;
-  font-size: 20px;
-  color: black;
-}
-#experience-layer .settings-panel div input {
-  position: relative;
-}
 #experience-layer .settings-panel .mute {
   position: relative;
   margin-bottom: 20px;
   font-size: 20px;
   color: black;
   cursor: pointer;
+}
+#experience-layer .settings-panel .volume-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  place-items: center;
+  pointer-events: all;
+}
+#experience-layer .settings-panel .volume-wrapper p {
+  position: relative;
+  font-size: 20px;
+  color: black;
+}
+#experience-layer .settings-panel .volume-wrapper input {
+  position: relative;
+  margin: 0 12px;
 }
 #experience-layer .settings-panel a {
   margin-top: 20px;

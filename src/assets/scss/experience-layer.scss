@@ -17,13 +17,24 @@
     width: 35px;
     display: flex;
     place-items: center;
-    pointer-events: all;
+    pointer-events: none;
     cursor: pointer;
+    opacity: 0;
+    scale: 0.9;
+    transition: opacity 0.8s $ease-power3-out, scale 0.8s $ease-power3-out;
 
     img {
       position: relative;
       height: 100%;
       width: auto;
+      -webkit-user-drag: none;
+      user-select: none;
+    }
+
+    &.animate {
+      opacity: 1;
+      scale: 1;
+      pointer-events: all;
     }
 
   }
@@ -31,9 +42,16 @@
   .settings {
     left: auto;
     right: 35px;
+    opacity: 1;
+    pointer-events: all;
+    transition: transform 0.8s $ease-power3-out;
 
     img {
       opacity: 0.3;
+    }
+
+    &:hover {
+      transform: rotate(30deg);
     }
 
   }
@@ -61,7 +79,15 @@
       transform: translate(-50%, -50%);
     }
 
-    div {
+    .mute {
+      position: relative;
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: black;
+      cursor: pointer;
+    }
+
+    .volume-wrapper {
       position: relative;
       display: flex;
       flex-direction: row;
@@ -70,23 +96,15 @@
 
       p {
         position: relative;
-        margin-right: 12px;
         font-size: 20px;
         color: black;
       }
 
       input {
         position: relative;
+        margin: 0 12px;
       }
 
-    }
-
-    .mute {
-      position: relative;
-      margin-bottom: 20px;
-      font-size: 20px;
-      color: black;
-      cursor: pointer;
     }
 
     a {
