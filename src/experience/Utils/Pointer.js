@@ -16,11 +16,11 @@ export default class Pointer extends EventEmitter {
 
         this.experience = new Experience()
         this.locations = new Locations().instance
+        this.appStore = this.experience.appStore
 
         this.raycaster = new Raycaster()
         this.intersects = []
         this.triggerMovementTreshold = 0.035
-        this.triggerOrbitTreshold = 0.005
 
         this.mouse = {
             x: 0,
@@ -55,7 +55,7 @@ export default class Pointer extends EventEmitter {
             this.trigger('movement', [this.mouse]);
         }
 
-        if (deltaX > this.triggerOrbitTreshold || deltaY > this.triggerOrbitTreshold) {
+        if (this.appStore.$state.isInteractingWithObject) {
             this.trigger('movement-orbit');
         }
 

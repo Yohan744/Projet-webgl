@@ -29,10 +29,10 @@ export default class Experience extends EventEmitter {
 
         this.targetElement = _options.targetElement
 
+        this.setAppStore()
         this.pointer = new Pointer()
         this.time = new Time()
         this.sizes = new Sizes()
-        this.setAppStore()
         this.setConfig()
         this.setDebug()
         this.setStats()

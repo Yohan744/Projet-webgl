@@ -13,6 +13,6 @@ export const objectsData = {
         file: Cassette,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
-        outlineScale: 0.055 // false to deactivate, type number to activate
+        outlineScale: false // false to deactivate, type number to activate
     },
 }

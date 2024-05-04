@@ -36,6 +36,7 @@ export default class Prop extends EventEmitter {
             if (!state) {
                 this.animatePropsToBasicPosition()
                 this.outline?.showOutline()
+                this.appStore.updateOrbitsControlsState(false)
             }
         })
     }
@@ -72,6 +73,8 @@ export default class Prop extends EventEmitter {
             ease: "power2.inOut",
             onUpdate: () => {
                 this.outline?.updateOutlineMeshPosition(this.mesh.position)
+            }, onComplete: () => {
+                this.appStore.updateOrbitsControlsState(true)
             }
         });
 

@@ -38,7 +38,7 @@ export class MouseUtils {
 
     onMouseDown() {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
-        if (intersects.length > 0 && this.appStore.$state.isCameraOnSpot && this.appStore.$state.isInteractingWithObject) {
+        if (intersects.length > 0 && this.appStore.$state.isCameraOnSpot && this.appStore.$state.isInteractingWithObject && this.appStore.$state.isOrbitControlsEnabled) {
             this.isDragging = true;
             this.controls.enabled = true;
             this.update();

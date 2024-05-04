@@ -10,6 +10,7 @@ export const useAppStore = defineStore({
         isExperienceVisible: false,
         isCameraOnSpot: false,
         isInteractingWithObject: false,
+        isOrbitControlsEnabled: false,
         isSettingsOpen: false
     }),
     getters: {
@@ -37,6 +38,9 @@ export const useAppStore = defineStore({
         updateInteractingState(state) {
             this.isInteractingWithObject = state
         },
+        updateOrbitsControlsState(state) {
+            this.isOrbitControlsEnabled = state
+        },
         toggleSettings() {
             this.isSettingsOpen = !this.isSettingsOpen
         },
@@ -45,6 +49,7 @@ export const useAppStore = defineStore({
             this.isExperienceVisible = false
             this.isCameraOnSpot = false
             this.isInteractingWithObject = false
+            this.isOrbitControlsEnabled = false
             this.isSettingsOpen = false
         },
         resetAll() {
@@ -55,6 +60,7 @@ export const useAppStore = defineStore({
             this.isExperienceVisible = false
             this.isCameraOnSpot = false
             this.isInteractingWithObject = false
+            this.isOrbitControlsEnabled = false
             this.isSettingsOpen = false
         }
     },

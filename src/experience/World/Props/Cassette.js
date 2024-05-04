@@ -31,6 +31,7 @@ export default class Cassette extends Prop {
             }
         });
         this.scene.add(this.cassetteModel);
+        this.outline = new Outline(this.cassetteModel, 0.055);
     }
 
     onClick() {

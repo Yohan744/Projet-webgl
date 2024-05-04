@@ -57,9 +57,16 @@ export default [
                         diffuse: 'assets/textures/cassette/Cassette.webp',
                     }
                 },
+
                 {
                     name: 'monabouquet',
-                    source: '/assets/textures/projector/projections/monabouquet.webp',
+                    source: '/assets/textures/objects/projections/monabouquet.webp',
+                    type: 'texture',
+                },
+
+                {
+                    name: 'monasurf',
+                    source: '/assets/textures/objects/projections/monasurf.webp',
                     type: 'texture',
                 },
 
@@ -70,15 +77,11 @@ export default [
                 },
 
                 {
-                    name: 'monasurf',
-                    source: '/assets/textures/projector/projections/monasurf.webp',
-                    type: 'texture',
-                },
-                {
                 name: 'backgroundTreeTexture',
                 source: '/assets/textures/attic/background/backgroundTree.webp',
                 type: 'texture',
                 },
+
                 {
                     name: 'ground',
                     type: 'group',
