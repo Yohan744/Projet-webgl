@@ -11,18 +11,31 @@ export default class Projections {
         this.init()
     }
     init() {
+<<<<<<< Updated upstream
         this.planeGeometry = new PlaneGeometry(3, 3)
+=======
+        this.planeGeometry = new PlaneGeometry(3, 3, 1, 1)
+>>>>>>> Stashed changes
         const t = this.resources.items.backgroundTreeTexture
         t.flipY = true
 
         this.planeMaterial = new MeshStandardMaterial({
             map: t,
+<<<<<<< Updated upstream
             side: DoubleSide
         })
         this.plane = new Mesh(this.planeGeometry, this.planeMaterial)
         this.plane.position.copy(this.planePosition)
         this.plane.rotation.set(0, -Math.PI * 0.25, 0)
         this.scene.add(this.plane)
+=======
+            side: FrontSide
+        })
+        this.background = new Mesh(this.planeGeometry, this.planeMaterial)
+        this.background.position.copy(new Vector3(2.45, 0, 4.5))
+        this.background.rotation.set(0, 0, 0)
+        this.scene.add(this.background)
+>>>>>>> Stashed changes
     }
     destroy() {
         if (this.planeGeometry) this.planeGeometry.dispose()

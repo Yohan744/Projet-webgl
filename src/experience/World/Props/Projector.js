@@ -4,6 +4,7 @@ import Pointer from "../../Utils/Pointer";
 import Outline from "../Effects/Outline";
 import {FrontSide, Mesh, MeshStandardMaterial} from "three";
 import Projections from "./Projections";
+import {MouseUtils} from "../Utils/MouseUtils";
 
 export default class Projector {
     constructor() {
@@ -22,6 +23,7 @@ export default class Projector {
         this.init();
         this.setupSpotlight();
         this.setupProjection();
+
     }
 
     init() {
