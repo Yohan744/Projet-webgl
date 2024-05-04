@@ -5,6 +5,7 @@ import Pointer from "../../Utils/Pointer";
 import Outline from "../Effects/Outline";
 //import { MouseUtils } from "../Utils/MouseUtils";
 import { CameraUtils } from "../Utils/CameraUtils";
+import { MouseUtils } from "../Utils/MouseUtils";
 
 export default class Dahlia {
     constructor() {
@@ -33,11 +34,28 @@ export default class Dahlia {
        // this.interactiveDahlia = new MouseUtils(this.dahliaModel, this.camera, this.pointer);
         this.dahliaModel.position.set(-3.5, 0, -4);
         this.dahliaModel.rotateZ(Math.PI / 2);
+
+           this.interactiveDahlia = new MouseUtils(this.dahliaModel, this.camera, this.pointer, this.renderer);
         this.scene.add(this.dahliaModel);
     }
     getModel() {
         return this.mesh;
     }
+
+    handleClick(event) {
+        const intersects = this.pointer.raycaster.intersectObjects([this.dahliaModel], true);
+        console.log(this.dahliaModel.position)
+        if (intersects.length > 0) {
+            if (!this.hasAnimatedToCamera) {
+                //this.positionEnvelopInFrontOfCamera();
+                //this.hasAnimatedToCamera = true;
+                CameraUtils.animateToCamera(this.dahliaModel, this.camera);
+                this.hasAnimatedToCamera = true;
+            }
+        }
+    }
+   
+
     animateToPosition(x, y, z) {
         gsap.to(this.dahliaModel.position, {
             x: x,
@@ -49,21 +67,18 @@ export default class Dahlia {
             }
         });
     }
-
     appear(envelopPosition) {
-        const targetPosition = envelopPosition.clone(); 
-        targetPosition.x += 1; 
-        targetPosition.y += 0.5; 
-        gsap.to(this.dahliaModel.position, {
+        const offset = new THREE.Vector3(0, 0.3, 0); // Example offset
+        const targetPosition = envelopPosition.clone().add(offset);
+        return gsap.to(this.dahliaModel.position, {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
             duration: 1,
-            onComplete: () => {
-                console.log("Dahlia appeared!");
-            }
+            onComplete: () => console.log("Dahlia appeared next to Envelop!")
         });
     }
+    
 
     returnToInitialPosition() {
         const initialPosition = new THREE.Vector3(-3.5, 0, -4); 

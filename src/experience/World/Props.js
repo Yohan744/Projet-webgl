@@ -8,7 +8,7 @@ import ChestDrawer from "./Props/ChestDrawer";
 import Envelop from "./Props/Envelop";
 import Dahlia from "./Props/Dahlia";
 import Letter from "./Props/Letter";
-import Carousel from "./Props/Carroussel";
+import Carousel from "./Props/Carousel";
 
 export default class Props {
 

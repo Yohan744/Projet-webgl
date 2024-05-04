@@ -5,6 +5,7 @@ import Pointer from "../../Utils/Pointer";
 import Outline from "../Effects/Outline";
 //import { MouseUtils } from "../Utils/MouseUtils";
 import { CameraUtils } from "../Utils/CameraUtils";
+import { MouseUtils } from "../Utils/MouseUtils";
 
 export default class Letter {
     constructor() {
@@ -34,9 +35,23 @@ export default class Letter {
         this.letterModel = this.resources.items.letterModel.scene;
         //this.outline = new Outline(this.scene, this.letterModel, 0.05, 0xffffff);
        // this.interactiveLetter = new MouseUtils(this.letterModel, this.camera, this.pointer);
-        this.letterModel.position.set(-3.5, 0, -4);
-        this.letterModel.rotateZ(Math.PI / 2);
+       this.letterModel.position.set(-3.5, 0, -4);
+       this.letterModel.rotateZ(Math.PI / 2);
+
+          this.interactiveDahlia = new MouseUtils(this.letterModel, this.camera, this.pointer, this.renderer);
         this.scene.add(this.letterModel);
+    }
+    handleClick(event) {
+        const intersects = this.pointer.raycaster.intersectObjects([this.dahliaModel], true);
+        console.log(this.dahliaModel.position)
+        if (intersects.length > 0) {
+            if (!this.hasAnimatedToCamera) {
+                //this.positionEnvelopInFrontOfCamera();
+                //this.hasAnimatedToCamera = true;
+                CameraUtils.animateToCamera(this.dahliaModel, this.camera);
+                this.hasAnimatedToCamera = true;
+            }
+        }
     }
 
     animateToPosition(x, y, z) {
@@ -50,6 +65,19 @@ export default class Letter {
             }
         });
     }
+
+    appear(envelopPosition) {
+        const offset = new THREE.Vector3(0, 0.5, 0); // Example offset
+        const targetPosition = envelopPosition.clone().add(offset);
+        return gsap.to(this.letterModel.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 1,
+            onComplete: () => console.log("letter appeared next to Envelop!")
+        });
+    }
+    
 
     destroy() {
         this.pointer.off("click");

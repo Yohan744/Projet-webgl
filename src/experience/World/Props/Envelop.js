@@ -5,7 +5,8 @@ import Pointer from "../../Utils/Pointer";
 import Outline from "../Effects/Outline";
 //import { MouseUtils } from "../Utils/MouseUtils";
 import { CameraUtils } from "../Utils/CameraUtils";
-import Carousel from "./Carroussel";
+import Carousel from "./Carousel";
+import { MouseUtils } from "../Utils/MouseUtils";
 
 export default class Envelop {
     constructor() {
@@ -23,24 +24,30 @@ export default class Envelop {
     setDependencies(dahlia, letter, chestDrawer) {
         this.dahlia = dahlia;
         this.letter = letter;
-        // Référence réciproque à chestDrawer si nécessaire
         this.chestDrawer = chestDrawer;
     }
 
     init() {
         this.envelopModel = this.resources.items.envelopModel.scene;
         //this.outline = new Outline(this.scene, this.envelopModel, 0.05, 0xffffff);
-        //this.interactiveEnvelop = new MouseUtils(this.envelopModel, this.camera, this.pointer);
-        //this.envelopModel.position.set(-3.5, 0, -4);
-        //this.envelopModel.rotateZ(Math.PI / 2);
+    this.envelopModel.position.set(-3.5, 0, -4);
+        this.envelopModel.rotateZ(Math.PI / 2);
+      
+        this.interactiveEnvelop = new MouseUtils(this.envelopModel, this.camera, this.pointer, this.renderer);
         this.scene.add(this.envelopModel);
     }
     handleClick(event) {
         const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel], true);
+        console.log(this.envelopModel.position)
         if (intersects.length > 0) {
             if (this.chestDrawer.isOpen && !this.hasAnimatedToCamera) {
-                /*CameraUtils.animateToCamera(this.envelopModel, this.camera);
-                this.hasAnimatedToCamera = true; */
+                //this.positionEnvelopInFrontOfCamera();
+                //this.hasAnimatedToCamera = true;
+                CameraUtils.animateToCamera(this.envelopModel, this.camera);
+                this.hasAnimatedToCamera = true;
+                gsap.delayedCall(1.5, () => { 
+                    this.triggerCarouselView();
+                });
             }
         }
     }
@@ -57,8 +64,32 @@ export default class Envelop {
         });
     }
 
+    triggerCarouselView() {
+    const basePosition = this.envelopModel.position.clone();
 
-   
+    let timeline = gsap.timeline();
+    
+    
+    timeline.add(() => {
+        const objects = [
+            { model: this.envelopModel },
+            { model: this.dahlia.getModel(), initialPosition: basePosition },
+            { model: this.letter.getModel(), initialPosition: basePosition }
+        ];
+        
+        const carousel = new Carousel(this.scene, this.camera, objects);
+        carousel.alignItems();
+        console.log("Carousel displayed.");
+    });
+    timeline.add(this.dahlia.appear(basePosition));
+    timeline.add(this.letter.appear(basePosition), "-=0.5"); 
+    
+}
+
+    
+    
+
+
     destroy() {
         this.items.forEach(item => {
             item.visible = false; // ou this.scene.remove(item) si vous voulez les enlever complètement
