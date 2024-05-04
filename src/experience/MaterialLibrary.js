@@ -2,7 +2,7 @@ import {
     AdditiveBlending,
     BackSide,
     DoubleSide,
-    FrontSide, MeshBasicMaterial,
+    FrontSide, MeshBasicMaterial, MeshLambertMaterial,
     MeshStandardMaterial, RepeatWrapping,
 } from "three";
 import Experience from "./Experience";
@@ -18,7 +18,8 @@ let groundMaterial,
 let sideMirrorMaterial,
     mirrorMaterial,
     cardBoardMaterial,
-    carpetMaterial;
+    carpetMaterial,
+    sheetMaterial;
 
 let outlineMaterial;
 
@@ -228,6 +229,22 @@ export default class MaterialLibrary {
 
         return carpetMaterial
     }
+
+    getSheetMaterial() {
+        if (!sheetMaterial) {
+            sheetMaterial = new MeshLambertMaterial({
+                color: '#b3b3b3',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(sheetMaterial)
+        }
+
+        return sheetMaterial
+    }
+
+
+    //////////////////////// EFFECTS MATERIALS ////////////////////////
 
     getOutlineMaterial() {
         if (!outlineMaterial) {
