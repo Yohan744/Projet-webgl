@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Experience from "../../Experience";
 import Prop from "./Prop";
+import {MouseUtils} from "../Utils/MouseUtils";
 
 export default class Walkman extends Prop {
 
@@ -10,6 +11,7 @@ export default class Walkman extends Prop {
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
+        new MouseUtils(this.mesh);
 
     }
 

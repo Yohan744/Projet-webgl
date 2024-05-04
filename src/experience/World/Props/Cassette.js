@@ -4,6 +4,7 @@ import Outline from "../Effects/Outline";
 import {CameraUtils} from "../Utils/CameraUtils";
 import Prop from "./Prop";
 import * as THREE from "three";
+import gsap from "gsap";
 
 export default class Cassette extends Prop {
 
@@ -15,17 +16,15 @@ export default class Cassette extends Prop {
         this.scene = this.experience.scene;
 
         // just temporary
-        this.camera = this.experience.camera.instance;
-        this.renderer = this.experience.renderer.instance;
-        this.pointer = this.experience.pointer;
         this.cassetteModel = mesh
+        this.basicPosition = new THREE.Vector3(-3.65, 1.8, -4.1);
         this.temporaryInit();
     }
 
     temporaryInit() {
         this.cassetteModel.scale.set(0.05, 0.05, 0.05);
-        this.cassetteModel.position.set(-3.65, 1.8, -4.1);
-        this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer, this.renderer);
+        this.cassetteModel.position.copy(this.basicPosition);
+        new MouseUtils(this.cassetteModel);
         this.cassetteModel.traverse(child => {
             if (child.isMesh && Array.isArray(child.morphTargetInfluences)) {
                 child.morphTargetInfluences.forEach((_, i) => child.morphTargetInfluences[i] = 0);
@@ -36,6 +35,33 @@ export default class Cassette extends Prop {
 
     onClick() {
         console.log("click object")
+    }
+
+    // OVERRIDE JUST FOR NOW
+    animatePropsToBasicPosition() {
+
+        gsap.to(this.mesh.position, {
+            x: this.basicPosition.x,
+            y: this.basicPosition.y,
+            z: this.basicPosition.z,
+            duration: 2,
+            ease: "power2.inOut",
+            onUpdate: () => {
+                this.outline?.updateOutlineMeshPosition(this.mesh.position)
+            }
+        });
+
+        gsap.to(this.mesh.rotation, {
+            x: this.propsBasicRotation.x,
+            y: this.propsBasicRotation.y,
+            z: this.propsBasicRotation.z,
+            duration: 2,
+            ease: "power2.inOut",
+            onUpdate: () => {
+                this.outline?.updateOutlineMeshRotation(this.mesh.rotation)
+            }
+        });
+
     }
 
     // handlepencilClick() {

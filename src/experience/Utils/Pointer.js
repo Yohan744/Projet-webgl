@@ -19,7 +19,8 @@ export default class Pointer extends EventEmitter {
 
         this.raycaster = new Raycaster()
         this.intersects = []
-        this.triggerTreshold = 0.035
+        this.triggerMovementTreshold = 0.035
+        this.triggerOrbitTreshold = 0.005
 
         this.mouse = {
             x: 0,
@@ -50,9 +51,14 @@ export default class Pointer extends EventEmitter {
         const deltaX = Math.abs(this.mouse.x - this.oldMouse.x);
         const deltaY = Math.abs(this.mouse.y - this.oldMouse.y);
 
-        if (deltaX > this.triggerTreshold || deltaY > this.triggerTreshold) {
+        if (deltaX > this.triggerMovementTreshold || deltaY > this.triggerMovementTreshold) {
             this.trigger('movement', [this.mouse]);
         }
+
+        if (deltaX > this.triggerOrbitTreshold || deltaY > this.triggerOrbitTreshold) {
+            this.trigger('movement-orbit');
+        }
+
     }
 
     onClick(_event) {

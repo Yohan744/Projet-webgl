@@ -64,9 +64,6 @@ export default {
     'appStore.$state.isExperienceVisible': function(state) {
       state ? this.setExperienceLayerOpacity() : null;
     },
-    'appStore.$state.globalVolume': function(state) {
-      console.log(state)
-    },
     'appStore.$state.isCameraOnSpot': function() {
       this.animateGoBackIcon();
     },
