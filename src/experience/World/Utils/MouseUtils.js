@@ -31,7 +31,6 @@ export class MouseUtils {
     onMouseDown() {
         const intersects = this.pointer.raycaster.intersectObjects([this.model], true);
         if (intersects.length > 0) {
-            console.log('drag');
             this.isDragging = true;
             this.controls.enabled = true;
             this.update();

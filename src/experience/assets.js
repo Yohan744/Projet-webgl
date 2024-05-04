@@ -59,7 +59,7 @@ export default [
                 },
                 {
                     name: 'monabouquet',
-                    source: '/assets/images/monabouquet.webp',
+                    source: '/assets/textures/projector/projections/monabouquet.webp',
                     type: 'texture',
                 },
 
@@ -71,7 +71,7 @@ export default [
 
                 {
                     name: 'monasurf',
-                    source: '/assets/images/monasurf.webp',
+                    source: '/assets/textures/projector/projections/monasurf.webp',
                     type: 'texture',
                 },
                 {
