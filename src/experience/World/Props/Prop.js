@@ -119,9 +119,9 @@ export default class Prop extends EventEmitter {
 
     destroy() {
         this.outline?.destroy()
-        this.mesh.geometry.dispose()
-        this.mesh.material.dispose()
-        this.scene.remove(this.mesh)
+        this.mesh?.geometry?.dispose()
+        this.mesh?.material?.dispose()
+        this.scene?.remove(this.mesh)
         this.pointer.off("click", this.handleClick.bind(this));
     }
 

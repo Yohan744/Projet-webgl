@@ -12,7 +12,6 @@ export default class Loader extends EventEmitter {
         super()
 
         this.experience = new Experience()
-        this.renderer = this.experience.renderer.instance
 
         this.setLoaders()
 
@@ -70,38 +69,12 @@ export default class Loader extends EventEmitter {
         this.loaders.push({
             extensions: ['glb', 'gltf'],
             action: (_resource) => {
-                console.log("Loading done: ", _resource.name);
                 gltfLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
                 })
             }
         })
 
-        // HDR
-        /*
-        const rgbeLoader = new RGBELoader()
-        this.loaders.push({
-            extensions: ['hdr'],
-            action: (_resource) =>
-            {
-                rgbeLoader.load(_resource.source, (_data) =>
-                {
-                    this.fileLoadEnd(_resource, _data)
-                })
-            }
-        }) */
-
-        const ktxLoader = new KTX2Loader();
-        ktxLoader.setTranscoderPath('/basis/');
-        ktxLoader.detectSupport(this.renderer);
-        this.loaders.push({
-            extensions: ['ktx2'],
-            action: (_resource) => {
-                ktxLoader.load(_resource.source, (_data) => {
-                    this.fileLoadEnd(_resource, _data)
-                })
-            }
-        })
     }
 
     /**

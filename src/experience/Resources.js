@@ -10,7 +10,7 @@ export default class Resources extends EventEmitter {
         this.items = {}
 
         // Loader
-        this.loader = new Loader({renderer: this.renderer})
+        this.loader = new Loader()
 
         this.groups = {}
         this.groups.assets = [..._assets]
@@ -56,10 +56,11 @@ export default class Resources extends EventEmitter {
             if (this.groups.assets.length > 0) {
                 this.loadNextGroup()
             } else {
-                this.trigger('ready', [this.groups.current])
+                this.trigger('ready')
+                console.log("-- Resources ready --")
+                console.log("")
             }
 
-            console.log(" ")
         })
     }
 

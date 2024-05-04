@@ -45,13 +45,11 @@ export class MouseUtils {
         }
     }
 
-
     onMouseMove() {
         if (this.isDragging) {
             requestAnimationFrame(this.update);
         }
     }
-
 
     update = () => {
         this.controls.update();

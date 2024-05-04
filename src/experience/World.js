@@ -17,7 +17,7 @@ export default class World {
         this.time = this.experience.time
 
         this.resources.on('ready', async (_group) => {
-            if (_group.name === 'base' && this.scene) {
+            if (this.scene) {
                 await this.init()
             }
         })
