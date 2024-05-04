@@ -24,7 +24,6 @@ export default class Props {
     }
 
     update() {
-        // update des props
     }
 
     destroy() {

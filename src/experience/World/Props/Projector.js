@@ -1,121 +1,168 @@
-import Experience from "../../Experience";
 import * as THREE from "three";
-import Pointer from "../../Utils/Pointer";
-import Outline from "../Effects/Outline";
+import Experience from "../../Experience";
+import {DoubleSide} from "three";
 
 export default class Projector {
     constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
-        this.resources = this.experience.resources;
-        this.renderer = this.experience.renderer.instance;
         this.camera = this.experience.camera.instance;
-        this.model = null;
-        this.currentImageIndex = 0;
-        this.images = [
-            this.resources.items.images1,
-            this.resources.items.images2,
-            this.resources.items.images3,
+        this.renderer = this.experience.renderer.instance;
+        this.clock = new THREE.Clock();
+        this.animations = [];
+        this.textures = [
+            this.experience.resources.items.monasurf,
+            this.experience.resources.items.monabouquet,
+            this.experience.resources.items.backgroundTreeTexture
         ];
-
-        this.pointer = new Pointer();
+        this.textureIndex = 0;
         this.init();
     }
 
     init() {
-        this.loadModel();
-        this.renderer.domElement.addEventListener('pointerdown', this.handlePointerDown.bind(this));
-        this.renderer.domElement.addEventListener('pointermove', this.handlePointerMove.bind(this));
-        this.renderer.domElement.addEventListener('pointerup', this.handlePointerUp.bind(this));
-        this.isCameraMoved = false;
-    }
-
-    loadModel() {
-        this.projectorModel = this.resources.items.projectorModel.scene;
-        this.projectorModel.scale.set(1, 1, 1);
+        this.projectorModel = this.experience.resources.items.projectorModel.scene;
         this.projectorModel.position.set(-3.8, 1.15, 4.5);
-        this.outline = new Outline(this.projectorModel, 1.05);
         this.scene.add(this.projectorModel);
+
+        this.mixer = new THREE.AnimationMixer(this.projectorModel);
+        this.mixer.timeScale = 0.2;
+
+        this.setupAnimations(this.experience.resources.items.projectorModel.animations);
+        this.animate();
+        this.renderer.domElement.addEventListener('pointerdown', this.handlePointerDown.bind(this));
     }
 
-    handlePointerDown() {
+    setupSpotlight() {
+        this.spotlight = new THREE.SpotLight(0xffffff, 60, 0, Math.PI * 0.05);
+        this.spotlight.position.copy(this.projectorModel.position);
+        this.spotlight.target.position.set(this.projectorModel.position.x + 0.7, this.projectorModel.position.y + 0.02, this.projectorModel.position.z);
+
+        this.spotlight.angle = 0.1;
+        this.spotlight.penumbra = 0.7;
+        this.spotlight.decay = 1;
+        this.spotlight.distance = 0;
+
+        this.spotlight.castShadow = true;
+        this.spotlight.shadow.mapSize.width = 1024;
+        this.spotlight.shadow.mapSize.height = 1024;
+        this.spotlight.shadow.camera.near = 1;
+        this.spotlight.shadow.camera.far = 100;
+        this.spotlight.shadow.camera.fov = 30;
+        this.spotlight.shadow.camera.aspect = 6;
+        this.spotlight.shadow.camera.focus = 0.6;
+
+        const texture = this.textures[this.textureIndex];
+        texture.flipY = true;
+        this.spotlight.map = texture;
+        this.spotlight.map.side = DoubleSide
+
+        this.scene.add(this.spotlight.target);
+        this.scene.add(this.spotlight);
+    }
+
+    setupAnimations(animations) {
+        animations.forEach(clip => {
+            const tracks = clip.tracks.map(track => new THREE.VectorKeyframeTrack(
+                track.name,
+                new Float32Array(track.times),
+                new Float32Array(track.values)
+            ));
+            const animationClip = new THREE.AnimationClip(clip.name, clip.duration, tracks);
+            const action = this.mixer.clipAction(animationClip);
+            action.setLoop(THREE.LoopOnce);
+            action.clampWhenFinished = true;
+            this.animations.push(action);
+        });
+    }
+
+    animate() {
+        requestAnimationFrame(this.animate.bind(this));
+        const delta = this.clock.getDelta();
+        this.mixer.update(delta);
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    handlePointerDown(event) {
         const intersects = this.experience.pointer.raycaster.intersectObject(this.projectorModel, true);
         if (intersects.length > 0) {
+            this.triggerAnimation();
             if (!this.isCameraMoved) {
                 this.onModelClicked(intersects[0]);
                 this.isCameraMoved = true;
-            } else {
-                this.isDragging = true;
+            } else if (!this.isSetup) {
+                this.isSetup = true;
             }
         }
     }
 
-    handlePointerMove() {
-        if (this.isDragging) {
-            this.changePlaneImage();
-        }
-    }
 
-    handlePointerUp() {
-        this.isDragging = false;
-    }
-// Décale qui permet de placer une texture sur un objet 3D
-    createDisplaySurface() {
-        if (!this.displayPlane) {
-            const geometry = new THREE.PlaneGeometry(0.48, 0.3);
-            const material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide });
-            this.displayPlane = new THREE.Mesh(geometry, material);
-            this.displayPlane.position.set(-2.8, 1.7, 4.57);
-            this.displayPlane.lookAt(this.camera.position);
-            this.scene.add(this.displayPlane);
-            this.updatePlaneImage();
-        }
-    }
-
-    changePlaneImage() {
-        this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
-        this.updatePlaneImage();
-    }
-
-    updatePlaneImage() {
-        const loader = new THREE.TextureLoader();
-        const imagePath = this.images[this.currentImageIndex];
-
-        loader.load(
-            imagePath,
-            texture => {
-                if (this.displayPlane) {
-                    texture.needsUpdate = true;
-                    this.displayPlane.material.map = texture;
-                    this.displayPlane.material.needsUpdate = true;
-                }
-            },
-            undefined,
-        );
-    }
 
     onModelClicked(intersect) {
-        this.outline.removeOutline();
         const offset = new THREE.Vector3(-1.3, 0.2, 0.5);
         const modelPosition = intersect.object.getWorldPosition(new THREE.Vector3());
         const targetPosition = modelPosition.clone().add(offset);
-
-        this.experience.camera.lookAtSheet(targetPosition, () => {
-            //this.createDisplaySurface();
-        });
+        this.experience.camera.lookAtSheet(targetPosition);
+        this.setupSpotlight();
+        this.isCameraMoved = true;
     }
 
+    triggerAnimation() {
+        if (this.animations.length > 0) {
+            const action = this.animations[0];
+            if (!action.isRunning()) {
+                action.play();
+                this.textureIndex = (this.textureIndex + 1) % this.textures.length;
+                const newTexture = this.textures[this.textureIndex];
+                newTexture.flipY = true;
+                if (this.spotlight && this.spotlight.map) {
+                    this.spotlight.map = this.textures[this.textureIndex];
+                    this.spotlight.map.needsUpdate = true;
+                }
+                action.paused = false;
+            }
+
+            const targetTime = action.time + 0.30;
+            if (targetTime >= action.getClip().duration) {
+                action.reset();
+
+                action.play();
+            } else {
+                const startTime = performance.now();
+                const interpolateAnimation = () => {
+                    const elapsed = performance.now() - startTime;
+                    const t = Math.min(elapsed / 1000, 1);
+
+                    action.time = THREE.MathUtils.lerp(action.time, targetTime, t);
+                    this.mixer.update(0);
+
+                    if (t < 1) {
+                        requestAnimationFrame(interpolateAnimation);
+                    } else {
+                        action.paused = true;
+                        if (targetTime >= action.getClip().duration) {
+                            action.reset();
+                            action.paused = true;
+                        }
+                    }
+                };
+                interpolateAnimation();
+            }
+        }
+    }
+
+
     destroy() {
-        this.pointer.off("click");
-        this.outline.destroy()
+        if (this.mixer) {
+            this.mixer.uncacheRoot(this.projectorModel);
+        }
         if (this.projectorModel) {
+            this.scene.remove(this.projectorModel);
             this.projectorModel.traverse(child => {
                 if (child.isMesh) {
-                    child.material.dispose();
                     child.geometry.dispose();
+                    child.material.dispose();
                 }
             });
-            this.scene.remove(this.projectorModel);
         }
     }
 }
