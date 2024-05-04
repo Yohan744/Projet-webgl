@@ -7,7 +7,6 @@ export class MouseUtils {
         this.camera = camera;
         this.pointer = pointer;
         this.renderer = renderer;
-
         this.fakeCamera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.fakeCamera.position.copy(camera.position);
 
@@ -16,38 +15,52 @@ export class MouseUtils {
         this.controls.enablePan = false;
         this.controls.enableRotate = true;
         this.controls.target.copy(model.position);
-        this.controls.update();
 
-        this.pointer.on('click', this.onMouseDown.bind(this));
-        this.pointer.on('movement', this.onMouseMove.bind(this));
-        this.pointer.on('click-release', this.onMouseUp.bind(this));
+        this.mouseDown = this.onMouseDown.bind(this);
+        this.mouseMove = this.onMouseMove.bind(this);
+        this.mouseUp = this.onMouseUp.bind(this);
+        this.rafId = null;
+
+        this.pointer.on('click', this.mouseDown);
+        this.pointer.on('movement', this.mouseMove);
+        this.pointer.on('click-release', this.mouseUp);
 
         this.isDragging = false;
     }
 
     onMouseDown() {
-        const intersects = this.pointer.raycaster.intersectObjects([this.model]);
+        const intersects = this.pointer.raycaster.intersectObjects([this.model], true);
         if (intersects.length > 0) {
-            this.controls.enabled = true;
+            console.log('drag');
             this.isDragging = true;
+            this.controls.enabled = true;
+            this.update();
         }
     }
+
 
     onMouseMove() {
         if (this.isDragging) {
-            this.controls.update();
-            this.model.quaternion.copy(this.fakeCamera.quaternion);
+            requestAnimationFrame(this.update);
         }
     }
 
-    onMouseUp() {
+
+    update = () => {
+            this.controls.update();
+            this.model.quaternion.copy(this.fakeCamera.quaternion.conjugate());
+
+    }
+        onMouseUp() {
         this.isDragging = false;
+        cancelAnimationFrame(this.rafId);
     }
 
     destroy() {
+        cancelAnimationFrame(this.rafId);
         this.controls.dispose();
-        this.pointer.off('click', this.onMouseDown);
-        this.pointer.off('movement', this.onMouseMove);
-        this.pointer.off('click-release', this.onMouseUp);
+        this.pointer.off('click', this.mouseDown);
+        this.pointer.off('movement', this.mouseMove);
+        this.pointer.off('click-release', this.mouseUp);
     }
 }

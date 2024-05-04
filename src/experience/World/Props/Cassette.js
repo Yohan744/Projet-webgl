@@ -1,7 +1,7 @@
 import {MouseUtils} from "../Utils/MouseUtils";
+import {CameraUtils} from "../Utils/CameraUtils";
 import Experience from "../../Experience";
 import Outline from "../Effects/Outline";
-import {CameraUtils} from "../Utils/CameraUtils";
 
 export default class Cassette {
     constructor() {
@@ -12,10 +12,7 @@ export default class Cassette {
         this.camera = this.experience.camera.instance;
         this.appStore = this.experience.appStore;
         this.pointer = this.experience.pointer
-        // this.cameraUtils = new CameraUtils(this.resources.items.cassetteModel.scene);
-
         this.pointer.on("click", this.handleClick.bind(this));
-
         this.init();
     }
 
@@ -25,33 +22,28 @@ export default class Cassette {
         // this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer);
         this.cassetteModel.position.set(-3.65, 1.8, -4.1);
         this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer, this.renderer);
-        this.cassetteModel.traverse(child => {
-            if (child.isMesh && Array.isArray(child.morphTargetInfluences)) {
-                child.morphTargetInfluences.forEach((_, i) => child.morphTargetInfluences[i] = 0);
-            }
-        });
-        this.scene.add(this.cassetteModel);
-        this.outline = new Outline(this.cassetteModel, 0.0525);
-    }
 
+        this.scene.add(this.cassetteModel);
+        //this.interactiveCassette = new MouseUtils(this.cassetteModel, this.camera, this.pointer, this.renderer);
+
+        this.outline = new Outline(this.cassetteModel, 0.0525);
+
+    }
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObjects([this.cassetteModel], true);
         if (intersects.length > 0 && !this.hasAnimatedToCamera && this.appStore.$state.isCameraOnSpot) {
             this.outline.removeOutline();
-            // CameraUtils.animateToCamera(this.cassetteModel, this.camera);
-            // this.cameraUtils.animatePropsToCamera();
             CameraUtils.animateToCamera(this.cassetteModel, this.camera);
-            this.pointer.on('pencilClick', () => this.handlepencilClick());
+            //this.pointer.on('pencilClick', () => this.handlepencilClick());
+            // Test manual rotation
+
+
             this.hasAnimatedToCamera = true;
         }
     }
-
     handlepencilClick() {
-        if (this.appStore.$state.isCameraOnSpot) {
-            this.advanceMorphTargets();
-        }
+          // this.advanceMorphTargets();
     }
-
     advanceMorphTargets() {
         this.cassetteModel.traverse(child => {
             if (child.isMesh && child.morphTargetInfluences) {
@@ -59,12 +51,9 @@ export default class Cassette {
             }
         });
     }
-
     destroy() {
         this.pointer.off("click");
-
         this.outline.destroy()
-
         if (this.cassetteModel) {
             this.cassetteModel.traverse(child => {
                 if (child.isMesh) {
@@ -74,7 +63,6 @@ export default class Cassette {
             });
             this.scene.remove(this.cassetteModel);
         }
-
         if (this.interactiveCassette) {
             this.interactiveCassette.destroy();
         }
