@@ -2,7 +2,7 @@ import Experience from "../../Experience";
 import * as THREE from "three";
 
 export default class ChestDrawer {
-    constructor(envelop) {
+    constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
@@ -10,7 +10,6 @@ export default class ChestDrawer {
         this.camera = this.experience.camera.instance;
         this.appStore = this.experience.appStore;
         this.pointer = this.experience.pointer;
-        this.envelop = envelop;
         this.pointer.on("click", this.handleClick.bind(this));
         this.isCameraMoved = false;
 
@@ -18,6 +17,12 @@ export default class ChestDrawer {
         this.isOpen = false;
 
         this.init();
+    }
+
+    setDependencies(envelop, dahlia, letter) {
+        this.envelop = envelop;
+        this.dahlia = dahlia;
+        this.letter = letter;
     }
 
     init() {
@@ -85,6 +90,8 @@ export default class ChestDrawer {
         const position = new THREE.Vector3();
         this.tirroirHaut.getWorldPosition(position);
         this.envelop.animateToPosition(position.x - 0.5, position.y, position.z);
+        this.dahlia.animateToPosition(position.x - 0.5, position.y, position.z);
+        this.letter.animateToPosition(position.x - 0.5, position.y, position.z);
     }
     
     /* 

@@ -5,9 +5,10 @@ import Pointer from "../../Utils/Pointer";
 import Outline from "../Effects/Outline";
 //import { MouseUtils } from "../Utils/MouseUtils";
 import { CameraUtils } from "../Utils/CameraUtils";
+import Carousel from "./Carroussel";
 
 export default class Envelop {
-    constructor(chestDrawer) {
+    constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
@@ -15,16 +16,20 @@ export default class Envelop {
         this.camera = this.experience.camera.instance;
         this.pointer = this.experience.pointer
         this.appStore = this.experience.appStore;
-        this.chestDrawer = chestDrawer; 
         this.isOpen = false; // Instance of ChestDrawer class
         this.pointer.on("click", this.handleClick.bind(this));
-
         this.init();
+    }
+    setDependencies(dahlia, letter, chestDrawer) {
+        this.dahlia = dahlia;
+        this.letter = letter;
+        // Référence réciproque à chestDrawer si nécessaire
+        this.chestDrawer = chestDrawer;
     }
 
     init() {
         this.envelopModel = this.resources.items.envelopModel.scene;
-        this.outline = new Outline(this.scene, this.envelopModel, 0.05, 0xffffff);
+        //this.outline = new Outline(this.scene, this.envelopModel, 0.05, 0xffffff);
         //this.interactiveEnvelop = new MouseUtils(this.envelopModel, this.camera, this.pointer);
         //this.envelopModel.position.set(-3.5, 0, -4);
         //this.envelopModel.rotateZ(Math.PI / 2);
@@ -34,9 +39,8 @@ export default class Envelop {
         const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel], true);
         if (intersects.length > 0) {
             if (this.chestDrawer.isOpen && !this.hasAnimatedToCamera) {
-                this.outline.removeOutline();
-                CameraUtils.animateToCamera(this.envelopModel, this.camera);
-                this.hasAnimatedToCamera = true; 
+                /*CameraUtils.animateToCamera(this.envelopModel, this.camera);
+                this.hasAnimatedToCamera = true; */
             }
         }
     }
@@ -53,7 +57,15 @@ export default class Envelop {
         });
     }
 
+
+   
     destroy() {
+        this.items.forEach(item => {
+            item.visible = false; // ou this.scene.remove(item) si vous voulez les enlever complètement
+        });
+        document.getElementById('btn-left').removeEventListener('click', this.handleLeftClick);
+        document.getElementById('btn-right').removeEventListener('click', this.handleRightClick);
+   
         this.pointer.off("click");
         if (this.envelopModel) {
             this.envelopModel.traverse(child => {

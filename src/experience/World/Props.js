@@ -8,7 +8,7 @@ import ChestDrawer from "./Props/ChestDrawer";
 import Envelop from "./Props/Envelop";
 import Dahlia from "./Props/Dahlia";
 import Letter from "./Props/Letter";
-
+import Carousel from "./Props/Carroussel";
 
 export default class Props {
 
@@ -26,12 +26,24 @@ export default class Props {
         this.projector = new Projector()
         this.pencil = new Pencil()
         this.malle = new Malle()
-        this.chestDrawer = new ChestDrawer()
-        this.envelop = new Envelop(this.chestDrawer)
-        this.envelop.chestDrawer = (this.chestDrawer)
-        this.chestDrawer.envelop = (this.envelop)
+
+        /*
         this.dahlia = new Dahlia(this.envelop)
         this.letter = new Letter(this.envelop)
+        this.chestDrawer = new ChestDrawer()
+        this.envelop = new Envelop(this.chestDrawer, this.dahlia, this.letter, this.cassette)
+        this.envelop.chestDrawer = (this.chestDrawer)
+        this.chestDrawer.envelop = (this.envelop)*/
+        this.chestDrawer = new ChestDrawer();
+        this.dahlia = new Dahlia();
+        this.letter = new Letter();
+        this.envelop = new Envelop(this.chestDrawer);
+        this.carousel = new Carousel();
+
+        this.chestDrawer.setDependencies(this.envelop, this.dahlia, this.letter);
+        this.envelop.setDependencies(this.dahlia, this.letter, this.chestDrawer, this.carousel);
+        this.dahlia.setDependencies(this.envelop, this.chestDrawer);
+        this.letter.setDependencies(this.envelop, this.chestDrawer);
     }
 
     update() {

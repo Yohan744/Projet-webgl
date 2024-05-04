@@ -16,13 +16,23 @@ export default class Letter {
         this.pointer = this.experience.pointer
         this.appStore = this.experience.appStore;
         this.isOpen = false; 
-
+        this.mesh = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1, 1), 
+            new THREE.MeshBasicMaterial({color: 0xff0000})
+        );
         this.init();
     }
 
+    setDependencies(envelop, chestDrawer) {
+        this.envelop = envelop;
+        this.chestDrawer = chestDrawer;
+    }
+    getModel() {
+        return this.mesh;
+    }
     init() {
         this.letterModel = this.resources.items.letterModel.scene;
-        this.outline = new Outline(this.scene, this.letterModel, 0.05, 0xffffff);
+        //this.outline = new Outline(this.scene, this.letterModel, 0.05, 0xffffff);
        // this.interactiveLetter = new MouseUtils(this.letterModel, this.camera, this.pointer);
         this.letterModel.position.set(-3.5, 0, -4);
         this.letterModel.rotateZ(Math.PI / 2);

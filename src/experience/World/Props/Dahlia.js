@@ -7,27 +7,47 @@ import Outline from "../Effects/Outline";
 import { CameraUtils } from "../Utils/CameraUtils";
 
 export default class Dahlia {
-    constructor(envelop) {
-        this.envelop = envelop;
+    constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
         this.renderer = this.experience.renderer.instance;
         this.camera = this.experience.camera.instance;
-        this.pointer = this.experience.pointer
+        this.pointer = this.experience.pointer;
         this.appStore = this.experience.appStore;
         this.isOpen = false; 
-
+        this.mesh = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1, 1), 
+            new THREE.MeshBasicMaterial({color: 0xff0000})
+        );
         this.init();
     }
-
+    
+    setDependencies(envelop, chestDrawer) {
+        this.envelop = envelop;
+        this.chestDrawer = chestDrawer;
+    }
     init() {
         this.dahliaModel = this.resources.items.dahliaModel.scene;
-        this.outline = new Outline(this.scene, this.dahliaModel, 0.05, 0xffffff);
+       // this.outline = new Outline(this.scene, this.dahliaModel, 0.05, 0xffffff);
        // this.interactiveDahlia = new MouseUtils(this.dahliaModel, this.camera, this.pointer);
         this.dahliaModel.position.set(-3.5, 0, -4);
         this.dahliaModel.rotateZ(Math.PI / 2);
         this.scene.add(this.dahliaModel);
+    }
+    getModel() {
+        return this.mesh;
+    }
+    animateToPosition(x, y, z) {
+        gsap.to(this.dahliaModel.position, {
+            x: x,
+            y: y,
+            z: z,
+            duration: 1, 
+            onComplete: () => {
+                console.log("Animation complete!");
+            }
+        });
     }
 
     appear(envelopPosition) {
