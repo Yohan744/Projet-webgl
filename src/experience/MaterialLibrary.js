@@ -19,7 +19,14 @@ let sideMirrorMaterial,
     mirrorMaterial,
     cardBoardMaterial,
     carpetMaterial,
-    sheetMaterial;
+    sheetMaterial,
+    chestDrawerMaterial,
+    shelfMaterial,
+    deskMaterial,
+    storageMaterial,
+    littleStorageMaterial,
+    pillowMaterial,
+    coatRackMaterial;
 
 let outlineMaterial;
 
@@ -241,6 +248,97 @@ export default class MaterialLibrary {
         }
 
         return sheetMaterial
+    }
+
+    getChestDrawerMaterial() {
+        if (!chestDrawerMaterial) {
+            chestDrawerMaterial = new MeshStandardMaterial({
+                color: '#bc7c4b',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(chestDrawerMaterial)
+        }
+
+        return chestDrawerMaterial
+    }
+
+    getShelfMaterial() {
+        if (!shelfMaterial) {
+            shelfMaterial = new MeshStandardMaterial({
+                color: '#ffbc8c',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(shelfMaterial)
+        }
+
+        return shelfMaterial
+    }
+
+    getDeskMaterial() {
+        if (!deskMaterial) {
+            deskMaterial = new MeshStandardMaterial({
+                color: '#ffbd5d',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(deskMaterial)
+        }
+
+        return deskMaterial
+    }
+
+    getStorageMaterial() {
+        if (!storageMaterial) {
+            storageMaterial = new MeshStandardMaterial({
+                color: '#b99f46',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(storageMaterial)
+        }
+
+        return storageMaterial
+    }
+
+    getLittleStorageMaterial() {
+        if (!littleStorageMaterial) {
+            littleStorageMaterial = new MeshStandardMaterial({
+                color: '#f6ae86',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(littleStorageMaterial)
+        }
+
+        return littleStorageMaterial
+    }
+
+    getPillowMaterial() {
+        if (!pillowMaterial) {
+            pillowMaterial = new MeshStandardMaterial({
+                color: '#f8f8f8',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(pillowMaterial)
+        }
+
+        return pillowMaterial
+    }
+
+    getCoatRackMaterial() {
+        if (!coatRackMaterial) {
+            coatRackMaterial = new MeshStandardMaterial({
+                color: '#383838',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(coatRackMaterial)
+        }
+
+        return coatRackMaterial
     }
 
 
