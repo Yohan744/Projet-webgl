@@ -28,12 +28,27 @@ export default class Objects {
                 if (name.includes("tour_miroir")) {
                     child.material = this.materialLibrary.getSideMirrorMaterial()
                 } else if (name.includes("miroir001")) {
-                    // child.position.add(new Vector3(0, 0, 0.5))
                     child.material = this.materialLibrary.getMirrorMaterial()
                 } else if (name.includes("carton")) {
                     child.material = this.materialLibrary.getCardBoardMaterial()
                 } else if (name.includes("tapis")) {
                     child.material = this.materialLibrary.getCarpetMaterial()
+                } else if (name.includes("drap_qui_tombe") || name.includes("fauteuil_drappe_")) {
+                    child.material = this.materialLibrary.getSheetMaterial()
+                } else if (name.includes("bureau")) {
+                    // child.material = this.materialLibrary.getDeskMaterial()
+                } else if (name.includes("biblotheque")) {
+                    // child.material = this.materialLibrary.getShelfMaterial()
+                } else if (name.includes("meuble")) {
+                    // child.material = this.materialLibrary.getLittleStorageMaterial()
+                } else if (name.includes("coussin")) {
+                    child.material = this.materialLibrary.getPillowMaterial()
+                } else if (name.includes("porte_manteau")) {
+                    // child.material = this.materialLibrary.getCoatRackMaterial()
+                }
+
+                else {
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true
