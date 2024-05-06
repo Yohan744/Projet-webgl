@@ -39,21 +39,18 @@ export default class World {
     }
 
     update() {
-        if (this.attic) this.attic.update()
-        if (this.objects) this.objects.update()
-        if (this.objectsInteractable) this.objectsInteractable.update()
-        if (this.props) this.props.update()
-
+        this.attic?.update()
+        this.objects?.update()
+        this.objectsInteractable?.update()
     }
 
     destroy() {
-        if (this.materialLibrary) this.materialLibrary.destroy()
-        if (this.lights) this.lights.destroy()
-        if (this.attic) this.attic.destroy()
-        if (this.objects) this.objects.destroy()
-        if (this.objectsInteractable) this.objectsInteractable.destroy()
-        if (this.props) this.props.destroy()
-        if (this.background) this.background.destroy()
-        if (this.locations) this.locations.destroy()
+        this.materialLibrary?.destroy()
+        this.lights?.destroy()
+        this.attic?.destroy()
+        this.objects?.destroy()
+        this.objectsInteractable?.destroy()
+        this.background?.destroy()
+        this.locations?.destroy()
     }
 }

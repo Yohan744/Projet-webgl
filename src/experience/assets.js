@@ -153,6 +153,14 @@ export default [
                 }
             },
 
+            {
+                name: 'littleStorage',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/littleStorage/diffuse.webp',
+                }
+            },
+
         ]
     },
 

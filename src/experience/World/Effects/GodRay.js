@@ -46,6 +46,7 @@ export default class GodRay {
             blending: THREE.AdditiveBlending,
             transparent: true,
             depthWrite: false,
+            depthTest: false,
             side: THREE.FrontSide,
         });
 

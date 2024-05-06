@@ -37,10 +37,10 @@ export default class Objects {
                     child.material = this.materialLibrary.getSheetMaterial()
                 } else if (name.includes("bureau")) {
                     // child.material = this.materialLibrary.getDeskMaterial()
-                } else if (name.includes("biblotheque")) {
+                } else if (name.includes("bibliothèque")) {
                     // child.material = this.materialLibrary.getShelfMaterial()
-                } else if (name.includes("meuble")) {
-                    // child.material = this.materialLibrary.getLittleStorageMaterial()
+                } else if (name.includes("petitmeuble")) {
+                    child.material = this.materialLibrary.getLittleStorageMaterial()
                 } else if (name.includes("coussin")) {
                     child.material = this.materialLibrary.getPillowMaterial()
                 } else if (name.includes("porte_manteau")) {

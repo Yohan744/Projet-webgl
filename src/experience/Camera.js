@@ -123,6 +123,7 @@ export default class Camera {
         })
 
         watch(() => this.appStore.isSettingsOpen, (value) => this.updateFocusMode(value))
+        watch(() => this.appStore.isInteractingWithObject, (value) => this.updateFocusMode(value))
 
     }
 

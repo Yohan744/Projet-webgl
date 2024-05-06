@@ -305,7 +305,7 @@ export default class MaterialLibrary {
     getLittleStorageMaterial() {
         if (!littleStorageMaterial) {
             littleStorageMaterial = new MeshStandardMaterial({
-                color: '#f6ae86',
+                map: this.resources.items.littleStorage.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 

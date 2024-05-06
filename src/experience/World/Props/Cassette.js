@@ -1,7 +1,6 @@
 import {MouseUtils} from "../Utils/MouseUtils";
 import Experience from "../../Experience";
 import Outline from "../Effects/Outline";
-import {CameraUtils} from "../Utils/CameraUtils";
 import Prop from "./Prop";
 import * as THREE from "three";
 import gsap from "gsap";
@@ -14,6 +13,7 @@ export default class Cassette extends Prop {
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
+        this.outlineScale = isOutlined;
 
         // just temporary
         this.cassetteModel = mesh
@@ -31,11 +31,12 @@ export default class Cassette extends Prop {
             }
         });
         this.scene.add(this.cassetteModel);
+
         this.outline = new Outline(this.cassetteModel, 0.055);
     }
 
     onClick() {
-        console.log("click object")
+        console.log("click cassette")
     }
 
     // OVERRIDE JUST FOR NOW
