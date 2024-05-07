@@ -14,7 +14,7 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.76.0",
-    "stats.js": "^0.17.0",
+    "stats-gl": "^2.2.8",
     "three": "^0.163.0",
     "tweakpane": "^4.0.3",
     "vite": "^5.2.8",

@@ -4,7 +4,7 @@ import {Pane} from "tweakpane";
 
 import Time from './Utils/Time.js'
 import Sizes from './Utils/Sizes.js'
-import Stats from './Utils/Stats.js'
+import StatsMonitor from './Utils/StatsMonitor.js'
 
 import Resources from './Resources.js'
 import Renderer from './Renderer.js'
@@ -78,7 +78,7 @@ export default class Experience extends EventEmitter {
 
     setStats() {
         if (this.config.debug) {
-            this.stats = new Stats(true)
+            this.stats = new StatsMonitor(true)
         }
     }
 
@@ -108,7 +108,7 @@ export default class Experience extends EventEmitter {
     }
 
     resize() {
-        // Config
+
         const boundings = this.targetElement.getBoundingClientRect()
         this.config.width = boundings.width
         this.config.height = boundings.height
@@ -117,27 +117,21 @@ export default class Experience extends EventEmitter {
 
         this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
 
-        if (this.camera)
-            this.camera.resize()
+        this.camera?.resize()
 
-        if (this.renderer)
-            this.renderer.resize()
+        this.renderer?.resize()
 
-        if (this.world)
-            this.world.resize()
+        this.world?.resize()
     }
 
     update() {
-        if (this.stats)
-            this.stats.update()
+        this.stats?.update()
 
-        this.camera.update()
+        this.camera?.update()
 
-        if (this.world)
-            this.world.update()
+        this.world?.update()
 
-        if (this.renderer)
-            this.renderer.update()
+        this.renderer?.update()
 
         window.requestAnimationFrame(() => {
             this.update()
@@ -148,28 +142,20 @@ export default class Experience extends EventEmitter {
 
         Experience.instance = null
 
-        if (this.pointer)
-            this.pointer.destroy()
+        this.pointer?.destroy()
 
-        if (this.stats)
-            this.stats.destroy()
+        this.stats?.destroy()
 
-        if (this.renderer) {
-            this.renderer.instance.domElement.remove();
-            this.renderer.destroy()
-        }
+        this.renderer?.instance.domElement.remove();
+        this.renderer?.destroy()
 
-        if (this.world)
-            this.world.destroy()
+        this.world?.destroy()
 
-        if (this.resources)
-            this.resources.destroy()
+        this.resources?.destroy()
 
-        if (this.debug)
-            this.debug.dispose()
+        this.debug?.dispose()
 
-        if (this.time)
-            this.time.stop()
+        this.time?.stop()
 
         window.cancelAnimationFrame(this.update)
 

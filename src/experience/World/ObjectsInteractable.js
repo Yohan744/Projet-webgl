@@ -45,6 +45,13 @@ export default class ObjectsInteractable {
         this.cassette = new dataCasetteTemporary.file(cassetteMesh, dataCasetteTemporary.rotationOnClick, dataCasetteTemporary.animateToCameraOnClick, dataCasetteTemporary.outlineScale)
         this.objects.push(this.cassette)
 
+        /////
+
+        const dataPencilTemporary = objectsData["pencil"]
+        const pencilMesh = this.resources.items.pencilModel.scene
+        this.pencil = new dataPencilTemporary.file(pencilMesh, dataPencilTemporary.rotationOnClick, dataPencilTemporary.animateToCameraOnClick, dataPencilTemporary.outlineScale)
+        this.objects.push(this.pencil)
+
         this.scene.add(this.objectsInteractableModel)
 
     }

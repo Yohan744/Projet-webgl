@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Walkman from "../experience/World/Props/Walkman";
 import Cassette from "../experience/World/Props/Cassette";
+import Pencil from "../experience/World/Props/Pencil";
 
 export const objectsData = {
     walkman: {
@@ -11,6 +12,12 @@ export const objectsData = {
     },
     cassette: {
         file: Cassette,
+        rotationOnClick: new THREE.Vector3(0, 0, 0),
+        animateToCameraOnClick: true,
+        outlineScale: false // false to deactivate, type number to activate
+    },
+    pencil: {
+        file: Pencil,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         outlineScale: false // false to deactivate, type number to activate

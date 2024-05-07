@@ -17,15 +17,9 @@ export default class Props {
 
     init() {
         this.projector = new Projector()
-        this.pencil = new Pencil()
         this.malle = new Malle()
     }
 
-    update() {
-    }
-
-    destroy() {
-        // destruction des props
-    }
+    // ce fichier va être supprimé bientôt
 
 }
