@@ -66,7 +66,9 @@ export default class Pointer extends EventEmitter {
         this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
         const intersects = this.raycaster.intersectObjects(this.locations, false);
         if (intersects.length > 0) {
-            this.trigger('spot-clicked', [intersects[0]])
+            const position = intersects[0].object.position.clone()
+            const lookingPoint = intersects[0].object.data.lookingPoint
+            this.trigger('spot-clicked', [position, lookingPoint])
         }
         this.trigger('click')
     }

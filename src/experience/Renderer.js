@@ -8,7 +8,7 @@ export default class Renderer {
         this.experience = new Experience()
         this.config = this.experience.config
         this.debug = this.experience.debug
-        this.stats = this.experience.stats.instance
+        this.stats = this.experience.stats
         this.time = this.experience.time
         this.sizes = this.experience.sizes
         this.scene = this.experience.scene
@@ -54,8 +54,8 @@ export default class Renderer {
 
         this.context = this.instance.getContext()
 
-        if (this.stats) {
-            this.stats.init(this.instance)
+        if (this.stats && this.stats.instance) {
+            this.stats.instance.init(this.instance)
         }
 
         // Debug

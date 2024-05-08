@@ -5,7 +5,7 @@ import gsap from "gsap"
 import {watch} from "vue";
 
 export default class Camera {
-    constructor(_options) {
+    constructor() {
 
         this.experience = new Experience()
         this.config = this.experience.config
@@ -94,20 +94,45 @@ export default class Camera {
 
     setDebug() {
         if (this.debug) {
-            this.debugFolder.addBinding(this, 'mode', {view: 'list', options: {Default: "default", Debug: "debug"}, label: "Camera mode"});
+            this.debugFolder.addBinding(this, 'mode', {
+                view: 'list',
+                options: {Default: "default", Debug: "debug"},
+                label: "Camera mode"
+            });
 
-            this.debugFolder.addBinding(this.cameraAmplitude, 'x', {view: 'slider', min: 0, max: 5, step: 0.001, label: "Camera amp X"})
-            this.debugFolder.addBinding(this.cameraAmplitude, 'y', {view: 'slider', min: 0, max: 5, step: 0.001, label: "Camera amp Y"})
+            this.debugFolder.addBinding(this.cameraAmplitude, 'x', {
+                view: 'slider',
+                min: 0,
+                max: 5,
+                step: 0.001,
+                label: "Camera amp X"
+            })
+            this.debugFolder.addBinding(this.cameraAmplitude, 'y', {
+                view: 'slider',
+                min: 0,
+                max: 5,
+                step: 0.001,
+                label: "Camera amp Y"
+            })
 
-            this.debugFolder.addBinding(this, 'lerpCamera', {view: 'slider', min: 0, max: 0.99, step: 0.001, label: "Camera smooth"})
+            this.debugFolder.addBinding(this, 'lerpCamera', {
+                view: 'slider',
+                min: 0,
+                max: 0.99,
+                step: 0.001,
+                label: "Camera smooth"
+            })
 
-            const isFocusedInput = this.debugFolder.addBinding(this, 'isFocused', {view: 'checkbox', label: "Focus mode"})
+            const isFocusedInput = this.debugFolder.addBinding(this, 'isFocused', {
+                view: 'checkbox',
+                label: "Focus mode"
+            })
             isFocusedInput.on('change', () => this.updateFocusMode(this.isFocused));
         }
     }
 
     setWatchers() {
-        this.pointer.on('spot-clicked', (spot) => this.moveToSpot(spot))
+        this.pointer.on('spot-clicked', (position, lookingPoint) => this.moveCamera(position, lookingPoint))
 
         if (this.pointer && this.mode === 'default') {
             this.pointer.on('movement', (mouse) => {
@@ -116,12 +141,7 @@ export default class Camera {
             })
         }
 
-        watch(() => this.appStore.$state.isCameraOnSpot, (value) => {
-            if (!value) {
-                this.goBackToDefaultPosition()
-            }
-        })
-
+        watch(() => this.appStore.$state.isCameraOnSpot, value => !value && this.moveCamera(this.basicCameraPosition, this.basicLookingPoint, 0.75, false))
         watch(() => this.appStore.isSettingsOpen, (value) => this.updateFocusMode(value))
         watch(() => this.appStore.isInteractingWithObject, (value) => this.updateFocusMode(value))
 
@@ -138,67 +158,48 @@ export default class Camera {
         this.modes.debug.instance.updateProjectionMatrix()
     }
 
-    moveToSpot(spot) {
+    moveCamera(position = false, lookingPoint = false, mult = 1, isGoingOnASpot = true, duration = 3) {
 
-        if (this.isMoving) return
+        let distanceToPoint = null
 
-        this.isMoving = true
+        if (position) {
 
-        const position = spot.object.position.clone()
-        const lookingPoint = this.getNormalizedLookingPoint(position, spot.object.data.lookingPoint)
-        const distanceToPoint = Math.round(position.distanceTo(this.modes.default.instance.position))
+            if (this.isMoving) return
 
-        gsap.to(this.modes.default.instance.position, {
-            x: position.x,
-            y: position.y + this.basicCameraPosition.y,
-            z: position.z,
-            duration: distanceToPoint * this.movingSpeedMultiplier,
-            ease: 'power1.inOut',
-            onComplete: () => {
-                this.isMoving = false
-                this.appStore.updateCameraOnSpot(true)
-            }
-        })
+            this.isMoving = true
+            distanceToPoint = Math.round(position.distanceTo(this.modes.default.instance.position))
 
-        gsap.to(this.lookingPoint, {
-            x: lookingPoint.x,
-            y: lookingPoint.y,
-            z: lookingPoint.z,
-            duration: distanceToPoint * this.movingSpeedMultiplier,
-            ease: 'power1.inOut'
-        })
+            gsap.to(this.modes.default.instance.position, {
+                x: position.x,
+                y: position.y + isGoingOnASpot ? this.basicCameraPosition.y : 0,
+                z: position.z,
+                duration: distanceToPoint * this.movingSpeedMultiplier * mult,
+                ease: 'power1.inOut',
+                onComplete: () => {
+                    this.isMoving = false
+                    if (isGoingOnASpot) this.appStore.updateCameraOnSpot(true)
+                }
+            })
 
-    }
+        }
 
-    goBackToDefaultPosition() {
+        if (lookingPoint) {
 
-        if (this.isMoving) return
+            const point = this.getNormalizedLookingPoint(position, lookingPoint)
+            const d = distanceToPoint ? distanceToPoint * this.movingSpeedMultiplier * mult : duration
 
-        this.isMoving = true
+            gsap.to(this.lookingPoint, {
+                x: point.x,
+                y: point.y,
+                z: point.z,
+                duration: d,
+                ease: 'power1.inOut'
+            })
 
-        const lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
-        const distanceToPoint = Math.round(this.modes.default.instance.position.distanceTo(this.basicCameraPosition))
-
-        gsap.to(this.modes.default.instance.position, {
-            x: this.basicCameraPosition.x,
-            y: this.basicCameraPosition.y,
-            z: this.basicCameraPosition.z,
-            duration: distanceToPoint * this.movingSpeedMultiplier * 0.75,
-            ease: 'power2.inOut',
-            onComplete: () => {
-                this.isMoving = false
-            }
-        })
-
-        gsap.to(this.lookingPoint, {
-            x: lookingPoint.x,
-            y: lookingPoint.y,
-            z: lookingPoint.z,
-            duration: distanceToPoint * this.movingSpeedMultiplier * 0.35,
-            ease: 'linear'
-        })
+        }
 
     }
+
     lookAtSheet(targetPosition) {
 
         const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, 1.2, 0))
@@ -289,14 +290,13 @@ export default class Camera {
         this.instance.updateMatrixWorld();
     }
 
-
     destroy() {
         this.modes.debug.orbitControls.destroy()
         this.modes.default.instance.destroy()
         this.modes.debug.instance.destroy()
         if (this.debug) this.debugFolder.dispose()
         this.scene.remove(this.instance)
-        this.pointer.off('spot-clicked', this.moveToSpot)
+        this.pointer.off('spot-clicked', this.moveCamera)
         this.pointer.off('movement', this.onMovement)
     }
 }

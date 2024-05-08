@@ -42,7 +42,7 @@ export default class Time extends EventEmitter {
         }
 
         if (this.playing) {
-            this.trigger('tick')
+            // this.trigger('tick')
         }
     }
 

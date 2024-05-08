@@ -119,7 +119,17 @@ export default class MaterialLibrary {
     }
 
     getRoofMaterial() {
-        return wallsMaterial
+        if (!roofMaterial) {
+
+            roofMaterial = new MeshStandardMaterial({
+                map: this.resources.items.walls.diffuse,
+                side: this.debug ? DoubleSide : BackSide
+            })
+
+            this.materialsUsed.push(roofMaterial)
+        }
+
+        return roofMaterial
     }
 
     getWindowMaterial() {
