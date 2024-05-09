@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import GUI from 'lil-gui'
 import {Pane} from "tweakpane";
 
 import Time from './Utils/Time.js'
@@ -15,6 +14,7 @@ import assets from './assets.js'
 import Pointer from "./Utils/Pointer";
 import EventEmitter from "./Utils/EventEmitter";
 import {useAppStore} from "../stores/appStore";
+import {useSoundManager} from "../main";
 
 export default class Experience extends EventEmitter {
     static instance
@@ -41,6 +41,7 @@ export default class Experience extends EventEmitter {
         this.setRenderer()
         this.setResources()
         this.setWorld()
+        this.setSoundManager()
 
         this.sizes.on('resize', () => {
             this.resize()
@@ -82,6 +83,10 @@ export default class Experience extends EventEmitter {
         }
     }
 
+    setAppStore() {
+        this.appStore = useAppStore()
+    }
+
     setScene() {
         this.scene = new THREE.Scene()
     }
@@ -103,8 +108,8 @@ export default class Experience extends EventEmitter {
         this.world = new World()
     }
 
-    setAppStore() {
-        this.appStore = useAppStore()
+    setSoundManager() {
+        this.soundManager = useSoundManager
     }
 
     resize() {
@@ -156,6 +161,8 @@ export default class Experience extends EventEmitter {
         this.debug?.dispose()
 
         this.time?.stop()
+
+        this.soundManager?.destroy()
 
         window.cancelAnimationFrame(this.update)
 

@@ -1,9 +1,11 @@
+import Experience from "../../../Experience";
+import Outline from "../../Effects/Outline";
 import * as THREE from "three";
-import Experience from "../../Experience";
-import Prop from "./Prop";
-import {MouseUtils} from "../Utils/MouseUtils";
+import Prop from "../Prop";
+import {MouseUtils} from "../../Utils/MouseUtils";
+import gsap from "gsap";
 
-export default class Walkman extends Prop {
+export default class Pencil extends Prop {
 
     constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05) {
         super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, isOutlined)
@@ -11,17 +13,14 @@ export default class Walkman extends Prop {
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
-        new MouseUtils(this.mesh);
 
     }
 
     onClick() {
-        console.log("click object")
+        console.log("click crayon")
     }
 
     destroy() {
         super.destroy()
     }
-
-
 }

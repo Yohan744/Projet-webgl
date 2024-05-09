@@ -9,6 +9,15 @@
   opacity: 0;
   transition: opacity 2.5s ease-in-out;
 
+  &.visible {
+    opacity: 1;
+
+    *.visible {
+      pointer-events: all;
+    }
+
+  }
+
   .go-back-arrow, .settings {
     position: absolute;
     top: 35px;
@@ -31,7 +40,7 @@
       user-select: none;
     }
 
-    &.animate {
+    &.visible {
       opacity: 1;
       scale: 1;
       pointer-events: all;
@@ -43,7 +52,6 @@
     left: auto;
     right: 35px;
     opacity: 1;
-    pointer-events: all;
     transition: transform 0.8s $ease-power3-out;
 
     img {

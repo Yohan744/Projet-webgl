@@ -4,6 +4,7 @@ import router from './router/index.js';
 import { createPinia } from 'pinia'
 import { createPersistedState } from 'pinia-plugin-persistedstate';
 import './assets/scss/main.css';
+import SoundManager from './assets/js/SoundManager';
 
 const pinia = createPinia();
 pinia.use(createPersistedState({
@@ -18,3 +19,5 @@ createApp(App)
     .use(router)
     .use(pinia)
     .mount('#app');
+
+export const useSoundManager = new SoundManager()

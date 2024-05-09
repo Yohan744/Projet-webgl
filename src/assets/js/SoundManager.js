@@ -3,79 +3,91 @@ import { data } from '../../data/Sounds.js';
 import { useAppStore } from '../../stores/appStore.js';
 import {watch} from "vue";
 
-const appStore = useAppStore()
-
-const params = {
-    globalVolume: appStore.$state.globalVolume,
-    backgroundVolume: 0.2,
-    dialogueVolume: 0.5,
-    isMuted: appStore.$state.isMuted,
-}
-
-watch(() => appStore.$state.globalVolume, (value) => {
-    params.globalVolume = value
-    Howler.volume(params.globalVolume)
-})
-
-Howler.volume(params.globalVolume)
-
-const sounds = {}
-
-Object.keys(data).forEach(key => {
-    const sound = data[key]
-    sounds[key] = new Howl({
-        src: sound.src,
-        volume: sound.volume,
-        preload: sound.preload,
-        loop: sound.loop,
-    })
-})
-
 export default class SoundManager {
 
-    static playBackground() {
-        if (!params.isMuted && !sounds.background.playing()) {
-            sounds.background.play()
+    constructor() {
+
+        this.appStore = useAppStore();
+
+        this.sounds = {};
+
+        this.init()
+
+        watch(() => this.appStore.$state.globalVolume, (value) => {
+            Howler.volume(this.appStore.$state.globalVolume);
+        });
+
+    }
+
+    init() {
+
+        Object.keys(data).forEach(key => {
+            const sound = data[key];
+            this.sounds[key] = new Howl({
+                src: sound.src,
+                volume: sound.volume,
+                preload: sound.preload,
+                loop: sound.loop,
+            });
+        });
+
+        Howler.volume(this.appStore.$state.globalVolume);
+
+    }
+
+    play(key) {
+        if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
+            this.sounds[key].play();
         }
     }
 
-    static stopBackground() {
-        sounds.background.stop()
+    stop(key) {
+        this.sounds[key].stop();
     }
 
-    static play(key) {
-        if (!params.isMuted && !sounds[key].playing()) {
-            sounds[key].play()
+    fadeIn(key, duration) {
+        if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
+            this.sounds[key].fade(0, this.sounds[key].volume(), duration);
         }
     }
 
-    static stop(key) {
-        sounds[key].stop()
-    }
-
-    static fadeIn(key, duration) {
-        if (!params.isMuted && !sounds[key].playing()) {
-            sounds[key].fade(0, sounds[key].volume(), duration)
+    fadeOut(key, duration) {
+        if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
+            this.sounds[key].fade(this.sounds[key].volume(), 0, duration);
         }
     }
 
-    static fadeOut(key, duration) {
-        if (!params.isMuted && !sounds[key].playing()) {
-            sounds[key].fade(sounds[key].volume(), 0, duration)
-        }
+    playSoundWithBackgroundFade(key, fadeDuration) {
+        const originalVolume = this.sounds['background'].volume();
+
+        this.sounds['background'].fade(originalVolume, originalVolume / 2, fadeDuration);
+
+        this.sounds[key].play();
+
+        this.sounds[key].on('end', () => {
+            this.sounds['background'].fade(originalVolume / 2, originalVolume, fadeDuration);
+            this.sounds[key].off('end');
+        });
     }
 
-    static setVolume(key, volume) {
-        sounds[key].volume(volume)
+    setSoundVolume(key, volume) {
+        this.sounds[key].volume(volume);
     }
 
-    static mute() {
-        Howler.mute(true)
-        appStore.toggleMute(true)
+    mute() {
+        Howler.mute(true);
+        this.appStore.toggleMute(true);
     }
 
-    static unmute() {
-        Howler.mute(false)
-        appStore.toggleMute(false)
+    unmute() {
+        Howler.mute(false);
+        this.appStore.toggleMute(false);
     }
+
+    destroy() {
+        Object.keys(this.sounds).forEach(key => {
+            this.sounds[key].unload();
+        });
+    }
+
 }

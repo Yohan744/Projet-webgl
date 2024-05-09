@@ -4,6 +4,7 @@ import Outline from "../Effects/Outline";
 import {watch} from "vue";
 import gsap from "gsap";
 import EventEmitter from "../../Utils/EventEmitter";
+import {MouseUtils} from "../Utils/MouseUtils";
 
 export default class Prop extends EventEmitter {
 
@@ -25,6 +26,7 @@ export default class Prop extends EventEmitter {
         this.offsetFromCamera = 0.6;
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
+        if (this.animatePropsToCameraOnClick) this.mouseUtils = new MouseUtils(this.mesh);
 
         this.setWatchers()
 
@@ -122,6 +124,7 @@ export default class Prop extends EventEmitter {
         this.mesh?.geometry?.dispose()
         this.mesh?.material?.dispose()
         this.scene?.remove(this.mesh)
+        this.mouseUtils?.destroy()
         this.pointer.off("click", this.handleClick.bind(this));
     }
 

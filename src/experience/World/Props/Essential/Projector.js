@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Experience from "../../Experience";
+import Experience from "../../../Experience";
 import {DoubleSide} from "three";
 
 export default class Projector {

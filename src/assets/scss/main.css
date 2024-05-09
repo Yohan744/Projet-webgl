@@ -30,6 +30,12 @@
   opacity: 0;
   transition: opacity 2.5s ease-in-out;
 }
+#experience-layer.visible {
+  opacity: 1;
+}
+#experience-layer.visible *.visible {
+  pointer-events: all;
+}
 #experience-layer .go-back-arrow, #experience-layer .settings {
   position: absolute;
   top: 35px;
@@ -51,7 +57,7 @@
   -webkit-user-drag: none;
   user-select: none;
 }
-#experience-layer .go-back-arrow.animate, #experience-layer .settings.animate {
+#experience-layer .go-back-arrow.visible, #experience-layer .settings.visible {
   opacity: 1;
   scale: 1;
   pointer-events: all;
@@ -60,7 +66,6 @@
   left: auto;
   right: 35px;
   opacity: 1;
-  pointer-events: all;
   transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .settings img {

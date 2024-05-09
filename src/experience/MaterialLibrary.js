@@ -73,7 +73,7 @@ export default class MaterialLibrary {
                 map: this.resources.items.ground.diffuse,
                 roughnessMap: this.resources.items.ground.roughness,
                 normalMap: this.resources.items.ground.normal,
-                side: this.debug ? DoubleSide : BackSide
+                side: this.debug ? DoubleSide : FrontSide
             })
 
             this.materialsUsed.push(groundMaterial)
@@ -91,7 +91,7 @@ export default class MaterialLibrary {
                 map: this.resources.items.windowWall.diffuse,
                 roughnessMap: this.resources.items.windowWall.roughness,
                 normalMap: this.resources.items.windowWall.normal,
-                side: this.debug ? DoubleSide : BackSide
+                side: this.debug ? DoubleSide : FrontSide
             })
 
             this.materialsUsed.push(windowWallMaterial)
@@ -109,7 +109,7 @@ export default class MaterialLibrary {
                 map: this.resources.items.walls.diffuse,
                 roughnessMap: this.resources.items.walls.roughness,
                 normalMap: this.resources.items.walls.normal,
-                side: this.debug ? DoubleSide : BackSide
+                side: this.debug ? DoubleSide : FrontSide
             })
 
             this.materialsUsed.push(wallsMaterial)
@@ -123,7 +123,7 @@ export default class MaterialLibrary {
 
             roofMaterial = new MeshStandardMaterial({
                 map: this.resources.items.walls.diffuse,
-                side: this.debug ? DoubleSide : BackSide
+                side: this.debug ? DoubleSide : FrontSide
             })
 
             this.materialsUsed.push(roofMaterial)

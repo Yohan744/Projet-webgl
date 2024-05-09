@@ -31,28 +31,26 @@ export default class ObjectsInteractable {
                 if (name.includes("walkman")) {
                     this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
                     this.objects.push(this.walkman)
+                } else if (name.includes("cassette")) {
+                    this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.objects.push(this.cassette)
+                }  else if (name.includes("crayon")) {
+                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.objects.push(this.pencil)
+                } else if (name.includes("telephone")) {
+                    this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.objects.push(this.telephone)
+                } else if (name.includes("projecteur")) {
+                    child.dispose()
+                } else {
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true
+                this.scene.add(this.objectsInteractableModel)
 
             }
         })
-
-        // juste for now waiting for final file.glb
-
-        const dataCasetteTemporary = objectsData["cassette"]
-        const cassetteMesh = this.resources.items.cassetteModel.scene
-        this.cassette = new dataCasetteTemporary.file(cassetteMesh, dataCasetteTemporary.rotationOnClick, dataCasetteTemporary.animateToCameraOnClick, dataCasetteTemporary.outlineScale)
-        this.objects.push(this.cassette)
-
-        /////
-
-        const dataPencilTemporary = objectsData["pencil"]
-        const pencilMesh = this.resources.items.pencilModel.scene
-        this.pencil = new dataPencilTemporary.file(pencilMesh, dataPencilTemporary.rotationOnClick, dataPencilTemporary.animateToCameraOnClick, dataPencilTemporary.outlineScale)
-        this.objects.push(this.pencil)
-
-        this.scene.add(this.objectsInteractableModel)
 
     }
 

@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import Experience from "../../Experience";
-import Outline from "../Effects/Outline";
+import Experience from "../../../Experience";
+import Outline from "../../Effects/Outline";
 
 export default class Malle {
     constructor() {

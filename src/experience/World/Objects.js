@@ -48,7 +48,7 @@ export default class Objects {
                 }
 
                 else {
-                    console.log(name)
+                    // console.log(name)
                 }
 
                 child.material.needsUpdate = true

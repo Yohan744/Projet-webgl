@@ -5,7 +5,7 @@
       <img :src="goBackIcon" alt="Go back"/>
     </div>
 
-    <div ref="settings" @click="handleSettingsClick" class="settings">
+    <div ref="settings" @click="handleSettingsClick" class="settings visible">
       <img src="../assets/icons/settings.svg" alt="Settings"/>
     </div>
 
@@ -76,7 +76,7 @@ export default {
           this.goBackIcon = homeIcon;
         }
         this.animateGoBackIcon();
-      }, 650);
+      }, 800);
     },
   },
   mounted() {
@@ -93,7 +93,7 @@ export default {
       }
     },
     animateGoBackIcon() {
-      this.$refs.goBack.classList.toggle('animate');
+      this.$refs.goBack.classList.toggle('visible');
     },
     handleSettingsClick() {
       this.isSettingsVisible = !this.isSettingsVisible;
@@ -104,7 +104,7 @@ export default {
     },
     setExperienceLayerOpacity() {
       if (this.$refs.experienceLayer) {
-        this.$refs.experienceLayer.style.opacity = 1;
+        this.$refs.experienceLayer.classList.add('visible');
       }
     },
     toggleMuted() {

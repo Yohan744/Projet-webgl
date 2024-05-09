@@ -1,9 +1,9 @@
 import Experience from "../Experience";
-import Cassette from "./Props/Cassette";
-import Walkman from "./Props/Walkman";
-import Projector from "./Props/Projector";
-import Pencil from "./Props/Pencil";
-import Malle from "./Props/Malle";
+import Cassette from "./Props/Essential/Cassette";
+import Walkman from "./Props/Essential/Walkman";
+import Projector from "./Props/Essential/Projector";
+import Pencil from "./Props/Essential/Pencil";
+import Malle from "./Props/Essential/Malle";
 
 export default class Props {
 
