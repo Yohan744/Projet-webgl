@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Experience from "../../../Experience";
+import Experience from "../../Experience";
 import {DoubleSide} from "three";
 
 export default class Projector {
@@ -24,6 +24,14 @@ export default class Projector {
         this.projectorModel.position.set(-3.8, 1.15, 4.5);
         this.scene.add(this.projectorModel);
 
+
+        const tireuse = this.projectorModel.getObjectByName('tireuse');
+        if (!tireuse) {
+            console.error('Tireuse object not found!');
+            return;
+        }
+
+        this.setupDragControls([tireuse]);
         this.mixer = new THREE.AnimationMixer(this.projectorModel);
         this.mixer.timeScale = 0.2;
 
@@ -32,6 +40,20 @@ export default class Projector {
         this.renderer.domElement.addEventListener('pointerdown', this.handlePointerDown.bind(this));
     }
 
+    setupDragControls(objects) {
+        const dragControls = new DragControls(objects, this.camera, this.renderer.domElement);
+        console.log(dragControls);
+        dragControls.addEventListener('drag', event => {
+            event.object.position.z = THREE.MathUtils.clamp(event.object.position.z, -0.05, 0.05);
+        });
+    }
+
+    moveRail(rail) {
+        rail.position.x += 0.05;
+        if (rail.position.x > 1) {
+            rail.position.x = 0;
+        }
+    }
     setupSpotlight() {
         this.spotlight = new THREE.SpotLight(0xffffff, 60, 0, Math.PI * 0.05);
         this.spotlight.position.copy(this.projectorModel.position);
@@ -77,8 +99,8 @@ export default class Projector {
 
     animate() {
         requestAnimationFrame(this.animate.bind(this));
-        const delta = this.clock.getDelta();
-        this.mixer.update(delta);
+       // const delta = this.clock.getDelta();
+        //this.mixer.update(delta);
         this.renderer.render(this.scene, this.camera);
     }
 
@@ -89,8 +111,12 @@ export default class Projector {
             if (!this.isCameraMoved) {
                 this.onModelClicked(intersects[0]);
                 this.isCameraMoved = true;
-            } else if (!this.isSetup) {
-                this.isSetup = true;
+            } else {
+                const object = intersects[0].object;
+                if (object.name === 'rail_Diapo.position') {
+                    console.log("là")
+                    this.moveRail(object);
+                }
             }
         }
     }
