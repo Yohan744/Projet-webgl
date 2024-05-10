@@ -21,14 +21,16 @@ let sideMirrorMaterial,
     carpetMaterial,
     sheetMaterial,
     chestDrawerMaterial,
-    shelfMaterial,
+    libraryMaterial,
     deskMaterial,
     storageMaterial,
     littleStorageMaterial,
     pillowMaterial,
-    coatRackMaterial;
+    coatRackMaterial,
+    bulbMaterial;
 
-let outlineMaterial;
+let outlineMaterial,
+    locationsMaterial;
 
 export default class MaterialLibrary {
 
@@ -273,23 +275,23 @@ export default class MaterialLibrary {
         return chestDrawerMaterial
     }
 
-    getShelfMaterial() {
-        if (!shelfMaterial) {
-            shelfMaterial = new MeshStandardMaterial({
-                color: '#ffbc8c',
+    getLibraryMaterial() {
+        if (!libraryMaterial) {
+            libraryMaterial = new MeshBasicMaterial({
+                map: this.resources.items.library.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
-            this.materialsUsed.push(shelfMaterial)
+            this.materialsUsed.push(libraryMaterial)
         }
 
-        return shelfMaterial
+        return libraryMaterial
     }
 
     getDeskMaterial() {
         if (!deskMaterial) {
-            deskMaterial = new MeshStandardMaterial({
-                color: '#ffbd5d',
+            deskMaterial = new MeshBasicMaterial({
+                map: this.resources.items.desk.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -351,6 +353,19 @@ export default class MaterialLibrary {
         return coatRackMaterial
     }
 
+    getBulbMaterial() {
+        if (!bulbMaterial) {
+            bulbMaterial = new MeshBasicMaterial({
+                map: this.resources.items.bulb.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(bulbMaterial)
+        }
+
+        return bulbMaterial
+    }
+
 
     //////////////////////// EFFECTS MATERIALS ////////////////////////
 
@@ -367,6 +382,23 @@ export default class MaterialLibrary {
         }
 
         return outlineMaterial
+    }
+
+    getLocationsMaterial() {
+        if (!locationsMaterial) {
+            locationsMaterial = new MeshBasicMaterial({
+                color: 0xffffff,
+                side: FrontSide,
+                transparent: true,
+                opacity: 0.65,
+                depthWrite: false,
+                depthTest: false,
+            })
+
+            this.materialsUsed.push(locationsMaterial)
+        }
+
+        return locationsMaterial
     }
 
     destroy() {

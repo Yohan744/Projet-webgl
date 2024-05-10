@@ -161,6 +161,30 @@ export default [
                 }
             },
 
+            {
+                name: 'desk',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/desk/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'library',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/library/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'bulb',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/bulb/diffuse.webp',
+                }
+            },
+
         ]
     },
 

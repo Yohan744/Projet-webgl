@@ -43,7 +43,7 @@ export default class ObjectsInteractable {
                 } else if (name.includes("projecteur")) {
                     child.dispose()
                 } else {
-                    console.log(name)
+                    // console.log(name)
                 }
 
                 child.material.needsUpdate = true

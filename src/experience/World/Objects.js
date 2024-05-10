@@ -25,6 +25,9 @@ export default class Objects {
                 child.material.dispose()
                 child.matrixAutoUpdate = false
 
+                child.receiveShadow = false
+                child.castShadow = false
+
                 if (name.includes("tour_miroir")) {
                     child.material = this.materialLibrary.getSideMirrorMaterial()
                 } else if (name.includes("miroir001")) {
@@ -35,20 +38,22 @@ export default class Objects {
                     child.material = this.materialLibrary.getCarpetMaterial()
                 } else if (name.includes("drap_qui_tombe") || name.includes("fauteuil_drappe_")) {
                     child.material = this.materialLibrary.getSheetMaterial()
-                } else if (name.includes("bureau")) {
-                    // child.material = this.materialLibrary.getDeskMaterial()
+                } else if (name === "bureau") {
+                    child.material = this.materialLibrary.getDeskMaterial()
                 } else if (name.includes("bibliothèque")) {
-                    // child.material = this.materialLibrary.getShelfMaterial()
+                    child.material = this.materialLibrary.getLibraryMaterial()
                 } else if (name.includes("petitmeuble")) {
                     child.material = this.materialLibrary.getLittleStorageMaterial()
                 } else if (name.includes("coussin")) {
                     child.material = this.materialLibrary.getPillowMaterial()
                 } else if (name.includes("porte_manteau")) {
                     // child.material = this.materialLibrary.getCoatRackMaterial()
+                } else if (name.includes("ampoule")) {
+                    child.material = this.materialLibrary.getBulbMaterial()
                 }
 
                 else {
-                    // console.log(name)
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true
