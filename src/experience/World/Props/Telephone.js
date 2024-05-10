@@ -5,8 +5,8 @@ import * as THREE from "three";
 
 export default class Telephone extends Prop {
 
-    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05) {
-        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, isOutlined)
+    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05, propSound) {
+        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, isOutlined, propSound)
 
         this.experience = new Experience();
         this.resources = this.experience.resources;
@@ -14,6 +14,9 @@ export default class Telephone extends Prop {
 
     }
 
+    init() {
+
+    }
     onClick() {
         console.log("click telephone")
     }

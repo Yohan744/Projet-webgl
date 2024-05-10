@@ -8,7 +8,7 @@ import {MouseUtils} from "../Utils/MouseUtils";
 
 export default class Prop extends EventEmitter {
 
-    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05) {
+    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05, propSound = '') {
         super();
 
         this.experience = new Experience();
@@ -16,20 +16,30 @@ export default class Prop extends EventEmitter {
         this.pointer = this.experience.pointer
         this.appStore = this.experience.appStore;
         this.camera = this.experience.camera.modes.default.instance;
+        this.soundManager = this.experience.soundManager;
+
         this.mesh = mesh
         this.animatePropsToCameraOnClick = animatePropsToCameraOnClick
         this.isOutlined = isOutlined
+        this.propSound = propSound
 
         this.propsBasicPosition = mesh.position.clone()
         this.propsBasicRotation = mesh.rotation.clone()
         this.desiredRotation = desiredRotationOnClick
         this.offsetFromCamera = 0.6;
+        this.chanceOfPlayingASong = 0.4
+        this.propsSongHasBeenPlayed = false
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
         if (this.animatePropsToCameraOnClick) this.mouseUtils = new MouseUtils(this.mesh);
 
+        this.init()
         this.setWatchers()
 
+    }
+
+    init() {
+        // to be overridden
     }
 
     setWatchers() {
@@ -51,12 +61,27 @@ export default class Prop extends EventEmitter {
                 this.animatePropsToCamera()
                 this.appStore.updateInteractingState(true)
                 this.outline?.removeOutline()
+                this.playSoundOnClick()
             }
         }
     }
 
     onClick() {
         // to be overridden
+    }
+
+    playSoundOnClick() {
+        if (this.propSound !== '') {
+            if (!this.propsSongHasBeenPlayed) {
+                this.soundManager.playSoundWithBackgroundFade(this.propSound, 1.25)
+                this.propsSongHasBeenPlayed = true
+            } else {
+                if (Math.random() < this.chanceOfPlayingASong) {
+                    const randomSound = this.experience.soundManager.getRandomSound()
+                    this.soundManager.playSoundWithBackgroundFade(randomSound, 1.25)
+                }
+            }
+        }
     }
 
     animatePropsToCamera() {

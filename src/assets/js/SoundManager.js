@@ -41,6 +41,11 @@ export default class SoundManager {
         }
     }
 
+    pause(key) {
+        this.sounds[key].pause();
+        this.sounds[key].isPlaying = false;
+    }
+
     stop(key) {
         this.sounds[key].stop();
     }
@@ -60,28 +65,38 @@ export default class SoundManager {
     playSoundWithBackgroundFade(key, fadeDuration) {
         const originalVolume = this.sounds['background'].volume();
 
-        this.sounds['background'].fade(originalVolume, originalVolume / 2, fadeDuration);
+        this.sounds['background'].fade(originalVolume, originalVolume / 3, fadeDuration);
 
-        this.sounds[key].play();
+        setTimeout(() => {
+            this.sounds[key].play();
 
-        this.sounds[key].on('end', () => {
-            this.sounds['background'].fade(originalVolume / 2, originalVolume, fadeDuration);
-            this.sounds[key].off('end');
-        });
+            this.sounds[key].on('end', () => {
+                this.sounds['background'].fade(originalVolume / 3, originalVolume, fadeDuration);
+                this.sounds[key].off('end');
+            });
+        }, fadeDuration * 1000);
     }
 
     setSoundVolume(key, volume) {
         this.sounds[key].volume(volume);
     }
 
+    getRandomSound() {
+        const generalSounds = Object.keys(data).filter(key => key.includes('general'));
+        const randomIndex = Math.floor(Math.random() * generalSounds.length);
+        return generalSounds[randomIndex];
+    }
+
     mute() {
         Howler.mute(true);
         this.appStore.toggleMute(true);
+        this.pause('background')
     }
 
     unmute() {
         Howler.mute(false);
         this.appStore.toggleMute(false);
+        this.play('background')
     }
 
     destroy() {

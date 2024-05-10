@@ -9,24 +9,28 @@ export const objectsData = {
         file: Walkman,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
-        outlineScale: 1.05 // false to deactivate, type number to activate
+        outlineScale: 1.05, // false to deactivate, type number to activate
+        propSound: '' // not set yet
     },
     cassette: {
         file: Cassette,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
-        outlineScale: 1.05
+        outlineScale: 1.05,
+        propSound: ''
     },
     crayon: {
         file: Pencil,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
-        outlineScale: 1.05
+        outlineScale: 1.05,
+        propSound: ''
     },
     telephone: {
         file: Telephone,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
-        outlineScale: 1.05
+        outlineScale: 1.05,
+        propSound: 'telephone'
     },
 }

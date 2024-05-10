@@ -29,16 +29,16 @@ export default class ObjectsInteractable {
                 child.material.dispose()
 
                 if (name.includes("walkman")) {
-                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
                     this.objects.push(this.walkman)
                 } else if (name.includes("cassette")) {
-                    this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
                     this.objects.push(this.cassette)
                 }  else if (name.includes("crayon")) {
-                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
                     this.objects.push(this.pencil)
                 } else if (name.includes("telephone")) {
-                    this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale)
+                    this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
                     this.objects.push(this.telephone)
                 } else if (name.includes("projecteur")) {
                     child.dispose()

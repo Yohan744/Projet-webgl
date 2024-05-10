@@ -34,6 +34,9 @@ import arrowLeftIcon from '../assets/icons/arrow-left.svg';
 
 export default {
   name: 'ExperienceLayer',
+  props: {
+    soundManager: Object,
+  },
   setup() {
     const appStore = useAppStore();
     return {
@@ -108,7 +111,7 @@ export default {
       }
     },
     toggleMuted() {
-      this.appStore.toggleMute(!this.appStore.$state.muted);
+      this.appStore.$state.muted ? this.soundManager.unmute() : this.soundManager.mute();
     },
   }
 }

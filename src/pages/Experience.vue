@@ -5,7 +5,7 @@
     </div>
     <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
-    <ExperienceLayer/>
+    <ExperienceLayer :soundManager="soundManager"/>
     <div ref="experienceContainer" class="experience"></div>
   </main>
 </template>
