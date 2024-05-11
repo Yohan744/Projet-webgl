@@ -90,7 +90,7 @@ export default class ChestDrawer {
         const position = new THREE.Vector3();
         this.tirroirHaut.getWorldPosition(position);
         this.envelop.animateToPosition(position.x - 0.5, position.y, position.z);
-        this.dahlia.animateToPosition(position.x - 0.5, position.y, position.z);
+       // this.dahlia.animateToPosition(position.x - 0.5, position.y, position.z);
         this.letter.animateToPosition(position.x - 0.5, position.y, position.z);
     }
     

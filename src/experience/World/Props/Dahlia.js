@@ -3,7 +3,6 @@ import * as THREE from "three";
 import gsap from "gsap";
 import Pointer from "../../Utils/Pointer";
 import Outline from "../Effects/Outline";
-//import { MouseUtils } from "../Utils/MouseUtils";
 import { CameraUtils } from "../Utils/CameraUtils";
 import { MouseUtils } from "../Utils/MouseUtils";
 
@@ -26,17 +25,14 @@ export default class Dahlia {
     
     setDependencies(envelop, chestDrawer) {
         this.envelop = envelop;
+        this.dahliaModel.position.set(0, 0, 0);
+        this.dahliaModel.rotateZ(Math.PI / 2);
+        envelop.envelopModel.add(this.dahliaModel)
         this.chestDrawer = chestDrawer;
     }
     init() {
         this.dahliaModel = this.resources.items.dahliaModel.scene;
-       // this.outline = new Outline(this.scene, this.dahliaModel, 0.05, 0xffffff);
-       // this.interactiveDahlia = new MouseUtils(this.dahliaModel, this.camera, this.pointer);
-        this.dahliaModel.position.set(-3.5, 0, -4);
-        this.dahliaModel.rotateZ(Math.PI / 2);
-
-           this.interactiveDahlia = new MouseUtils(this.dahliaModel, this.camera, this.pointer, this.renderer);
-        this.scene.add(this.dahliaModel);
+        this.interactiveDahlia = new MouseUtils(this.dahliaModel, this.camera, this.pointer, this.renderer);
     }
     getModel() {
         return this.mesh;
@@ -47,14 +43,11 @@ export default class Dahlia {
         console.log(this.dahliaModel.position)
         if (intersects.length > 0) {
             if (!this.hasAnimatedToCamera) {
-                //this.positionEnvelopInFrontOfCamera();
-                //this.hasAnimatedToCamera = true;
                 CameraUtils.animateToCamera(this.dahliaModel, this.camera);
                 this.hasAnimatedToCamera = true;
             }
         }
     }
-   
 
     animateToPosition(x, y, z) {
         gsap.to(this.dahliaModel.position, {
@@ -67,17 +60,17 @@ export default class Dahlia {
             }
         });
     }
-    appear(envelopPosition) {
-        const offset = new THREE.Vector3(0, 0.3, 0); // Example offset
-        const targetPosition = envelopPosition.clone().add(offset);
-        return gsap.to(this.dahliaModel.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z,
-            duration: 1,
-            onComplete: () => console.log("Dahlia appeared next to Envelop!")
-        });
-    }
+    // appear(envelopPosition) {
+    //     const offset = new THREE.Vector3(0, -0.3, 0); // Example offset
+    //     const targetPosition = envelopPosition.clone().add(offset);
+    //     return gsap.to(this.dahliaModel.position, {
+    //         x: targetPosition.x,
+    //         y: targetPosition.y,
+    //         z: targetPosition.z,
+    //         duration: 1,
+    //         onComplete: () => console.log("Dahlia appeared next to Envelop!")
+    //     });
+    // }
     
 
     returnToInitialPosition() {
@@ -92,7 +85,6 @@ export default class Dahlia {
             }
         });
     }
-
 
 
     destroy() {

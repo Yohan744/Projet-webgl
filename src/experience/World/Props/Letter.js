@@ -7,14 +7,14 @@ import Outline from "../Effects/Outline";
 import { CameraUtils } from "../Utils/CameraUtils";
 import { MouseUtils } from "../Utils/MouseUtils";
 
-export default class Letter {
+export default class Dahlia {
     constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
         this.renderer = this.experience.renderer.instance;
         this.camera = this.experience.camera.instance;
-        this.pointer = this.experience.pointer
+        this.pointer = this.experience.pointer;
         this.appStore = this.experience.appStore;
         this.isOpen = false; 
         this.mesh = new THREE.Mesh(
@@ -23,32 +23,42 @@ export default class Letter {
         );
         this.init();
     }
-
+    
     setDependencies(envelop, chestDrawer) {
         this.envelop = envelop;
-        this.chestDrawer = chestDrawer;
+        if (this.envelop && this.envelop.envelopModel) {
+            this.letterModel.position.set(0.3, 0, 0);
+            // Ajout du modèle LetterModel à l'objet envelopModel de l'objet envelop
+            this.envelop.envelopModel.add(this.letterModel);
+            this.chestDrawer = chestDrawer;
+            console.log("LetterModel position:", this.letterModel.position);
+            console.log("LetterModel parent:", this.letterModel.parent);
+            console.log("EnvelopModel position:", this.envelop.envelopModel.position);
+        } else {
+            console.error("Envelop or EnvelopModel is not defined.");
+        }
+    }
+    init() {
+        this.letterModel = this.resources.items.letterModel.scene;
+       // this.outline = new Outline(this.scene, this.letterModel, 0.05, 0xffffff);
+       // this.interactiveDahlia = new MouseUtils(this.letterModel, this.camera, this.pointer);
+        this.letterModel.position.set(0, 0, 0);
+       // this.letterModel.rotateZ(Math.PI / 2);
+
+        this.interactiveDahlia = new MouseUtils(this.letterModel, this.camera, this.pointer, this.renderer);
+       // this.scene.add(this.letterModel);
+
     }
     getModel() {
         return this.mesh;
     }
-    init() {
-        this.letterModel = this.resources.items.letterModel.scene;
-        //this.outline = new Outline(this.scene, this.letterModel, 0.05, 0xffffff);
-       // this.interactiveLetter = new MouseUtils(this.letterModel, this.camera, this.pointer);
-       this.letterModel.position.set(-3.5, 0, -4);
-       this.letterModel.rotateZ(Math.PI / 2);
 
-          this.interactiveDahlia = new MouseUtils(this.letterModel, this.camera, this.pointer, this.renderer);
-        this.scene.add(this.letterModel);
-    }
     handleClick(event) {
-        const intersects = this.pointer.raycaster.intersectObjects([this.dahliaModel], true);
-        console.log(this.dahliaModel.position)
+        const intersects = this.pointer.raycaster.intersectObjects([this.letterModel], true);
+        console.log(this.letterModel.position)
         if (intersects.length > 0) {
             if (!this.hasAnimatedToCamera) {
-                //this.positionEnvelopInFrontOfCamera();
-                //this.hasAnimatedToCamera = true;
-                CameraUtils.animateToCamera(this.dahliaModel, this.camera);
+                CameraUtils.animateToCamera(this.letterModel, this.camera);
                 this.hasAnimatedToCamera = true;
             }
         }
@@ -65,19 +75,32 @@ export default class Letter {
             }
         });
     }
+    // appear(envelopPosition) {
+    //     const offset = new THREE.Vector3(0, -0.3, 0); // Example offset
+    //     const targetPosition = envelopPosition.clone().add(offset);
+    //     return gsap.to(this.letterModel.position, {
+    //         x: targetPosition.x,
+    //         y: targetPosition.y,
+    //         z: targetPosition.z,
+    //         duration: 1,
+    //         onComplete: () => console.log("Dahlia appeared next to Envelop!")
+    //     });
+    // }
+    
 
-    appear(envelopPosition) {
-        const offset = new THREE.Vector3(0, 0.5, 0); // Example offset
-        const targetPosition = envelopPosition.clone().add(offset);
-        return gsap.to(this.letterModel.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z,
+    returnToInitialPosition() {
+        const initialPosition = new THREE.Vector3(-3.5, 0, -4); 
+        gsap.to(this.letterModel.position, {
+            x: initialPosition.x,
+            y: initialPosition.y,
+            z: initialPosition.z,
             duration: 1,
-            onComplete: () => console.log("letter appeared next to Envelop!")
+            onComplete: () => {
+                console.log("Dahlia returned to initial position!");
+            }
         });
     }
-    
+
 
     destroy() {
         this.pointer.off("click");

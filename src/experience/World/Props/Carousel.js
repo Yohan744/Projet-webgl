@@ -1,31 +1,43 @@
 import Experience from "../../Experience";
 import * as THREE from "three";
 import gsap from "gsap";
-
+import { CameraUtils } from "../Utils/CameraUtils";
 import Pointer from "../../Utils/Pointer";
 
+
 export default class Carousel {
-    constructor(scene, camera, objects) {
+    constructor(scene, camera, group) {
         this.scene = scene;
         this.camera = camera;
-        this.objects = objects;
+        this.group = group;
+        this.objects = Array.from(group.children);
+        this.currentIndex = 0;
+
+        this.bindKeyEvents();
     }
 
-    alignItems() {
-        const angle = Math.PI * 2 / this.objects.length; 
+    bindKeyEvents() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                this.rotateObjects(event.key === 'ArrowRight');
+            }
+        });
+    }
+
+    rotateObjects(clockwise = true) {
+        if (clockwise) {
+            const first = this.objects.shift();
+            this.objects.push(first);
+        } else {
+            const last = this.objects.pop();
+            this.objects.unshift(last);
+        }
+        this.updatePositions();
+    }
+
+    updatePositions() {
         this.objects.forEach((obj, index) => {
-            const radius = 5; 
-            const theta = angle * index;
-            const x = this.objects[0].initialPosition.x + radius * Math.cos(theta); 
-            const y = this.objects[0].initialPosition.y;
-            const z = this.objects[0].initialPosition.z + radius * Math.sin(theta);
-            gsap.to(obj.model.position, {
-                x: x,
-                y: y,
-                z: z,
-                duration: 1,
-                onComplete: () => console.log(obj.model.name + " positioned.")
-            });
+            obj.position.x = (index - 1) * 0.3; 
         });
     }
 }
