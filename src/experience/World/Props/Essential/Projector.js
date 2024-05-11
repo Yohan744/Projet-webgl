@@ -1,6 +1,7 @@
 import * as THREE from "three";
-import Experience from "../../Experience";
+import Experience from "../../../Experience";
 import {DoubleSide} from "three";
+import {DragControls} from "three/examples/jsm/controls/DragControls";
 
 export default class Projector {
     constructor() {
@@ -24,29 +25,55 @@ export default class Projector {
         this.projectorModel.position.set(-3.8, 1.15, 4.5);
         this.scene.add(this.projectorModel);
 
+        this.initDraggableObjects();
 
-        const tireuse = this.projectorModel.getObjectByName('tireuse');
-        if (!tireuse) {
-            console.error('Tireuse object not found!');
-            return;
-        }
-
-        this.setupDragControls([tireuse]);
-        this.mixer = new THREE.AnimationMixer(this.projectorModel);
-        this.mixer.timeScale = 0.2;
-
-        this.setupAnimations(this.experience.resources.items.projectorModel.animations);
+        // this.setupAnimations(this.experience.resources.items.projectorModel.animations);
         this.animate();
         this.renderer.domElement.addEventListener('pointerdown', this.handlePointerDown.bind(this));
     }
 
+    initDraggableObjects() {
+        const tireuse = this.projectorModel.getObjectByName('tireuse');
+
+        this.setupDragControls([tireuse], { draggingThreshold: 0.1 });
+
+
+        this.renderer.domElement.removeEventListener('pointerdown', this.handlePointerDown.bind(this));
+
+        console.log("Objet draggable : ", this.dragControls.getObjects());
+        console.log("DragControls activé : ", this.dragControls.enabled);
+    }
+
     setupDragControls(objects) {
-        const dragControls = new DragControls(objects, this.camera, this.renderer.domElement);
-        console.log(dragControls);
-        dragControls.addEventListener('drag', event => {
+        this.dragControls = new DragControls(objects, this.camera, this.renderer.domElement);
+
+        this.dragControls.addEventListener('dragstart', event => {
+            console.log("Début du glisser-déposer. Arrêt des animations...");
+            this.stopAnimations();
+        });
+
+        this.dragControls.addEventListener('dragend', event => {
+            console.log("Fin du glisser-déposer. Reprise des animations...");
+            this.resumeAnimations();
+        });
+
+        this.dragControls.addEventListener('drag', event => {
+            console.log("Drag en cours...");
             event.object.position.z = THREE.MathUtils.clamp(event.object.position.z, -0.05, 0.05);
         });
     }
+
+    stopAnimations() {
+        console.log("Arrêt des animations");
+        this.animations.forEach(action => {
+            action.stop();
+        });
+    }
+
+    resumeAnimations() {
+        console.log("Reprise des animations");
+    }
+
 
     moveRail(rail) {
         rail.position.x += 0.05;
@@ -99,7 +126,7 @@ export default class Projector {
 
     animate() {
         requestAnimationFrame(this.animate.bind(this));
-       // const delta = this.clock.getDelta();
+        // const delta = this.clock.getDelta();
         //this.mixer.update(delta);
         this.renderer.render(this.scene, this.camera);
     }
@@ -107,13 +134,14 @@ export default class Projector {
     handlePointerDown(event) {
         const intersects = this.experience.pointer.raycaster.intersectObject(this.projectorModel, true);
         if (intersects.length > 0) {
-            this.triggerAnimation();
+            // this.initDraggableObjects()
+            //this.triggerAnimation();
             if (!this.isCameraMoved) {
                 this.onModelClicked(intersects[0]);
                 this.isCameraMoved = true;
             } else {
                 const object = intersects[0].object;
-                if (object.name === 'rail_Diapo.position') {
+                if (object.name === 'rail_Diapo') {
                     console.log("là")
                     this.moveRail(object);
                 }
