@@ -28,6 +28,8 @@ export default class ObjectsInteractable {
                 const data = objectsData[name]
                 child.material.dispose()
 
+                // if (!data) return
+
                 if (name.includes("walkman")) {
                     this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
                     this.objects.push(this.walkman)
@@ -40,17 +42,30 @@ export default class ObjectsInteractable {
                 } else if (name.includes("telephone")) {
                     this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
                     this.objects.push(this.telephone)
-                } else if (name.includes("projecteur")) {
-                    child.dispose()
+                } else if (name.includes("rubicub")) {
+                    child.material = this.materialLibrary.getRubiksCubeMaterial()
+                    this.rubikscube = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.objects.push(this.rubikscube)
+                } else if (name.includes("tv")) {
+                    child.material = this.materialLibrary.getTvMaterial()
+                    this.television = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.objects.push(this.television)
+                } else if (name.includes("tourne_disque")) {
+                    child.material = this.materialLibrary.getRecordPlayerMaterial()
+                    this.recordPlayer = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.objects.push(this.recordPlayer)
+                } else if (name.includes("photo") || name.includes("diapo") || name.includes("rail")) {
+
                 } else {
                     // console.log(name)
                 }
 
                 child.material.needsUpdate = true
-                this.scene.add(this.objectsInteractableModel)
 
             }
         })
+
+        this.scene.add(this.objectsInteractableModel)
 
     }
 

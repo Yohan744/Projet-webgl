@@ -20,14 +20,20 @@ let sideMirrorMaterial,
     cardBoardMaterial,
     carpetMaterial,
     sheetMaterial,
-    chestDrawerMaterial,
     libraryMaterial,
     deskMaterial,
     storageMaterial,
     littleStorageMaterial,
     pillowMaterial,
     coatRackMaterial,
-    bulbMaterial;
+    bulbMaterial,
+    ladderMaterial;
+
+let recordPlayerMaterial,
+    rubiksCubeMaterial,
+    televisionMaterial,
+    chestDrawerMaterial;
+
 
 let outlineMaterial,
     locationsMaterial;
@@ -217,11 +223,8 @@ export default class MaterialLibrary {
 
     getCardBoardMaterial() {
         if (!cardBoardMaterial) {
-            cardBoardMaterial = new MeshStandardMaterial({
+            cardBoardMaterial = new MeshLambertMaterial({
                 map: this.resources.items.cardboard.diffuse,
-                roughnessMap: this.resources.items.cardboard.roughness,
-                normalMap: this.resources.items.cardboard.normal,
-                aoMap: this.resources.items.cardboard.ao,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -236,7 +239,7 @@ export default class MaterialLibrary {
 
             this.repeatTextures(['diffuse', 'roughness', 'normal'], 'carpet', 1.75, 1.75)
 
-            carpetMaterial = new MeshStandardMaterial({
+            carpetMaterial = new MeshBasicMaterial({
                 map: this.resources.items.carpet.diffuse,
                 roughnessMap: this.resources.items.carpet.roughness,
                 normalMap: this.resources.items.carpet.normal,
@@ -260,19 +263,6 @@ export default class MaterialLibrary {
         }
 
         return sheetMaterial
-    }
-
-    getChestDrawerMaterial() {
-        if (!chestDrawerMaterial) {
-            chestDrawerMaterial = new MeshStandardMaterial({
-                color: '#bc7c4b',
-                side: this.debug ? DoubleSide : FrontSide
-            })
-
-            this.materialsUsed.push(chestDrawerMaterial)
-        }
-
-        return chestDrawerMaterial
     }
 
     getLibraryMaterial() {
@@ -303,7 +293,7 @@ export default class MaterialLibrary {
 
     getStorageMaterial() {
         if (!storageMaterial) {
-            storageMaterial = new MeshStandardMaterial({
+            storageMaterial = new MeshBasicMaterial({
                 color: '#b99f46',
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -316,7 +306,7 @@ export default class MaterialLibrary {
 
     getLittleStorageMaterial() {
         if (!littleStorageMaterial) {
-            littleStorageMaterial = new MeshStandardMaterial({
+            littleStorageMaterial = new MeshBasicMaterial({
                 map: this.resources.items.littleStorage.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -329,7 +319,7 @@ export default class MaterialLibrary {
 
     getPillowMaterial() {
         if (!pillowMaterial) {
-            pillowMaterial = new MeshStandardMaterial({
+            pillowMaterial = new MeshLambertMaterial({
                 color: '#f8f8f8',
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -342,8 +332,8 @@ export default class MaterialLibrary {
 
     getCoatRackMaterial() {
         if (!coatRackMaterial) {
-            coatRackMaterial = new MeshStandardMaterial({
-                color: '#383838',
+            coatRackMaterial = new MeshBasicMaterial({
+                map: this.resources.items.coatRack.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -364,6 +354,73 @@ export default class MaterialLibrary {
         }
 
         return bulbMaterial
+    }
+
+    getLadderMaterial() {
+        if (!ladderMaterial) {
+            ladderMaterial = new MeshBasicMaterial({
+                map: this.resources.items.ladder.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(ladderMaterial)
+        }
+
+        return ladderMaterial
+    }
+
+    //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
+
+    getChestDrawerMaterial() {
+        if (!chestDrawerMaterial) {
+            chestDrawerMaterial = new MeshStandardMaterial({
+                color: '#bc7c4b',
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(chestDrawerMaterial)
+        }
+
+        return chestDrawerMaterial
+    }
+
+    getRubiksCubeMaterial() {
+        if (!rubiksCubeMaterial) {
+            rubiksCubeMaterial = new MeshBasicMaterial({
+                map: this.resources.items.rubiksCube.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(rubiksCubeMaterial)
+        }
+
+        return rubiksCubeMaterial
+    }
+
+    getTvMaterial() {
+        if (!televisionMaterial) {
+            televisionMaterial = new MeshBasicMaterial({
+                map: this.resources.items.television.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(televisionMaterial)
+        }
+
+        return televisionMaterial
+    }
+
+    getRecordPlayerMaterial() {
+        if (!recordPlayerMaterial) {
+            recordPlayerMaterial = new MeshBasicMaterial({
+                map: this.resources.items.recordPlayer.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(recordPlayerMaterial)
+        }
+
+        return recordPlayerMaterial
     }
 
 

@@ -22,9 +22,9 @@ export default class Objects {
             if (child.isMesh) {
 
                 const name = child.name.toLowerCase()
+
                 child.material.dispose()
                 child.matrixAutoUpdate = false
-
                 child.receiveShadow = false
                 child.castShadow = false
 
@@ -42,17 +42,19 @@ export default class Objects {
                     child.material = this.materialLibrary.getDeskMaterial()
                 } else if (name.includes("bibliothèque")) {
                     child.material = this.materialLibrary.getLibraryMaterial()
-                } else if (name.includes("petitmeuble")) {
+                } else if (name.includes("petit_meuble")) {
                     child.material = this.materialLibrary.getLittleStorageMaterial()
+                } else if (name.includes("meuble_mur_fenetre")) {
+                    child.material = this.materialLibrary.getStorageMaterial()
                 } else if (name.includes("coussin")) {
                     child.material = this.materialLibrary.getPillowMaterial()
                 } else if (name.includes("porte_manteau")) {
-                    // child.material = this.materialLibrary.getCoatRackMaterial()
+                    child.material = this.materialLibrary.getCoatRackMaterial()
                 } else if (name.includes("ampoule")) {
                     child.material = this.materialLibrary.getBulbMaterial()
-                }
-
-                else {
+                } else if (name.includes("échelle")) {
+                    child.material = this.materialLibrary.getLadderMaterial()
+                } else {
                     console.log(name)
                 }
 

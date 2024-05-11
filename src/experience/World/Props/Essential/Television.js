@@ -1,8 +1,8 @@
-import * as THREE from "three";
 import Experience from "../../../Experience";
 import Prop from "../Prop";
+import * as THREE from "three";
 
-export default class Walkman extends Prop {
+export default class Television extends Prop {
 
     constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05, propSound) {
         super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, isOutlined, propSound)
@@ -16,13 +16,11 @@ export default class Walkman extends Prop {
     init() {
 
     }
-
     onClick() {
-        console.log("click walkman")
+        console.log("click TV")
     }
 
     destroy() {
         super.destroy()
     }
-
 }

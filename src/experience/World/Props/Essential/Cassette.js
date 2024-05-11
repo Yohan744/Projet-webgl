@@ -1,4 +1,3 @@
-import {MouseUtils} from "../../Utils/MouseUtils";
 import Experience from "../../../Experience";
 import Prop from "../Prop";
 import * as THREE from "three";

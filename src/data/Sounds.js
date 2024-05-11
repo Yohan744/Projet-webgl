@@ -16,7 +16,7 @@ export const data = {
 
     telephone: {
         src: p + 'telephone.mp3',
-        volume: 0.5,
+        volume: 0.75,
         preload: true,
         loop: false,
     },
@@ -25,19 +25,19 @@ export const data = {
 
     general1: {
         src: g + 'general1.mp3',
-        volume: 0.5,
+        volume: 0.75,
         preload: true,
         loop: false,
     },
     general2: {
         src: g + 'general2.mp3',
-        volume: 0.5,
+        volume: 0.75,
         preload: true,
         loop: false,
     },
     general3: {
         src: g + 'general3.mp3',
-        volume: 0.5,
+        volume: 0.75,
         preload: true,
         loop: false,
     },

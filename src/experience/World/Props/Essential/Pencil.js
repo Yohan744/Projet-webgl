@@ -1,9 +1,6 @@
 import Experience from "../../../Experience";
-import Outline from "../../Effects/Outline";
 import * as THREE from "three";
 import Prop from "../Prop";
-import {MouseUtils} from "../../Utils/MouseUtils";
-import gsap from "gsap";
 
 export default class Pencil extends Prop {
 
