@@ -307,28 +307,6 @@ export default class Camera {
         });
     }
 
-    resetCameraPosition(onCompleteCallback) {
-        const duration = 2;
-        gsap.to(this.instance.position, {
-            x: this.originalPosition.x,
-            y: this.originalPosition.y,
-            z: this.originalPosition.z,
-            duration: duration,
-            ease: "power1.inOut"
-        });
-
-        gsap.to(this.lookingPoint, {
-            x: this.originalLookAt.x,
-            y: this.originalLookAt.y,
-            z: this.originalLookAt.z,
-            duration: duration,
-            ease: "power1.inOut",
-            onComplete: onCompleteCallback
-        });
-    }
-
-
-
     getNormalizedLookingPoint(position, point) {
         const direction = new THREE.Vector3().copy(point);
         direction.normalize();

@@ -15,6 +15,7 @@ export default class Envelop {
 
         this.hasAnimatedToCamera = false;
         this.isDragging = false;
+        this.isPositionned = false;
         this.mouseStartClickPosition = {
             x: 0,
             y: 0,
@@ -45,8 +46,6 @@ export default class Envelop {
         this.itemGroup.add(this.cassette);
         this.itemGroup.add(this.letter);
 
-        //this.itemGroup.position.copy(this.envelopModel.position);
-       // console.log(this.itemGroup.position)
         this.scene.add(this.itemGroup);
     }
 
@@ -62,9 +61,6 @@ export default class Envelop {
             }
         });
 
-        if (!this.morphTargets) {
-            console.log("No morph targets found in the model");
-        }
     }
 
     setEvents() {
@@ -75,12 +71,14 @@ export default class Envelop {
 
     handleClick(event) {
         const mousePosition = this.pointer.getMousePosition();
-        const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel], true);
-        const intersectedObject = this.pointer.raycaster.intersectObjects([this.itemGroup, ...this.itemGroup.children], true);
+        const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel, ...this.itemGroup.children], true);;
+        console.log(intersects);
         if (intersects.length > 0) {
             if (this.hasOpenEnvelop) {
-                console.log("here")
                this.positionItemsInFrontOfCamera();
+            }
+            if(intersects[0].object && this.isPositionned) {
+                this.bringItemToFront(intersects[0].object)
             }
             if (!this.hasAnimatedToCamera) {
                 CameraUtils.animateToCamera(this.envelopModel, this.camera);
@@ -94,39 +92,40 @@ export default class Envelop {
                 };
                 }
         }
-        if (intersectedObject.length > 0) {
-            if (!this.hasOpenEnvelop) {
-                this.positionItemsInFrontOfCamera();
-            } else {
-                this.bringItemToFront(intersectedObject);
-            }
-            this.resetItemsToCarousel()
-        }
     }
 
     bringItemToFront(item) {
-        const targetPosition = new THREE.Vector3();
-        this.camera.getWorldDirection(targetPosition);
-        targetPosition.multiplyScalar(2).add(this.camera.position);
+        const basePosition = new THREE.Vector3(0, 0, 0);
 
         gsap.to(item.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z,
+            x: basePosition.x,
+            y: basePosition.y + 0.3,
+            z: basePosition.z + 0.2,
             duration: 2,
             ease: "power2.inOut",
-            onComplete: () => {
-                //item.lookAt(this.camera.position);
-                console.log("Item is now in front of the camera.");
-            }
         });
     }
+
+
     handleMouseMove(mouse) {
         if(!this.isDragging) return;
         if (!this.isAnimating && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
             this.startAnimationOfMorphTargets();
             this.itemGroup.visible = true;
             this.isAnimating = true;
+        } else {
+            const deltaX = event.clientX - this.mouseStartClickPosition.x;
+            const rotationSpeed = 0.001;
+            const deltaRotation = deltaX * rotationSpeed;
+
+            this.itemGroup.rotation.y += deltaRotation;
+            if (this.itemGroup.rotation.y >= 2 * Math.PI) {
+                this.itemGroup.rotation.y -= 2 * Math.PI;
+            } else if (this.itemGroup.rotation.y <= -2 * Math.PI) {
+                this.itemGroup.rotation.y += 2 * Math.PI;
+            }
+
+
         }
     }
 
@@ -170,13 +169,12 @@ export default class Envelop {
                 duration: 2,
                 ease: "power2.inOut",
                 onComplete: () => {
-                    console.log(this.hasOpenEnvelop)
-                    this.hasOpenEnvelop = true;
+                    this.isPositionned = true;
                 }
             });
         });
 
-        const drawerPosition = new THREE.Vector3(0, -0.1, 0);
+        const drawerPosition = new THREE.Vector3(0, -0.05, -0.05);
         gsap.to(this.envelopModel.position, {
             x: drawerPosition.x,
             y: drawerPosition.y,
@@ -208,24 +206,16 @@ export default class Envelop {
                         z: itemPosition.z,
                         duration: 2,
                         ease: "power2.inOut",
+                    onComplete:() => {
+                            this.hasOpenEnvelop = true;
+                    }
                     })
             }
         });
     }
 
-    showNextItem() {
-        console.log(this.currentItemIndex);
-        const newPosition = -this.currentItemIndex * 2;
-        console.log(this.itemGroup);
-        gsap.to(this.itemGroup.position, {
-            z: newPosition,
-            duration: 1,
-            ease: "power2.inOut",
-            onComplete: () => {
-                this.currentItemIndex = (this.currentItemIndex + 1) % 3;
-            }
-        });
-    }
+
+
 
     destroy() {
         this.scene.remove(this.envelopModel);
