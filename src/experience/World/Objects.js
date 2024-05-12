@@ -22,8 +22,11 @@ export default class Objects {
             if (child.isMesh) {
 
                 const name = child.name.toLowerCase()
+
                 child.material.dispose()
                 child.matrixAutoUpdate = false
+                child.receiveShadow = false
+                child.castShadow = false
 
                 if (name.includes("tour_miroir")) {
                     child.material = this.materialLibrary.getSideMirrorMaterial()
@@ -35,19 +38,23 @@ export default class Objects {
                     child.material = this.materialLibrary.getCarpetMaterial()
                 } else if (name.includes("drap_qui_tombe") || name.includes("fauteuil_drappe_")) {
                     child.material = this.materialLibrary.getSheetMaterial()
-                } else if (name.includes("bureau")) {
-                    // child.material = this.materialLibrary.getDeskMaterial()
+                } else if (name === "bureau") {
+                    child.material = this.materialLibrary.getDeskMaterial()
                 } else if (name.includes("bibliothèque")) {
-                    // child.material = this.materialLibrary.getShelfMaterial()
-                } else if (name.includes("petitmeuble")) {
+                    child.material = this.materialLibrary.getLibraryMaterial()
+                } else if (name.includes("petit_meuble")) {
                     child.material = this.materialLibrary.getLittleStorageMaterial()
+                } else if (name.includes("meuble_mur_fenetre")) {
+                    child.material = this.materialLibrary.getStorageMaterial()
                 } else if (name.includes("coussin")) {
                     child.material = this.materialLibrary.getPillowMaterial()
                 } else if (name.includes("porte_manteau")) {
-                    // child.material = this.materialLibrary.getCoatRackMaterial()
-                }
-
-                else {
+                    child.material = this.materialLibrary.getCoatRackMaterial()
+                } else if (name.includes("ampoule")) {
+                    child.material = this.materialLibrary.getBulbMaterial()
+                } else if (name.includes("échelle")) {
+                    child.material = this.materialLibrary.getLadderMaterial()
+                } else {
                     console.log(name)
                 }
 

@@ -29,9 +29,9 @@ export default class World {
         this.attic = new Attic(this.materialLibrary)
         this.objects = new Objects(this.materialLibrary)
         this.objectsInteractable = new ObjectsInteractable(this.materialLibrary)
+        this.locations = new Locations(this.materialLibrary)
         this.props = new Props()
         this.background = new Background()
-        this.locations = new Locations().instance
     }
 
     resize() {

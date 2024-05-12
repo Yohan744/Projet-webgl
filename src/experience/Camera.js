@@ -245,13 +245,19 @@ export default class Camera {
     updateFocusMode(value) {
         this.isFocused = value
 
-        if (this.isFocused) {
-            this.cameraAmplitude = this.cameraAmplitudeFocus
-            this.lerpCamera = this.lerpCameraFocus
-        } else {
-            this.cameraAmplitude = this.cameraAmplitudeNormal
-            this.lerpCamera = this.lerpCameraNormal
-        }
+        gsap.to(this.cameraAmplitude, {
+            x: this.isFocused ? this.cameraAmplitudeFocus.x : this.cameraAmplitudeNormal.x,
+            y: this.isFocused ? this.cameraAmplitudeFocus.y : this.cameraAmplitudeNormal.y,
+            duration: 2,
+            ease: 'power1.inOut'
+        })
+
+        gsap.to(this, {
+            lerpCamera: this.isFocused ? this.lerpCameraFocus : this.lerpCameraNormal,
+            duration: 2,
+            ease: 'power1.inOut'
+        })
+
     }
 
     getNormalizedLookingPoint(position, point) {

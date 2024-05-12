@@ -1,28 +1,35 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
+import MaterialLibrary from "../MaterialLibrary";
 
 export default class Locations {
 
-    constructor() {
+    static instance
 
-        this.instance = this
+    constructor(materialLibrary) {
+
+        if (Locations.instance) {
+            return Locations.instance
+        }
+        Locations.instance = this
 
         this.experience = new Experience()
         this.debug = this.experience.debug
+        this.materialLibrary = materialLibrary
 
         this.spots = []
 
         this.locationsPositions = [
             new THREE.Vector3(-1.75, 0, 4.1),
-            new THREE.Vector3(-2.15, 0, -2.8),
-            new THREE.Vector3(0.5, 0, -2),
-            new THREE.Vector3(1.5, 0, 2),
+            new THREE.Vector3(-2, 0, -2.5),
+            new THREE.Vector3(1.75, 0, -2.25),
+            new THREE.Vector3(0.8, 0, 2.75),
         ]
 
         this.locationsLookingPoint = [
             new THREE.Vector3(-3, -0.5, -0.5),
             new THREE.Vector3(-9, -0.5, -15),
-            new THREE.Vector3(5, -3.5, -15),
+            new THREE.Vector3(10, -3.5, -5),
             new THREE.Vector3(5, -2, -3),
         ]
 
@@ -45,20 +52,21 @@ export default class Locations {
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
             const geometry = new THREE.PlaneGeometry(0.65, 0.65)
-            geometry.rotateX(Math.PI * 0.5)
+            geometry.rotateX(-Math.PI * 0.5)
 
             const location = new THREE.Mesh(
                 geometry,
-                new THREE.MeshBasicMaterial({
-                    color: 0xffffff,
-                    side: THREE.DoubleSide,
-                })
+                this.materialLibrary.getLocationsMaterial()
             )
+
+            location.matrixAutoUpdate = false
 
             location.position.copy(this.locationsPositions[i]).add(this.locationsOffset[i])
             location.data = {
                 lookingPoint: this.locationsLookingPoint[i]
             };
+
+            location.updateMatrix()
 
             this.spots.push(location)
             this.scene.add(location)
@@ -72,6 +80,8 @@ export default class Locations {
 
     destroy() {
         this.spots.forEach((spot) => {
+            spot.geometry.dispose()
+            spot.material.dispose()
             this.scene.remove(spot)
         })
     }

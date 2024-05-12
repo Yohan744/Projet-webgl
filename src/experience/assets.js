@@ -23,29 +23,8 @@ export default [
             },
 
             {
-                name: 'cassetteModel',
-                source: '/assets/models/cassette.glb',
-                type: 'model',
-                textures: {
-                    diffuse: 'assets/textures/cassette/Cassette.webp',
-                }
-            },
-
-            {
-                name: 'walkmanModel',
-                source: '/assets/models/walkman.glb',
-                type: 'model',
-            },
-
-            {
                 name: 'malleModel',
                 source: '/assets/models/malle-ouverture.glb',
-                type: 'model',
-            },
-
-            {
-                name: 'pencilModel',
-                source: '/assets/models/crayon.gltf',
                 type: 'model',
             },
 
@@ -147,9 +126,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/cardboard/diffuse.webp',
-                    roughness: 'assets/textures/objects/cardboard/roughness.webp',
-                    normal: 'assets/textures/objects/cardboard/normal.webp',
-                    ao: 'assets/textures/objects/cardboard/ao.webp',
                 }
             },
 
@@ -158,6 +134,70 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/littleStorage/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'desk',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/desk/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'library',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/library/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'bulb',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/bulb/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'ladder',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/ladder/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'coatRack',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/coatRack/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'rubiksCube',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/rubiksCube/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'television',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/television/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'recordPlayer',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/recordPlayer/diffuse.webp',
                 }
             },
 

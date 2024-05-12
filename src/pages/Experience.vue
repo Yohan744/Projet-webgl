@@ -1,8 +1,11 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <Loading v-if="!isLoaded && isVideoIntroWatched"/>
+    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{ visible: showStartButton }">
+      <p>start experience</p>
+    </div>
+    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
-    <ExperienceLayer/>
+    <ExperienceLayer :soundManager="soundManager"/>
     <div ref="experienceContainer" class="experience"></div>
   </main>
 </template>
@@ -14,6 +17,7 @@ import {useAppStore} from "../stores/appStore";
 import Loading from "../components/Loading.vue";
 import {useRouter} from "vue-router";
 import ExperienceLayer from "../components/ExperienceLayer.vue";
+import {useSoundManager} from "../main";
 
 export default {
   name: 'ExperiencePage',
@@ -27,7 +31,9 @@ export default {
       routeCheck: false,
       isLoaded: false,
       experience: null,
+      soundManager: useSoundManager,
       isVideoIntroWatched: appStore.isVideoIntroWatched,
+      showStartButton: false
     };
   },
   beforeMount() {
@@ -38,7 +44,7 @@ export default {
     }
   },
   watch: {
-    'appStore.$state.isVideoIntroWatched': function() {
+    'appStore.$state.isVideoIntroWatched': function () {
       if (this.isLoaded) {
         this.setExperienceOpacity();
       }
@@ -69,7 +75,8 @@ export default {
       });
       this.experience.resources.on('ready', () => {
         this.isLoaded = true;
-        if (this.isVideoIntroWatched) {
+        this.showStartButton = this.appStore.$state.lastVisitedRoute === null && this.appStore.$state.isVideoIntroWatched
+        if (this.isVideoIntroWatched && !this.showStartButton) {
           this.setExperienceOpacity();
         }
       });
@@ -78,8 +85,16 @@ export default {
       if (this.$refs.experienceContainer) {
         this.appStore.setExperienceVisible()
         this.$refs.experienceContainer.style.opacity = 1;
+        this.showStartButton = false;
+        this.soundManager?.play('background')
       }
     },
+    handleClickStartButton() {
+      this.$refs.startButton.classList.remove('visible');
+      setTimeout(() => {
+        this.setExperienceOpacity();
+      }, 1000);
+    }
   },
 }
 </script>
@@ -92,6 +107,31 @@ export default {
   left: 0;
   height: 100dvh;
   width: 100dvw;
+
+  .start-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    z-index: -1;
+    cursor: pointer;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.8s ease-in-out;
+
+    p {
+      position: relative;
+      font-size: 30px;
+      color: white;
+    }
+
+    &.visible {
+      pointer-events: all;
+      z-index: 1;
+      opacity: 1;
+    }
+
+  }
 
   .experience {
     position: absolute;

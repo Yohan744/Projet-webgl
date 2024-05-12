@@ -1,26 +1,30 @@
 <template>
   <section ref="experienceLayer" id="experience-layer">
 
-    <div ref="goBack" @click="goBack" class="go-back-arrow">
+    <div ref="goBack" @click="goBack" class="go-back-arrow-icon">
       <img :src="goBackIcon" alt="Go back"/>
     </div>
 
-    <div ref="settings" @click="handleSettingsClick" class="settings">
+    <div ref="settings" @click="handleSettingsIconClick" class="settings-icon visible">
       <img src="../assets/icons/settings.svg" alt="Settings"/>
     </div>
 
-    <div ref="settingsPanel" class="settings-panel">
+    <div ref="settingsWrapper" class="settings-wrapper" @click="handleClickSettingsWrapper">
 
-      <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
+      <div class="settings-panel">
 
-      <div class="volume-wrapper">
-        <p>Global volume</p>
-        <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
-        <p>{{globalVolume}}</p>
+        <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
+
+        <div class="volume-wrapper">
+          <p>Global volume</p>
+          <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
+          <p>{{globalVolume}}</p>
+        </div>
+
+        <router-link to="/">Go back to home</router-link>
+        <router-link to="/" @click="() => this.appStore.resetAll()">Reset experience</router-link>
+
       </div>
-
-      <router-link to="/">Go back to home</router-link>
-      <router-link to="/" @click="() => this.appStore.resetAll()">Reset experience</router-link>
 
     </div>
 
@@ -34,6 +38,9 @@ import arrowLeftIcon from '../assets/icons/arrow-left.svg';
 
 export default {
   name: 'ExperienceLayer',
+  props: {
+    soundManager: Object,
+  },
   setup() {
     const appStore = useAppStore();
     return {
@@ -76,7 +83,7 @@ export default {
           this.goBackIcon = homeIcon;
         }
         this.animateGoBackIcon();
-      }, 650);
+      }, 800);
     },
   },
   mounted() {
@@ -93,23 +100,28 @@ export default {
       }
     },
     animateGoBackIcon() {
-      this.$refs.goBack.classList.toggle('animate');
+      this.$refs.goBack.classList.toggle('visible');
     },
-    handleSettingsClick() {
+    handleSettingsIconClick() {
       this.isSettingsVisible = !this.isSettingsVisible;
-      if (this.$refs.settingsPanel) {
-        this.$refs.settingsPanel.classList.toggle('visible');
+      if (this.$refs.settingsWrapper) {
+        this.$refs.settingsWrapper.classList.toggle('visible');
         this.appStore.toggleSettings()
       }
     },
     setExperienceLayerOpacity() {
       if (this.$refs.experienceLayer) {
-        this.$refs.experienceLayer.style.opacity = 1;
+        this.$refs.experienceLayer.classList.add('visible');
       }
     },
     toggleMuted() {
-      this.appStore.toggleMute(!this.appStore.$state.muted);
+      this.appStore.$state.muted ? this.soundManager.unmute() : this.soundManager.mute();
     },
+    handleClickSettingsWrapper(e) {
+      if (e.target === this.$refs.settingsWrapper) {
+        this.handleSettingsIconClick();
+      }
+    }
   }
 }
 </script>

@@ -41,9 +41,9 @@ export default class Time extends EventEmitter {
             this.delta = 60
         }
 
-        if (this.playing) {
-            // this.trigger('tick')
-        }
+        // if (this.playing) {
+        //     this.trigger('tick')
+        // }
     }
 
     /**

@@ -1,6 +1,5 @@
 import Experience from "../Experience";
 import {Raycaster} from "three";
-import Locations from "../World/Locations";
 import EventEmitter from "./EventEmitter";
 
 export default class Pointer extends EventEmitter {
@@ -15,7 +14,6 @@ export default class Pointer extends EventEmitter {
         Pointer.instance = this
 
         this.experience = new Experience()
-        this.locations = new Locations().instance
         this.appStore = this.experience.appStore
 
         this.raycaster = new Raycaster()
@@ -33,7 +31,7 @@ export default class Pointer extends EventEmitter {
         }
 
         this.experience.on('ready', async () => {
-            this.locations = this.locations.getLocations()
+            this.locations = this.experience.world.locations.getLocations()
             await this.setEvents()
         })
 
@@ -56,7 +54,7 @@ export default class Pointer extends EventEmitter {
         }
 
         if (this.appStore.$state.isInteractingWithObject) {
-            this.trigger('movement-orbit');
+            this.trigger('movement-orbit', [this.mouse]);
         }
 
     }

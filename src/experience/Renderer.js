@@ -1,7 +1,15 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
-import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js'
+import {
+    ToneMappingEffect,
+    EffectPass,
+    EffectComposer,
+    BlendFunction,
+    RenderPass,
+    ToneMappingMode,
+    BokehEffect
+} from "postprocessing";
+
 
 export default class Renderer {
     constructor(_options = {}) {
@@ -9,23 +17,24 @@ export default class Renderer {
         this.config = this.experience.config
         this.debug = this.experience.debug
         this.stats = this.experience.stats
-        this.time = this.experience.time
-        this.sizes = this.experience.sizes
         this.scene = this.experience.scene
         this.camera = this.experience.camera
+        this.appStore = this.experience.appStore
 
-        // Debug
-        if (this.debug) {
+        this.isBlurEffectEnabled = false;
+
+        this.setInstance()
+        this.initPostProcessing();
+
+        if (this.debug)  {
+
             this.debugFolder = this.debug.addFolder({
                 title: 'Renderer',
                 expanded: true
             })
+
+            this.setDebug()
         }
-
-        this.usePostprocess = false
-
-        this.setInstance()
-        //this.setPostProcess()
     }
 
     setInstance() {
@@ -39,8 +48,8 @@ export default class Renderer {
         this.instance.domElement.style.position = 'absolute'
         this.instance.domElement.style.top = 0
         this.instance.domElement.style.left = 0
-        this.instance.domElement.style.width = '100%'
-        this.instance.domElement.style.height = '100%'
+        this.instance.domElement.style.width = '100dvw'
+        this.instance.domElement.style.height = '100dvh'
 
         this.instance.setClearColor(this.clearColor, 1)
         this.instance.setSize(this.config.width, this.config.height)
@@ -51,105 +60,163 @@ export default class Renderer {
         this.instance.shadowMap.enabled = true
         this.instance.toneMapping = THREE.ACESFilmicToneMapping
         this.instance.toneMappingExposure = 1
-
-        this.context = this.instance.getContext()
+        this.instance.outputEncoding = THREE.sRGBEncoding
 
         if (this.stats && this.stats.instance) {
             this.stats.instance.init(this.instance)
         }
+    }
 
-        // Debug
-        if (this.debug) {
+    initPostProcessing() {
+        this.composer = new EffectComposer(this.instance);
 
-            const toneMappingOptions = {
-                NoToneMapping: THREE.NoToneMapping,
-                LinearToneMapping: THREE.LinearToneMapping,
-                ReinhardToneMapping: THREE.ReinhardToneMapping,
-                CineonToneMapping: THREE.CineonToneMapping,
-                ACESFilmicToneMapping: THREE.ACESFilmicToneMapping
-            };
+        this.toneMappingEffect = new ToneMappingEffect({
+            blendFunction: BlendFunction.NORMAL,
+            mode: ToneMappingMode.ACES_FILMIC,
+            resolution: 512,
+            whitePoint: 4.0,
+            middleGrey: 0.6,
+            minLuminance: 0,
+            averageLuminance: 1.0,
+            adaptationRate: 1.0
+        });
 
-            const toneMapping = this.debugFolder.addBinding(this.instance, 'toneMapping', {
-                view: 'list',
-                options: toneMappingOptions,
-                label: "Tone mapping"
-            });
+        this.dofEffect = new BokehEffect({
+            focus: 0.001,
+            aperture: 0.1,
+            maxBlur: 0.025,
+            width: this.config.width,
+            height: this.config.height
+        });
 
-            toneMapping.on('change', () => {
-                this.scene.traverse((_child) => {
-                    if (_child instanceof THREE.Mesh)
-                        _child.material.needsUpdate = true;
-                });
-            });
+        this.onlyTonePass = new EffectPass(this.camera.instance, this.toneMappingEffect);
+        this.toneAndBlurPass = new EffectPass(this.camera.instance, this.toneMappingEffect, this.dofEffect);
 
-            this.debugFolder.addBinding(this.instance, 'toneMappingExposure', {min: 0, max: 10, step: 0.01, label: "Exposure"})
+        this.composer.addPass(new RenderPass(this.scene, this.camera.instance));
+        this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
+    }
 
+    toggleBlurEffect(value) {
+        this.isBlurEffectEnabled = value;
+        this.composer.passes.pop();
+        this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
+    }
+
+    setDebug() {
+
+        const blendFunctionDebug = {
+            Skip: BlendFunction.SKIP,
+            Set: BlendFunction.SET,
+            Add: BlendFunction.ADD,
+            Alpha: BlendFunction.ALPHA,
+            Average: BlendFunction.AVERAGE,
+            Color: BlendFunction.COLOR,
+            ColorDodge: BlendFunction.COLOR_DODGE,
+            Darken: BlendFunction.DARKEN,
+            Hue: BlendFunction.HUE,
+            Lighten: BlendFunction.LIGHTEN,
+            LinearDodge: BlendFunction.LINEAR_DODGE,
+            Luminosity: BlendFunction.LUMINOSITY,
+            Multiply: BlendFunction.MULTIPLY,
+            Normal: BlendFunction.NORMAL,
+            Overlay: BlendFunction.OVERLAY,
+            PinLight: BlendFunction.PIN_LIGHT,
+            Saturation: BlendFunction.SATURATION,
+            Screen: BlendFunction.SCREEN,
+            SoftLight: BlendFunction.SOFT_LIGHT,
+            Src: BlendFunction.SRC
         }
+
+        const blend = this.debugFolder.addBinding(this.toneMappingEffect.blendMode, '_blendFunction', {
+            view: 'list',
+            options: blendFunctionDebug,
+            label: "Blend function"
+        });
+
+        blend.on('change', (e) => {
+            this.toneMappingEffect.blendMode.setBlendFunction(e.value)
+            // this.dofEffect.blendMode.setBlendFunction(e.value)
+        })
+
+        //////////////////
+
+        const ToneMappingModeDebug = {
+            Linear: ToneMappingMode.LINEAR,
+            Reinhard: ToneMappingMode.REINHARD,
+            Reinhard2: ToneMappingMode.REINHARD2,
+            Reinhard2Adaptive: ToneMappingMode.REINHARD2_ADAPTIVE,
+            Uncharted2: ToneMappingMode.UNCHARTED2,
+            OptimizedCineon: ToneMappingMode.OPTIMIZED_CINEON,
+            AcesFilmic: ToneMappingMode.ACES_FILMIC,
+            Agx: ToneMappingMode.AGX,
+            Neutral: ToneMappingMode.NEUTRAL
+        }
+
+        this.debugFolder.addBinding(this.toneMappingEffect, 'mode', {
+            view: 'list',
+            options: ToneMappingModeDebug,
+            label: "Tone mapping mode"
+        });
+
+        //////////////////
+
+        this.debugFolder.addBinding(this.instance, 'toneMappingExposure', {
+            min: 0,
+            max: 10,
+            step: 0.01,
+            label: "Exposure"
+        })
+
+        //////////////////
+
+        this.debugFolder.addBinding(this, 'isBlurEffectEnabled', {
+            label: "Enable blur effect"
+        }).on('change', (e) => {
+            this.toggleBlurEffect(e.value)
+        })
+
+        //////////////////
+
+        // this.debugFolder.addBinding(this.dofEffect, 'focus', {
+        //     min: 0,
+        //     max: 1,
+        //     step: 0.01,
+        //     label: "Focus"
+        // })
+
+        // this.debugFolder.addBinding(this.dofEffect.camera, 'focalLength', {
+        //     min: 0,
+        //     max: 100,
+        //     step: 0.01,
+        //     label: "Focal length"
+        // })
+        //
+        // this.debugFolder.addBinding(this.dofEffect, 'fStop', {
+        //     min: 0,
+        //     max: 10,
+        //     step: 0.01,
+        //     label: "F-stop"
+        // })
+
     }
 
-    setPostProcess() {
-        this.postProcess = {}
-
-        /**
-         * Render pass
-         */
-        this.postProcess.renderPass = new RenderPass(this.scene, this.camera.instance)
-
-        /**
-         * Effect composer
-         */
-        this.renderTarget = new THREE.WebGLRenderTarget(
-            this.config.width,
-            this.config.height,
-            {
-                generateMipmaps: false,
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.LinearFilter,
-                format: THREE.RGBFormat,
-                samples: 2
-            }
-        )
-        this.postProcess.composer = new EffectComposer(this.instance, this.renderTarget)
-        this.postProcess.composer.setSize(this.config.width, this.config.height)
-        this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
-
-        this.postProcess.composer.addPass(this.postProcess.renderPass)
-    }
 
     resize() {
-        // Instance
         this.instance.setSize(this.config.width, this.config.height)
         this.instance.setPixelRatio(this.config.pixelRatio)
-
-        // Post process
-        if (this.usePostprocess) {
-            this.postProcess.composer.setSize(this.config.width, this.config.height)
-            this.postProcess.composer.setPixelRatio(this.config.pixelRatio)
-        }
+        this.composer.setSize(this.config.width, this.config.height)
     }
 
     update() {
-
-        if (this.usePostprocess) {
-            this.postProcess.composer.render()
-        } else {
-            this.instance.render(this.scene, this.camera.instance)
-        }
-
+        this.composer.render()
     }
 
     destroy() {
-        if (this.debug) this.debugFolder.dispose()
         if (this.instance) {
             this.instance.dispose()
             if (this.instance.renderLists) this.instance.renderLists.dispose()
         }
-        if (this.renderTarget) this.renderTarget.dispose()
-        if (this.postProcess) {
-            this.postProcess.renderPass.dispose()
-            this.postProcess.composer.dispose()
-            this.postProcess.composer.renderTarget1.dispose()
-            this.postProcess.composer.renderTarget2.dispose()
-        }
+        this.debugFolder?.dispose()
+        this.composer?.dispose()
     }
 }

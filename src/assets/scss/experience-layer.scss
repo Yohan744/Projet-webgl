@@ -9,7 +9,16 @@
   opacity: 0;
   transition: opacity 2.5s ease-in-out;
 
-  .go-back-arrow, .settings {
+  &.visible {
+    opacity: 1;
+
+    *.visible {
+      pointer-events: all;
+    }
+
+  }
+
+  .go-back-arrow-icon, .settings-icon {
     position: absolute;
     top: 35px;
     left: 35px;
@@ -31,7 +40,7 @@
       user-select: none;
     }
 
-    &.animate {
+    &.visible {
       opacity: 1;
       scale: 1;
       pointer-events: all;
@@ -39,11 +48,11 @@
 
   }
 
-  .settings {
+  .settings-icon {
     left: auto;
     right: 35px;
+    z-index: 3;
     opacity: 1;
-    pointer-events: all;
     transition: transform 0.8s $ease-power3-out;
 
     img {
@@ -56,59 +65,79 @@
 
   }
 
-  .settings-panel {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, Calc(-50% + 40px));
-    height: 300px;
-    width: 500px;
-    background-color: #fff;
-    border-radius: 10px;
-    pointer-events: none;
+  .settings-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 100dvw;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.8s $ease-power3-out, transform 0.8s $ease-power3-out;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.8s $ease-power3-out;
 
     &.visible {
+      opacity: 1;
       pointer-events: all;
-      opacity: 0.95;
-      transform: translate(-50%, -50%);
+      user-select: auto;
+
+      .settings-panel {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
     }
 
-    .mute {
+    .settings-panel {
       position: relative;
-      margin-bottom: 20px;
-      font-size: 20px;
-      color: black;
-      cursor: pointer;
-    }
-
-    .volume-wrapper {
-      position: relative;
+      transform: translateY(40px);
+      height: 300px;
+      width: 500px;
+      background-color: #fff;
+      border-radius: 10px;
       display: flex;
-      flex-direction: row;
-      place-items: center;
-      pointer-events: all;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.8s $ease-power3-out, transform 0.8s $ease-power3-out;
 
-      p {
+      .mute {
         position: relative;
+        margin-bottom: 20px;
         font-size: 20px;
         color: black;
+        cursor: pointer;
       }
 
-      input {
+      .volume-wrapper {
         position: relative;
-        margin: 0 12px;
+        display: flex;
+        flex-direction: row;
+        place-items: center;
+        pointer-events: all;
+
+        p {
+          position: relative;
+          font-size: 20px;
+          color: black;
+        }
+
+        input {
+          position: relative;
+          margin: 0 12px;
+        }
+
       }
 
-    }
+      a {
+        margin-top: 20px;
+      }
 
-    a {
-      margin-top: 20px;
     }
 
   }
