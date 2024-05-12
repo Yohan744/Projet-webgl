@@ -73,11 +73,10 @@ export default class Renderer {
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.NORMAL,
             mode: ToneMappingMode.ACES_FILMIC,
-            resolution: 256,
-            maxLuminance: 4.0,
+            resolution: 512,
             whitePoint: 4.0,
             middleGrey: 0.6,
-            minLuminance: 0.01,
+            minLuminance: 0,
             averageLuminance: 1.0,
             adaptationRate: 1.0
         });
