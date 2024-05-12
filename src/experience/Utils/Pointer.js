@@ -54,7 +54,7 @@ export default class Pointer extends EventEmitter {
         }
 
         if (this.appStore.$state.isInteractingWithObject) {
-            this.trigger('movement-orbit');
+            this.trigger('movement-orbit', [this.mouse]);
         }
 
     }
