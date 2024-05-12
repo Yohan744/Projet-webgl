@@ -19,7 +19,8 @@ export default class Envelop {
             x: 0,
             y: 0,
         };
-        this.dragThreshold = 50;
+        this.currentItemIndex = 0;
+        this.hasOpenEnvelop = false;
         this.dragDistance = 0.3
         this.init();
         this.setEvents();
@@ -29,7 +30,26 @@ export default class Envelop {
         this.envelopModel = this.resources.items.envelopModel.scene;
         this.scene.add(this.envelopModel);
         this.setupMorphTargets();
+        this.createCarouselItems();
     }
+
+    createCarouselItems() {
+        this.itemGroup = new THREE.Group();
+
+        this.dahlia = this.resources.items.dahliaModel.scene;
+        this.cassette = this.resources.items.cassetteModel.scene;
+        this.letter = this.resources.items.letterModel.scene;
+
+
+        this.itemGroup.add(this.dahlia);
+        this.itemGroup.add(this.cassette);
+        this.itemGroup.add(this.letter);
+
+        //this.itemGroup.position.copy(this.envelopModel.position);
+       // console.log(this.itemGroup.position)
+        this.scene.add(this.itemGroup);
+    }
+
 
     setupMorphTargets() {
         this.envelopModel.traverse((child) => {
@@ -56,7 +76,12 @@ export default class Envelop {
     handleClick(event) {
         const mousePosition = this.pointer.getMousePosition();
         const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel], true);
+        const intersectedObject = this.pointer.raycaster.intersectObjects([this.itemGroup, ...this.itemGroup.children], true);
         if (intersects.length > 0) {
+            if (this.hasOpenEnvelop) {
+                console.log("here")
+               this.positionItemsInFrontOfCamera();
+            }
             if (!this.hasAnimatedToCamera) {
                 CameraUtils.animateToCamera(this.envelopModel, this.camera);
                 this.hasAnimatedToCamera = true;
@@ -69,11 +94,38 @@ export default class Envelop {
                 };
                 }
         }
+        if (intersectedObject.length > 0) {
+            if (!this.hasOpenEnvelop) {
+                this.positionItemsInFrontOfCamera();
+            } else {
+                this.bringItemToFront(intersectedObject);
+            }
+            this.resetItemsToCarousel()
+        }
+    }
+
+    bringItemToFront(item) {
+        const targetPosition = new THREE.Vector3();
+        this.camera.getWorldDirection(targetPosition);
+        targetPosition.multiplyScalar(2).add(this.camera.position);
+
+        gsap.to(item.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 2,
+            ease: "power2.inOut",
+            onComplete: () => {
+                //item.lookAt(this.camera.position);
+                console.log("Item is now in front of the camera.");
+            }
+        });
     }
     handleMouseMove(mouse) {
         if(!this.isDragging) return;
         if (!this.isAnimating && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
             this.startAnimationOfMorphTargets();
+            this.itemGroup.visible = true;
             this.isAnimating = true;
         }
     }
@@ -89,10 +141,90 @@ export default class Envelop {
                 gsap.to(this.morphMesh.morphTargetInfluences, {
                     [40]: "-=1",
                     duration: 2,
-                    ease: "power1.inOut"
+                    ease: "power1.inOut",
+                    onComplete: () => {
+                        this.prepareCarouselDisplay();
+                    }
                 });
             }
         }
+    }
+
+    resetItemsToCarousel() {
+        this.positionItemsInFrontOfCamera();
+    }
+
+    positionItemsInFrontOfCamera() {
+        const spacing = 0.3;
+        const positions = [
+            new THREE.Vector3(-spacing, 0, -0.1),
+            new THREE.Vector3(0, 0, -0.1),
+            new THREE.Vector3(spacing, 0, -0.1)
+        ];
+
+        this.itemGroup.children.forEach((item, index) => {
+            gsap.to(item.position, {
+                x: positions[index].x,
+                y: positions[index].y,
+                z: positions[index].z,
+                duration: 2,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    console.log(this.hasOpenEnvelop)
+                    this.hasOpenEnvelop = true;
+                }
+            });
+        });
+
+        const drawerPosition = new THREE.Vector3(0, -0.1, 0);
+        gsap.to(this.envelopModel.position, {
+            x: drawerPosition.x,
+            y: drawerPosition.y,
+            z: drawerPosition.z,
+            duration: 2,
+            ease: "power2.inOut"
+        });
+    }
+
+    prepareCarouselDisplay() {
+        this.itemGroup.visible = true;
+        this.itemGroup.position.copy(this.envelopModel.position);
+        this.itemGroup.rotation.copy(this.envelopModel.rotation);
+
+        this.envelopModel.getWorldPosition(this.envelopModel.position);
+        this.itemGroup.quaternion.copy(this.envelopModel.quaternion)
+        const itemPosition = this.envelopModel.position.clone().add(new THREE.Vector3(0, -0.2, 0));
+
+        gsap.to(this.itemGroup.position, {
+            x: itemPosition.x + 0.5,
+            y: itemPosition.y,
+            z: itemPosition.z,
+            duration: 2,
+            ease: "power2.inOut",
+            onComplete: () => {
+                gsap.to(this.itemGroup.position, {
+                        x: itemPosition.x,
+                        y: itemPosition.y + 0.3,
+                        z: itemPosition.z,
+                        duration: 2,
+                        ease: "power2.inOut",
+                    })
+            }
+        });
+    }
+
+    showNextItem() {
+        console.log(this.currentItemIndex);
+        const newPosition = -this.currentItemIndex * 2;
+        console.log(this.itemGroup);
+        gsap.to(this.itemGroup.position, {
+            z: newPosition,
+            duration: 1,
+            ease: "power2.inOut",
+            onComplete: () => {
+                this.currentItemIndex = (this.currentItemIndex + 1) % 3;
+            }
+        });
     }
 
     destroy() {

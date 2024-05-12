@@ -37,6 +37,21 @@ export default [
                 source: '/assets/models/enveloppe.glb',
                 type: 'model',
             },
+            {
+                name: 'cassetteModel',
+                source: '/assets/models/cassette.glb',
+                type: 'model',
+            },
+            {
+                name: 'dahliaModel',
+                source: '/assets/models/dahlia.glb',
+                type: 'model',
+            },
+            {
+                name: 'letterModel',
+                source: '/assets/models/lettre.glb',
+                type: 'model',
+            },
 
             {
                 name: 'photoModel',
