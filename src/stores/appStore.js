@@ -29,6 +29,9 @@ export const useAppStore = defineStore({
         updateCameraOnSpot(state) {
             this.isCameraOnSpot = state
         },
+        setCarousel(state) {
+            this.isCarouselSetted = state
+        },
         toggleSettings() {
             this.isSettingsOpen = !this.isSettingsOpen
         },

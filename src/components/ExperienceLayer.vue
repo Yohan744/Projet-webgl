@@ -15,6 +15,9 @@
       <router-link to="/">Go back to home</router-link>
       <router-link to="/" @click="() => this.appStore.resetAll()">Reset experience</router-link>
     </div>
+    <button id="btn-left">Gauche</button>
+<button id="btn-right">Droite</button>
+
   </section>
 </template>
 
