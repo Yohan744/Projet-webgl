@@ -16,6 +16,11 @@ export default class Television extends Prop {
     init() {
 
     }
+
+    onClickGeneral() {
+
+    }
+
     onClick() {
         console.log("click TV")
     }

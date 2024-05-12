@@ -16,6 +16,10 @@ export default class RubiksCube extends Prop {
     init() {
 
     }
+
+    onClickGeneral() {
+
+    }
     onClick() {
         console.log("click rubik's cube")
     }

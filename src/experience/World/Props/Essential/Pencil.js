@@ -17,6 +17,10 @@ export default class Pencil extends Prop {
 
     }
 
+    onClickGeneral() {
+
+    }
+
     onClick() {
         console.log("click crayon")
     }

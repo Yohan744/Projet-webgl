@@ -16,6 +16,11 @@ export default class Cassette extends Prop {
     init() {
 
     }
+
+    onClickGeneral() {
+
+    }
+
     onClick() {
         console.log("click cassette")
     }

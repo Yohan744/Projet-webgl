@@ -16,6 +16,10 @@ export default class RecordPlayer extends Prop {
     init() {
 
     }
+
+    onClickGeneral() {
+
+    }
     onClick() {
         console.log("click record player")
     }

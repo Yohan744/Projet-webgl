@@ -16,6 +16,10 @@ export default class Telephone extends Prop {
     init() {
 
     }
+
+    onClickGeneral() {
+
+    }
     onClick() {
         console.log("click telephone")
     }

@@ -17,6 +17,10 @@ export default class Walkman extends Prop {
 
     }
 
+    onClickGeneral() {
+
+    }
+
     onClick() {
         console.log("click walkman")
     }

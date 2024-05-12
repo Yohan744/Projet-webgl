@@ -16,6 +16,7 @@ export default class Prop extends EventEmitter {
         this.pointer = this.experience.pointer
         this.appStore = this.experience.appStore;
         this.camera = this.experience.camera.modes.default.instance;
+        this.renderer = this.experience.renderer;
         this.soundManager = this.experience.soundManager;
 
         this.mesh = mesh
@@ -49,6 +50,7 @@ export default class Prop extends EventEmitter {
                 this.animatePropsToBasicPosition()
                 this.outline?.showOutline()
                 this.appStore.updateOrbitsControlsState(false)
+                this.renderer.toggleBlurEffect(false)
             }
         })
     }
@@ -56,14 +58,20 @@ export default class Prop extends EventEmitter {
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
         if (intersects.length > 0 && this.appStore.$state.isCameraOnSpot) {
-            this.onClick()
+            this.onClickGeneral()
             if (this.animatePropsToCameraOnClick && !this.appStore.$state.isInteractingWithObject) {
                 this.animatePropsToCamera()
                 this.appStore.updateInteractingState(true)
                 this.outline?.removeOutline()
                 this.playSoundOnClick()
+                this.onClick()
+                this.renderer.toggleBlurEffect(true)
             }
         }
+    }
+
+    onClickGeneral() {
+        // to be overridden
     }
 
     onClick() {
