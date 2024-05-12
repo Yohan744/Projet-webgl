@@ -1,10 +1,9 @@
 import Experience from "../Experience";
-import Cassette from "./Props/Essential/Cassette";
-import Walkman from "./Props/Essential/Walkman";
 import Projector from "./Props/Essential/Projector";
-import Pencil from "./Props/Essential/Pencil";
 import Malle from "./Props/Essential/Malle";
 import Photo from "./Props/Essential/Photo";
+import Drawer from "./Props/Essential/Drawer";
+import Envelop from "./Props/Essential/Envelop";
 
 export default class Props {
 
@@ -17,6 +16,8 @@ export default class Props {
     }
 
     init() {
+        this.drawer = new Drawer();
+        this.envelop = new Envelop()
         this.projector = new Projector()
         this.malle = new Malle()
         this.photo = new Photo()

@@ -27,6 +27,16 @@ export default [
                 source: '/assets/models/malle-ouverture.glb',
                 type: 'model',
             },
+            {
+                name: 'drawerModel',
+                source: '/assets/models/commode.glb',
+                type: 'model',
+            },
+            {
+                name: 'envelopModel',
+                source: '/assets/models/enveloppe.glb',
+                type: 'model',
+            },
 
             {
                 name: 'photoModel',
