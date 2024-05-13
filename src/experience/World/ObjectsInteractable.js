@@ -31,28 +31,28 @@ export default class ObjectsInteractable {
                 // if (!data) return
 
                 if (name.includes("walkman")) {
-                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     this.objects.push(this.walkman)
                 } else if (name.includes("cassette")) {
-                    this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     this.objects.push(this.cassette)
                 }  else if (name.includes("crayon")) {
-                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     this.objects.push(this.pencil)
                 } else if (name.includes("telephone")) {
-                    this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     this.objects.push(this.telephone)
                 } else if (name.includes("rubicub")) {
                     child.material = this.materialLibrary.getRubiksCubeMaterial()
-                    this.rubikscube = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.rubikscube = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     this.objects.push(this.rubikscube)
                 } else if (name.includes("tv")) {
                     child.material = this.materialLibrary.getTvMaterial()
-                    this.television = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.television = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     this.objects.push(this.television)
                 } else if (name.includes("tourne_disque")) {
                     child.material = this.materialLibrary.getRecordPlayerMaterial()
-                    this.recordPlayer = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.outlineScale, data.propSound)
+                    this.recordPlayer = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     this.objects.push(this.recordPlayer)
                 } else if (name.includes("photo") || name.includes("diapo") || name.includes("rail")) {
 

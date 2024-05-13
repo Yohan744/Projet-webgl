@@ -12,13 +12,15 @@ export const objectsData = {
         file: Walkman,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
+        distanceToCamera: 0.5,
         outlineScale: 1.05, // false to deactivate, type number to activate
-        propSound: '' // not set yet
+        propSound: ''// not set yet
     },
     cassette: {
         file: Cassette,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
+        distanceToCamera: 0.4,
         outlineScale: 1.05,
         propSound: ''
     },
@@ -26,6 +28,7 @@ export const objectsData = {
         file: Pencil,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
+        distanceToCamera: 0.6,
         outlineScale: 1.05,
         propSound: ''
     },
@@ -33,6 +36,7 @@ export const objectsData = {
         file: Telephone,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
+        distanceToCamera: 1,
         outlineScale: 1.05,
         propSound: 'telephone'
     },
@@ -40,6 +44,7 @@ export const objectsData = {
         file: RubiksCube,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
+        distanceToCamera: 0.6,
         outlineScale: 1.05,
         propSound: ''
     },
@@ -47,6 +52,7 @@ export const objectsData = {
         file: Television,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
+        distanceToCamera: 1,
         outlineScale: 1.05,
         propSound: ''
     },
@@ -54,6 +60,7 @@ export const objectsData = {
         file: RecordPlayer,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
+        distanceToCamera: 1,
         outlineScale: 1.05,
         propSound: ''
     },

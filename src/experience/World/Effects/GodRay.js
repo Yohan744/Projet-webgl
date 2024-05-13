@@ -38,7 +38,7 @@ export default class GodRay {
             uniforms: {
                 uColor: {value: new THREE.Color('#ffefb0')},
                 uAlphaBase: {value: 0}, // 0.2
-                uAlphaRays: {value: 0.41}, // 0.05
+                uAlphaRays: {value: 0.25}, // 0.05
                 uSeed: {value: Math.random() * 1000},
                 uTime: {value: 0},
                 uTexture: {value: t}

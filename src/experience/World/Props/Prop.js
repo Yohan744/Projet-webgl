@@ -8,7 +8,7 @@ import {MouseUtils} from "../Utils/MouseUtils";
 
 export default class Prop extends EventEmitter {
 
-    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, isOutlined = 1.05, propSound = '') {
+    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound = '') {
         super();
 
         this.experience = new Experience();
@@ -27,7 +27,7 @@ export default class Prop extends EventEmitter {
         this.propsBasicPosition = mesh.position.clone()
         this.propsBasicRotation = mesh.rotation.clone()
         this.desiredRotation = desiredRotationOnClick
-        this.offsetFromCamera = 0.6;
+        this.offsetFromCamera = distanceToCamera;
         this.chanceOfPlayingASong = 0.4
         this.propsSongHasBeenPlayed = false
 
