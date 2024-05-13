@@ -138,6 +138,14 @@ export default [
             },
 
             {
+                name: 'storage',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/storage/diffuse.webp',
+                }
+            },
+
+            {
                 name: 'desk',
                 type: 'group',
                 textures: {

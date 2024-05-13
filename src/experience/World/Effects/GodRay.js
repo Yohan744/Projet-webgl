@@ -20,7 +20,7 @@ export default class GodRay {
         if (this.debug) {
             this.debugFolder = this.debug.addFolder({
                 title: 'GodRay',
-                expanded: true,
+                expanded: false,
             })
             this.setDebug()
         }

@@ -294,7 +294,7 @@ export default class MaterialLibrary {
     getStorageMaterial() {
         if (!storageMaterial) {
             storageMaterial = new MeshBasicMaterial({
-                color: '#b99f46',
+                map: this.resources.items.storage.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
