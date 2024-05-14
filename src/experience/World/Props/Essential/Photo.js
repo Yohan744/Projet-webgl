@@ -25,11 +25,11 @@ export default class Photo {
         this.photoModel.rotation.x = Math.PI / 2;
         this.scene.add(this.photoModel);
 
-        const group = new THREE.Group();
-        group.position.copy(this.photoModel.position);
+        this.group = new THREE.Group();
+        this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        group.add(this.photoModel);
-        this.scene.add(group);
+        this.group.add(this.photoModel);
+        this.scene.add(this.group);
 
         const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
         const rectangleMaterial = new THREE.MeshBasicMaterial({
@@ -40,7 +40,7 @@ export default class Photo {
         });
         this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
         this.rectangleMesh.position.set(0, 0, 0.01);
-        group.add(this.rectangleMesh);
+        this.group.add(this.rectangleMesh);
 
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 20000;
@@ -117,7 +117,12 @@ export default class Photo {
     checkDisplacedParticles() {
         const particlesCount = this.initialPositions.length;
         if (this.displacedParticles >= particlesCount / 3) {
-            console.log('Au moins la moitié des particules ont été déplacées.');
+            console.log('Au moins un tiers des particules ont été déplacées.');
+            this.scene.remove(this.group);
+            this.group.traverse((object) => {
+                if (object.geometry) object.geometry.dispose();
+                if (object.material) object.material.dispose();
+            });
         }
     }
 
