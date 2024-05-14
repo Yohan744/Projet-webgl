@@ -26,8 +26,49 @@ export default class Photo {
         
         this.photoModel.rotation.x = Math.PI / 2;
         this.scene.add(this.photoModel);
-        //this.camera.scene.add(this.photoModel);
-        console.log(this.photoModel.position);
+
+        const group = new THREE.Group();
+        group.position.copy(this.photoModel.position)
+        group.add(this.photoModel);    
+        this.photoModel.position.set(0, 0, 0);
+        console.log(group.position)
+        this.scene.add(group);
+
+        const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.17);  
+        const rectangleMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0
+        });
+        const rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
+        rectangleMesh.position.set(0, 0, 0.01);
+        group.add(rectangleMesh);
+
+        // Création des particules
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 10000;  // Nombre de particules
+        const posArray = new Float32Array(particlesCount * 3); // Trois valeurs par particule (x, y, z)
+
+        for (let i = 0; i < particlesCount; i++) {
+            // Répartit les particules uniformément sur le rectangle
+            posArray[i * 3 + 0] = (Math.random() - 0.5) * 0.17; // Coordonnées x, ajustées à la largeur du rectangle
+            posArray[i * 3 + 1] = (Math.random() - 0.5) * 0.11; // Coordonnées y, ajustées à la hauteur du rectangle
+            posArray[i * 3 + 2] = 0; // Coordonnées z, sur le plan du rectangle
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.001,
+            sizeAttenuation: true,
+            color: 0xffffff,  
+            transparent: true,
+            opacity: 0.3
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+rectangleMesh.add(particlesMesh); // Ajoute les particules au rectangle
     }
     onClick() {
         console.log("photo")
