@@ -14,7 +14,7 @@ export default class Photo {
         this.mouse = new THREE.Vector2();
         this.raycaster = new THREE.Raycaster();
         this.isHovering = false;
-
+        this.displacedParticles = 0; 
         this.init();
     }
 
@@ -47,7 +47,7 @@ export default class Photo {
         const posArray = new Float32Array(particlesCount * 3);
         this.initialPositions = [];
         this.activeParticles = new Array(particlesCount).fill(true);
-        
+
         for (let i = 0; i < particlesCount; i++) {
             const x = (Math.random() - 0.5) * 0.17;
             const y = (Math.random() - 0.5) * 0.12;
@@ -78,7 +78,7 @@ export default class Photo {
 
     onMouseMove(event) {
         const rect = this.renderer.domElement.getBoundingClientRect();
-        const mouseX = ((event.clientX - rect.left) / rect.width) * 0.17 - 0.085; 
+        const mouseX = ((event.clientX - rect.left) / rect.width) * 0.17 - 0.085;
         const mouseY = -((event.clientY - rect.top) / rect.height) * 0.12 + 0.06;
 
         const positions = this.particlesMesh.geometry.attributes.position.array;
@@ -86,7 +86,7 @@ export default class Photo {
         const distanceFactor = 0.1;
 
         for (let i = 0; i < this.initialPositions.length; i++) {
-            if (!this.activeParticles[i]) continue;  
+            if (!this.activeParticles[i]) continue;
 
             const pos = this.initialPositions[i];
             const dx = mouseX - pos.x;
@@ -97,6 +97,8 @@ export default class Photo {
                 this.activeParticles[i] = false;
                 positions[i * 3] = NaN;
                 positions[i * 3 + 1] = NaN;
+                this.displacedParticles++;
+                this.checkDisplacedParticles(); 
             } else {
                 if (distance < radius * 2) {
                     const directionX = dx / distance;
@@ -110,6 +112,13 @@ export default class Photo {
             }
         }
         this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+    }
+
+    checkDisplacedParticles() {
+        const particlesCount = this.initialPositions.length;
+        if (this.displacedParticles >= particlesCount / 3) {
+            console.log('Au moins la moitié des particules ont été déplacées.');
+        }
     }
 
     destroy() {
