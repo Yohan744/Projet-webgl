@@ -108,7 +108,7 @@ export default class Photo {
                 positions[i * 3] = NaN;
                 positions[i * 3 + 1] = NaN;
                 this.displacedParticles++;
-                if (this.displacedParticles >= this.initialPositions.length / 3) {
+                if (this.displacedParticles >= this.initialPositions.length / 2) {
                     this.removeGroup();
                     break;
                 }
