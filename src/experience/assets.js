@@ -29,6 +29,12 @@ export default [
             },
 
             {
+                name: 'photoModel',
+                source: '/assets/models/photo.glb',
+                type: 'model',
+            },
+
+            {
                 name: 'projectorModel',
                 source: '/assets/models/visionneuse.glb',
                 type: 'model',
