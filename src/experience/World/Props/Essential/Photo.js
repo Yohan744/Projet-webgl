@@ -1,7 +1,5 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
-import Outline from "../../Effects/Outline";
-import { PI } from "three/examples/jsm/nodes/Nodes.js";
 
 export default class Photo {
     constructor() {
@@ -14,17 +12,30 @@ export default class Photo {
         this.mouse = new THREE.Vector2();
         this.raycaster = new THREE.Raycaster();
         this.isHovering = false;
-        this.displacedParticles = 0; 
+        this.displacedParticles = 0;
+        this.group = null; 
+        this.initialPositions = [];
+        this.activeParticles = [];
+        
         this.init();
     }
 
     init() {
+        this.setupPhotoModel();
+        this.setupGroup();
+        this.setupParticles();
+        this.setupMouseEvents();
+    }
+
+    setupPhotoModel() {
         this.photoModel = this.resources.items.photoModel.scene;
         this.photoModel.scale.set(1, 1, 1);
         this.photoModel.position.set(0, 2.25, 9.32);
         this.photoModel.rotation.x = Math.PI / 2;
         this.scene.add(this.photoModel);
+    }
 
+    setupGroup() {
         this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
@@ -41,12 +52,12 @@ export default class Photo {
         this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
         this.rectangleMesh.position.set(0, 0, 0.01);
         this.group.add(this.rectangleMesh);
+    }
 
+    setupParticles() {
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 20000;
         const posArray = new Float32Array(particlesCount * 3);
-        this.initialPositions = [];
-        this.activeParticles = new Array(particlesCount).fill(true);
 
         for (let i = 0; i < particlesCount; i++) {
             const x = (Math.random() - 0.5) * 0.17;
@@ -56,6 +67,7 @@ export default class Photo {
             posArray[i * 3 + 1] = y;
             posArray[i * 3 + 2] = z;
             this.initialPositions.push(new THREE.Vector3(x, y, z));
+            this.activeParticles.push(true);
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -68,8 +80,6 @@ export default class Photo {
 
         this.particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         this.rectangleMesh.add(this.particlesMesh);
-
-        this.setupMouseEvents();
     }
 
     setupMouseEvents() {
@@ -83,7 +93,7 @@ export default class Photo {
 
         const positions = this.particlesMesh.geometry.attributes.position.array;
         const radius = 0.005;
-        const distanceFactor = 0.1;
+        const radiusSquared = radius * radius; 
 
         for (let i = 0; i < this.initialPositions.length; i++) {
             if (!this.activeParticles[i]) continue;
@@ -91,39 +101,37 @@ export default class Photo {
             const pos = this.initialPositions[i];
             const dx = mouseX - pos.x;
             const dy = mouseY - pos.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            const distanceSquared = dx * dx + dy * dy;
 
-            if (distance < radius) {
+            if (distanceSquared < radiusSquared) {
                 this.activeParticles[i] = false;
                 positions[i * 3] = NaN;
                 positions[i * 3 + 1] = NaN;
                 this.displacedParticles++;
-                this.checkDisplacedParticles(); 
-            } else {
-                if (distance < radius * 2) {
-                    const directionX = dx / distance;
-                    const directionY = dy / distance;
-                    const targetX = mouseX + directionX * radius;
-                    const targetY = mouseY + directionY * radius;
-
-                    positions[i * 3] += (targetX - pos.x) * distanceFactor;
-                    positions[i * 3 + 1] += (targetY - pos.y) * distanceFactor;
+                if (this.displacedParticles >= this.initialPositions.length / 3) {
+                    this.removeGroup();
+                    break;
                 }
+            } else if (distanceSquared < radiusSquared * 4) {
+                const distance = Math.sqrt(distanceSquared);
+                const directionX = dx / distance;
+                const directionY = dy / distance;
+                const targetX = mouseX + directionX * radius;
+                const targetY = mouseY + directionY * radius;
+
+                positions[i * 3] += (targetX - pos.x) * 0.1;
+                positions[i * 3 + 1] += (targetY - pos.y) * 0.1;
             }
         }
         this.particlesMesh.geometry.attributes.position.needsUpdate = true;
     }
 
-    checkDisplacedParticles() {
-        const particlesCount = this.initialPositions.length;
-        if (this.displacedParticles >= particlesCount / 3) {
-            console.log('Au moins un tiers des particules ont été déplacées.');
-            this.scene.remove(this.group);
-            this.group.traverse((object) => {
-                if (object.geometry) object.geometry.dispose();
-                if (object.material) object.material.dispose();
-            });
-        }
+    removeGroup() {
+        this.scene.remove(this.group);
+        this.group.traverse((object) => {
+            if (object.geometry) object.geometry.dispose();
+            if (object.material) object.material.dispose();
+        });
     }
 
     destroy() {
