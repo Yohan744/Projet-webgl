@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { gsap } from "gsap";
+import { watch } from "vue";
 import Experience from "../../../Experience";
 import { CameraUtils } from "../../Utils/CameraUtils";
 import Locations from "../../Locations";
@@ -26,8 +27,22 @@ export default class Envelop {
         this.hasOpenEnvelop = false;
         this.dragDistance = 0.2;
         this.initialEnvelopePosition = new THREE.Vector3(0, -0.05, -0.05);
+        this.currentSelectedItem = null;
+
         this.init();
         this.setEvents();
+        this.setWatchers();
+    }
+
+    setWatchers() {
+        watch(
+            () => this.appStore.objectToPocket,
+            (newVal) => {
+                if (newVal) {
+                    this.putObjectInPocket();
+                }
+            }
+        );
     }
 
     init() {
@@ -42,21 +57,33 @@ export default class Envelop {
         this.itemGroup = new THREE.Group();
 
         this.dahlia = this.resources.items.dahliaModel.scene;
-        this.cassette = this.resources.items.cassetteModel.scene;
         this.letter = this.resources.items.letterModel.scene;
 
+        if (!this.appStore.isCassetteInPocket) {
+            this.cassette = this.resources.items.cassetteModel.scene;
+            this.itemGroup.add(this.cassette);
+            this.items = [this.dahlia, this.cassette, this.letter];
+        } else {
+            this.items = [this.dahlia, this.letter];
+        }
+
         this.itemGroup.add(this.dahlia);
-        this.itemGroup.add(this.cassette);
         this.itemGroup.add(this.letter);
 
         this.scene.add(this.itemGroup);
 
-        this.items = [this.dahlia, this.cassette, this.letter];
         this.positions = [
             { x: 0, y: 0.2, z: 0 },
             { x: -0.2, y: -0.1, z: -0.2 },
             { x: 0.2, y: 0.1, z: -0.2 }
         ];
+
+        if (this.appStore.isCassetteInPocket) {
+            this.positions = [
+                { x: 0.2, y: 0, z: 0.2 },
+                { x: -0.2, y: 0, z: -0.2 }
+            ];
+        }
     }
 
     setupMorphTargets() {
@@ -100,6 +127,8 @@ export default class Envelop {
                 x: mousePosition.x,
                 y: mousePosition.y,
             };
+        } else {
+            this.resetItemPositions();
         }
     }
 
@@ -153,7 +182,6 @@ export default class Envelop {
             ease: "power2.inOut",
         });
     }
-
 
     animateItemGroup() {
         this.itemGroup.position.copy(this.envelopModel.position);
@@ -209,14 +237,16 @@ export default class Envelop {
 
     separateItemsToTriangle() {
         this.carouselIsSet = true;
-        const itemPositions = [
+        const itemPositions = this.appStore.isCassetteInPocket ? [
+            { x: 0.2, y: 0, z: 0.2 },
+            { x: -0.2, y: 0, z: -0.2 }
+        ] : [
             { x: 0, y: 0.2, z: 0 },
             { x: -0.2, y: -0.3, z: -0.2 },
             { x: 0.2, y: -0.3, z: -0.2 }
         ];
 
-        const items = [this.dahlia, this.cassette, this.letter];
-        items.forEach((item, index) => {
+        this.items.forEach((item, index) => {
             gsap.to(item.position, {
                 x: itemPositions[index].x,
                 y: itemPositions[index].y,
@@ -225,18 +255,51 @@ export default class Envelop {
                 ease: "power2.inOut",
             });
         });
+
+        this.updatePocketButtonVisibility();
     }
 
     rotateItemsRight() {
-        const temp = this.items.pop();
-        this.items.unshift(temp);
-        this.animateItems();
+        if (this.items.length === 2) {
+            this.rotateTwoItems(true);
+        } else {
+            const temp = this.items.pop();
+            this.items.unshift(temp);
+            this.animateItems();
+        }
+        this.updatePocketButtonVisibility();
     }
 
     rotateItemsLeft() {
-        const temp = this.items.shift();
-        this.items.push(temp);
-        this.animateItems();
+        if (this.items.length === 2) {
+            this.rotateTwoItems(false);
+        } else {
+            const temp = this.items.shift();
+            this.items.push(temp);
+            this.animateItems();
+        }
+        this.updatePocketButtonVisibility();
+    }
+
+    rotateTwoItems(clockwise) {
+        const [firstItem, secondItem] = this.items;
+        const center = new THREE.Vector3().addVectors(firstItem.position, secondItem.position).multiplyScalar(0.5);
+
+        const angle = clockwise ? Math.PI : -Math.PI;
+        gsap.to(firstItem.position, {
+            x: center.x + (firstItem.position.x - center.x) * Math.cos(angle) - (firstItem.position.z - center.z) * Math.sin(angle),
+            z: center.z + (firstItem.position.x - center.x) * Math.sin(angle) + (firstItem.position.z - center.z) * Math.cos(angle),
+            duration: 2,
+            ease: "power2.inOut"
+        });
+        gsap.to(secondItem.position, {
+            x: center.x + (secondItem.position.x - center.x) * Math.cos(angle) - (secondItem.position.z - center.z) * Math.sin(angle),
+            z: center.z + (secondItem.position.x - center.x) * Math.sin(angle) + (secondItem.position.z - center.z) * Math.cos(angle),
+            duration: 2,
+            ease: "power2.inOut"
+        });
+
+        this.items = [secondItem, firstItem];
     }
 
     animateItems() {
@@ -249,6 +312,60 @@ export default class Envelop {
                 ease: "power2.inOut",
             });
         });
+    }
+
+    updatePocketButtonVisibility() {
+        const frontItem = this.items[0];
+        if (frontItem === this.cassette) {
+            this.appStore.updatePocketState(true);
+        } else {
+            this.appStore.updatePocketState(false);
+        }
+    }
+
+    resetItemPositions() {
+        if (this.currentSelectedItem) {
+            this.currentSelectedItem = null;
+            this.animateItems();
+            this.hidePocketButton();
+        }
+    }
+
+    hidePocketButton() {
+        this.appStore.updatePocketState(false);
+    }
+
+    bringItemToFront(item) {
+        this.currentSelectedItem = item;
+        const frontPosition = { x: 0, y: 0.2, z: 0 };
+
+        gsap.to(item.position, {
+            x: frontPosition.x,
+            y: frontPosition.y,
+            z: frontPosition.z,
+            duration: 2,
+            ease: "power2.inOut",
+        });
+    }
+
+    putObjectInPocket() {
+        const frontItem = this.items[0];
+        if (frontItem === this.cassette) {
+            gsap.to(this.cassette.position, {
+                z: this.cassette.position.z + 2,
+                y: this.cassette.position.y - 1,
+                duration: 2,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    this.scene.remove(this.cassette);
+                    this.items = this.items.filter(item => item !== this.cassette);
+                    this.positions.pop();
+                    this.animateItems();
+                    this.appStore.updatePocketState(false);
+                    this.appStore.updateCassetteInPocketState(true);
+                }
+            });
+        }
     }
 
     destroy() {

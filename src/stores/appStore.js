@@ -11,7 +11,11 @@ export const useAppStore = defineStore({
         isCameraOnSpot: false,
         isInteractingWithObject: false,
         isOrbitControlsEnabled: false,
-        isSettingsOpen: false
+        isSettingsOpen: false,
+        isPocketButtonVisible: false,
+        objectToPocket: false,
+        isCassetteInPocket: false,
+        objectOut: false,
     }),
     getters: {
 
@@ -44,6 +48,18 @@ export const useAppStore = defineStore({
         toggleSettings() {
             this.isSettingsOpen = !this.isSettingsOpen
         },
+        updatePocketState(state) {
+            this.isPocketButtonVisible = state;
+        },
+        updateObjectToPocket(state) {
+            this.objectToPocket = state;
+        },
+        updateCassetteInPocketState(state) {
+            this.isCassetteInPocket = state;
+        },
+        initObjectFromThePocket() {
+            this.isObjectOut = !this.objectOut;
+        },
         resetSomeStatesOnReload() {
             this.lastVisitedRoute = null
             this.isExperienceVisible = false
@@ -51,6 +67,9 @@ export const useAppStore = defineStore({
             this.isInteractingWithObject = false
             this.isOrbitControlsEnabled = false
             this.isSettingsOpen = false
+            this.isPocketButtonVisible = false
+            this.objectToPocket = false
+            this.isCassetteInPocket = false
         },
         resetAll() {
             this.muted = false
@@ -62,6 +81,10 @@ export const useAppStore = defineStore({
             this.isInteractingWithObject = false
             this.isOrbitControlsEnabled = false
             this.isSettingsOpen = false
+            this.isPocketButtonVisible = false
+            this.objectToPocket = false
+            this.isCassetteInPocket = false,
+            this.objectOut = false
         }
     },
     persist: true
