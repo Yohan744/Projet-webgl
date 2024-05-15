@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import Experience from "../../Experience";
 import godRayVertexShader from './../../Shaders/GodRay/vertex.glsl';
 import godRayFragmentShader from './../../Shaders/GodRay/fragment.glsl';
-import {DoubleSide, FrontSide, MeshStandardMaterial} from "three";
 
 export default class GodRay {
 
@@ -45,8 +44,6 @@ export default class GodRay {
             },
             blending: THREE.AdditiveBlending,
             transparent: true,
-            depthWrite: false,
-            depthTest: false,
             side: THREE.FrontSide,
         });
 

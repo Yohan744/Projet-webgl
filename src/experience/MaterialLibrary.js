@@ -462,8 +462,6 @@ export default class MaterialLibrary {
                 side: FrontSide,
                 transparent: true,
                 opacity: 0.65,
-                depthWrite: false,
-                depthTest: false,
             })
 
             this.materialsUsed.push(locationsMaterial)
