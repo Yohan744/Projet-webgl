@@ -37,13 +37,8 @@ export default class Drawer {
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObject(this.topDrawer, true);
         if (intersects.length > 0 && !this.isOpen) {
-            this.captureOriginalCameraPosition();
             this.animateDrawer(this.topDrawer);
         }
-    }
-
-    captureOriginalCameraPosition() {
-        this.originalCameraPosition = this.camera.instance.position.clone();
     }
 
     animateDrawer(drawer) {

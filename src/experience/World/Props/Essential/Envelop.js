@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { gsap } from "gsap";
-import { CameraUtils } from "../../Utils/CameraUtils";
 import Experience from "../../../Experience";
+import { CameraUtils } from "../../Utils/CameraUtils";
+import Locations from "../../Locations";
 
 export default class Envelop {
     constructor() {
@@ -9,26 +10,29 @@ export default class Envelop {
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
         this.renderer = this.experience.renderer.instance;
-        this.camera = this.experience.camera.instance;
+        this.camera = this.experience.camera;
         this.pointer = this.experience.pointer;
         this.appStore = this.experience.appStore;
+        this.locations = new Locations(this.experience.materialLibrary);
 
         this.hasAnimatedToCamera = false;
+        this.carouselIsSet = false;
         this.isDragging = false;
-        this.isPositionned = false;
+        this.isAnimating = false;
         this.mouseStartClickPosition = {
             x: 0,
             y: 0,
         };
-        this.currentItemIndex = 0;
         this.hasOpenEnvelop = false;
-        this.dragDistance = 0.3
+        this.dragDistance = 0.2;
+        this.initialEnvelopePosition = new THREE.Vector3(0, -0.05, -0.05);
         this.init();
         this.setEvents();
     }
 
     init() {
         this.envelopModel = this.resources.items.envelopModel.scene;
+        this.envelopModel.position.copy(this.initialEnvelopePosition);
         this.scene.add(this.envelopModel);
         this.setupMorphTargets();
         this.createCarouselItems();
@@ -41,14 +45,19 @@ export default class Envelop {
         this.cassette = this.resources.items.cassetteModel.scene;
         this.letter = this.resources.items.letterModel.scene;
 
-
         this.itemGroup.add(this.dahlia);
         this.itemGroup.add(this.cassette);
         this.itemGroup.add(this.letter);
 
         this.scene.add(this.itemGroup);
-    }
 
+        this.items = [this.dahlia, this.cassette, this.letter];
+        this.positions = [
+            { x: 0, y: 0.2, z: 0 },
+            { x: -0.2, y: -0.1, z: -0.2 },
+            { x: 0.2, y: 0.1, z: -0.2 }
+        ];
+    }
 
     setupMorphTargets() {
         this.envelopModel.traverse((child) => {
@@ -57,10 +66,9 @@ export default class Envelop {
                 this.morphMesh = child;
                 this.morphTargets = child.morphTargetInfluences;
                 this.morphTargets[41] = 1;
-                child.morphTargetInfluences[40] = 1
+                child.morphTargetInfluences[40] = 1;
             }
         });
-
     }
 
     setEvents() {
@@ -69,63 +77,48 @@ export default class Envelop {
         this.pointer.on("click-release", this.handleMouseUp.bind(this));
     }
 
-    handleClick(event) {
+    handleClick() {
         const mousePosition = this.pointer.getMousePosition();
-        const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel, ...this.itemGroup.children], true);;
+        const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel, this.itemGroup, ...this.itemGroup.children], true);
         console.log(intersects);
         if (intersects.length > 0) {
             if (this.hasOpenEnvelop) {
-               this.positionItemsInFrontOfCamera();
-            }
-            if(intersects[0].object && this.isPositionned) {
-                this.bringItemToFront(intersects[0].object)
+                this.separateItemsToTriangle();
             }
             if (!this.hasAnimatedToCamera) {
-                CameraUtils.animateToCamera(this.envelopModel, this.camera);
+                this.camera.moveCameraToInitialPosition(() => {
+                    this.animateEnvelope(() => {
+                        CameraUtils.animateToCamera(this.envelopModel, this.camera.instance, () => {
+                            this.animateItemGroup();
+                        });
+                    });
+                });
                 this.hasAnimatedToCamera = true;
             }
-            else {
-                    this.isDragging = true;
-                    this.mouseStartClickPosition = {
-                    x: mousePosition.x,
-                    y: mousePosition.y,
-                };
-                }
+            this.isDragging = true;
+            this.mouseStartClickPosition = {
+                x: mousePosition.x,
+                y: mousePosition.y,
+            };
         }
     }
 
-    bringItemToFront(item) {
-        const basePosition = new THREE.Vector3(0, 0, 0);
-
-        gsap.to(item.position, {
-            x: basePosition.x,
-            y: basePosition.y + 0.3,
-            z: basePosition.z + 0.2,
-            duration: 2,
-            ease: "power2.inOut",
-        });
-    }
-
-
     handleMouseMove(mouse) {
-        if(!this.isDragging) return;
+        if (!this.isDragging) return;
         if (!this.isAnimating && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
             this.startAnimationOfMorphTargets();
             this.itemGroup.visible = true;
             this.isAnimating = true;
-        } else {
-            const deltaX = event.clientX - this.mouseStartClickPosition.x;
-            const rotationSpeed = 0.001;
-            const deltaRotation = deltaX * rotationSpeed;
-
-            this.itemGroup.rotation.y += deltaRotation;
-            if (this.itemGroup.rotation.y >= 2 * Math.PI) {
-                this.itemGroup.rotation.y -= 2 * Math.PI;
-            } else if (this.itemGroup.rotation.y <= -2 * Math.PI) {
-                this.itemGroup.rotation.y += 2 * Math.PI;
+            this.isDragging = false;
+        } else if(this.carouselIsSet) {
+            this.itemGroup.visible = true;
+            this.isAnimating = true;
+            if ((mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
+                this.rotateItemsRight();
+                this.isDragging = false;
+            } else {
+                this.rotateItemsLeft();
             }
-
-
         }
     }
 
@@ -142,80 +135,121 @@ export default class Envelop {
                     duration: 2,
                     ease: "power1.inOut",
                     onComplete: () => {
-                        this.prepareCarouselDisplay();
+                        this.animateItemGroup();
                     }
                 });
             }
         }
     }
 
-    resetItemsToCarousel() {
-        this.positionItemsInFrontOfCamera();
-    }
+    animateEnvelope(onComplete) {
+        const liftUp = { y: this.envelopModel.position.y + 0.5 };
 
-    positionItemsInFrontOfCamera() {
-        const spacing = 0.3;
-        const positions = [
-            new THREE.Vector3(-spacing, 0, -0.1),
-            new THREE.Vector3(0, 0, -0.1),
-            new THREE.Vector3(spacing, 0, -0.1)
-        ];
+        const tl = gsap.timeline({ onComplete });
 
-        this.itemGroup.children.forEach((item, index) => {
-            gsap.to(item.position, {
-                x: positions[index].x,
-                y: positions[index].y,
-                z: positions[index].z,
-                duration: 2,
-                ease: "power2.inOut",
-                onComplete: () => {
-                    this.isPositionned = true;
-                }
-            });
-        });
-
-        const drawerPosition = new THREE.Vector3(0, -0.05, -0.05);
-        gsap.to(this.envelopModel.position, {
-            x: drawerPosition.x,
-            y: drawerPosition.y,
-            z: drawerPosition.z,
+        tl.to(this.envelopModel.position, {
+            y: liftUp.y,
             duration: 2,
-            ease: "power2.inOut"
+            ease: "power2.inOut",
         });
     }
 
-    prepareCarouselDisplay() {
-        this.itemGroup.visible = true;
+
+    animateItemGroup() {
         this.itemGroup.position.copy(this.envelopModel.position);
         this.itemGroup.rotation.copy(this.envelopModel.rotation);
 
-        this.envelopModel.getWorldPosition(this.envelopModel.position);
-        this.itemGroup.quaternion.copy(this.envelopModel.quaternion)
-        const itemPosition = this.envelopModel.position.clone().add(new THREE.Vector3(0, -0.2, 0));
-
         gsap.to(this.itemGroup.position, {
-            x: itemPosition.x + 0.5,
-            y: itemPosition.y,
-            z: itemPosition.z,
-            duration: 2,
+            x: this.itemGroup.position.x + 0.2,
+            duration: 1,
             ease: "power2.inOut",
             onComplete: () => {
                 gsap.to(this.itemGroup.position, {
-                        x: itemPosition.x,
-                        y: itemPosition.y + 0.3,
-                        z: itemPosition.z,
-                        duration: 2,
-                        ease: "power2.inOut",
-                    onComplete:() => {
-                            this.hasOpenEnvelop = true;
+                    x: this.itemGroup.position.x - 0.2,
+                    z: this.itemGroup.position.z + 0.1,
+                    duration: 1,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        this.animateEnvelopeBackToDrawer();
+                        this.hasOpenEnvelop = true;
                     }
-                    })
+                });
             }
         });
     }
 
+    animateEnvelopeBackToDrawer() {
+        const drawerPosition = new THREE.Vector3();
+        const drawer = this.experience.scene.getObjectByName("tirroir-haut");
+        drawer.getWorldPosition(drawerPosition);
 
+        const envelopPositionX = drawerPosition.x;
+        const envelopPositionY = drawerPosition.y + 0.1;
+        const envelopPositionZ = drawerPosition.z - 0.4;
 
+        gsap.to(this.envelopModel.position, {
+            x: envelopPositionX,
+            y: envelopPositionY,
+            z: envelopPositionZ,
+            duration: 2,
+            ease: "power2.inOut"
+        });
+
+        gsap.to(this.envelopModel.rotation, {
+            x: -Math.PI * 2,
+            y: this.envelopModel.rotation.y + 0.6,
+            z: 0,
+            duration: 2,
+            ease: "power2.inOut",
+            onComplete: () => {
+                this.scene.remove(this.envelopModel);
+            }
+        });
+    }
+
+    separateItemsToTriangle() {
+        this.carouselIsSet = true;
+        const itemPositions = [
+            { x: 0, y: 0.2, z: 0 },
+            { x: -0.2, y: -0.3, z: -0.2 },
+            { x: 0.2, y: -0.3, z: -0.2 }
+        ];
+
+        const items = [this.dahlia, this.cassette, this.letter];
+        items.forEach((item, index) => {
+            gsap.to(item.position, {
+                x: itemPositions[index].x,
+                y: itemPositions[index].y,
+                z: itemPositions[index].z,
+                duration: 2,
+                ease: "power2.inOut",
+            });
+        });
+    }
+
+    rotateItemsRight() {
+        const temp = this.items.pop();
+        this.items.unshift(temp);
+        this.animateItems();
+    }
+
+    rotateItemsLeft() {
+        const temp = this.items.shift();
+        this.items.push(temp);
+        this.animateItems();
+    }
+
+    animateItems() {
+        this.items.forEach((item, index) => {
+            gsap.to(item.position, {
+                x: this.positions[index].x,
+                y: this.positions[index].y,
+                z: this.positions[index].z,
+                duration: 2,
+                ease: "power2.inOut",
+            });
+        });
+    }
 
     destroy() {
         this.scene.remove(this.envelopModel);
