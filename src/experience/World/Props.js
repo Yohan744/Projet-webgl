@@ -4,6 +4,7 @@ import Walkman from "./Props/Essential/Walkman";
 import Projector from "./Props/Essential/Projector";
 import Pencil from "./Props/Essential/Pencil";
 import Malle from "./Props/Essential/Malle";
+import Photo from "./Props/Essential/Photo";
 
 export default class Props {
 
@@ -18,6 +19,7 @@ export default class Props {
     init() {
         this.projector = new Projector()
         this.malle = new Malle()
+        this.photo = new Photo()
     }
 
     // ce fichier va être supprimé bientôt
