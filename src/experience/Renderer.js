@@ -7,7 +7,7 @@ import {
     BlendFunction,
     RenderPass,
     ToneMappingMode,
-    BokehEffect
+    BokehEffect, DepthPass
 } from "postprocessing";
 
 
@@ -57,7 +57,7 @@ export default class Renderer {
 
         this.instance.physicallyCorrectLights = true
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
-        this.instance.shadowMap.enabled = true
+        this.instance.shadowMap.enabled = false
         this.instance.toneMapping = THREE.ACESFilmicToneMapping
         this.instance.toneMappingExposure = 1
         this.instance.outputEncoding = THREE.sRGBEncoding
@@ -70,10 +70,13 @@ export default class Renderer {
     initPostProcessing() {
         this.composer = new EffectComposer(this.instance);
 
+        const depthPass = new DepthPass(this.scene, this.camera.instance);
+        this.composer.addPass(depthPass);
+
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.NORMAL,
             mode: ToneMappingMode.ACES_FILMIC,
-            resolution: 512,
+            resolution: 2048,
             whitePoint: 4.0,
             middleGrey: 0.6,
             minLuminance: 0,
@@ -82,8 +85,8 @@ export default class Renderer {
         });
 
         this.dofEffect = new BokehEffect({
-            focus: 0.001,
-            aperture: 0.1,
+            focus: 0.010,
+            aperture: 0.184,
             maxBlur: 0.025,
             width: this.config.width,
             height: this.config.height
@@ -177,26 +180,27 @@ export default class Renderer {
 
         //////////////////
 
-        // this.debugFolder.addBinding(this.dofEffect, 'focus', {
-        //     min: 0,
-        //     max: 1,
-        //     step: 0.01,
-        //     label: "Focus"
-        // })
+        this.debugFolder.addBinding(this.dofEffect.uniforms.get('focus'), 'value', {
+            min: 0,
+            max: 1,
+            step: 0.001,
+            label: 'Blur focus'
+        });
 
-        // this.debugFolder.addBinding(this.dofEffect.camera, 'focalLength', {
-        //     min: 0,
-        //     max: 100,
-        //     step: 0.01,
-        //     label: "Focal length"
-        // })
-        //
-        // this.debugFolder.addBinding(this.dofEffect, 'fStop', {
-        //     min: 0,
-        //     max: 10,
-        //     step: 0.01,
-        //     label: "F-stop"
-        // })
+        this.debugFolder.addBinding(this.dofEffect.uniforms.get('aperture'), 'value', {
+            min: 0,
+            max: 1,
+            step: 0.001,
+            label: 'Aperture'
+        });
+
+
+        this.debugFolder.addBinding(this.dofEffect.uniforms.get('dof'), 'value', {
+            min: 0,
+            max: 1,
+            step: 0.001,
+            label: 'DOF'
+        });
 
     }
 

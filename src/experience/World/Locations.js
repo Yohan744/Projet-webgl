@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
-import MaterialLibrary from "../MaterialLibrary";
+import {watch} from "vue";
 
 export default class Locations {
 
@@ -15,6 +15,7 @@ export default class Locations {
 
         this.experience = new Experience()
         this.debug = this.experience.debug
+        this.appStore = this.experience.appStore
         this.materialLibrary = materialLibrary
 
         this.spots = []
@@ -43,6 +44,9 @@ export default class Locations {
         this.experience.on('ready', () => {
             this.scene = this.experience.scene
             this.init()
+
+            watch(() => this.appStore.$state.isCameraOnSpot, (state) => !state && this.setLocationsVisibility(true))
+
         })
 
     }
@@ -76,6 +80,13 @@ export default class Locations {
 
     getLocations() {
         return this.spots
+    }
+
+    setLocationsVisibility(state) {
+        this.spots.forEach((spot) => {
+            spot.visible = state
+        })
+
     }
 
     destroy() {

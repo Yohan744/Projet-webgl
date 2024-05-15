@@ -1,7 +1,8 @@
 import * as THREE from "three";
-import {DoubleSide} from "three";
+import { DoubleSide } from "three";
 import Experience from "../../../Experience";
 import gsap from "gsap";
+import Prop from "../Prop";
 
 export default class Projector {
     constructor() {
@@ -29,11 +30,14 @@ export default class Projector {
             y: 0,
         };
 
-        this.dragDistance = 0.3
+        this.dragDistance = 0.3;
         this.isSpotlight = false;
         this.pointerDown = this.onPointerDown.bind(this);
         this.pointerMove = this.onPointerMove.bind(this);
         this.pointerUp = this.onPointerUp.bind(this);
+
+        this.railMoveCount = 0;
+        this.railOriginalPosition = new THREE.Vector3();
 
         this.setEvents();
         this.init();
@@ -43,10 +47,17 @@ export default class Projector {
         this.projectorModel = this.experience.resources.items.projectorModel.scene;
         this.projectorModel.position.set(-3.8, 1.15, 4.5);
         this.scene.add(this.projectorModel);
+
+        this.mesh = this.projectorModel;
+
+        const rail = this.projectorModel.getObjectByName('rail_Diapo');
+        if (rail) {
+            this.railOriginalPosition.copy(rail.position);
+        }
     }
 
     setEvents() {
-        this.pointer.on('click', this.pointerDown );
+        this.pointer.on('click', this.pointerDown);
         this.pointer.on('movement-orbit', this.pointerMove);
         this.pointer.on('click-release', this.pointerUp);
     }
@@ -56,7 +67,7 @@ export default class Projector {
         this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
         const intersects = this.pointer.raycaster.intersectObjects([this.projectorModel], true);
         if (intersects.length > 0) {
-            console.log(intersects[0].object.name)
+            console.log(intersects[0].object.name);
             if (!this.isCameraMoved) {
                 this.onModelClicked(intersects[0]);
                 this.isCameraMoved = true;
@@ -68,48 +79,41 @@ export default class Projector {
                         x: mousePosition.x,
                         y: mousePosition.y,
                     };
-                    console.log("ready")
-                    this.appStore.updateInteractingState(true)
+                    console.log("ready");
+                    this.appStore.updateInteractingState(true);
                 } else if (intersects[0].object.name === 'EnsembleRail' && this.isFirstAnimationIsDone) {
                     this.moveRail();
-                } else if(intersects[0].object.name === 'BoutonOn') {
-                    if (!this.isSpotlight) {
-                        const button = intersects[0].object
-                        gsap.to(button.position, {
-                            y: "-=0.003",
-                            duration: 0.5,
-                            onComplete: () => {
-                                this.setupSpotlight(true);
-                                gsap.to(button.position, {
-                                    y: "+=0.003",
-                                    duration: 0.5,
-                                });
-                            }
-                        });
-                    } else {
-                            const button = intersects[0].object
-                            gsap.to(button.position, {
-                                y: "-=0.003",
-                                duration: 0.5,
-                                onComplete: () => {
-                                   this.removeSpotlight()
-                                    gsap.to(button.position, {
-                                        y: "+=0.003",
-                                        duration: 0.5,
-                                    });
-                                }
-                            });
-                    }
+                } else if (intersects[0].object.name === 'BoutonOn') {
+                    this.toggleSpotlight(intersects[0].object);
                 }
             }
         }
     }
+
     onModelClicked(intersect) {
         const offset = new THREE.Vector3(-1.3, 0.28, 0.5);
         const modelPosition = intersect.object.getWorldPosition(new THREE.Vector3());
         const targetPosition = modelPosition.clone().add(offset);
         this.experience.camera.lookAtSheet(targetPosition);
         this.isCameraMoved = true;
+    }
+
+    toggleSpotlight(button) {
+        gsap.to(button.position, {
+            y: "-=0.003",
+            duration: 0.5,
+            onComplete: () => {
+                if (!this.isSpotlight) {
+                    this.setupSpotlight(true);
+                } else {
+                    this.removeSpotlight();
+                }
+                gsap.to(button.position, {
+                    y: "+=0.003",
+                    duration: 0.5,
+                });
+            }
+        });
     }
 
     setupSpotlight(withTexture) {
@@ -155,60 +159,82 @@ export default class Projector {
         if (this.spotlightWithTexture) {
             this.scene.remove(this.spotlightWithTexture);
             this.spotlightWithTexture = null;
-            this.isSpotlight = false;
         }
+        this.isSpotlight = false;
     }
 
     onPointerMove(mouse) {
         if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
 
         if (!this.isFirstAnimationIsDone && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
-            console.log("Parfait");
-            this.isAnimating = true;
-            gsap.to(this.draggableModel.position, {
-                z: "+=0.05",
-                duration: 1,
-                onComplete: () => {
-                    this.isAnimating = false;
-                    this.isFirstAnimationIsDone = true;
-                }
-            });
-            this.animateTextureDisappearance();
+            this.handleForwardDrag();
         } else if (this.isFirstAnimationIsDone && (this.mouseStartClickPosition.x + 1) - (mouse.x + 1) > this.dragDistance) {
-            console.log("Parfait");
-            this.isAnimating = true;
-                this.changeTextureAnimation();
-            gsap.to(this.draggableModel.position, {
-                z: "-=0.05",
-                duration: 1,
-                onComplete: () => {
-                    this.isAnimating = false;
-                    this.isFirstAnimationIsDone = false;
-                }
-            });
+            this.handleBackwardDrag();
         } else {
             console.log("pas assez loin");
         }
     }
 
+    handleForwardDrag() {
+        console.log("Parfait");
+        this.isAnimating = true;
+        gsap.to(this.draggableModel.position, {
+            z: "+=0.05",
+            duration: 1,
+            onComplete: () => {
+                this.isAnimating = false;
+                this.isFirstAnimationIsDone = true;
+            }
+        });
+        this.animateTextureDisappearance();
+    }
+
+    handleBackwardDrag() {
+        console.log("Parfait");
+        this.isAnimating = true;
+        gsap.to(this.draggableModel.position, {
+            z: "-=0.05",
+            duration: 1,
+            onComplete: () => {
+                this.isAnimating = false;
+                this.isFirstAnimationIsDone = false;
+            }
+        });
+        this.changeTextureAnimation();
+    }
+
     moveRail() {
         const rail = this.projectorModel.getObjectByName('rail_Diapo');
         if (rail) {
-            gsap.to(rail.position, {
-                x: "+=0.005",
-                duration: 1,
-                onComplete: () => {
-                    console.log("Rail animation complete");
-                }
-            });
+            this.railMoveCount++;
+            if (this.railMoveCount > 10) {
+                gsap.to(rail.position, {
+                    x: this.railOriginalPosition.x,
+                    y: this.railOriginalPosition.y,
+                    z: this.railOriginalPosition.z,
+                    duration: 1,
+                    onComplete: () => {
+                        this.railMoveCount = 0;
+                        console.log("Rail repositioned to original position.");
+                    }
+                });
+            } else {
+                gsap.to(rail.position, {
+                    x: "+=0.005",
+                    duration: 1,
+                    onComplete: () => {
+                        console.log("Rail animation complete.");
+                    }
+                });
+            }
         }
     }
 
     animateTextureDisappearance() {
-        if(this.isSpotlight) {
+        if (this.isSpotlight && this.spotlightWithTexture) {
             gsap.to(this.spotlightWithTexture.position, {
                 z: "+=0.05",
-                duration: 0.3,
+                duration: 0.5,
                 ease: "power2.in",
                 onComplete: () => {
                     this.spotlightWithTexture.position.z -= 0.05;
@@ -223,30 +249,40 @@ export default class Projector {
         this.textureIndex = (this.textureIndex + 1) % this.textures.length;
         const newTexture = this.textures[this.textureIndex];
         newTexture.flipY = true;
-        if(this.isSpotlight) {
+
+        if (this.isSpotlight && this.spotlightWithTexture) {
+            this.spotlightWithTexture.position.z += 0.05;
+            this.spotlightWithTexture.map = newTexture;
+            this.spotlightWithTexture.visible = true;
+
+            gsap.to(this.spotlightWithTexture.position, {
+                z: "-=0.05",
+                duration: 0.5,
+                onComplete: () => {
+                    this.isAnimating = false;
+                }
+            });
+        } else if (this.isSpotlight) {
             this.spotlight.visible = false;
-            if (!this.spotlightWithTexture) {
-                this.setupSpotlight(true);
-                this.spotlightWithTexture.position.z += 0.05;
-                gsap.to(this.spotlightWithTexture.map, {
-                    onComplete: () => {
-                        this.textureIndex = newTexture;
-                        this.isAnimating = false;
-                        gsap.to(this.spotlightWithTexture.position, {
-                            z: "-=0.05",
-                            duration: 0.5,
-                        });
-                    }
-                });
-                this.spotlightWithTexture.map = newTexture;
-            }
+            this.setupSpotlight(true);
+
+            this.spotlightWithTexture.position.z += 0.05;
+
+            gsap.to(this.spotlightWithTexture.position, {
+                z: "-=0.05",
+                duration: 0.5,
+                onComplete: () => {
+                    this.isAnimating = false;
+                }
+            });
         }
     }
+
     onPointerUp() {
         if (this.isDragging) {
             this.isDragging = false;
             this.draggableModel = null;
-            this.appStore.updateInteractingState(false)
+            this.appStore.updateInteractingState(false);
         }
     }
 
@@ -266,10 +302,8 @@ export default class Projector {
             this.spotlight = null;
         }
 
-        this.pointer.off('click', this.onPointerDown.bind(this));
-        this.pointer.off('movement-orbit', this.onPointerMove.bind(this));
-        this.pointer.off('click-release', this.onPointerUp.bind(this));
+        this.pointer.off('click', this.pointerDown);
+        this.pointer.off('movement-orbit', this.pointerMove);
+        this.pointer.off('click-release', this.pointerUp);
     }
-
 }
-

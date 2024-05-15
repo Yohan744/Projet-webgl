@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import Experience from "../../Experience";
 import godRayVertexShader from './../../Shaders/GodRay/vertex.glsl';
 import godRayFragmentShader from './../../Shaders/GodRay/fragment.glsl';
-import {DoubleSide, FrontSide, MeshStandardMaterial} from "three";
 
 export default class GodRay {
 
@@ -20,7 +19,7 @@ export default class GodRay {
         if (this.debug) {
             this.debugFolder = this.debug.addFolder({
                 title: 'GodRay',
-                expanded: true,
+                expanded: false,
             })
             this.setDebug()
         }
@@ -38,15 +37,13 @@ export default class GodRay {
             uniforms: {
                 uColor: {value: new THREE.Color('#ffefb0')},
                 uAlphaBase: {value: 0}, // 0.2
-                uAlphaRays: {value: 0.41}, // 0.05
+                uAlphaRays: {value: 0.25}, // 0.05
                 uSeed: {value: Math.random() * 1000},
                 uTime: {value: 0},
                 uTexture: {value: t}
             },
             blending: THREE.AdditiveBlending,
             transparent: true,
-            depthWrite: false,
-            depthTest: false,
             side: THREE.FrontSide,
         });
 

@@ -46,7 +46,7 @@ export default class Dust {
             fragmentShader: dustFragmentShader,
             transparent: true,
             blending: THREE.AdditiveBlending,
-            depthWrite: false
+            depthWrite: true
         })
 
         this.dust = new THREE.Points(this.dustGeometry, this.dustMaterial)

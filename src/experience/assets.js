@@ -27,6 +27,37 @@ export default [
                 source: '/assets/models/malle-ouverture.glb',
                 type: 'model',
             },
+            {
+                name: 'drawerModel',
+                source: '/assets/models/commode.glb',
+                type: 'model',
+            },
+            {
+                name: 'envelopModel',
+                source: '/assets/models/enveloppe.glb',
+                type: 'model',
+            },
+            {
+                name: 'cassetteModel',
+                source: '/assets/models/cassette.glb',
+                type: 'model',
+            },
+            {
+                name: 'dahliaModel',
+                source: '/assets/models/dahlia.glb',
+                type: 'model',
+            },
+            {
+                name: 'letterModel',
+                source: '/assets/models/lettre.glb',
+                type: 'model',
+            },
+
+            {
+                name: 'photoModel',
+                source: '/assets/models/photo.glb',
+                type: 'model',
+            },
 
             {
                 name: 'projectorModel',
@@ -134,6 +165,30 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/littleStorage/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'chestDrawer',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/chestDrawer/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'drawer',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/drawer/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'storage',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/storage/diffuse.webp',
                 }
             },
 
