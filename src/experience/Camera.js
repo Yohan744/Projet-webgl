@@ -1,12 +1,11 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from "gsap"
-import {watch} from "vue";
+import { watch } from "vue";
 
 export default class Camera {
     constructor() {
-
         this.experience = new Experience()
         this.config = this.experience.config
         this.debug = this.experience.debug
@@ -29,6 +28,7 @@ export default class Camera {
         this.basicCameraPosition = new THREE.Vector3(0, 2.25, 9.5)
         this.basicLookingPoint = new THREE.Vector3(0, -0.25, -3)
         this.sheetLookingPoint = new THREE.Vector3(2, 0, 0)
+        this.drawerLookingPoint = new THREE.Vector3(0, -0.35, 0)
 
         this.lookingPoint = this.getNormalizedLookingPoint(this.basicCameraPosition, this.basicLookingPoint)
         this.prevTarget = new THREE.Vector3();
@@ -38,12 +38,14 @@ export default class Camera {
         this.upVector = new THREE.Vector3(0, 1, 0);
 
         this.lerpCamera = 0
-        this.cameraAmplitude = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
+        this.cameraAmplitude = this.isMobile ? { x: 3.5, y: 2 } : { x: 1.75, y: 1.25 }
         this.lerpCameraNormal = 0.975
-        this.cameraAmplitudeNormal = this.isMobile ? {x: 3.5, y: 2} : {x: 1.75, y: 1.25}
+        this.cameraAmplitudeNormal = this.isMobile ? { x: 3.5, y: 2 } : { x: 1.75, y: 1.25 }
         this.lerpCameraFocus = 0.99
-        this.cameraAmplitudeFocus = this.isMobile ? {x: 1, y: 1} : {x: 0.5, y: 0.5}
+        this.cameraAmplitudeFocus = this.isMobile ? { x: 1, y: 1 } : { x: 0.5, y: 0.5 }
         this.movingSpeedMultiplier = 0.65
+        this.originalPosition = null;
+        this.originalLookAt = null;
 
         if (this.debug) {
             this.debugFolder = this.debug.addFolder({
@@ -62,7 +64,9 @@ export default class Camera {
         const width = this.config.width === null ? window.innerWidth : this.config.width
         this.instance = new THREE.PerspectiveCamera(50, width / this.config.height, 0.1, 50)
         this.instance.rotation.reorder('YXZ')
-        this.instance.lookAt(this.lookingPoint)
+        this.instance.lookAt(this.lookingPoint);
+        this.originalPosition = this.instance.position.clone();
+        this.originalLookAt = this.lookingPoint.clone();
 
         this.scene.add(this.instance)
     }
@@ -96,7 +100,7 @@ export default class Camera {
         if (this.debug) {
             this.debugFolder.addBinding(this, 'mode', {
                 view: 'list',
-                options: {Default: "default", Debug: "debug"},
+                options: { Default: "default", Debug: "debug" },
                 label: "Camera mode"
             });
 
@@ -260,6 +264,83 @@ export default class Camera {
 
     }
 
+    moveCameraToDrawer(targetObject, yOffset = 4) {
+        this.originalPosition = this.modes.default.instance.position.clone();
+        this.originalLookAt = this.lookingPoint.clone();
+
+        this.isMoving = true;
+        targetObject.updateMatrixWorld(true);
+        const objectPosition = new THREE.Vector3();
+        targetObject.getWorldPosition(objectPosition);
+
+        const cameraPosition = objectPosition.clone().add(new THREE.Vector3(0, yOffset, 0));
+        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(-1.8, -8, -2));
+        const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp);
+
+        const tl = gsap.timeline();
+
+        gsap.to(this.modes.default.instance.position, {
+            x: cameraPosition.x + 0.3,
+            y: this.modes.default.instance.position.y + 0.7,
+            z: cameraPosition.z,
+            duration: 1,
+            ease: "power1.inOut",
+            onUpdate: () => {
+                this.instance.lookAt(objectPosition);
+            },
+            onComplete: () => {
+                this.appStore.updateCameraOnSpot(true);
+                this.isMoving = false;
+            }
+        });
+        tl.to(this.lookingPoint, {
+            x: tmpLookingPoint.x,
+            y: tmpLookingPoint.y,
+            z: tmpLookingPoint.z,
+            duration: 1,
+            ease: 'power1.in'
+        });
+        gsap.to(this.instance, {
+            fov: 40,
+            ease: "power1.out",
+            delay: 2,
+            duration: 2,
+            onUpdate: () => {
+                this.updateFocusMode(true);
+            }
+        });
+    }
+
+    moveCameraToInitialPosition(onComplete) {
+        if (this.originalPosition && this.originalLookAt) {
+            gsap.to(this.modes.default.instance.position, {
+                x: this.originalPosition.x,
+                y: this.originalPosition.y,
+                z: this.originalPosition.z,
+                duration: 2,
+                ease: 'power2.inOut',
+                onComplete: onComplete
+            });
+
+            gsap.to(this.lookingPoint, {
+                x: this.originalLookAt.x,
+                y: this.originalLookAt.y,
+                z: this.originalLookAt.z,
+                duration: 2,
+                ease: 'power2.inOut'
+            });
+        }
+        gsap.to(this.instance, {
+            fov: 75,
+            ease: "power1.out",
+            delay: 2,
+            duration: 2,
+            onUpdate: () => {
+                this.updateFocusMode(true);
+            }
+        });
+    }
+
     getNormalizedLookingPoint(position, point) {
         const direction = new THREE.Vector3().copy(point);
         direction.normalize();
@@ -277,7 +358,6 @@ export default class Camera {
     }
 
     update() {
-
         if (this.mode === 'default') {
             this.lookAtTarget.set(0, 0, 0).copy(this.lookingPoint);
             this.lookAtTarget.addScaledVector(this.side, this.mousePos.x * this.cameraAmplitude.x);
