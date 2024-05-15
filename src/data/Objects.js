@@ -14,7 +14,8 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 0.5,
         outlineScale: 1.05, // false to deactivate, type number to activate
-        propSound: ''// not set yet
+        propSound: '', // not set yet
+        spotId: 2 // spot where object belongs
     },
     cassette: {
         file: Cassette,
@@ -22,7 +23,8 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 0.4,
         outlineScale: 1.05,
-        propSound: ''
+        propSound: '',
+        spotId: 1
     },
     crayon: {
         file: Pencil,
@@ -30,7 +32,8 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 0.6,
         outlineScale: 1.05,
-        propSound: ''
+        propSound: '',
+        spotId: 1
     },
     telephone: {
         file: Telephone,
@@ -38,7 +41,8 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.05,
-        propSound: 'telephone'
+        propSound: 'telephone',
+        spotId: 0
     },
     rubicub: {
         file: RubiksCube,
@@ -46,7 +50,8 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 0.6,
         outlineScale: 1.05,
-        propSound: ''
+        propSound: '',
+        spotId: 3
     },
     tv: {
         file: Television,
@@ -54,7 +59,8 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.05,
-        propSound: ''
+        propSound: '',
+        spotId: 3
     },
     tourne_disque1: {
         file: RecordPlayer,
@@ -62,6 +68,7 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.05,
-        propSound: ''
+        propSound: '',
+        spotId: 1
     },
 }

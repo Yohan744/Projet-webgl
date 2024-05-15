@@ -15,10 +15,10 @@ let groundMaterial,
     sideWindowMaterial,
     beamMaterial;
 
-let sideMirrorMaterial,
-    mirrorMaterial,
+let mirrorMaterial,
     cardBoardMaterial,
-    carpetMaterial,
+    firstCarpetMaterial,
+    secondCarpetMaterial,
     sheetMaterial,
     libraryMaterial,
     deskMaterial,
@@ -27,7 +27,12 @@ let sideMirrorMaterial,
     pillowMaterial,
     coatRackMaterial,
     bulbMaterial,
-    ladderMaterial;
+    ladderMaterial,
+    rockingChairMaterial,
+    tableMaterial,
+    lampMaterial,
+    chairMaterial,
+    sheetChairMaterial;
 
 let recordPlayerMaterial,
     rubiksCubeMaterial,
@@ -147,6 +152,7 @@ export default class MaterialLibrary {
             windowMaterial = new MeshStandardMaterial({
                 color: '#ffefb0',
                 transparent: true,
+                opacity: 0.5,
                 blending: AdditiveBlending,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -192,27 +198,10 @@ export default class MaterialLibrary {
 
     ///////////////////////////// OBJECTS MATERIALS /////////////////////////////
 
-    getSideMirrorMaterial() {
-        if (!sideMirrorMaterial) {
-            sideMirrorMaterial = new MeshStandardMaterial({
-                map: this.resources.items.sideMirror.diffuse,
-                roughnessMap: this.resources.items.sideMirror.roughness,
-                normalMap: this.resources.items.sideMirror.normal,
-                side: this.debug ? DoubleSide : FrontSide
-            })
-
-            this.materialsUsed.push(sideMirrorMaterial)
-        }
-
-        return sideMirrorMaterial
-    }
-
     getMirrorMaterial() {
         if (!mirrorMaterial) {
-            mirrorMaterial = new MeshStandardMaterial({
-                color: '#ffffff',
-                metalness: 1,
-                roughnessMap: this.resources.items.mirror.roughness,
+            mirrorMaterial = new MeshBasicMaterial({
+                map: this.resources.items.mirror.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -235,22 +224,32 @@ export default class MaterialLibrary {
         return cardBoardMaterial
     }
 
-    getCarpetMaterial() {
-        if (!carpetMaterial) {
+    getFirstCarpetMaterial() {
+        if (!firstCarpetMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'carpet', 1.75, 1.75)
-
-            carpetMaterial = new MeshBasicMaterial({
+            firstCarpetMaterial = new MeshBasicMaterial({
                 map: this.resources.items.carpet.diffuse,
-                roughnessMap: this.resources.items.carpet.roughness,
-                normalMap: this.resources.items.carpet.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
-            this.materialsUsed.push(carpetMaterial)
+            this.materialsUsed.push(firstCarpetMaterial)
         }
 
-        return carpetMaterial
+        return firstCarpetMaterial
+    }
+
+    getSecondCarpetMaterial() {
+        if (!secondCarpetMaterial) {
+
+            secondCarpetMaterial = new MeshBasicMaterial({
+                map: this.resources.items.carpet.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(secondCarpetMaterial)
+        }
+
+        return secondCarpetMaterial
     }
 
     getSheetMaterial() {
@@ -370,6 +369,71 @@ export default class MaterialLibrary {
         return ladderMaterial
     }
 
+    getRockingChairMaterial() {
+        if (!rockingChairMaterial) {
+            rockingChairMaterial = new MeshBasicMaterial({
+                map: this.resources.items.rockingChair.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(rockingChairMaterial)
+        }
+
+        return rockingChairMaterial
+    }
+
+    getTableMaterial() {
+        if (!tableMaterial) {
+            tableMaterial = new MeshBasicMaterial({
+                map: this.resources.items.table.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(tableMaterial)
+        }
+
+        return tableMaterial
+    }
+
+    getLampMaterial() {
+        if (!lampMaterial) {
+            lampMaterial = new MeshBasicMaterial({
+                map: this.resources.items.lamp.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(lampMaterial)
+        }
+
+        return lampMaterial
+    }
+
+    getChairMaterial() {
+        if (!chairMaterial) {
+            chairMaterial = new MeshBasicMaterial({
+                map: this.resources.items.chair.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(chairMaterial)
+        }
+
+        return chairMaterial
+    }
+
+    getSheetChairMaterial() {
+        if (!sheetChairMaterial) {
+            sheetChairMaterial = new MeshBasicMaterial({
+                map: this.resources.items.sheetChair.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(sheetChairMaterial)
+        }
+
+        return sheetChairMaterial
+    }
+
     //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
 
     getChestDrawerMaterial() {
@@ -461,7 +525,7 @@ export default class MaterialLibrary {
                 color: 0xffffff,
                 side: FrontSide,
                 transparent: true,
-                opacity: 0.65,
+                opacity: 0.6,
             })
 
             this.materialsUsed.push(locationsMaterial)

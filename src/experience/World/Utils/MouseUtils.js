@@ -6,6 +6,7 @@ export class MouseUtils {
     constructor(mesh) {
         this.experience = new Experience();
         this.mesh = mesh;
+        this.meshName = this.mesh.name.toLowerCase();
         this.camera = this.experience.camera.modes.default.instance;
         this.pointer = this.experience.pointer;
         this.appStore = this.experience.appStore;
@@ -52,9 +53,10 @@ export class MouseUtils {
     }
 
     update = () => {
-        this.controls.update();
-        this.mesh.quaternion.copy(this.fakeCamera.quaternion.conjugate());
-
+        if (this.meshName === this.appStore.$state.actualObjectInteractingName) {
+            this.controls.update();
+            this.mesh.quaternion.copy(this.fakeCamera.quaternion.conjugate());
+        }
     }
 
     onMouseUp() {

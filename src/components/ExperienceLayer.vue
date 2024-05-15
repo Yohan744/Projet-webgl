@@ -1,29 +1,41 @@
 <template>
   <section ref="experienceLayer" id="experience-layer">
+
     <div ref="goBack" @click="goBack" class="go-back-arrow-icon">
       <img :src="goBackIcon" alt="Go back"/>
     </div>
+
     <div ref="settings" @click="handleSettingsIconClick" class="settings-icon visible">
       <img src="../assets/icons/settings.svg" alt="Settings"/>
     </div>
+
     <div ref="settingsWrapper" class="settings-wrapper" @click="handleClickSettingsWrapper">
+
       <div class="settings-panel">
+
         <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
+
         <div class="volume-wrapper">
           <p>Global volume</p>
           <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
           <p>{{globalVolume}}</p>
         </div>
+
         <router-link to="/">Go back to home</router-link>
         <router-link to="/" @click="() => this.appStore.resetAll()">Reset experience</router-link>
+
       </div>
+
     </div>
+
     <div class="pocket-button-container" :class="{ visible: appStore.isPocketButtonVisible }">
       <button @click="handlePocketButtonClick">Mettre dans la poche</button>
     </div>
+
     <div v-if="appStore.isCassetteInPocket" class="cassette-icon" @click="handleCassetteIconClick">
       <img src="../assets/icons/home.svg" alt="Cassette"/>
     </div>
+
   </section>
 </template>
 

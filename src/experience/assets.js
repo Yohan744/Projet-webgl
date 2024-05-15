@@ -125,20 +125,10 @@ export default [
         items: [
 
             {
-                name: 'sideMirror',
-                type: 'group',
-                textures: {
-                    diffuse: 'assets/textures/objects/mirror/side/diffuse.webp',
-                    roughness: 'assets/textures/objects/mirror/side/roughness.webp',
-                    normal: 'assets/textures/objects/mirror/side/normal.webp',
-                }
-            },
-
-            {
                 name: 'mirror',
                 type: 'group',
                 textures: {
-                    roughness: 'assets/textures/objects/mirror/glass/roughness.webp',
+                    diffuse: 'assets/textures/objects/mirror/diffuse.webp',
                 }
             },
 
@@ -147,8 +137,7 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/carpet/diffuse.webp',
-                    roughness: 'assets/textures/objects/carpet/roughness.webp',
-                    normal: 'assets/textures/objects/carpet/normal.webp',
+                    diffuse2: 'assets/textures/objects/carpet/diffuse2.webp',
                 }
             },
 
@@ -253,6 +242,46 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/recordPlayer/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'rockingChair',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/rockingChair/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'table',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/table/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'lamp',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/lamp/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'chair',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/chair/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'sheetChair',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/sheetChair/diffuse.webp',
                 }
             },
 
