@@ -69,8 +69,6 @@ export default class Pointer extends EventEmitter {
             this.trigger('spot-clicked', [position, lookingPoint])
             this.appStore.setSpotId(intersects[0].object.data.id)
             this.experience.world.locations.setLocationsVisibility(false)
-            console.log(intersects[0].object.data.id)
-            console.log(intersects)
         }
         this.trigger('click')
     }
