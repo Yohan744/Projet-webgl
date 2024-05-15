@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
 import {watch} from "vue";
+import gsap from "gsap";
 
 export default class Locations {
 
@@ -84,7 +85,28 @@ export default class Locations {
 
     setLocationsVisibility(state) {
         this.spots.forEach((spot) => {
-            spot.visible = state
+
+            const delay = Math.random() * 0.25
+
+            gsap.to(spot.material, {
+                opacity: state ? 1 : 0,
+                delay: delay,
+                duration: 1.5,
+                ease: 'power3.inOut'
+            })
+
+            gsap.to(spot.scale, {
+                x: state ? 1 : 0,
+                y: state ? 1 : 0,
+                z: state ? 1 : 0,
+                delay: delay,
+                duration: 1.5,
+                ease: 'power3.inOut',
+                onUpdate: () => {
+                    spot.updateMatrix()
+                }
+            })
+
         })
 
     }

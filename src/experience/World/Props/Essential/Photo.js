@@ -29,7 +29,6 @@ export default class Photo {
 
     setupPhotoModel() {
         this.photoModel = this.resources.items.photoModel.scene;
-        this.photoModel.scale.set(1, 1, 1);
         this.photoModel.position.set(0, 2.25, 9.32);
         this.photoModel.rotation.x = Math.PI / 2;
         this.scene.add(this.photoModel);
@@ -42,12 +41,14 @@ export default class Photo {
         this.group.add(this.photoModel);
         this.scene.add(this.group);
 
+        const t = this.resources.items.backgroundTreeTexture
+        t.flipY = true
+
         const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
         const rectangleMaterial = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
+            map: t,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: 0
         });
         this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
         this.rectangleMesh.position.set(0, 0, 0.01);
@@ -72,10 +73,10 @@ export default class Photo {
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.001,
-            color: 0xffffff,
+            size: 0.01,
+            color: '#9f9f9f',
             transparent: true,
-            opacity: 0.4
+            opacity: 0.3
         });
 
         this.particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
@@ -83,7 +84,7 @@ export default class Photo {
     }
 
     setupMouseEvents() {
-        this.renderer.domElement.addEventListener('mousemove', this.onMouseMove.bind(this));
+        window.addEventListener('mousemove', this.onMouseMove.bind(this));
     }
 
     onMouseMove(event) {
@@ -135,7 +136,6 @@ export default class Photo {
     }
 
     destroy() {
-        this.renderer.domElement.removeEventListener('mousemove', this.onMouseMove.bind(this));
-        super.destroy();
+        window.removeEventListener('mousemove', this.onMouseMove.bind(this));
     }
 }
