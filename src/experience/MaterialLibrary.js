@@ -147,6 +147,7 @@ export default class MaterialLibrary {
             windowMaterial = new MeshStandardMaterial({
                 color: '#ffefb0',
                 transparent: true,
+                opacity: 0.5,
                 blending: AdditiveBlending,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -461,7 +462,7 @@ export default class MaterialLibrary {
                 color: 0xffffff,
                 side: FrontSide,
                 transparent: true,
-                opacity: 0.65,
+                opacity: 0.6,
             })
 
             this.materialsUsed.push(locationsMaterial)

@@ -9,6 +9,8 @@ export const useAppStore = defineStore({
         isVideoIntroWatched: false,
         isExperienceVisible: false,
         isCameraOnSpot: false,
+        spotId: null,
+        actualObjectInteractingName: null,
         isInteractingWithObject: false,
         isOrbitControlsEnabled: false,
         isSettingsOpen: false,
@@ -39,6 +41,12 @@ export const useAppStore = defineStore({
         updateCameraOnSpot(state) {
             this.isCameraOnSpot = state
         },
+        setSpotId(id) {
+            this.spotId = id
+        },
+        setActualObjectInteractingName(name) {
+            this.actualObjectInteractingName = name
+        },
         updateInteractingState(state) {
             this.isInteractingWithObject = state
         },
@@ -64,6 +72,8 @@ export const useAppStore = defineStore({
             this.lastVisitedRoute = null
             this.isExperienceVisible = false
             this.isCameraOnSpot = false
+            this.spotId = null
+            this.actualObjectInteractingName = null
             this.isInteractingWithObject = false
             this.isOrbitControlsEnabled = false
             this.isSettingsOpen = false
@@ -78,12 +88,14 @@ export const useAppStore = defineStore({
             this.isVideoIntroWatched = false
             this.isExperienceVisible = false
             this.isCameraOnSpot = false
+            this.spotId = null
+            this.actualObjectInteractingName = null
             this.isInteractingWithObject = false
             this.isOrbitControlsEnabled = false
             this.isSettingsOpen = false
             this.isPocketButtonVisible = false
             this.objectToPocket = false
-            this.isCassetteInPocket = false,
+            this.isCassetteInPocket = false
             this.objectOut = false
         }
     },

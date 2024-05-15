@@ -8,7 +8,7 @@ import {MouseUtils} from "../Utils/MouseUtils";
 
 export default class Prop extends EventEmitter {
 
-    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound = '') {
+    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound = '', spotId = 0) {
         super();
 
         this.experience = new Experience();
@@ -30,6 +30,7 @@ export default class Prop extends EventEmitter {
         this.offsetFromCamera = distanceToCamera;
         this.chanceOfPlayingASong = 0.4
         this.propsSongHasBeenPlayed = false
+        this.spotId = spotId
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
         if (this.animatePropsToCameraOnClick) this.mouseUtils = new MouseUtils(this.mesh);
@@ -50,6 +51,7 @@ export default class Prop extends EventEmitter {
                 this.animatePropsToBasicPosition()
                 this.outline?.showOutline()
                 this.appStore.updateOrbitsControlsState(false)
+                this.appStore.setActualObjectInteractingName(null)
                 this.renderer.toggleBlurEffect(false)
             }
         })
@@ -59,13 +61,18 @@ export default class Prop extends EventEmitter {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
         if (intersects.length > 0 && this.appStore.$state.isCameraOnSpot) {
             this.onClickGeneral()
-            if (this.animatePropsToCameraOnClick && !this.appStore.$state.isInteractingWithObject) {
+            console.log(this.mesh.name)
+            if (this.animatePropsToCameraOnClick && !this.appStore.$state.isInteractingWithObject && this.spotId === this.appStore.$state.spotId && this.appStore.$state.actualObjectInteractingName === null) {
+
                 this.animatePropsToCamera()
-                this.appStore.updateInteractingState(true)
-                this.outline?.removeOutline()
                 this.playSoundOnClick()
                 this.onClick()
+
+                this.appStore.updateInteractingState(true)
+                this.appStore.setActualObjectInteractingName(this.mesh.name.toLowerCase())
+                this.outline?.removeOutline()
                 this.renderer.toggleBlurEffect(true)
+
             }
         }
     }

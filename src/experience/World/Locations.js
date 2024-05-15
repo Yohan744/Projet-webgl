@@ -46,7 +46,12 @@ export default class Locations {
             this.scene = this.experience.scene
             this.init()
 
-            watch(() => this.appStore.$state.isCameraOnSpot, (state) => !state && this.setLocationsVisibility(true))
+            watch(() => this.appStore.$state.isCameraOnSpot, (state) => {
+                if (!state) {
+                    this.setLocationsVisibility(true)
+                    this.appStore.setSpotId(null)
+                }
+            })
 
         })
 
@@ -56,7 +61,7 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
-            const geometry = new THREE.PlaneGeometry(0.65, 0.65)
+            const geometry = new THREE.CircleGeometry(0.35, 16)
             geometry.rotateX(-Math.PI * 0.5)
 
             const location = new THREE.Mesh(
@@ -68,6 +73,7 @@ export default class Locations {
 
             location.position.copy(this.locationsPositions[i]).add(this.locationsOffset[i])
             location.data = {
+                id: i,
                 lookingPoint: this.locationsLookingPoint[i]
             };
 
@@ -86,13 +92,24 @@ export default class Locations {
     setLocationsVisibility(state) {
         this.spots.forEach((spot) => {
 
-            const delay = Math.random() * 0.25
+            let delay = 0.25 + Math.random() * 0.65
+            const id = spot.data.id
+
+            if (id === this.appStore.$state.spotId) {
+                delay = 0
+            }
 
             gsap.to(spot.material, {
                 opacity: state ? 1 : 0,
-                delay: delay,
-                duration: 1.5,
-                ease: 'power3.inOut'
+                delay: delay * 0.8,
+                duration: 3,
+                ease: 'power2.out',
+                onStart: () => {
+                    state ? spot.material.visible = true : null
+                },
+                onComplete: () => {
+                    !state ? spot.material.visible = false : null
+                }
             })
 
             gsap.to(spot.scale, {
@@ -100,8 +117,8 @@ export default class Locations {
                 y: state ? 1 : 0,
                 z: state ? 1 : 0,
                 delay: delay,
-                duration: 1.5,
-                ease: 'power3.inOut',
+                duration: 3,
+                ease: 'power2.out',
                 onUpdate: () => {
                     spot.updateMatrix()
                 }
