@@ -21,7 +21,7 @@ export default class Props {
         this.envelop = new Envelop()
         this.projector = new Projector()
         this.malle = new Malle()
-        this.photo = new Photo()
+        // this.photo = new Photo()
     }
 
     // ce fichier va être supprimé bientôt
