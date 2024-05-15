@@ -32,7 +32,8 @@ let sideMirrorMaterial,
 let recordPlayerMaterial,
     rubiksCubeMaterial,
     televisionMaterial,
-    chestDrawerMaterial;
+    chestDrawerMaterial,
+    drawerMaterial;
 
 
 let outlineMaterial,
@@ -374,7 +375,7 @@ export default class MaterialLibrary {
     getChestDrawerMaterial() {
         if (!chestDrawerMaterial) {
             chestDrawerMaterial = new MeshStandardMaterial({
-                color: '#bc7c4b',
+                map: this.resources.items.chestDrawer.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -382,6 +383,19 @@ export default class MaterialLibrary {
         }
 
         return chestDrawerMaterial
+    }
+
+    getDrawerMaterial() {
+        if (!drawerMaterial) {
+            drawerMaterial = new MeshStandardMaterial({
+                map: this.resources.items.drawer.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(drawerMaterial)
+        }
+
+        return drawerMaterial
     }
 
     getRubiksCubeMaterial() {

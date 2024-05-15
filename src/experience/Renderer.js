@@ -7,7 +7,7 @@ import {
     BlendFunction,
     RenderPass,
     ToneMappingMode,
-    BokehEffect, DepthPass, AdaptiveLuminancePass
+    BokehEffect, DepthPass
 } from "postprocessing";
 
 

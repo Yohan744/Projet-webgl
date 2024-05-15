@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
-import MaterialLibrary from "../MaterialLibrary";
 import {watch} from "vue";
 
 export default class Locations {

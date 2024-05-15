@@ -44,6 +44,8 @@ export default class Objects {
                     child.material = this.materialLibrary.getLibraryMaterial()
                 } else if (name.includes("petit_meuble")) {
                     child.material = this.materialLibrary.getLittleStorageMaterial()
+                } else if (name === 'meuble') {
+                    child.material = this.materialLibrary.getChestDrawerMaterial()
                 } else if (name.includes("meuble_mur_fenetre")) {
                     child.material = this.materialLibrary.getStorageMaterial()
                 } else if (name.includes("coussin")) {

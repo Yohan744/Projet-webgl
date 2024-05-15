@@ -138,6 +138,22 @@ export default [
             },
 
             {
+                name: 'chestDrawer',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/chestDrawer/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'drawer',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/drawer/diffuse.webp',
+                }
+            },
+
+            {
                 name: 'storage',
                 type: 'group',
                 textures: {
