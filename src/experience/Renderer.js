@@ -58,7 +58,7 @@ export default class Renderer {
         this.instance.physicallyCorrectLights = true
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = false
-        this.instance.toneMapping = THREE.ACESFilmicToneMapping
+        this.instance.toneMapping = THREE.NoToneMapping
         this.instance.toneMappingExposure = 1
         this.instance.outputEncoding = THREE.sRGBEncoding
 
@@ -70,16 +70,18 @@ export default class Renderer {
     initPostProcessing() {
         this.composer = new EffectComposer(this.instance);
 
+        this.renderPass = new RenderPass(this.scene, this.camera.instance);
+
         const depthPass = new DepthPass(this.scene, this.camera.instance);
         this.composer.addPass(depthPass);
 
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.NORMAL,
             mode: ToneMappingMode.ACES_FILMIC,
-            resolution: 2048,
-            whitePoint: 4.0,
-            middleGrey: 0.6,
-            minLuminance: 0,
+            resolution: 256,
+            whitePoint: 0,
+            middleGrey: 0,
+            minLuminance: 0.01,
             averageLuminance: 1.0,
             adaptationRate: 1.0
         });
@@ -95,7 +97,7 @@ export default class Renderer {
         this.onlyTonePass = new EffectPass(this.camera.instance, this.toneMappingEffect);
         this.toneAndBlurPass = new EffectPass(this.camera.instance, this.toneMappingEffect, this.dofEffect);
 
-        this.composer.addPass(new RenderPass(this.scene, this.camera.instance));
+        this.composer.addPass(this.renderPass);
         this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
     }
 

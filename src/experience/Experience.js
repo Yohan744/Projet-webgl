@@ -42,7 +42,11 @@ export default class Experience extends EventEmitter {
         this.setResources()
         this.setWorld()
         this.setSoundManager()
+        this.setWatchers()
 
+    }
+
+    setWatchers() {
         this.sizes.on('resize', () => {
             this.resize()
         })
@@ -51,6 +55,11 @@ export default class Experience extends EventEmitter {
             this.trigger('ready')
             this.update()
             this.camera.updateLerpCameraAfterFirstFrame()
+        })
+
+        this.resources.on('progress', (data) => {
+            const progress = data.loaded / data.toLoad
+            this.trigger('assetLoading', [progress])
         })
     }
 

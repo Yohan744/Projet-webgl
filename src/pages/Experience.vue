@@ -3,7 +3,7 @@
     <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{ visible: showStartButton }">
       <p>start experience</p>
     </div>
-    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"/>
+    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}" :progress="progress"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
     <ExperienceLayer :soundManager="soundManager"/>
     <div ref="experienceContainer" class="experience"></div>
@@ -32,6 +32,7 @@ export default {
       isLoaded: false,
       experience: null,
       soundManager: useSoundManager,
+      progress: 0,
       isVideoIntroWatched: appStore.isVideoIntroWatched,
       showStartButton: false
     };
@@ -70,9 +71,11 @@ export default {
   methods: {
     initExperience() {
       this.experience?.destroy();
+
       this.experience = new Experience({
         targetElement: this.$refs.experienceContainer
       });
+
       this.experience.resources.on('ready', () => {
         this.isLoaded = true;
         this.showStartButton = this.appStore.$state.lastVisitedRoute === null && this.appStore.$state.isVideoIntroWatched
@@ -80,6 +83,14 @@ export default {
           this.setExperienceOpacity();
         }
       });
+
+      this.experience.on('assetLoading', (value) => {
+        const progress = Math.round(value * 100);
+        if (progress > this.progress) {
+          this.progress = progress;
+        }
+      });
+
     },
     setExperienceOpacity() {
       if (this.$refs.experienceContainer) {
