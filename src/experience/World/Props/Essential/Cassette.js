@@ -24,6 +24,7 @@ export default class Cassette extends Prop {
             (newVal) => {
                 if (newVal) {
                     this.showInFrontOfCamera();
+                    this.appStore.isObjectOut = true;
                 }
             }
         );

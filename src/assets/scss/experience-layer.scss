@@ -19,7 +19,8 @@
 
   .go-back-arrow-icon,
   .settings-icon,
-  .cassette-icon {
+  .cassette-icon,
+  .pencil-icon {
     position: absolute;
     height: 35px;
     width: 35px;
@@ -66,6 +67,11 @@
   .cassette-icon {
     bottom: 20px;
     left: 20px;
+  }
+
+  .pencil-icon {
+    bottom: 20px;
+    left: 80px;
   }
 
   .settings-wrapper {
