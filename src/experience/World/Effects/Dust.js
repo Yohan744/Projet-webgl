@@ -11,7 +11,7 @@ export default class Dust {
         this.config = this.experience.config
         this.scene = this.experience.scene
 
-        this.dustNumber = 1300
+        this.dustNumber = 500
         this.size = 45
 
         this.init()

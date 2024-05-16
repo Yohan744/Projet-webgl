@@ -1,12 +1,15 @@
 <template>
   <div class="loading-wrapper">
-    <p>Loading ...</p>
+    <p>Loading {{progress}}%</p>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Loading',
+  props: {
+    progress: Number,
+  },
 }
 </script>
 
