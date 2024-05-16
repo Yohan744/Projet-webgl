@@ -13,10 +13,10 @@ export default class Photo {
         this.raycaster = new THREE.Raycaster();
         this.isHovering = false;
         this.displacedParticles = 0;
-        this.group = null; 
+        this.group = null;
         this.initialPositions = [];
         this.activeParticles = [];
-        
+
         this.init();
     }
 
@@ -41,12 +41,12 @@ export default class Photo {
         this.group.add(this.photoModel);
         this.scene.add(this.group);
 
-        const t = this.resources.items.photoTexture
-        t.flipY = true
+        const texture = this.resources.items.photoTexture;
+        texture.flipY = true;
 
         const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
         const rectangleMaterial = new THREE.MeshBasicMaterial({
-            map: t,
+            map: texture,
             side: THREE.DoubleSide,
             transparent: true,
         });
@@ -93,38 +93,38 @@ export default class Photo {
         const mouseY = -((event.clientY - rect.top) / rect.height) * 0.12 + 0.06;
 
         const positions = this.particlesMesh.geometry.attributes.position.array;
-        const radius = 0.005;
-        const radiusSquared = radius * radius; 
+        const radius = 0.04;
+        const radiusSquared = radius * radius;
 
         for (let i = 0; i < this.initialPositions.length; i++) {
             if (!this.activeParticles[i]) continue;
 
-            const pos = this.initialPositions[i];
-            const dx = mouseX - pos.x;
-            const dy = mouseY - pos.y;
+            const posX = positions[i * 3];
+            const posY = positions[i * 3 + 1];
+
+            const dx = mouseX - posX;
+            const dy = mouseY - posY;
             const distanceSquared = dx * dx + dy * dy;
 
             if (distanceSquared < radiusSquared) {
                 this.activeParticles[i] = false;
-                positions[i * 3] = NaN;
-                positions[i * 3 + 1] = NaN;
+                this.removeParticle(i);
                 this.displacedParticles++;
-                if (this.displacedParticles >= this.initialPositions.length / 2) {
+                if (this.displacedParticles >= this.initialPositions.length) {
                     this.removeGroup();
                     break;
                 }
-            } else if (distanceSquared < radiusSquared * 4) {
-                const distance = Math.sqrt(distanceSquared);
-                const directionX = dx / distance;
-                const directionY = dy / distance;
-                const targetX = mouseX + directionX * radius;
-                const targetY = mouseY + directionY * radius;
-
-                positions[i * 3] += (targetX - pos.x) * 0.1;
-                positions[i * 3 + 1] += (targetY - pos.y) * 0.1;
             }
         }
+
         this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+    }
+
+    removeParticle(index) {
+        const positions = this.particlesMesh.geometry.attributes.position.array;
+        positions[index * 3] = NaN;
+        positions[index * 3 + 1] = NaN;
+        positions[index * 3 + 2] = NaN;
     }
 
     removeGroup() {
