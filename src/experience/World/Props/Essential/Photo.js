@@ -41,7 +41,7 @@ export default class Photo {
         this.group.add(this.photoModel);
         this.scene.add(this.group);
 
-        const t = this.resources.items.backgroundTreeTexture
+        const t = this.resources.items.photoTexture
         t.flipY = true
 
         const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);

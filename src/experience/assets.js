@@ -58,7 +58,6 @@ export default [
                 source: '/assets/models/photo.glb',
                 type: 'model',
             },
-
             {
                 name: 'projectorModel',
                 source: '/assets/models/visionneuse.glb',
@@ -310,13 +309,16 @@ export default [
                 source: '/assets/textures/attic/godRay/alpha.png',
                 type: 'texture',
             },
-
             {
                 name: 'backgroundTreeTexture',
                 source: '/assets/textures/attic/background/backgroundTree.webp',
                 type: 'texture',
             },
-
+            {
+                name: 'photoTexture',
+                source: '/assets/textures/objects/photo/photo.webp',
+                type: 'texture',
+            },
         ]
     },
 ]
