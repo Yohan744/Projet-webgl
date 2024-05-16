@@ -1,5 +1,5 @@
 #experience-layer {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
@@ -15,13 +15,12 @@
     *.visible {
       pointer-events: all;
     }
-
   }
 
-  .go-back-arrow-icon, .settings-icon {
+  .go-back-arrow-icon,
+  .settings-icon,
+  .cassette-icon {
     position: absolute;
-    top: 35px;
-    left: 35px;
     height: 35px;
     width: 35px;
     display: flex;
@@ -30,7 +29,7 @@
     cursor: pointer;
     opacity: 0;
     scale: 0.9;
-    transition: opacity 0.8s $ease-power3-out, scale 0.8s $ease-power3-out;
+    transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), scale 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 
     img {
       position: relative;
@@ -45,15 +44,15 @@
       scale: 1;
       pointer-events: all;
     }
-
   }
 
   .settings-icon {
+    top: 35px;
     left: auto;
     right: 35px;
     z-index: 3;
     opacity: 1;
-    transition: transform 0.8s $ease-power3-out;
+    transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 
     img {
       opacity: 0.3;
@@ -62,7 +61,11 @@
     &:hover {
       transform: rotate(30deg);
     }
+  }
 
+  .cassette-icon {
+    bottom: 20px;
+    left: 20px;
   }
 
   .settings-wrapper {
@@ -78,7 +81,7 @@
     z-index: 1;
     pointer-events: none;
     user-select: none;
-    transition: opacity 0.8s $ease-power3-out;
+    transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 
     &.visible {
       opacity: 1;
@@ -89,7 +92,6 @@
         transform: translateY(0);
         opacity: 1;
       }
-
     }
 
     .settings-panel {
@@ -104,7 +106,7 @@
       justify-content: center;
       align-items: center;
       opacity: 0;
-      transition: opacity 0.8s $ease-power3-out, transform 0.8s $ease-power3-out;
+      transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 
       .mute {
         position: relative;
@@ -131,15 +133,11 @@
           position: relative;
           margin: 0 12px;
         }
-
       }
 
       a {
         margin-top: 20px;
       }
-
     }
-
   }
-
 }

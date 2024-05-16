@@ -196,6 +196,7 @@ export default class Envelop {
                     ease: "power2.inOut",
                     onComplete: () => {
                         this.animateEnvelopeBackToDrawer();
+                        this.separateItemsToTriangle();
                         this.hasOpenEnvelop = true;
                     }
                 });

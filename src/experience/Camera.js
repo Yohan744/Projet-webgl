@@ -163,7 +163,6 @@ export default class Camera {
     }
 
     moveCamera(position = false, lookingPoint = false, mult = 1, isGoingOnASpot = true, duration = 3) {
-
         let distanceToPoint = null
 
         if (position) {
@@ -183,7 +182,16 @@ export default class Camera {
                     this.isMoving = false
                     if (isGoingOnASpot) this.gameManager.updateCameraOnSpot(true)
                 }
-            })
+            });
+            gsap.to(this.modes.default.instance, {
+                fov: 50,
+                ease: "power1.out",
+                delay: distanceToPoint * this.movingSpeedMultiplier * mult,
+                duration: distanceToPoint * this.movingSpeedMultiplier * mult,
+                onUpdate: () => {
+                    this.updateFocusMode(false);
+                }
+            });
 
         }
 
@@ -231,9 +239,9 @@ export default class Camera {
         tl.to(this.lookingPoint, {
             x: lookingPoint.x,
             y: lookingPoint.y,
-            z: lookingPoint.z,
+            z: lookingPoint.z - 2,
             duration: 1,
-            ease: 'power1.out'
+            ease: 'power1.out',
         });
         gsap.to(this.instance, {
             fov: 30,
@@ -241,6 +249,7 @@ export default class Camera {
             delay: 2,
             duration: 2,
             onUpdate: () => {
+                this.updateFocusMode(true);
                 this.instance.updateProjectionMatrix();
             }
         });
@@ -264,7 +273,7 @@ export default class Camera {
 
     }
 
-    moveCameraToDrawer(targetObject, yOffset = 4) {
+    moveCameraToDrawer(targetObject) {
         this.originalPosition = this.modes.default.instance.position.clone();
         this.originalLookAt = this.lookingPoint.clone();
 
@@ -273,16 +282,16 @@ export default class Camera {
         const objectPosition = new THREE.Vector3();
         targetObject.getWorldPosition(objectPosition);
 
-        const cameraPosition = objectPosition.clone().add(new THREE.Vector3(0, yOffset, 0));
-        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(-1.8, -8, -2));
+        const cameraPosition = objectPosition.clone().add(new THREE.Vector3(0, 0, 0));
+        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, -2, 0));
         const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp);
 
         const tl = gsap.timeline();
 
         gsap.to(this.modes.default.instance.position, {
-            x: cameraPosition.x + 0.3,
-            y: this.modes.default.instance.position.y + 0.7,
-            z: cameraPosition.z,
+            x: cameraPosition.x + 0.2,
+            y: this.modes.default.instance.position.y,
+            z: cameraPosition.z + 0.4,
             duration: 1,
             ease: "power1.inOut",
             onUpdate: () => {
@@ -299,15 +308,6 @@ export default class Camera {
             z: tmpLookingPoint.z,
             duration: 1,
             ease: 'power1.in'
-        });
-        gsap.to(this.instance, {
-            fov: 40,
-            ease: "power1.out",
-            delay: 2,
-            duration: 2,
-            onUpdate: () => {
-                this.updateFocusMode(true);
-            }
         });
     }
 
@@ -331,7 +331,7 @@ export default class Camera {
             });
         }
         gsap.to(this.instance, {
-            fov: 75,
+            fov: 50,
             ease: "power1.out",
             delay: 2,
             duration: 2,
