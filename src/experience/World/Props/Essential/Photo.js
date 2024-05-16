@@ -111,7 +111,7 @@ export default class Photo {
                 this.removeParticle(i);
                 this.displacedParticles++;
                 if (this.displacedParticles >= this.initialPositions.length) {
-                    this.removeGroup();
+                    this.fadeOutGroup();
                     break;
                 }
             }
@@ -126,7 +126,28 @@ export default class Photo {
         positions[index * 3 + 1] = NaN;
         positions[index * 3 + 2] = NaN;
     }
+    fadeOutGroup(duration = 2000) {
+        const startTime = performance.now();
+        const fade = () => {
+            const currentTime = performance.now();
+            const elapsed = currentTime - startTime;
+            const opacity = THREE.MathUtils.clamp(1 - elapsed / duration, 0, 1);
 
+            this.group.traverse((object) => {
+                if (object.material) {
+                    object.material.opacity = opacity;
+                    object.material.transparent = true;
+                }
+            });
+
+            if (opacity > 0) {
+                requestAnimationFrame(fade);
+            } else {
+                this.removeGroup();
+            }
+        };
+        fade();
+    }
     removeGroup() {
         this.scene.remove(this.group);
         this.group.traverse((object) => {
