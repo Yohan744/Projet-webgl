@@ -1,4 +1,5 @@
 import Experience from "../Experience";
+import {remapMaterialUVs} from "../Utils/Functions";
 
 export default class Objects {
 
@@ -32,6 +33,10 @@ export default class Objects {
                     child.material = this.materialLibrary.getMirrorMaterial()
                 } else if (name.includes("carton")) {
                     child.material = this.materialLibrary.getCardBoardMaterial()
+                    remapMaterialUVs(child.material, {
+                        map: 'texcoord_0',
+                        aoMap: 'texcoord_2'
+                    });
                 } else if (name === 'tapis_voiture') {
                     child.material = this.materialLibrary.getFirstCarpetMaterial()
                 } else if (name === 'tapis_vieux') {

@@ -12,14 +12,13 @@ import {
 
 
 export default class Renderer {
-    constructor(_options = {}) {
+    constructor() {
         this.experience = new Experience()
         this.config = this.experience.config
         this.debug = this.experience.debug
         this.stats = this.experience.stats
         this.scene = this.experience.scene
         this.camera = this.experience.camera
-        this.appStore = this.experience.appStore
 
         this.isBlurEffectEnabled = false;
 

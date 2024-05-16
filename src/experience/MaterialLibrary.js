@@ -135,7 +135,7 @@ export default class MaterialLibrary {
     getRoofMaterial() {
         if (!roofMaterial) {
 
-            roofMaterial = new MeshStandardMaterial({
+            roofMaterial = new MeshBasicMaterial({
                 map: this.resources.items.walls.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -149,7 +149,7 @@ export default class MaterialLibrary {
     getWindowMaterial() {
         if (!windowMaterial) {
 
-            windowMaterial = new MeshStandardMaterial({
+            windowMaterial = new MeshLambertMaterial({
                 color: '#ffefb0',
                 transparent: true,
                 opacity: 0.5,
@@ -165,10 +165,8 @@ export default class MaterialLibrary {
 
     getSideWindowMaterial() {
         if (!sideWindowMaterial) {
-            sideWindowMaterial = new MeshStandardMaterial({
-                map: this.resources.items.walls.diffuse,
-                roughnessMap: this.resources.items.walls.roughness,
-                normalMap: this.resources.items.walls.normal,
+            sideWindowMaterial = new MeshBasicMaterial({
+                map: this.resources.items.sideWindow.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -215,6 +213,7 @@ export default class MaterialLibrary {
         if (!cardBoardMaterial) {
             cardBoardMaterial = new MeshLambertMaterial({
                 map: this.resources.items.cardboard.diffuse,
+                // aoMap: this.resources.items.cardboard.ao,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -535,7 +534,7 @@ export default class MaterialLibrary {
     }
 
     destroy() {
-        this.materialsUsed.forEach(material => {
+        this.materialsUsed?.forEach(material => {
             material.dispose();
 
             if (material.map) material.map.dispose();

@@ -12,7 +12,7 @@ export default class Camera {
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
         this.pointer = this.experience.pointer
-        this.appStore = this.experience.appStore
+        this.gameManager = this.experience.gameManager
         this.isMobile = this.experience.config.isMobile
 
         this.isFocused = false
@@ -145,9 +145,9 @@ export default class Camera {
             })
         }
 
-        watch(() => this.appStore.$state.isCameraOnSpot, value => !value && this.moveCamera(this.basicCameraPosition, this.basicLookingPoint, 0.75, false))
-        watch(() => this.appStore.isSettingsOpen, (value) => this.updateFocusMode(value))
-        watch(() => this.appStore.isInteractingWithObject, (value) => this.updateFocusMode(value))
+        watch(() => this.gameManager.state.isCameraOnSpot, value => !value && this.moveCamera(this.basicCameraPosition, this.basicLookingPoint, 0.75, false))
+        watch(() => this.gameManager.state.isSettingsOpen, (value) => this.updateFocusMode(value))
+        watch(() => this.gameManager.state.isInteractingWithObject, (value) => this.updateFocusMode(value))
 
     }
 
@@ -181,7 +181,7 @@ export default class Camera {
                 ease: 'power1.inOut',
                 onComplete: () => {
                     this.isMoving = false
-                    if (isGoingOnASpot) this.appStore.updateCameraOnSpot(true)
+                    if (isGoingOnASpot) this.gameManager.updateCameraOnSpot(true)
                 }
             })
 
@@ -289,7 +289,7 @@ export default class Camera {
                 this.instance.lookAt(objectPosition);
             },
             onComplete: () => {
-                this.appStore.updateCameraOnSpot(true);
+                this.gameManager.updateCameraOnSpot(true);
                 this.isMoving = false;
             }
         });

@@ -18,27 +18,30 @@ import Loading from "../components/Loading.vue";
 import {useRouter} from "vue-router";
 import ExperienceLayer from "../components/ExperienceLayer.vue";
 import {useSoundManager} from "../main";
+import {useGameManager} from "../assets/js/GameManager";
 
 export default {
   name: 'ExperiencePage',
   components: {ExperienceLayer, Loading, VideoIntro},
   data() {
     const appStore = useAppStore();
+    const gameManager = useGameManager();
     const router = useRouter()
     return {
       appStore,
+      gameManager,
       router,
       routeCheck: false,
       isLoaded: false,
       experience: null,
       soundManager: useSoundManager,
       progress: 0,
-      isVideoIntroWatched: appStore.isVideoIntroWatched,
+      isVideoIntroWatched: appStore.$state.isVideoIntroWatched,
       showStartButton: false
     };
   },
   beforeMount() {
-    if (this.appStore.lastVisitedRoute !== '/' && !this.appStore.isVideoIntroWatched) {
+    if (this.gameManager.state.lastVisitedRoute !== '/' && !this.appStore.$state.isVideoIntroWatched) {
       this.router.push('/');
     } else {
       this.routeCheck = true;
@@ -78,9 +81,11 @@ export default {
 
       this.experience.resources.on('ready', () => {
         this.isLoaded = true;
-        this.showStartButton = this.appStore.$state.lastVisitedRoute === null && this.appStore.$state.isVideoIntroWatched
+        this.showStartButton = this.gameManager.state.lastVisitedRoute === null && this.appStore.$state.isVideoIntroWatched
         if (this.isVideoIntroWatched && !this.showStartButton) {
           this.setExperienceOpacity();
+        } else {
+          console.log()
         }
       });
 
@@ -94,7 +99,7 @@ export default {
     },
     setExperienceOpacity() {
       if (this.$refs.experienceContainer) {
-        this.appStore.setExperienceVisible()
+        this.gameManager.setExperienceVisible()
         this.$refs.experienceContainer.style.opacity = 1;
         this.showStartButton = false;
         this.soundManager?.play('background')

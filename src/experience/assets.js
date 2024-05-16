@@ -116,6 +116,22 @@ export default [
                 }
             },
 
+            {
+                name: 'sideWindow',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/attic/sideWindow/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'roof',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/attic/roof/diffuse.webp',
+                }
+            },
+
         ]
     },
 
@@ -146,6 +162,7 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/cardboard/diffuse.webp',
+                    ao: 'assets/textures/objects/cardboard/ao.webp',
                 }
             },
 
