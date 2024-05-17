@@ -58,8 +58,9 @@ export default class Renderer {
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = false
         this.instance.toneMapping = THREE.NoToneMapping
-        this.instance.toneMappingExposure = 1
+        this.instance.toneMappingExposure = 0.75
         this.instance.outputEncoding = THREE.sRGBEncoding
+        this.instance.outputColorSpace = THREE.SRGBColorSpace
 
         if (this.stats && this.stats.instance) {
             this.stats.instance.init(this.instance)
@@ -76,7 +77,7 @@ export default class Renderer {
 
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.NORMAL,
-            mode: ToneMappingMode.ACES_FILMIC,
+            mode: ToneMappingMode.OPTIMIZED_CINEON,
             resolution: 256,
             whitePoint: 0,
             middleGrey: 0,

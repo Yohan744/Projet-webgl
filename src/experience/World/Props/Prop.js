@@ -61,7 +61,6 @@ export default class Prop extends EventEmitter {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
         if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot) {
             this.onClickGeneral()
-            console.log(this.mesh.name)
             if (this.animatePropsToCameraOnClick && !this.gameManager.state.isInteractingWithObject && this.spotId === this.gameManager.state.spotId && this.gameManager.state.actualObjectInteractingName === null) {
 
                 this.animatePropsToCamera()
