@@ -18,44 +18,9 @@
 #masthead a:hover {
   text-underline-offset: 2px;
 }
-.pocket-button-container {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: none;
-}
-.pocket-button-container.visible {
-  display: block;
-}
-
-.cassette-icon {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  cursor: pointer;
-}
-
-.cassette-icon img {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-.pencil-icon {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  cursor: pointer;
-}
-
-.pencil-icon img {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-
 
 #experience-layer {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
@@ -71,62 +36,11 @@
 #experience-layer.visible *.visible {
   pointer-events: all;
 }
-#experience-layer {
-  position: relative;
-}
-
-.pocket-button-container {
+#experience-layer .go-back-arrow-icon,
+#experience-layer .settings-icon,
+#experience-layer .cassette-icon,
+#experience-layer .pencil-icon {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: none;
-}
-
-.pocket-button-container.visible {
-  display: block;
-}
-
-.cassette-icon {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  cursor: pointer;
-}
-
-.cassette-icon img {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-
-.pocket-button-container {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: none;
-}
-
-.pocket-button-container.visible {
-  display: block;
-}
-
-.cassette-icon, .pencil-icon {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  cursor: pointer;
-}
-
-.cassette-icon img, .pencil-icon img {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-
-#experience-layer .go-back-arrow-icon, #experience-layer .settings-icon {
-  position: absolute;
-  top: 35px;
-  left: 35px;
   height: 35px;
   width: 35px;
   display: flex;
@@ -137,19 +51,34 @@
   scale: 0.9;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), scale 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-#experience-layer .go-back-arrow-icon img, #experience-layer .settings-icon img {
+#experience-layer .go-back-arrow-icon img,
+#experience-layer .settings-icon img,
+#experience-layer .cassette-icon img,
+#experience-layer .pencil-icon img {
   position: relative;
   height: 100%;
   width: auto;
   -webkit-user-drag: none;
   user-select: none;
 }
-#experience-layer .go-back-arrow-icon.visible, #experience-layer .settings-icon.visible {
+#experience-layer .go-back-arrow-icon.visible,
+#experience-layer .settings-icon.visible,
+#experience-layer .cassette-icon.visible,
+#experience-layer .pencil-icon.visible {
   opacity: 1;
   scale: 1;
   pointer-events: all;
 }
+#experience-layer .cassette-icon {
+  bottom: 20px;
+  left: 20px;
+}
+#experience-layer .pencil-icon {
+  bottom: 20px;
+  left: 80px;
+}
 #experience-layer .settings-icon {
+  top: 35px;
   left: auto;
   right: 35px;
   z-index: 3;

@@ -47,6 +47,16 @@
     }
   }
 
+  .cassette-icon {
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .pencil-icon {
+    bottom: 20px;
+    left: 80px;
+  }
+
   .settings-icon {
     top: 35px;
     left: auto;
@@ -62,16 +72,6 @@
     &:hover {
       transform: rotate(30deg);
     }
-  }
-
-  .cassette-icon {
-    bottom: 20px;
-    left: 20px;
-  }
-
-  .pencil-icon {
-    bottom: 20px;
-    left: 80px;
   }
 
   .settings-wrapper {
@@ -146,4 +146,5 @@
       }
     }
   }
+
 }

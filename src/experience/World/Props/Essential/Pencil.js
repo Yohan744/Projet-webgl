@@ -73,8 +73,8 @@ export default class Pencil extends Prop {
             duration: 2,
             ease: 'power2.inOut',
             onComplete: () => {
-                this.gameManager.updatePocketState(false);
-                this.gameManager.updatePencilInPocketState(true);
+                this.gameManager.updatePocketButtonState(false);
+                this.gameManager.addObjectToInventory('pencil');
                 this.scene.remove(this.mesh);
             }
         });
@@ -82,7 +82,7 @@ export default class Pencil extends Prop {
 
     onClick() {
         console.log('Pencil clicked');
-        this.gameManager.updatePocketState(true);
+        this.gameManager.updatePocketButtonState(true);
     }
 
     destroy() {

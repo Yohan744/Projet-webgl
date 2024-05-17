@@ -11,9 +11,11 @@ const state = reactive({
     isSettingsOpen: false,
     isPocketButtonVisible: false,
     objectToPocket: false,
-    isCassetteInPocket: false,
-    isPencilInPocket: false,
-    objectOut: false,
+});
+
+const inventory = reactive({
+    cassette: false,
+    pencil: false,
 });
 
 export function useGameManager() {
@@ -50,7 +52,7 @@ export function useGameManager() {
         state.isSettingsOpen = !state.isSettingsOpen;
     }
 
-    function updatePocketState(stateValue) {
+    function updatePocketButtonState(stateValue) {
         state.isPocketButtonVisible = stateValue;
     }
 
@@ -58,15 +60,21 @@ export function useGameManager() {
         state.objectToPocket = stateValue;
     }
 
-    function updateCassetteInPocketState(stateValue) {
-        state.isCassetteInPocket = stateValue;
-    }
-    function updatePencilInPocketState(stateValue) {
-        state.isPencilInPocket = stateValue;
+    function addObjectToInventory(objectName) {
+        if (inventory[objectName] !== undefined) {
+            inventory[objectName] = true;
+        } else {
+            console.error('Object not found in inventory, wrong naming');
+
+        }
     }
 
-    function initObjectFromThePocket() {
-        state.objectOut = !state.objectOut;
+    function removeObjectFromInventory(objectName) {
+        if (inventory[objectName] !== undefined) {
+            inventory[objectName] = false;
+        } else {
+            console.error('Object not found in inventory, wrong naming');
+        }
     }
 
     function resetAll() {
@@ -80,13 +88,16 @@ export function useGameManager() {
         state.isSettingsOpen = false;
         state.isPocketButtonVisible = false;
         state.objectToPocket = false;
-        state.isCassetteInPocket = false;
         state.pencilIconClicked = false;
         state.objectOut = false;
+
+        inventory.cassette = false;
+        inventory.pencil = false;
     }
 
     return {
         state,
+        inventory,
         setLastVisitedRoute,
         setExperienceVisible,
         updateCameraOnSpot,
@@ -95,11 +106,10 @@ export function useGameManager() {
         updateInteractingState,
         updateOrbitsControlsState,
         toggleSettings,
-        updatePocketState,
+        updatePocketButtonState,
+        addObjectToInventory,
+        removeObjectFromInventory,
         updateObjectToPocket,
-        updateCassetteInPocketState,
-        updatePencilInPocketState,
-        initObjectFromThePocket,
         resetAll,
     };
 }

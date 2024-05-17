@@ -29,13 +29,14 @@
     </div>
 
     <div class="pocket-button-container" :class="{ visible: gameManager.state.isPocketButtonVisible }">
-      <button @click="handlePocketButtonClick">Mettre dans la poche</button>
+      <button @click="handlePocketButtonClick">Mettre dans la pocheeee</button>
     </div>
 
-    <div v-if="gameManager.state.isCassetteInPocket" class="cassette-icon visible" @click="handleCassetteIconClick">
+    <div v-if="gameManager.inventory.cassette" class="cassette-icon visible" @click="handleCassetteIconClick">
       <img src="../assets/icons/objects/CASSETTE_VIGNETTE.png" alt="Cassette"/>
     </div>
-    <div v-if="gameManager.state.isPencilInPocket" ref="pencil" @click="handlePencilIconClick" class="pencil-icon visible">
+
+    <div v-if="gameManager.inventory.pencil" ref="pencil" @click="handlePencilIconClick" class="pencil-icon visible">
       <img src="../assets/icons/objects/icn_crayon.svg" alt="Pencil"/>
     </div>
 
