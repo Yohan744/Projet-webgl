@@ -136,7 +136,7 @@ export default class Envelop {
             this.itemGroup.visible = true;
             this.isAnimating = true;
             this.isDragging = false;
-        } else if(this.carouselIsSet) {
+        } else if (this.carouselIsSet) {
             this.itemGroup.visible = true;
             this.isAnimating = true;
             if ((mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
@@ -196,6 +196,7 @@ export default class Envelop {
                     ease: "power2.inOut",
                     onComplete: () => {
                         this.animateEnvelopeBackToDrawer();
+                        this.separateItemsToTriangle();
                         this.hasOpenEnvelop = true;
                     }
                 });
@@ -314,9 +315,9 @@ export default class Envelop {
     updatePocketButtonVisibility() {
         const frontItem = this.items[0];
         if (frontItem === this.cassette) {
-            this.gameManager.state.updatePocketState(true);
+            this.gameManager.updatePocketState(true);
         } else {
-            this.gameManager.state.updatePocketState(false);
+            this.gameManager.updatePocketState(false);
         }
     }
 
@@ -329,7 +330,7 @@ export default class Envelop {
     }
 
     hidePocketButton() {
-        this.gameManager.state.updatePocketState(false);
+        this.gameManager.updatePocketState(false);
     }
 
     bringItemToFront(item) {
@@ -358,8 +359,8 @@ export default class Envelop {
                     this.items = this.items.filter(item => item !== this.cassette);
                     this.positions.pop();
                     this.animateItems();
-                    this.gameManager.state.updatePocketState(false);
-                    this.gameManager.state.updateCassetteInPocketState(true);
+                    this.gameManager.updatePocketState(false);
+                    this.gameManager.updateCassetteInPocketState(true);
                 }
             });
         }
