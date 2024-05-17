@@ -32,8 +32,11 @@
       <button @click="handlePocketButtonClick">Mettre dans la poche</button>
     </div>
 
-    <div v-if="gameManager.state.isCassetteInPocket" class="cassette-icon" @click="handleCassetteIconClick">
-      <img src="../assets/icons/home.svg" alt="Cassette"/>
+    <div v-if="gameManager.state.isCassetteInPocket" class="cassette-icon visible" @click="handleCassetteIconClick">
+      <img src="../assets/icons/objects/CASSETTE_VIGNETTE.png" alt="Cassette"/>
+    </div>
+    <div v-if="gameManager.state.isPencilInPocket" ref="pencil" @click="handlePencilIconClick" class="pencil-icon visible">
+      <img src="../assets/icons/objects/icn_crayon.svg" alt="Pencil"/>
     </div>
 
   </section>
@@ -134,9 +137,10 @@ export default {
       this.gameManager.updateObjectToPocket(true);
     },
     handleCassetteIconClick() {
-      console.log("Cassette icon clicked");
       this.gameManager.initObjectFromThePocket();
-      this.$root.$emit('showCassette');
+    },
+    handlePencilIconClick() {
+      this.gameManager.initObjectFromThePocket();
     },
     resetExperience() {
       this.appStore.resetAll();
@@ -145,4 +149,3 @@ export default {
   }
 }
 </script>
-

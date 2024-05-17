@@ -24,7 +24,6 @@
   left: 20px;
   display: none;
 }
-
 .pocket-button-container.visible {
   display: block;
 }
@@ -41,6 +40,19 @@
   height: 50px;
   cursor: pointer;
 }
+.pencil-icon {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  cursor: pointer;
+}
+
+.pencil-icon img {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
 
 #experience-layer {
   position: absolute;
@@ -86,6 +98,31 @@
   height: 50px;
   cursor: pointer;
 }
+
+.pocket-button-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: none;
+}
+
+.pocket-button-container.visible {
+  display: block;
+}
+
+.cassette-icon, .pencil-icon {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  cursor: pointer;
+}
+
+.cassette-icon img, .pencil-icon img {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
 #experience-layer .go-back-arrow-icon, #experience-layer .settings-icon {
   position: absolute;
   top: 35px;

@@ -1,20 +1,33 @@
 import * as THREE from 'three';
+import { gsap } from 'gsap';
 import Experience from "../../../Experience";
 import Prop from '../Prop';
+import {watch} from "vue";
 
 export default class Cassette extends Prop {
     constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound, spotId) {
-        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, distanceToCamera, isOutlined, propSound, spotId)
+        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, distanceToCamera, isOutlined, propSound, spotId);
 
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
+        this.camera = this.experience.camera.instance;
+        this.offsetFromCamera = 0.6;
+        this.desiredRotation = desiredRotationOnClick;
 
-        this.init()
+        this.gameManager = this.experience.gameManager;
+        this.init();
     }
 
     init() {
-       // this.experience.appStore.$on('showCassette', this.showInFrontOfCamera.bind(this));
+        watch(() =>  this.gameManager.state.objectToPocket,
+            (newVal) => {
+                if (newVal) {
+                    this.showInFrontOfCamera();
+                    this.gameManager.isObjectOut = true;
+                }
+            }
+        );
     }
 
     showInFrontOfCamera() {
@@ -39,6 +52,8 @@ export default class Cassette extends Prop {
             duration: 2,
             ease: 'power2.inOut'
         });
+
+        this.scene.add(this.mesh);
     }
 
     onClick() {

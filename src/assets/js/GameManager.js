@@ -12,6 +12,7 @@ const state = reactive({
     isPocketButtonVisible: false,
     objectToPocket: false,
     isCassetteInPocket: false,
+    isPencilInPocket: false,
     objectOut: false,
 });
 
@@ -60,6 +61,9 @@ export function useGameManager() {
     function updateCassetteInPocketState(stateValue) {
         state.isCassetteInPocket = stateValue;
     }
+    function updatePencilInPocketState(stateValue) {
+        state.isPencilInPocket = stateValue;
+    }
 
     function initObjectFromThePocket() {
         state.objectOut = !state.objectOut;
@@ -77,6 +81,7 @@ export function useGameManager() {
         state.isPocketButtonVisible = false;
         state.objectToPocket = false;
         state.isCassetteInPocket = false;
+        state.pencilIconClicked = false;
         state.objectOut = false;
     }
 
@@ -93,6 +98,7 @@ export function useGameManager() {
         updatePocketState,
         updateObjectToPocket,
         updateCassetteInPocketState,
+        updatePencilInPocketState,
         initObjectFromThePocket,
         resetAll,
     };
