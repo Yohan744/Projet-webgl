@@ -35,6 +35,11 @@
   cursor: pointer;
 }
 
+.cassette-icon img {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
 .pencil-icon {
   position: absolute;
   bottom: 20px;
@@ -42,20 +47,12 @@
   cursor: pointer;
 }
 
-.icons-container {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  gap: 10px;
-}
-
-.cassette-icon img,
 .pencil-icon img {
   width: 50px;
   height: 50px;
   cursor: pointer;
 }
+
 
 #experience-layer {
   position: absolute;

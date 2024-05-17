@@ -15,19 +15,19 @@ export default class Pencil extends Prop {
         this.offsetFromCamera = 0.6;
         this.desiredRotation = desiredRotationOnClick;
 
-        this.appStore = this.experience.appStore;
+        this.gameManager = this.experience.gameManager;
         this.init();
     }
 
     init() {
-        watch(() => this.appStore.pencilIconClicked,
+        watch(() => this.gameManager.state.pencilIconClicked,
             (newVal) => {
                 if (newVal) {
                     this.showInFrontOfCamera();
                 }
             }
         );
-        watch(() => this.appStore.objectToPocket,
+        watch(() => this.gameManager.objectToPocket,
             (newVal) => {
                 if (newVal) {
                     this.moveToPocket();
@@ -73,8 +73,8 @@ export default class Pencil extends Prop {
             duration: 2,
             ease: 'power2.inOut',
             onComplete: () => {
-                this.appStore.updatePocketState(false);
-                this.appStore.updatePencilInPocketState(true);
+                this.gameManager.updatePocketState(false);
+                this.gameManager.updatePencilInPocketState(true);
                 this.scene.remove(this.mesh);
             }
         });
@@ -82,7 +82,7 @@ export default class Pencil extends Prop {
 
     onClick() {
         console.log('Pencil clicked');
-        this.appStore.updatePocketState(true);
+        this.gameManager.updatePocketState(true);
     }
 
     destroy() {

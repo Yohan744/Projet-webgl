@@ -15,16 +15,16 @@ export default class Cassette extends Prop {
         this.offsetFromCamera = 0.6;
         this.desiredRotation = desiredRotationOnClick;
 
-        this.appStore = this.experience.appStore;
+        this.gameManager = this.experience.gameManager;
         this.init();
     }
 
     init() {
-        watch(() =>  this.appStore.cassetteIconClicked,
+        watch(() =>  this.gameManager.state.objectToPocket,
             (newVal) => {
                 if (newVal) {
                     this.showInFrontOfCamera();
-                    this.appStore.isObjectOut = true;
+                    this.gameManager.isObjectOut = true;
                 }
             }
         );

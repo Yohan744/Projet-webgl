@@ -336,7 +336,6 @@ export default class Camera {
             delay: 2,
             duration: 2,
             onUpdate: () => {
-                this.appStore.updateCameraOnSpot(true)
                 this.updateFocusMode(true);
             }
         });
