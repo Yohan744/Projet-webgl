@@ -1,7 +1,7 @@
 <template>
   <section ref="experienceLayer" id="experience-layer">
 
-    <div ref="goBack" @click="goBack" class="go-back-arrow-icon">
+    <div ref="goBack" @click="goBack" class="go-back-icon">
       <img :src="goBackIcon" alt="Go back"/>
     </div>
 
@@ -28,16 +28,20 @@
 
     </div>
 
-    <div class="pocket-button-container" :class="{ visible: gameManager.state.isPocketButtonVisible }">
-      <button @click="handlePocketButtonClick">Mettre dans la pocheeee</button>
+    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible }" >
+      <p>Mettre dans la poche</p>
     </div>
 
-    <div v-if="gameManager.inventory.cassette" class="cassette-icon visible" @click="handleCassetteIconClick">
-      <img src="../assets/icons/objects/CASSETTE_VIGNETTE.png" alt="Cassette"/>
-    </div>
+    <div class="inventory-wrapper" v-if="isAnyItemInInventory">
 
-    <div v-if="gameManager.inventory.pencil" ref="pencil" @click="handlePencilIconClick" class="pencil-icon visible">
-      <img src="../assets/icons/objects/icn_crayon.svg" alt="Pencil"/>
+      <div v-if="gameManager.inventory.cassette" @click="handleInventoryObjectClick('cassette')">
+        <img src="../assets/icons/objects/CASSETTE_VIGNETTE.png" alt="Cassette"/>
+      </div>
+
+      <div v-if="gameManager.inventory.pencil" @click="handleInventoryObjectClick('pencil')">
+        <img src="../assets/icons/objects/icn_crayon.svg" alt="Pencil"/>
+      </div>
+
     </div>
 
   </section>
@@ -73,6 +77,9 @@ export default {
   computed: {
     isMuted() {
       return this.appStore.$state.muted ? 'Unmute' : 'Mute'
+    },
+    isAnyItemInInventory() {
+      return Object.values(this.gameManager.inventory).some(value => value);
     }
   },
   watch: {
@@ -137,11 +144,8 @@ export default {
     handlePocketButtonClick() {
       this.gameManager.updateObjectToPocket(true);
     },
-    handleCassetteIconClick() {
-      this.gameManager.initObjectFromThePocket();
-    },
-    handlePencilIconClick() {
-      this.gameManager.initObjectFromThePocket();
+    handleInventoryObjectClick(name) {
+      this.gameManager.setInventoryObjectInFrontOfCamera(name);
     },
     resetExperience() {
       this.appStore.resetAll();

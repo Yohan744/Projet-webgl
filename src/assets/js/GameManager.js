@@ -11,6 +11,7 @@ const state = reactive({
     isSettingsOpen: false,
     isPocketButtonVisible: false,
     objectToPocket: false,
+    showingInventoryObjectInFrontOfCamera: null,
 });
 
 const inventory = reactive({
@@ -69,12 +70,8 @@ export function useGameManager() {
         }
     }
 
-    function removeObjectFromInventory(objectName) {
-        if (inventory[objectName] !== undefined) {
-            inventory[objectName] = false;
-        } else {
-            console.error('Object not found in inventory, wrong naming');
-        }
+    function setInventoryObjectInFrontOfCamera(name) {
+        state.showingInventoryObjectInFrontOfCamera = name;
     }
 
     function resetAll() {
@@ -90,6 +87,7 @@ export function useGameManager() {
         state.objectToPocket = false;
         state.pencilIconClicked = false;
         state.objectOut = false;
+        state.showingInventoryObjectInFrontOfCamera = null;
 
         inventory.cassette = false;
         inventory.pencil = false;
@@ -108,8 +106,8 @@ export function useGameManager() {
         toggleSettings,
         updatePocketButtonState,
         addObjectToInventory,
-        removeObjectFromInventory,
         updateObjectToPocket,
+        setInventoryObjectInFrontOfCamera,
         resetAll,
     };
 }

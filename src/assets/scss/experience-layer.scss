@@ -17,11 +17,10 @@
     }
   }
 
-  .go-back-arrow-icon,
-  .settings-icon,
-  .cassette-icon,
-  .pencil-icon {
+  .go-back-icon, .settings-icon, {
     position: absolute;
+    top: 35px;
+    left: 35px;
     height: 35px;
     width: 35px;
     display: flex;
@@ -47,16 +46,6 @@
     }
   }
 
-  .cassette-icon {
-    bottom: 20px;
-    left: 20px;
-  }
-
-  .pencil-icon {
-    bottom: 20px;
-    left: 80px;
-  }
-
   .settings-icon {
     top: 35px;
     left: auto;
@@ -72,6 +61,64 @@
     &:hover {
       transform: rotate(30deg);
     }
+  }
+
+  .pocket-button {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    height: fit-content;
+    width: fit-content;
+    padding: 5px 8px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    border-radius: 10px;
+    background-color: white;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s $ease-power3-out, background-color 0.8s $ease-power3-out;
+
+    &.visible {
+      opacity: 1;
+    }
+
+    &:hover {
+      background-color: #b6b6b6;
+    }
+
+    p {
+      position: relative;
+      font-size: 20px;
+      color: black;
+    }
+
+  }
+
+  .inventory-wrapper {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    div {
+      position: relative;
+      height: 35px;
+      width: 35px;
+      margin-left: 20px;
+
+      img {
+        position: relative;
+        height: 100%;
+        width: auto;
+      }
+
+    }
+
   }
 
   .settings-wrapper {
