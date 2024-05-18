@@ -33,7 +33,7 @@ export const objectsData = {
         distanceToCamera: 0.6,
         outlineScale: 1.05,
         propSound: '',
-        spotId: 1
+        spotId: 2
     },
     telephone: {
         file: Telephone,

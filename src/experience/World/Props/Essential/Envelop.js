@@ -3,18 +3,15 @@ import { gsap } from "gsap";
 import { watch } from "vue";
 import Experience from "../../../Experience";
 import { CameraUtils } from "../../Utils/CameraUtils";
-import Locations from "../../Locations";
 
 export default class Envelop {
     constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
-        this.renderer = this.experience.renderer.instance;
         this.camera = this.experience.camera;
         this.pointer = this.experience.pointer;
-        this.appStore = this.experience.appStore;
-        this.locations = new Locations(this.experience.materialLibrary);
+        this.gameManager = this.experience.gameManager;
 
         this.hasAnimatedToCamera = false;
         this.carouselIsSet = false;
@@ -36,7 +33,7 @@ export default class Envelop {
 
     setWatchers() {
         watch(
-            () => this.appStore.objectToPocket,
+            () => this.gameManager.state.objectToPocket,
             (newVal) => {
                 if (newVal) {
                     this.putObjectInPocket();
@@ -59,7 +56,7 @@ export default class Envelop {
         this.dahlia = this.resources.items.dahliaModel.scene;
         this.letter = this.resources.items.letterModel.scene;
 
-        if (!this.appStore.isCassetteInPocket) {
+        if (!this.gameManager.inventory.cassette) {
             this.cassette = this.resources.items.cassetteModel.scene;
             this.itemGroup.add(this.cassette);
             this.items = [this.dahlia, this.cassette, this.letter];
@@ -78,7 +75,7 @@ export default class Envelop {
             { x: 0.2, y: 0.1, z: -0.2 }
         ];
 
-        if (this.appStore.isCassetteInPocket) {
+        if (this.gameManager.inventory.cassette) {
             this.positions = [
                 { x: 0.2, y: 0, z: 0.2 },
                 { x: -0.2, y: 0, z: -0.2 }
@@ -139,7 +136,7 @@ export default class Envelop {
             this.itemGroup.visible = true;
             this.isAnimating = true;
             this.isDragging = false;
-        } else if(this.carouselIsSet) {
+        } else if (this.carouselIsSet) {
             this.itemGroup.visible = true;
             this.isAnimating = true;
             if ((mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
@@ -199,6 +196,7 @@ export default class Envelop {
                     ease: "power2.inOut",
                     onComplete: () => {
                         this.animateEnvelopeBackToDrawer();
+                        this.separateItemsToTriangle();
                         this.hasOpenEnvelop = true;
                     }
                 });
@@ -237,7 +235,7 @@ export default class Envelop {
 
     separateItemsToTriangle() {
         this.carouselIsSet = true;
-        const itemPositions = this.appStore.isCassetteInPocket ? [
+        const itemPositions = this.gameManager.inventory.cassette ? [
             { x: 0.2, y: 0, z: 0.2 },
             { x: -0.2, y: 0, z: -0.2 }
         ] : [
@@ -316,11 +314,7 @@ export default class Envelop {
 
     updatePocketButtonVisibility() {
         const frontItem = this.items[0];
-        if (frontItem === this.cassette) {
-            this.appStore.updatePocketState(true);
-        } else {
-            this.appStore.updatePocketState(false);
-        }
+        this.gameManager.updatePocketButtonState(frontItem === this.cassette);
     }
 
     resetItemPositions() {
@@ -332,7 +326,7 @@ export default class Envelop {
     }
 
     hidePocketButton() {
-        this.appStore.updatePocketState(false);
+        this.gameManager.updatePocketButtonState(false);
     }
 
     bringItemToFront(item) {
@@ -361,8 +355,8 @@ export default class Envelop {
                     this.items = this.items.filter(item => item !== this.cassette);
                     this.positions.pop();
                     this.animateItems();
-                    this.appStore.updatePocketState(false);
-                    this.appStore.updateCassetteInPocketState(true);
+                    this.gameManager.updatePocketButtonState(false);
+                    this.gameManager.addObjectToInventory('cassette');
                 }
             });
         }

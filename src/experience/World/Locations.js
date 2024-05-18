@@ -16,7 +16,7 @@ export default class Locations {
 
         this.experience = new Experience()
         this.debug = this.experience.debug
-        this.appStore = this.experience.appStore
+        this.gameManager = this.experience.gameManager
         this.materialLibrary = materialLibrary
 
         this.spots = []
@@ -46,10 +46,10 @@ export default class Locations {
             this.scene = this.experience.scene
             this.init()
 
-            watch(() => this.appStore.$state.isCameraOnSpot, (state) => {
+            watch(() => this.gameManager.state.isCameraOnSpot, (state) => {
                 if (!state) {
                     this.setLocationsVisibility(true)
-                    this.appStore.setSpotId(null)
+                    this.gameManager.setSpotId(null)
                 }
             })
 
@@ -61,7 +61,7 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
-            const geometry = new THREE.CircleGeometry(0.35, 16)
+            const geometry = new THREE.CircleGeometry(0.375, 16)
             geometry.rotateX(-Math.PI * 0.5)
 
             const location = new THREE.Mesh(
@@ -92,10 +92,10 @@ export default class Locations {
     setLocationsVisibility(state) {
         this.spots.forEach((spot) => {
 
-            let delay = 0.25 + Math.random() * 0.65
+            let delay = 0.5 + Math.random() * 0.5
             const id = spot.data.id
 
-            if (id === this.appStore.$state.spotId) {
+            if (id === this.gameManager.state.spotId) {
                 delay = 0
             }
 

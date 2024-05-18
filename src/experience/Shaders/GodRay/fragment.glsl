@@ -3,7 +3,6 @@ uniform float uAlphaBase;
 uniform float uAlphaRays;
 uniform float uSeed;
 uniform float uTime;
-uniform sampler2D uTexture;
 
 varying vec2 vUv;
 
@@ -24,8 +23,6 @@ void main() {
     ray3 = smoothstep(0.1, 0.3, ray3);
 
     float rays = ray1 + ray2 + ray3;
-
-    vec3 texture = texture2D(uTexture, vUv).rgb;
 
     float a = uAlphaBase + rays * uAlphaRays * blur;
 

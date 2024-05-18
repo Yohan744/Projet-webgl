@@ -28,9 +28,6 @@ export default class GodRay {
 
     init() {
 
-        const t = this.resources.items.godRayTexture
-        t.flipY = true
-
         this.godRayMaterial = new THREE.ShaderMaterial({
             vertexShader: godRayVertexShader,
             fragmentShader: godRayFragmentShader,
@@ -40,7 +37,6 @@ export default class GodRay {
                 uAlphaRays: {value: 0.25}, // 0.05
                 uSeed: {value: Math.random() * 1000},
                 uTime: {value: 0},
-                uTexture: {value: t}
             },
             blending: THREE.AdditiveBlending,
             transparent: true,

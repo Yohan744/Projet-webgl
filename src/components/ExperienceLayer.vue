@@ -1,7 +1,7 @@
 <template>
   <section ref="experienceLayer" id="experience-layer">
 
-    <div ref="goBack" @click="goBack" class="go-back-arrow-icon">
+    <div ref="goBack" @click="goBack" class="go-back-icon">
       <img :src="goBackIcon" alt="Go back"/>
     </div>
 
@@ -22,18 +22,26 @@
         </div>
 
         <router-link to="/">Go back to home</router-link>
-        <router-link to="/" @click="() => this.appStore.resetAll()">Reset experience</router-link>
+        <router-link to="/" @click="resetExperience">Reset experience</router-link>
 
       </div>
 
     </div>
 
-    <div class="pocket-button-container" :class="{ visible: appStore.isPocketButtonVisible }">
-      <button @click="handlePocketButtonClick">Mettre dans la poche</button>
+    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible }" >
+      <p>Mettre dans la poche</p>
     </div>
 
-    <div v-if="appStore.isCassetteInPocket" class="cassette-icon" @click="handleCassetteIconClick">
-      <img src="../assets/icons/home.svg" alt="Cassette"/>
+    <div class="inventory-wrapper" v-if="isAnyItemInInventory">
+
+      <div v-if="gameManager.inventory.cassette" @click="handleInventoryObjectClick('cassette')">
+        <img src="../assets/icons/objects/CASSETTE_VIGNETTE.png" alt="Cassette"/>
+      </div>
+
+      <div v-if="gameManager.inventory.pencil" @click="handleInventoryObjectClick('pencil')">
+        <img src="../assets/icons/objects/icn_crayon.svg" alt="Pencil"/>
+      </div>
+
     </div>
 
   </section>
@@ -43,6 +51,7 @@
 import { useAppStore } from "../stores/appStore";
 import homeIcon from '../assets/icons/home.svg';
 import arrowLeftIcon from '../assets/icons/arrow-left.svg';
+import {useGameManager} from "../assets/js/GameManager";
 
 export default {
   name: 'ExperienceLayer',
@@ -51,8 +60,10 @@ export default {
   },
   setup() {
     const appStore = useAppStore();
+    const gameManager = useGameManager();
     return {
       appStore,
+      gameManager,
       isSettingsVisible: false,
     };
   },
@@ -64,11 +75,11 @@ export default {
     }
   },
   computed: {
-    isCameraOnSpot() {
-      return this.appStore.$state.isCameraOnSpot;
-    },
     isMuted() {
       return this.appStore.$state.muted ? 'Unmute' : 'Mute'
+    },
+    isAnyItemInInventory() {
+      return Object.values(this.gameManager.inventory).some(value => value);
     }
   },
   watch: {
@@ -76,13 +87,13 @@ export default {
       this.globalVolume = (Math.round(newVal * 10) / 10).toFixed(1);
       this.appStore.setGlobalVolume(parseFloat(this.globalVolume));
     },
-    'appStore.$state.isExperienceVisible': function(state) {
+    'gameManager.state.isExperienceVisible': function(state) {
       state ? this.setExperienceLayerOpacity() : null;
     },
-    'appStore.$state.isCameraOnSpot': function() {
+    'gameManager.state.isCameraOnSpot': function() {
       this.animateGoBackIcon();
     },
-    'appStore.$state.isInteractingWithObject': function(state) {
+    'gameManager.state.isInteractingWithObject': function(state) {
       this.animateGoBackIcon();
       setTimeout(() => {
         if (state) {
@@ -95,16 +106,16 @@ export default {
     },
   },
   mounted() {
-    if (this.appStore.$state.isExperienceVisible) {
+    if (this.gameManager.state.isExperienceVisible) {
       this.setExperienceLayerOpacity();
     }
   },
   methods: {
     goBack() {
-      if (this.appStore.$state.isInteractingWithObject) {
-        this.appStore.updateInteractingState(false)
+      if (this.gameManager.state.isInteractingWithObject) {
+        this.gameManager.updateInteractingState(false)
       } else {
-        this.appStore.updateCameraOnSpot(false)
+        this.gameManager.updateCameraOnSpot(false)
       }
     },
     animateGoBackIcon() {
@@ -114,7 +125,7 @@ export default {
       this.isSettingsVisible = !this.isSettingsVisible;
       if (this.$refs.settingsWrapper) {
         this.$refs.settingsWrapper.classList.toggle('visible');
-        this.appStore.toggleSettings()
+        this.gameManager.toggleSettings()
       }
     },
     setExperienceLayerOpacity() {
@@ -131,14 +142,15 @@ export default {
       }
     },
     handlePocketButtonClick() {
-      this.appStore.updateObjectToPocket(true);
+      this.gameManager.updateObjectToPocket(true);
     },
-    handleCassetteIconClick() {
-      console.log("Cassette icon clicked");
-      this.appStore.initObjectFromThePocket();
-      this.$root.$emit('showCassette');
+    handleInventoryObjectClick(name) {
+      this.gameManager.setInventoryObjectInFrontOfCamera(name);
+    },
+    resetExperience() {
+      this.appStore.resetAll();
+      this.gameManager.resetAll();
     }
   }
 }
 </script>
-

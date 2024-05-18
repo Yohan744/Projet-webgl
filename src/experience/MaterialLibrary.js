@@ -1,8 +1,8 @@
 import {
     AdditiveBlending,
-    BackSide,
+    BackSide, Color,
     DoubleSide,
-    FrontSide, MeshBasicMaterial, MeshLambertMaterial,
+    FrontSide, MeshBasicMaterial,
     MeshStandardMaterial, RepeatWrapping,
 } from "three";
 import Experience from "./Experience";
@@ -32,7 +32,8 @@ let mirrorMaterial,
     tableMaterial,
     lampMaterial,
     chairMaterial,
-    sheetChairMaterial;
+    sheetChairMaterial,
+    paintingMaterial;
 
 let recordPlayerMaterial,
     rubiksCubeMaterial,
@@ -43,6 +44,8 @@ let recordPlayerMaterial,
 
 let outlineMaterial,
     locationsMaterial;
+
+let backgroundTreeMaterial;
 
 export default class MaterialLibrary {
 
@@ -83,10 +86,8 @@ export default class MaterialLibrary {
     getGroundMaterial() {
         if (!groundMaterial) {
 
-            groundMaterial = new MeshStandardMaterial({
+            groundMaterial = new MeshBasicMaterial({
                 map: this.resources.items.ground.diffuse,
-                roughnessMap: this.resources.items.ground.roughness,
-                normalMap: this.resources.items.ground.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -99,12 +100,8 @@ export default class MaterialLibrary {
     getWindowWallMaterial() {
         if (!windowWallMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'windowWall', 2.5, 2.5)
-
-            windowWallMaterial = new MeshStandardMaterial({
+            windowWallMaterial = new MeshBasicMaterial({
                 map: this.resources.items.windowWall.diffuse,
-                roughnessMap: this.resources.items.windowWall.roughness,
-                normalMap: this.resources.items.windowWall.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -117,12 +114,8 @@ export default class MaterialLibrary {
     getWallsMaterial() {
         if (!wallsMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'walls', 7, 1)
-
-            wallsMaterial = new MeshStandardMaterial({
+            wallsMaterial = new MeshBasicMaterial({
                 map: this.resources.items.walls.diffuse,
-                roughnessMap: this.resources.items.walls.roughness,
-                normalMap: this.resources.items.walls.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -135,8 +128,8 @@ export default class MaterialLibrary {
     getRoofMaterial() {
         if (!roofMaterial) {
 
-            roofMaterial = new MeshStandardMaterial({
-                map: this.resources.items.walls.diffuse,
+            roofMaterial = new MeshBasicMaterial({
+                map: this.resources.items.roof.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -150,11 +143,13 @@ export default class MaterialLibrary {
         if (!windowMaterial) {
 
             windowMaterial = new MeshStandardMaterial({
-                color: '#ffefb0',
+                color: new Color('#ffde77'),
+                emissive: new Color('#ffde77'),
+                emissiveIntensity: 1,
                 transparent: true,
-                opacity: 0.5,
+                opacity: 1,
                 blending: AdditiveBlending,
-                side: this.debug ? DoubleSide : FrontSide
+                side: this.debug ? DoubleSide : FrontSide,
             })
 
             this.materialsUsed.push(windowMaterial)
@@ -165,10 +160,8 @@ export default class MaterialLibrary {
 
     getSideWindowMaterial() {
         if (!sideWindowMaterial) {
-            sideWindowMaterial = new MeshStandardMaterial({
-                map: this.resources.items.walls.diffuse,
-                roughnessMap: this.resources.items.walls.roughness,
-                normalMap: this.resources.items.walls.normal,
+            sideWindowMaterial = new MeshBasicMaterial({
+                map: this.resources.items.sideWindow.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -181,12 +174,8 @@ export default class MaterialLibrary {
     getBeamMaterial() {
         if (!beamMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'beam', 1, 3)
-
-            beamMaterial = new MeshStandardMaterial({
+            beamMaterial = new MeshBasicMaterial({
                 map: this.resources.items.beam.diffuse,
-                roughnessMap: this.resources.items.beam.roughness,
-                normalMap: this.resources.items.beam.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -213,9 +202,10 @@ export default class MaterialLibrary {
 
     getCardBoardMaterial() {
         if (!cardBoardMaterial) {
-            cardBoardMaterial = new MeshLambertMaterial({
+            cardBoardMaterial = new MeshBasicMaterial({
                 map: this.resources.items.cardboard.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                // aoMap: this.resources.items.cardboard.ao,
+                side: this.debug ? DoubleSide : DoubleSide
             })
 
             this.materialsUsed.push(cardBoardMaterial)
@@ -254,8 +244,8 @@ export default class MaterialLibrary {
 
     getSheetMaterial() {
         if (!sheetMaterial) {
-            sheetMaterial = new MeshLambertMaterial({
-                color: '#b3b3b3',
+            sheetMaterial = new MeshBasicMaterial({
+                map: this.resources.items.sheet.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -295,7 +285,7 @@ export default class MaterialLibrary {
         if (!storageMaterial) {
             storageMaterial = new MeshBasicMaterial({
                 map: this.resources.items.storage.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                side: this.debug ? DoubleSide : DoubleSide
             })
 
             this.materialsUsed.push(storageMaterial)
@@ -319,8 +309,8 @@ export default class MaterialLibrary {
 
     getPillowMaterial() {
         if (!pillowMaterial) {
-            pillowMaterial = new MeshLambertMaterial({
-                color: '#f8f8f8',
+            pillowMaterial = new MeshBasicMaterial({
+                map: this.resources.items.pillow.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -434,11 +424,24 @@ export default class MaterialLibrary {
         return sheetChairMaterial
     }
 
+    getPaintingMaterial() {
+        if (!paintingMaterial) {
+            paintingMaterial = new MeshBasicMaterial({
+                map: this.resources.items.painting.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(paintingMaterial)
+        }
+
+        return paintingMaterial
+    }
+
     //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
 
     getChestDrawerMaterial() {
         if (!chestDrawerMaterial) {
-            chestDrawerMaterial = new MeshStandardMaterial({
+            chestDrawerMaterial = new MeshBasicMaterial({
                 map: this.resources.items.chestDrawer.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -451,7 +454,7 @@ export default class MaterialLibrary {
 
     getDrawerMaterial() {
         if (!drawerMaterial) {
-            drawerMaterial = new MeshStandardMaterial({
+            drawerMaterial = new MeshBasicMaterial({
                 map: this.resources.items.drawer.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -501,6 +504,21 @@ export default class MaterialLibrary {
         return recordPlayerMaterial
     }
 
+    ///////////////////////// TEXTURE MATERIALS /////////////////////////////
+
+    getBackgroundTreeMaterial() {
+        if (!backgroundTreeMaterial) {
+            backgroundTreeMaterial = new MeshBasicMaterial({
+                map: this.resources.items.backgroundTreeTexture,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(backgroundTreeMaterial)
+        }
+
+        return backgroundTreeMaterial
+    }
+
 
     //////////////////////// EFFECTS MATERIALS ////////////////////////
 
@@ -535,7 +553,7 @@ export default class MaterialLibrary {
     }
 
     destroy() {
-        this.materialsUsed.forEach(material => {
+        this.materialsUsed?.forEach(material => {
             material.dispose();
 
             if (material.map) material.map.dispose();

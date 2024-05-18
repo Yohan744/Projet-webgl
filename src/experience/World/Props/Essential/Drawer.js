@@ -51,7 +51,7 @@ export default class Drawer {
                 onComplete: () => {
                     this.isOpen = true;
                     this.positionEnvelopeInDrawer(this.topDrawer);
-                    this.experience.camera.moveCameraToDrawer(this.topDrawer, 4);
+                    this.experience.camera.moveCameraToDrawer(this.topDrawer);
                 }
             });
         } else {

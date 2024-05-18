@@ -18,32 +18,9 @@
 #masthead a:hover {
   text-underline-offset: 2px;
 }
-.pocket-button-container {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: none;
-}
-
-.pocket-button-container.visible {
-  display: block;
-}
-
-.cassette-icon {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  cursor: pointer;
-}
-
-.cassette-icon img {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
 
 #experience-layer {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
@@ -59,34 +36,7 @@
 #experience-layer.visible *.visible {
   pointer-events: all;
 }
-#experience-layer {
-  position: relative;
-}
-
-.pocket-button-container {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: none;
-}
-
-.pocket-button-container.visible {
-  display: block;
-}
-
-.cassette-icon {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  cursor: pointer;
-}
-
-.cassette-icon img {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-#experience-layer .go-back-arrow-icon, #experience-layer .settings-icon {
+#experience-layer .go-back-icon, #experience-layer .settings-icon {
   position: absolute;
   top: 35px;
   left: 35px;
@@ -100,19 +50,20 @@
   scale: 0.9;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), scale 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
-#experience-layer .go-back-arrow-icon img, #experience-layer .settings-icon img {
+#experience-layer .go-back-icon img, #experience-layer .settings-icon img {
   position: relative;
   height: 100%;
   width: auto;
   -webkit-user-drag: none;
   user-select: none;
 }
-#experience-layer .go-back-arrow-icon.visible, #experience-layer .settings-icon.visible {
+#experience-layer .go-back-icon.visible, #experience-layer .settings-icon.visible {
   opacity: 1;
   scale: 1;
   pointer-events: all;
 }
 #experience-layer .settings-icon {
+  top: 35px;
   left: auto;
   right: 35px;
   z-index: 3;
@@ -124,6 +75,56 @@
 }
 #experience-layer .settings-icon:hover {
   transform: rotate(30deg);
+}
+#experience-layer .pocket-button {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  height: fit-content;
+  width: fit-content;
+  padding: 5px 8px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  border-radius: 10px;
+  background-color: white;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), background-color 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+#experience-layer .pocket-button.visible {
+  opacity: 1;
+}
+#experience-layer .pocket-button:hover {
+  background-color: #b6b6b6;
+}
+#experience-layer .pocket-button p {
+  position: relative;
+  font-size: 20px;
+  color: black;
+}
+#experience-layer .inventory-wrapper {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  pointer-events: all;
+}
+#experience-layer .inventory-wrapper div {
+  position: relative;
+  height: 35px;
+  width: 35px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+#experience-layer .inventory-wrapper div img {
+  position: relative;
+  height: 100%;
+  width: auto;
 }
 #experience-layer .settings-wrapper {
   position: fixed;

@@ -7,19 +7,18 @@ import {
     BlendFunction,
     RenderPass,
     ToneMappingMode,
-    BokehEffect, DepthPass
+    BokehEffect, SelectiveBloomEffect
 } from "postprocessing";
 
 
 export default class Renderer {
-    constructor(_options = {}) {
+    constructor() {
         this.experience = new Experience()
         this.config = this.experience.config
         this.debug = this.experience.debug
         this.stats = this.experience.stats
         this.scene = this.experience.scene
         this.camera = this.experience.camera
-        this.appStore = this.experience.appStore
 
         this.isBlurEffectEnabled = false;
 
@@ -59,8 +58,9 @@ export default class Renderer {
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = false
         this.instance.toneMapping = THREE.NoToneMapping
-        this.instance.toneMappingExposure = 1
+        this.instance.toneMappingExposure = 0.75
         this.instance.outputEncoding = THREE.sRGBEncoding
+        this.instance.outputColorSpace = THREE.SRGBColorSpace
 
         if (this.stats && this.stats.instance) {
             this.stats.instance.init(this.instance)
@@ -72,18 +72,25 @@ export default class Renderer {
 
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
 
-        const depthPass = new DepthPass(this.scene, this.camera.instance);
-        this.composer.addPass(depthPass);
-
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.NORMAL,
-            mode: ToneMappingMode.ACES_FILMIC,
+            mode: ToneMappingMode.LINEAR,
             resolution: 256,
             whitePoint: 0,
             middleGrey: 0,
             minLuminance: 0.01,
             averageLuminance: 1.0,
             adaptationRate: 1.0
+        });
+
+        this.bloom = new SelectiveBloomEffect(this.scene, this.camera.instance, {
+            blendFunction: BlendFunction.SCREEN,
+            luminanceThreshold: 0.7,
+            luminanceSmoothing: 0.025,
+            intensity: 3,
+            radius: 0.925,
+            levels: 8,
+            mipmapBlur: true,
         });
 
         this.dofEffect = new BokehEffect({
@@ -94,10 +101,12 @@ export default class Renderer {
             height: this.config.height
         });
 
+        this.bloomPass = new EffectPass(this.camera.instance, this.bloom);
         this.onlyTonePass = new EffectPass(this.camera.instance, this.toneMappingEffect);
         this.toneAndBlurPass = new EffectPass(this.camera.instance, this.toneMappingEffect, this.dofEffect);
 
         this.composer.addPass(this.renderPass);
+        this.composer.addPass(this.bloomPass);
         this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
     }
 

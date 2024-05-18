@@ -9,7 +9,7 @@ export class MouseUtils {
         this.meshName = this.mesh.name.toLowerCase();
         this.camera = this.experience.camera.modes.default.instance;
         this.pointer = this.experience.pointer;
-        this.appStore = this.experience.appStore;
+        this.gameManager = this.experience.gameManager;
 
         this.mouseDown = this.onMouseDown.bind(this);
         this.mouseMove = this.onMouseMove.bind(this);
@@ -39,7 +39,7 @@ export class MouseUtils {
 
     onMouseDown() {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
-        if (intersects.length > 0 && this.appStore.$state.isCameraOnSpot && this.appStore.$state.isInteractingWithObject && this.appStore.$state.isOrbitControlsEnabled) {
+        if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot && this.gameManager.state.isInteractingWithObject && this.gameManager.state.isOrbitControlsEnabled) {
             this.isDragging = true;
             this.controls.enabled = true;
             this.update();
@@ -53,7 +53,7 @@ export class MouseUtils {
     }
 
     update = () => {
-        if (this.meshName === this.appStore.$state.actualObjectInteractingName) {
+        if (this.meshName === this.gameManager.state.actualObjectInteractingName) {
             this.controls.update();
             this.mesh.quaternion.copy(this.fakeCamera.quaternion.conjugate());
         }

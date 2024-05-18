@@ -57,7 +57,7 @@ export default class ObjectsInteractable {
                 } else if (name.includes("photo") || name.includes("diapo") || name.includes("rail")) {
 
                 } else {
-                    // console.log(name)
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true
