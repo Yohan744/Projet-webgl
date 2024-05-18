@@ -2,7 +2,7 @@ import {
     AdditiveBlending,
     BackSide, Color,
     DoubleSide,
-    FrontSide, MeshBasicMaterial, MeshLambertMaterial,
+    FrontSide, MeshBasicMaterial,
     MeshStandardMaterial, RepeatWrapping,
 } from "three";
 import Experience from "./Experience";
@@ -44,6 +44,8 @@ let recordPlayerMaterial,
 
 let outlineMaterial,
     locationsMaterial;
+
+let backgroundTreeMaterial;
 
 export default class MaterialLibrary {
 
@@ -98,12 +100,8 @@ export default class MaterialLibrary {
     getWindowWallMaterial() {
         if (!windowWallMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'windowWall', 2.5, 2.5)
-
             windowWallMaterial = new MeshBasicMaterial({
                 map: this.resources.items.windowWall.diffuse,
-                roughnessMap: this.resources.items.windowWall.roughness,
-                normalMap: this.resources.items.windowWall.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -116,12 +114,8 @@ export default class MaterialLibrary {
     getWallsMaterial() {
         if (!wallsMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'walls', 7, 1)
-
             wallsMaterial = new MeshBasicMaterial({
                 map: this.resources.items.walls.diffuse,
-                roughnessMap: this.resources.items.walls.roughness,
-                normalMap: this.resources.items.walls.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -135,7 +129,7 @@ export default class MaterialLibrary {
         if (!roofMaterial) {
 
             roofMaterial = new MeshBasicMaterial({
-                map: this.resources.items.walls.diffuse,
+                map: this.resources.items.roof.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -180,12 +174,8 @@ export default class MaterialLibrary {
     getBeamMaterial() {
         if (!beamMaterial) {
 
-            this.repeatTextures(['diffuse', 'roughness', 'normal'], 'beam', 1, 3)
-
-            beamMaterial = new MeshStandardMaterial({
+            beamMaterial = new MeshBasicMaterial({
                 map: this.resources.items.beam.diffuse,
-                roughnessMap: this.resources.items.beam.roughness,
-                normalMap: this.resources.items.beam.normal,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -212,7 +202,7 @@ export default class MaterialLibrary {
 
     getCardBoardMaterial() {
         if (!cardBoardMaterial) {
-            cardBoardMaterial = new MeshLambertMaterial({
+            cardBoardMaterial = new MeshBasicMaterial({
                 map: this.resources.items.cardboard.diffuse,
                 // aoMap: this.resources.items.cardboard.ao,
                 side: this.debug ? DoubleSide : DoubleSide
@@ -451,7 +441,7 @@ export default class MaterialLibrary {
 
     getChestDrawerMaterial() {
         if (!chestDrawerMaterial) {
-            chestDrawerMaterial = new MeshStandardMaterial({
+            chestDrawerMaterial = new MeshBasicMaterial({
                 map: this.resources.items.chestDrawer.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -464,7 +454,7 @@ export default class MaterialLibrary {
 
     getDrawerMaterial() {
         if (!drawerMaterial) {
-            drawerMaterial = new MeshStandardMaterial({
+            drawerMaterial = new MeshBasicMaterial({
                 map: this.resources.items.drawer.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
@@ -512,6 +502,21 @@ export default class MaterialLibrary {
         }
 
         return recordPlayerMaterial
+    }
+
+    ///////////////////////// TEXTURE MATERIALS /////////////////////////////
+
+    getBackgroundTreeMaterial() {
+        if (!backgroundTreeMaterial) {
+            backgroundTreeMaterial = new MeshBasicMaterial({
+                map: this.resources.items.backgroundTreeTexture,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(backgroundTreeMaterial)
+        }
+
+        return backgroundTreeMaterial
     }
 
 

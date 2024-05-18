@@ -52,8 +52,9 @@ export default class Attic {
                     child.material = this.materialLibrary.getSideWindowMaterial()
                 }  else if (name.includes("poutres")) {
                     child.material = this.materialLibrary.getBeamMaterial()
-                }  else if (name.includes("godray")) {
+                }  else if (name.includes("lumière")) {
                     this.godRayMeshs.push(child)
+                    // child.visible = false
                 }
 
                 child.material.needsUpdate = true

@@ -74,7 +74,7 @@ export default class Renderer {
 
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.NORMAL,
-            mode: ToneMappingMode.ACES_FILMIC,
+            mode: ToneMappingMode.LINEAR,
             resolution: 256,
             whitePoint: 0,
             middleGrey: 0,

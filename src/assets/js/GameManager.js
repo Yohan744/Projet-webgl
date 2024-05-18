@@ -16,7 +16,7 @@ const state = reactive({
 
 const inventory = reactive({
     cassette: false,
-    pencil: true,
+    pencil: false,
 });
 
 export function useGameManager() {

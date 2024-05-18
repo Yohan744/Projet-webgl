@@ -38,7 +38,7 @@ export default class Resources extends EventEmitter {
             } else if (_resource.type === 'texture') {
                 data = new THREE.TextureLoader().load(_resource.source)
                 data.colorSpace = THREE.SRGBColorSpace
-                data.flipY = false
+                data.flipY = true
             }
 
             this.items[_resource.name] = data

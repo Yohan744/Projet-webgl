@@ -89,8 +89,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/windowWall/diffuse.webp',
-                    roughness: 'assets/textures/attic/windowWall/roughness.webp',
-                    normal: 'assets/textures/attic/windowWall/normal.webp',
                 }
             },
 
@@ -99,8 +97,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/walls/diffuse.webp',
-                    roughness: 'assets/textures/attic/walls/roughness.webp',
-                    normal: 'assets/textures/attic/walls/normal.webp',
                 }
             },
 
@@ -109,8 +105,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/beam/diffuse.webp',
-                    roughness: 'assets/textures/attic/beam/roughness.webp',
-                    normal: 'assets/textures/attic/beam/normal.webp',
                 }
             },
 
@@ -184,7 +178,7 @@ export default [
                 name: 'drawer',
                 type: 'group',
                 textures: {
-                    diffuse: 'assets/textures/objects/drawer/diffuse.webp',
+                    diffuse: 'assets/textures/objectsInteractable/drawer/diffuse.webp',
                 }
             },
 
@@ -240,7 +234,7 @@ export default [
                 name: 'rubiksCube',
                 type: 'group',
                 textures: {
-                    diffuse: 'assets/textures/objects/rubiksCube/diffuse.webp',
+                    diffuse: 'assets/textures/objectsInteractable/rubiksCube/diffuse.webp',
                 }
             },
 
@@ -248,7 +242,7 @@ export default [
                 name: 'television',
                 type: 'group',
                 textures: {
-                    diffuse: 'assets/textures/objects/television/diffuse.webp',
+                    diffuse: 'assets/textures/objectsInteractable/television/diffuse.webp',
                 }
             },
 
@@ -256,7 +250,7 @@ export default [
                 name: 'recordPlayer',
                 type: 'group',
                 textures: {
-                    diffuse: 'assets/textures/objects/recordPlayer/diffuse.webp',
+                    diffuse: 'assets/textures/objectsInteractable/recordPlayer/diffuse.webp',
                 }
             },
 
@@ -324,6 +318,14 @@ export default [
                 }
             },
 
+            {
+                name: 'cassette',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/cassette/diffuse.webp',
+                }
+            },
+
         ]
     },
 
@@ -341,12 +343,6 @@ export default [
             {
                 name: 'monasurf',
                 source: '/assets/textures/objects/projections/monasurf.webp',
-                type: 'texture',
-            },
-
-            {
-                name: 'godRayTexture',
-                source: '/assets/textures/attic/godRay/alpha.png',
                 type: 'texture',
             },
 
