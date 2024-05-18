@@ -35,7 +35,7 @@ export default class Pencil extends Prop {
 
         watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
             if (newVal === 'pencil') {
-                console.log("je dois montrer le pencil devant la camera")
+                this.showInFrontOfCamera()
             }
         });
 
@@ -49,7 +49,22 @@ export default class Pencil extends Prop {
         const targetPosition = new THREE.Vector3();
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
 
-        gsap.to(this.mesh.position, {
+        if (!this.experience.objectGroup) {
+            this.experience.objectGroup = new THREE.Group();
+            this.scene.add(this.experience.objectGroup);
+        }
+
+        const isBothObjectsInFront = this.gameManager.state.isPencilInFrontOfCamera && this.gameManager.state.isCassetteInFrontOfCamera;
+
+        if (isBothObjectsInFront) {
+            this.mesh.position.set(-0.3, 0, 0);
+        } else {
+            this.mesh.position.set(0, 0, 0);
+        }
+
+        this.experience.objectGroup.add(this.mesh);
+
+        gsap.to(this.experience.objectGroup.position, {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
@@ -65,8 +80,12 @@ export default class Pencil extends Prop {
             ease: 'power2.inOut'
         });
 
-        this.scene.add(this.mesh);
+        this.gameManager.setPencilInFrontOfCamera(true);
+
+        this.gameManager.state.isObjectOut = true;
     }
+
+
 
     moveToPocket() {
         const pocketPosition = new THREE.Vector3(0, -1, 2);
@@ -87,7 +106,7 @@ export default class Pencil extends Prop {
 
     onClick() {
         console.log('Pencil clicked');
-        this.gameManager.updatePocketButtonState(true);
+            this.gameManager.updatePocketButtonState(true);
     }
 
     destroy() {
