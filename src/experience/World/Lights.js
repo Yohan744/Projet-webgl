@@ -12,7 +12,7 @@ export default class Lights {
 
         if (this.scene) {
             this.setupAmbientLight()
-            this.setupPointLight()
+            // this.setupPointLight()
         }
 
     }

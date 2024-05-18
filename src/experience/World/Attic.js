@@ -47,6 +47,7 @@ export default class Attic {
                     child.material = this.materialLibrary.getWindowMaterial()
                     child.castShadow = true
                     child.receiveShadow = true
+                    // child.layers.enable(11)
                 } else if (name === 'fenetre') {
                     child.material = this.materialLibrary.getSideWindowMaterial()
                 }  else if (name.includes("poutres")) {

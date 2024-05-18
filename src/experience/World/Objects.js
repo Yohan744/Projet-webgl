@@ -59,6 +59,7 @@ export default class Objects {
                     child.material = this.materialLibrary.getCoatRackMaterial()
                 } else if (name.includes("ampoule")) {
                     child.material = this.materialLibrary.getBulbMaterial()
+                    child.layers.enable(11)
                 } else if (name.includes("échelle")) {
                     child.material = this.materialLibrary.getLadderMaterial()
                 } else if (name.includes("rockingchair")) {
@@ -71,8 +72,10 @@ export default class Objects {
                     child.material = this.materialLibrary.getChairMaterial()
                 } else if (name.includes("fauteuil_drappe_")) {
                     child.material = this.materialLibrary.getSheetChairMaterial()
+                } else if (name.includes("tableau")) {
+                    child.material = this.materialLibrary.getPaintingMaterial()
                 } else {
-                    console.log(name)
+                    // console.log(name)
                 }
 
                 child.material.needsUpdate = true

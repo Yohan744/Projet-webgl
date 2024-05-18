@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import {reactive} from 'vue';
 
 const state = reactive({
     lastVisitedRoute: null,
@@ -16,7 +16,7 @@ const state = reactive({
 
 const inventory = reactive({
     cassette: false,
-    pencil: false,
+    pencil: true,
 });
 
 export function useGameManager() {

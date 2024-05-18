@@ -20,20 +20,25 @@ export default class Pencil extends Prop {
     }
 
     init() {
-        watch(() => this.gameManager.state.pencilIconClicked,
-            (newVal) => {
-                if (newVal) {
-                    this.showInFrontOfCamera();
-                }
+
+        watch(() => this.gameManager.state.pencilIconClicked, (newVal) => {
+            if (newVal) {
+                this.showInFrontOfCamera();
             }
-        );
-        watch(() => this.gameManager.objectToPocket,
-            (newVal) => {
-                if (newVal) {
-                    this.moveToPocket();
-                }
+        });
+
+        watch(() => this.gameManager.state.objectToPocket, (newVal) => {
+            if (newVal) {
+                this.moveToPocket();
             }
-        );
+        });
+
+        watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
+            if (newVal === 'pencil') {
+                console.log("je dois montrer le pencil devant la camera")
+            }
+        });
+
 
     }
 

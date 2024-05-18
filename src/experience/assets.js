@@ -81,8 +81,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/ground/diffuse.webp',
-                    roughness: 'assets/textures/attic/ground/roughness.webp',
-                    normal: 'assets/textures/attic/ground/normal.webp',
                 }
             },
 
@@ -299,6 +297,30 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/sheetChair/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'pillow',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/pillow/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'sheet',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/sheet/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'painting',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/painting/diffuse.webp',
                 }
             },
 

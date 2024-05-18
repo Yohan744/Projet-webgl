@@ -104,12 +104,14 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    pointer-events: all;
 
     div {
       position: relative;
       height: 35px;
       width: 35px;
       margin-left: 20px;
+      cursor: pointer;
 
       img {
         position: relative;
