@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
+import dustVertexShader from "./../../../Shaders/Dust/vertex.glsl";
+import dustFragmentShader from "./../../../Shaders/Dust/fragment.glsl";
 
 export default class Photo {
     constructor() {
@@ -57,8 +59,9 @@ export default class Photo {
 
     setupParticles() {
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 20000;
+        const particlesCount = 100000;
         const posArray = new Float32Array(particlesCount * 3);
+        const scaleArray = new Float32Array(particlesCount);
 
         for (let i = 0; i < particlesCount; i++) {
             const x = (Math.random() - 0.5) * 0.17;
@@ -69,20 +72,29 @@ export default class Photo {
             posArray[i * 3 + 2] = z;
             this.initialPositions.push(new THREE.Vector3(x, y, z));
             this.activeParticles.push(true);
+
+            scaleArray[i] = Math.random();
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.01,
-            color: '#9f9f9f',
+        particlesGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1));
+
+        const particlesMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+                uSize: { value: 50 } 
+            },
+            vertexShader: dustVertexShader,
+            fragmentShader: dustFragmentShader,
             transparent: true,
-            opacity: 0.3
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
         });
 
         this.particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         this.rectangleMesh.add(this.particlesMesh);
     }
-
     setupMouseEvents() {
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
     }
