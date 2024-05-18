@@ -7,8 +7,9 @@ import {
     BlendFunction,
     RenderPass,
     ToneMappingMode,
-    BokehEffect, SelectiveBloomEffect
+    BokehEffect, SelectiveBloomEffect, VignetteEffect, VignetteTechnique
 } from "postprocessing";
+import gsap from 'gsap'
 
 
 export default class Renderer {
@@ -93,27 +94,56 @@ export default class Renderer {
             mipmapBlur: true,
         });
 
+        this.vignetteEffect = new VignetteEffect({
+            blendFunction: BlendFunction.NORMAL,
+            technique: VignetteTechnique.DEFAULT,
+            offset: 0,
+            darkness: 0.4
+        })
+
         this.dofEffect = new BokehEffect({
             focus: 0.010,
-            aperture: 0.184,
+            aperture: 0, // 0.184
             maxBlur: 0.025,
             width: this.config.width,
             height: this.config.height
         });
 
-        this.bloomPass = new EffectPass(this.camera.instance, this.bloom);
+        this.globalPass = new EffectPass(this.camera.instance, this.bloom, this.vignetteEffect);
         this.onlyTonePass = new EffectPass(this.camera.instance, this.toneMappingEffect);
         this.toneAndBlurPass = new EffectPass(this.camera.instance, this.toneMappingEffect, this.dofEffect);
 
         this.composer.addPass(this.renderPass);
-        this.composer.addPass(this.bloomPass);
+        this.composer.addPass(this.globalPass);
         this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
     }
 
     toggleBlurEffect(value) {
         this.isBlurEffectEnabled = value;
-        this.composer.passes.pop();
-        this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
+
+        gsap.set(this.dofEffect.uniforms.get('aperture'), {
+            value: value ? 0 : 1,
+        })
+
+        gsap.to(this.dofEffect.uniforms.get('aperture'), {
+            value: value ? 1 : 0,
+            delay: value ? 0.35 : 0,
+            duration: 3,
+            ease: 'power1.out',
+            onStart: () => {
+                if (value) {
+                    this.composer.passes.pop();
+                    this.composer.addPass(this.toneAndBlurPass);
+                }
+            },
+            onComplete: () => {
+                if (!value) {
+                    this.composer.passes.pop();
+                    this.composer.addPass(this.onlyTonePass);
+                }
+            }
+        })
+
     }
 
     setDebug() {
@@ -211,6 +241,22 @@ export default class Renderer {
             max: 1,
             step: 0.001,
             label: 'DOF'
+        });
+
+        //////////////////
+
+        this.debugFolder.addBinding(this.vignetteEffect, 'offset', {
+            min: 0,
+            max: 1,
+            step: 0.01,
+            label: 'Vignette offset'
+        });
+
+        this.debugFolder.addBinding(this.vignetteEffect, 'darkness', {
+            min: 0,
+            max: 1,
+            step: 0.01,
+            label: 'Vignette darkness'
         });
 
     }

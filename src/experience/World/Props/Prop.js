@@ -33,7 +33,12 @@ export default class Prop extends EventEmitter {
         this.spotId = spotId
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
-        if (this.animatePropsToCameraOnClick) this.mouseUtils = new MouseUtils(this.mesh);
+        if (this.animatePropsToCameraOnClick) {
+            this.mouseUtils = new MouseUtils(this.mesh);
+            this.mouseUtils.on('dragging', () => {
+                this.outline?.updateOutlineMeshRotation(this.mesh.rotation)
+            })
+        }
 
         this.init()
         this.setWatchers()
