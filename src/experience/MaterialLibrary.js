@@ -567,6 +567,8 @@ export default class MaterialLibrary {
         this.resources = null;
         this.experience = null;
         this.debug = null;
+
+        MaterialLibrary.instance = null
     }
 
 

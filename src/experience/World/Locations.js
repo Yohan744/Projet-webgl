@@ -129,6 +129,7 @@ export default class Locations {
     }
 
     destroy() {
+        Locations.instance = null
         this.spots.forEach((spot) => {
             spot.geometry.dispose()
             spot.material.dispose()
