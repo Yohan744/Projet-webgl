@@ -1,6 +1,6 @@
-const s = './src/assets/sounds/'
-const g = './src/assets/sounds/general/'
-const p = './src/assets/sounds/props/'
+const s = './assets/sounds/';
+const g = './assets/sounds/general/';
+const p = './assets/sounds/props/';
 
 export const data = {
 
