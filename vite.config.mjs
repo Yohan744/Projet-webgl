@@ -1,10 +1,13 @@
 import glsl from 'vite-plugin-glsl';
-import { defineConfig } from 'vite'
+import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue';
-import { visualizer } from 'rollup-plugin-visualizer';
+import {visualizer} from 'rollup-plugin-visualizer';
 
 export default defineConfig({
     root: '.',
+    server: {
+        open: true,
+    },
     publicDir: 'public',
     build: {
         outDir: 'dist',
