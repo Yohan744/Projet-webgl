@@ -16,9 +16,9 @@ export default class Photo {
         this.group = null;
         this.initialPositions = [];
         this.activeParticles = [];
-        this.rows = 45;
-        this.columns = 45;
-        this.particlesPerCell = 20;
+        this.rows = 40;
+        this.columns = 40;
+        this.particlesPerCell = 10;
         this.cells = {};
         this.cellMeshes = [];
         this.detectedCells = new Set();
@@ -32,7 +32,6 @@ export default class Photo {
         this.setupParticles();
         this.setupGridCells();
         this.setupMouseEvents();
-        this.updateUndetectedCellsCount();
     }
 
     setupPhotoModel() {
@@ -57,7 +56,6 @@ export default class Photo {
         this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
         this.rectangleMesh.position.set(0, 0, 0);
         this.group.add(this.rectangleMesh);
-
     }
 
     setupParticles() {
@@ -85,7 +83,7 @@ export default class Photo {
             uniforms: {
                 uTime: { value: 0 },
                 uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-                uSize: { value: 4 }
+                uSize: { value: 7 }
             },
             vertexShader: `
                 uniform float uPixelRatio;
@@ -167,33 +165,48 @@ export default class Photo {
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
     }
 
-    detectCell(event) {
+    detectCells(event) {
         const rect = this.renderer.domElement.getBoundingClientRect();
         this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
         this.raycaster.setFromCamera(this.mouse, this.camera);
-
         const intersects = this.raycaster.intersectObjects(this.cellMeshes);
 
         if (intersects.length > 0) {
             const cellIndex = this.cellMeshes.indexOf(intersects[0].object);
             if (!this.detectedCells.has(cellIndex)) {
                 this.detectedCells.add(cellIndex);
-                this.updateUndetectedCellsCount();
-                return cellIndex;
+                return [cellIndex, ...this.getNeighboringCells(cellIndex)];
             }
         }
 
-        return -1;
+        return [];
+    }
+
+    getNeighboringCells(cellIndex) {
+        const neighbors = [];
+        const row = Math.floor(cellIndex / this.columns);
+        const column = cellIndex % this.columns;
+
+        // Top neighbor
+        if (row > 0) neighbors.push(cellIndex - this.columns);
+        // Bottom neighbor
+        if (row < this.rows - 1) neighbors.push(cellIndex + this.columns);
+        // Left neighbor
+        if (column > 0) neighbors.push(cellIndex - 1);
+        // Right neighbor
+        if (column < this.columns - 1) neighbors.push(cellIndex + 1);
+
+        return neighbors;
     }
 
     onMouseMove(event) {
-        const cellIndex = this.detectCell(event);
-        if (cellIndex !== -1) {
+        const cellIndices = this.detectCells(event);
+        cellIndices.forEach((cellIndex) => {
             this.removeCellParticles(cellIndex);
-            this.particlesMesh.geometry.attributes.position.needsUpdate = true;
-        }
+        });
+        this.particlesMesh.geometry.attributes.position.needsUpdate = true;
     }
 
     removeCellParticles(cellIndex) {
@@ -209,7 +222,9 @@ export default class Photo {
             delete this.cells[cellIndex];
 
             if (this.displacedParticles >= this.initialPositions.length) {
-                this.fadeOutGroup();
+                this.fadeOut(this.group);
+            } else {
+                this.fadeOut(this.cellMeshes[cellIndex]);
             }
         }
     }
@@ -221,40 +236,46 @@ export default class Photo {
         positions[index * 3 + 2] = NaN;
     }
 
-    updateUndetectedCellsCount() {
-        const undetectedCells = this.rows * this.columns - this.detectedCells.size;
-        console.log(`Undetected Cells: ${undetectedCells}`);
-    }
-
-    fadeOutGroup(duration = 2000) {
+    fadeOut(object, duration = 2000) {
         const startTime = performance.now();
         const fade = () => {
             const currentTime = performance.now();
             const elapsed = currentTime - startTime;
             const opacity = THREE.MathUtils.clamp(1 - elapsed / duration, 0, 1);
 
-            this.group.traverse((object) => {
-                if (object.material) {
-                    object.material.opacity = opacity;
-                    object.material.transparent = true;
-                }
-            });
+            if (object instanceof THREE.Group) {
+                object.traverse((child) => {
+                    if (child.material) {
+                        child.material.opacity = opacity;
+                        child.material.transparent = true;
+                    }
+                });
+            } else if (object.material) {
+                object.material.opacity = opacity;
+                object.material.transparent = true;
+            }
 
             if (opacity > 0) {
                 requestAnimationFrame(fade);
             } else {
-                this.removeGroup();
+                this.removeObject(object);
             }
         };
         fade();
     }
 
-    removeGroup() {
-        this.scene.remove(this.group);
-        this.group.traverse((object) => {
+    removeObject(object) {
+        if (object instanceof THREE.Group) {
+            this.scene.remove(object);
+            object.traverse((child) => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+        } else {
+            this.group.remove(object);
             if (object.geometry) object.geometry.dispose();
             if (object.material) object.material.dispose();
-        });
+        }
     }
 
     destroy() {
