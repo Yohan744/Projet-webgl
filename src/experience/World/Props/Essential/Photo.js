@@ -31,20 +31,20 @@ export default class Photo {
 
     setupPhotoModel() {
         this.photoModel = this.resources.items.photoModel.scene;
-        this.photoModel.position.set(0, 2.25, 9.32);
+        this.photoModel.position.set(0, 2.25, 9.25);
         this.photoModel.rotation.x = Math.PI / 2;
-        this.scene.add(this.photoModel);
+        // this.scene.add(this.photoModel);
     }
 
     setupGroup() {
         this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        this.group.add(this.photoModel);
+        // this.group.add(this.photoModel);
         this.scene.add(this.group);
 
-        const texture = this.resources.items.photoTexture;
-        texture.flipY = true;
+        // const texture = this.resources.items.photoTexture;
+        const texture = this.resources.items.backgroundTreeTexture;
 
         const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
         const rectangleMaterial = new THREE.MeshBasicMaterial({
@@ -53,13 +53,13 @@ export default class Photo {
             transparent: true,
         });
         this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
-        this.rectangleMesh.position.set(0, 0, 0.01);
+        this.rectangleMesh.position.set(0, 0, 0);
         this.group.add(this.rectangleMesh);
     }
 
     setupParticles() {
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 100000;
+        const particlesCount = 400;
         const posArray = new Float32Array(particlesCount * 3);
         const scaleArray = new Float32Array(particlesCount);
 
@@ -81,20 +81,37 @@ export default class Photo {
 
         const particlesMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                uTime: { value: 0 },
-                uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-                uSize: { value: 50 } 
+                uTime: {value: 0},
+                uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
+                uSize: {value: 50}
             },
-            vertexShader: dustVertexShader,
+            vertexShader: `
+            
+            uniform float uPixelRatio;
+            uniform float uSize;
+            attribute float aScale;
+            
+            void main() {
+                vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+            
+                vec4 viewPosition = viewMatrix * modelPosition;
+                vec4 projectionPosition = projectionMatrix * viewPosition;
+            
+                gl_Position = projectionPosition;
+                gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
+            }
+            `,
             fragmentShader: dustFragmentShader,
             transparent: true,
             blending: THREE.AdditiveBlending,
-            depthWrite: false
+            depthTest: false,
         });
 
         this.particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        this.rectangleMesh.add(this.particlesMesh);
+        this.group.add(this.particlesMesh);
+        this.particlesMesh.position.set(0, 0, 0.001);
     }
+
     setupMouseEvents() {
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
     }
@@ -138,6 +155,7 @@ export default class Photo {
         positions[index * 3 + 1] = NaN;
         positions[index * 3 + 2] = NaN;
     }
+
     fadeOutGroup(duration = 2000) {
         const startTime = performance.now();
         const fade = () => {
@@ -160,6 +178,7 @@ export default class Photo {
         };
         fade();
     }
+
     removeGroup() {
         this.scene.remove(this.group);
         this.group.traverse((object) => {
