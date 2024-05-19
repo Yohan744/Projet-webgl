@@ -48,7 +48,7 @@ export default class Cassette extends Prop {
         if (isCassetteAndPencilInFront) {
             this.mesh.position.set(0.3, 0, 0);
         } else if (isCassetteAndWalkmanInFront) {
-            this.mesh.position.set(0.3, 0, 0);
+            this.mesh.position.set(0, 0.06, 0.38);
         } else {
             this.mesh.position.set(0, 0, 0);
         }
