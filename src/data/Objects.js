@@ -14,7 +14,7 @@ import TopChest from "../experience/World/Props/Essential/TopChest";
 export const objectsData = {
     walkman: {
         file: Walkman,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
+        //rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 0.5,
         outlineScale: 1.05, // false to deactivate, type number to activate

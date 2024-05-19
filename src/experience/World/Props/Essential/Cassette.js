@@ -48,7 +48,8 @@ export default class Cassette extends Prop {
         if (isCassetteAndPencilInFront) {
             this.mesh.position.set(0.3, 0, 0);
         } else if (isCassetteAndWalkmanInFront) {
-            this.mesh.position.set(0, 0.06, 0.38);
+            this.mesh.position.set(0.3, 0, 0.3);
+            this.moveWalkmanBack();
         } else {
             this.mesh.position.set(0, 0, 0);
         }
@@ -73,6 +74,22 @@ export default class Cassette extends Prop {
 
         this.gameManager.setCassetteInFrontOfCamera(true);
         this.gameManager.state.isObjectOut = true;
+    }
+
+    moveWalkmanBack() {
+        const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
+        if (walkman) {
+            gsap.to(walkman.position, {
+                z: walkman.position.z - 2,
+                duration: 1,
+                ease: 'power2.inOut'
+            });
+            gsap.to(this.mesh.position, {
+                z: this.mesh.position.z + 2,
+                duration: 1,
+                ease: 'power2.inOut'
+            });
+        }
     }
 
     onClick() {

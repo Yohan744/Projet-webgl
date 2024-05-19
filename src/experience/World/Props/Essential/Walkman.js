@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 import { watch } from 'vue';
 
 export default class Walkman extends Prop {
-    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound, spotId) {
+    constructor(mesh, desiredRotationOnClick = null, animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound, spotId) {
         super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, distanceToCamera, isOutlined, propSound, spotId);
 
         this.experience = new Experience();
@@ -28,10 +28,8 @@ export default class Walkman extends Prop {
     }
 
     init() {
-        watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
-            if (newVal === 'walkman') {
-                this.gameManager.isObjectOut = true;
-            }
+        watch(() => this.gameManager.state.isCassetteInFrontOfCamera, () => {
+            this.checkObjectsInFront();
         });
 
         const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
@@ -45,7 +43,6 @@ export default class Walkman extends Prop {
                 child.add(lines);
             }
         });
-
     }
 
     setEvents() {
@@ -56,6 +53,24 @@ export default class Walkman extends Prop {
         this.pointer.on('click', this.pointerDown);
         this.pointer.on('movement-orbit', this.pointerMove);
         this.pointer.on('click-release', this.pointerUp);
+    }
+
+    checkObjectsInFront() {
+        const isCassetteInFront = this.gameManager.state.isCassetteInFrontOfCamera;
+        const isWalkmanInFront = this.gameManager.state.showingInventoryObjectInFrontOfCamera === 'walkman';
+
+        this.objectCanRotate = !(isCassetteInFront && isWalkmanInFront);
+
+        if (isCassetteInFront && isWalkmanInFront) {
+            this.desiredRotation = null;
+            const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
+            const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
+
+            if (walkman) walkman.position.set(-0.3, 0, -0.5);
+            if (cassette) cassette.position.set(0.3, 0, 0.5);
+        }
+
+        console.log(`ObjectCanRotate: ${this.objectCanRotate}`);
     }
 
     onPointerDown() {
@@ -155,49 +170,6 @@ export default class Walkman extends Prop {
             }
         }
     }
-
-    animatePropsToCamera() {
-        const cameraDirection = new THREE.Vector3();
-        this.camera.getWorldDirection(cameraDirection);
-
-        const targetPosition = new THREE.Vector3();
-        targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
-
-        gsap.to(this.mesh.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z,
-            duration: 2,
-            ease: "power2.inOut",
-            onUpdate: () => {
-                console.log(`Object position: x=${this.mesh.position.x}, y=${this.mesh.position.y}, z=${this.mesh.position.z}`);
-                this.checkPosition();
-            },
-            onComplete: () => {
-                this.gameManager.updateOrbitsControlsState(true);
-            }
-        });
-
-        gsap.to(this.mesh.rotation, {
-            x: this.desiredRotation.x,
-            y: this.desiredRotation.y,
-            z: this.desiredRotation.z,
-            duration: 2,
-            ease: "power2.inOut"
-        });
-    }
-
-    checkPosition() {
-        const targetPosition = new THREE.Vector3(0, 0, 0);
-        if (this.mesh.position.distanceTo(targetPosition) < 0.1) {
-            this.objectCanRotate = false;
-            console.log("Rotation disabled");
-        } else {
-            this.objectCanRotate = true;
-            console.log("Rotation enabled");
-        }
-    }
-
     destroy() {
         super.destroy();
         this.pointer.off('click', this.pointerDown);
