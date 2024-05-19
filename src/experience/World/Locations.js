@@ -61,7 +61,7 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
-            const geometry = new THREE.CircleGeometry(0.375, 16)
+            const geometry = new THREE.CircleGeometry(0.375, 32)
             geometry.rotateX(-Math.PI * 0.5)
 
             const location = new THREE.Mesh(
@@ -100,7 +100,7 @@ export default class Locations {
             }
 
             gsap.to(spot.material, {
-                opacity: state ? 1 : 0,
+                opacity: state ? 0.65 : 0,
                 delay: delay * 0.8,
                 duration: 3,
                 ease: 'power2.out',
@@ -129,6 +129,7 @@ export default class Locations {
     }
 
     destroy() {
+        Locations.instance = null
         this.spots.forEach((spot) => {
             spot.geometry.dispose()
             spot.material.dispose()

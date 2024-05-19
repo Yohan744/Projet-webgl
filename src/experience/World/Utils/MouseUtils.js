@@ -1,9 +1,11 @@
 import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js";
 import Experience from "../../Experience";
+import EventEmitter from "../../Utils/EventEmitter";
 
-export class MouseUtils {
+export class MouseUtils extends EventEmitter{
     constructor(mesh) {
+        super()
         this.experience = new Experience();
         this.mesh = mesh;
         this.meshName = this.mesh.name.toLowerCase();
@@ -56,6 +58,7 @@ export class MouseUtils {
         if (this.meshName === this.gameManager.state.actualObjectInteractingName) {
             this.controls.update();
             this.mesh.quaternion.copy(this.fakeCamera.quaternion.conjugate());
+            this.trigger('dragging');
         }
     }
 

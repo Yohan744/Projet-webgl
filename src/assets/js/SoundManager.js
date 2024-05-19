@@ -36,8 +36,12 @@ export default class SoundManager {
     }
 
     play(key) {
+        if (this.sounds[key].state() === 'unloaded') this.loadSongs()
         if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
             this.sounds[key].play();
+        } else {
+            console.log(this.sounds[key].playing())
+            console.log("zebi")
         }
     }
 
@@ -99,8 +103,15 @@ export default class SoundManager {
         this.play('background')
     }
 
+    loadSongs() {
+        Object.keys(this.sounds).forEach(key => {
+            this.sounds[key].load();
+        });
+    }
+
     destroy() {
         Object.keys(this.sounds).forEach(key => {
+            this.sounds[key].stop();
             this.sounds[key].unload();
         });
     }

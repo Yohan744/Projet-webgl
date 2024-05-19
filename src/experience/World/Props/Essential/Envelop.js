@@ -104,7 +104,6 @@ export default class Envelop {
     handleClick() {
         const mousePosition = this.pointer.getMousePosition();
         const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel, this.itemGroup, ...this.itemGroup.children], true);
-        console.log(intersects);
         if (intersects.length > 0) {
             if (this.hasOpenEnvelop) {
                 this.separateItemsToTriangle();

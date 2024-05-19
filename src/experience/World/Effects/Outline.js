@@ -6,9 +6,12 @@ export default class Outline {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.materialLibrary = this.experience.world.materialLibrary
+
         this.mesh = mesh;
         this.outlineScale = outlineScale;
+
         this.init()
+
     }
 
     init() {
@@ -38,11 +41,25 @@ export default class Outline {
             opacity: 0,
             duration: 0.75,
         })
+        const scale = 1 + ((this.outlineScale - 1) * 0.5)
+        gsap.to(this.clonedModel.scale, {
+            x: scale,
+            y: scale,
+            z: scale,
+            duration: 0.75,
+        })
     }
 
     showOutline() {
         gsap.to(this.material, {
             opacity: 1,
+            delay: 0.5,
+            duration: 0.75,
+        })
+        gsap.to(this.clonedModel.scale, {
+            x: this.outlineScale,
+            y: this.outlineScale,
+            z: this.outlineScale,
             delay: 0.5,
             duration: 0.75,
         })

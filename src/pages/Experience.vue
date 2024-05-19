@@ -1,9 +1,11 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{ visible: showStartButton }">
+    <div ref="startButton" class="start-button" @click="handleClickStartButton"
+         v-bind:class="{ visible: showStartButton }">
       <p>start experience</p>
     </div>
-    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}" :progress="progress"/>
+    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"
+             :progress="progress"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
     <ExperienceLayer :soundManager="soundManager"/>
     <div ref="experienceContainer" class="experience"></div>
@@ -73,7 +75,10 @@ export default {
   },
   methods: {
     initExperience() {
-      this.experience?.destroy();
+      if (this.experience) {
+        this.experience.destroy();
+        this.experience = null;
+      }
 
       this.experience = new Experience({
         targetElement: this.$refs.experienceContainer
@@ -84,15 +89,13 @@ export default {
         this.showStartButton = this.gameManager.state.lastVisitedRoute === null && this.appStore.$state.isVideoIntroWatched
         if (this.isVideoIntroWatched && !this.showStartButton) {
           this.setExperienceOpacity();
-        } else {
-          console.log()
         }
       });
 
       this.experience.on('assetLoading', (value) => {
         const progress = Math.round(value * 100);
         if (progress > this.progress) {
-          this.progress = progress;
+          this.progress = Math.min(progress, 100);
         }
       });
 

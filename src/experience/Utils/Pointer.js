@@ -94,6 +94,7 @@ export default class Pointer extends EventEmitter {
     }
 
     destroy() {
+        Pointer.instance = null
         window.removeEventListener("pointermove", (_event) => this.onMovement(_event))
         window.removeEventListener('pointerdown', this.onClick.bind(this), false);
         window.removeEventListener('pointerup', this.onClickRelease.bind(this), false);

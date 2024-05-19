@@ -7,8 +7,9 @@ import {
     BlendFunction,
     RenderPass,
     ToneMappingMode,
-    BokehEffect, SelectiveBloomEffect
+    BokehEffect, SelectiveBloomEffect, VignetteEffect, VignetteTechnique, DepthPass
 } from "postprocessing";
+import gsap from 'gsap'
 
 
 export default class Renderer {
@@ -58,8 +59,7 @@ export default class Renderer {
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = false
         this.instance.toneMapping = THREE.NoToneMapping
-        this.instance.toneMappingExposure = 0.75
-        this.instance.outputEncoding = THREE.sRGBEncoding
+        this.instance.toneMappingExposure = 1.5
         this.instance.outputColorSpace = THREE.SRGBColorSpace
 
         if (this.stats && this.stats.instance) {
@@ -71,10 +71,11 @@ export default class Renderer {
         this.composer = new EffectComposer(this.instance);
 
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
+        this.depthPass = new DepthPass(this.scene, this.camera.instance);
 
         this.toneMappingEffect = new ToneMappingEffect({
-            blendFunction: BlendFunction.NORMAL,
-            mode: ToneMappingMode.LINEAR,
+            blendFunction: BlendFunction.DARKEN,
+            mode: ToneMappingMode.ACES_FILMIC,
             resolution: 256,
             whitePoint: 0,
             middleGrey: 0,
@@ -85,35 +86,64 @@ export default class Renderer {
 
         this.bloom = new SelectiveBloomEffect(this.scene, this.camera.instance, {
             blendFunction: BlendFunction.SCREEN,
-            luminanceThreshold: 0.7,
+            luminanceThreshold: 0.6,
             luminanceSmoothing: 0.025,
-            intensity: 3,
-            radius: 0.925,
-            levels: 8,
+            intensity: 2.25,
+            radius: 0.6,
+            levels: 12,
             mipmapBlur: true,
         });
 
+        this.vignetteEffect = new VignetteEffect({
+            blendFunction: BlendFunction.NORMAL,
+            technique: VignetteTechnique.DEFAULT,
+            offset: 0,
+            darkness: 0.75
+        })
+
         this.dofEffect = new BokehEffect({
             focus: 0.010,
-            aperture: 0.184,
+            aperture: 0, // 0.184
             maxBlur: 0.025,
             width: this.config.width,
             height: this.config.height
         });
 
-        this.bloomPass = new EffectPass(this.camera.instance, this.bloom);
+        this.globalPass = new EffectPass(this.camera.instance, this.bloom, this.vignetteEffect);
         this.onlyTonePass = new EffectPass(this.camera.instance, this.toneMappingEffect);
         this.toneAndBlurPass = new EffectPass(this.camera.instance, this.toneMappingEffect, this.dofEffect);
 
         this.composer.addPass(this.renderPass);
-        this.composer.addPass(this.bloomPass);
+        this.composer.addPass(this.globalPass);
         this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
     }
 
     toggleBlurEffect(value) {
         this.isBlurEffectEnabled = value;
-        this.composer.passes.pop();
-        this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
+
+        gsap.set(this.dofEffect.uniforms.get('aperture'), {
+            value: value ? 0 : 1,
+        })
+
+        gsap.to(this.dofEffect.uniforms.get('aperture'), {
+            value: value ? 1 : 0,
+            delay: value ? 0.35 : 0,
+            duration: 3,
+            ease: 'power1.out',
+            onStart: () => {
+                if (value) {
+                    this.composer.passes.pop();
+                    this.composer.addPass(this.toneAndBlurPass);
+                }
+            },
+            onComplete: () => {
+                if (!value) {
+                    this.composer.passes.pop();
+                    this.composer.addPass(this.onlyTonePass);
+                }
+            }
+        })
+
     }
 
     setDebug() {
@@ -189,6 +219,27 @@ export default class Renderer {
             this.toggleBlurEffect(e.value)
         })
 
+        /////////////////
+
+        // this.bloom = new SelectiveBloomEffect(this.scene, this.camera.instance, {
+        //     blendFunction: BlendFunction.SCREEN,
+        //     luminanceThreshold: 0.7,
+        //     luminanceSmoothing: 0.025,
+        //     intensity: 3,
+        //     radius: 0.925,
+        //     levels: 8,
+        //     mipmapBlur: true,
+        // });
+
+        console.log(this.bloom)
+
+        this.debugFolder.addBinding(this.bloom.uniforms.get('intensity'), 'value', {
+            min: 0,
+            max: 10,
+            step: 0.001,
+            label: 'Bloom luminance threshold'
+        });
+
         //////////////////
 
         this.debugFolder.addBinding(this.dofEffect.uniforms.get('focus'), 'value', {
@@ -211,6 +262,22 @@ export default class Renderer {
             max: 1,
             step: 0.001,
             label: 'DOF'
+        });
+
+        //////////////////
+
+        this.debugFolder.addBinding(this.vignetteEffect, 'offset', {
+            min: 0,
+            max: 1,
+            step: 0.01,
+            label: 'Vignette offset'
+        });
+
+        this.debugFolder.addBinding(this.vignetteEffect, 'darkness', {
+            min: 0,
+            max: 1,
+            step: 0.01,
+            label: 'Vignette darkness'
         });
 
     }
