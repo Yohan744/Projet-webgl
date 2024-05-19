@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
-import dustVertexShader from "./../../../Shaders/Dust/vertex.glsl";
 import dustFragmentShader from "./../../../Shaders/Dust/fragment.glsl";
 
 export default class Photo {
@@ -13,11 +12,16 @@ export default class Photo {
         this.pointer = this.experience.pointer;
         this.mouse = new THREE.Vector2();
         this.raycaster = new THREE.Raycaster();
-        this.isHovering = false;
         this.displacedParticles = 0;
         this.group = null;
         this.initialPositions = [];
         this.activeParticles = [];
+        this.rows = 45;
+        this.columns = 45;
+        this.particlesPerCell = 20;
+        this.cells = {};
+        this.cellMeshes = [];
+        this.detectedCells = new Set();
 
         this.init();
     }
@@ -26,24 +30,22 @@ export default class Photo {
         this.setupPhotoModel();
         this.setupGroup();
         this.setupParticles();
+        this.setupGridCells();
         this.setupMouseEvents();
+        this.updateUndetectedCellsCount();
     }
 
     setupPhotoModel() {
         this.photoModel = this.resources.items.photoModel.scene;
         this.photoModel.position.set(0, 2.25, 9.25);
         this.photoModel.rotation.x = Math.PI / 2;
-        // this.scene.add(this.photoModel);
     }
 
     setupGroup() {
         this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        // this.group.add(this.photoModel);
         this.scene.add(this.group);
-
-        // const texture = this.resources.items.photoTexture;
         const texture = this.resources.items.backgroundTreeTexture;
 
         const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
@@ -55,25 +57,25 @@ export default class Photo {
         this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
         this.rectangleMesh.position.set(0, 0, 0);
         this.group.add(this.rectangleMesh);
+
     }
 
     setupParticles() {
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 400;
+        const particlesCount = this.rows * this.columns * this.particlesPerCell;
         const posArray = new Float32Array(particlesCount * 3);
         const scaleArray = new Float32Array(particlesCount);
 
-        for (let i = 0; i < particlesCount; i++) {
-            const x = (Math.random() - 0.5) * 0.17;
-            const y = (Math.random() - 0.5) * 0.12;
-            const z = 0;
-            posArray[i * 3] = x;
-            posArray[i * 3 + 1] = y;
-            posArray[i * 3 + 2] = z;
-            this.initialPositions.push(new THREE.Vector3(x, y, z));
-            this.activeParticles.push(true);
+        const width = 0.17;
+        const height = 0.12;
+        const xSpacing = width / (this.columns - 1);
+        const ySpacing = height / (this.rows - 1);
 
-            scaleArray[i] = Math.random();
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                const startIndex = (i * this.columns + j) * this.particlesPerCell;
+                this.createParticlesForCell(i, j, xSpacing, ySpacing, width, height, posArray, scaleArray, startIndex);
+            }
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -81,25 +83,22 @@ export default class Photo {
 
         const particlesMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                uTime: {value: 0},
-                uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
-                uSize: {value: 50}
+                uTime: { value: 0 },
+                uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+                uSize: { value: 4 }
             },
             vertexShader: `
-            
-            uniform float uPixelRatio;
-            uniform float uSize;
-            attribute float aScale;
-            
-            void main() {
-                vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-            
-                vec4 viewPosition = viewMatrix * modelPosition;
-                vec4 projectionPosition = projectionMatrix * viewPosition;
-            
-                gl_Position = projectionPosition;
-                gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
-            }
+                uniform float uPixelRatio;
+                uniform float uSize;
+                attribute float aScale;
+
+                void main() {
+                    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                    vec4 viewPosition = viewMatrix * modelPosition;
+                    vec4 projectionPosition = projectionMatrix * viewPosition;
+                    gl_Position = projectionPosition;
+                    gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
+                }
             `,
             fragmentShader: dustFragmentShader,
             transparent: true,
@@ -112,41 +111,107 @@ export default class Photo {
         this.particlesMesh.position.set(0, 0, 0.001);
     }
 
+    createParticlesForCell(row, column, xSpacing, ySpacing, width, height, posArray, scaleArray, startIndex) {
+        const cellIndex = row * this.columns + column;
+        const cellParticles = [];
+
+        for (let k = 0; k < this.particlesPerCell; k++) {
+            const index = startIndex + k;
+            const x = column * xSpacing - width / 2 + (Math.random() - 0.5) * xSpacing;
+            const y = row * ySpacing - height / 2 + (Math.random() - 0.5) * ySpacing;
+            const z = 0;
+
+            posArray[index * 3] = x;
+            posArray[index * 3 + 1] = y;
+            posArray[index * 3 + 2] = z;
+
+            this.initialPositions.push(new THREE.Vector3(x, y, z));
+            this.activeParticles.push(true);
+            cellParticles.push(index);
+
+            scaleArray[index] = Math.random();
+        }
+
+        this.cells[cellIndex] = cellParticles;
+    }
+
+    setupGridCells() {
+        const width = 0.17;
+        const height = 0.12;
+        const xSpacing = width / this.columns;
+        const ySpacing = height / this.rows;
+
+        const cellGeometry = new THREE.PlaneGeometry(xSpacing, ySpacing);
+        const cellMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            wireframe: true,
+            visible: false,
+            side: THREE.DoubleSide
+        });
+
+        for (let i = 0; i < this.rows * this.columns; i++) {
+            const cellMesh = new THREE.Mesh(cellGeometry, cellMaterial);
+            const row = Math.floor(i / this.columns);
+            const column = i % this.columns;
+            cellMesh.position.set(
+                column * xSpacing - width / 2 + xSpacing / 2,
+                row * ySpacing - height / 2 + ySpacing / 2,
+                0
+            );
+            this.group.add(cellMesh);
+            this.cellMeshes.push(cellMesh);
+        }
+    }
+
     setupMouseEvents() {
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
     }
 
-    onMouseMove(event) {
+    detectCell(event) {
         const rect = this.renderer.domElement.getBoundingClientRect();
-        const mouseX = ((event.clientX - rect.left) / rect.width) * 0.17 - 0.085;
-        const mouseY = -((event.clientY - rect.top) / rect.height) * 0.12 + 0.06;
+        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-        const positions = this.particlesMesh.geometry.attributes.position.array;
-        const radius = 0.04;
-        const radiusSquared = radius * radius;
+        this.raycaster.setFromCamera(this.mouse, this.camera);
 
-        for (let i = 0; i < this.initialPositions.length; i++) {
-            if (!this.activeParticles[i]) continue;
+        const intersects = this.raycaster.intersectObjects(this.cellMeshes);
 
-            const posX = positions[i * 3];
-            const posY = positions[i * 3 + 1];
-
-            const dx = mouseX - posX;
-            const dy = mouseY - posY;
-            const distanceSquared = dx * dx + dy * dy;
-
-            if (distanceSquared < radiusSquared) {
-                this.activeParticles[i] = false;
-                this.removeParticle(i);
-                this.displacedParticles++;
-                if (this.displacedParticles >= this.initialPositions.length) {
-                    this.fadeOutGroup();
-                    break;
-                }
+        if (intersects.length > 0) {
+            const cellIndex = this.cellMeshes.indexOf(intersects[0].object);
+            if (!this.detectedCells.has(cellIndex)) {
+                this.detectedCells.add(cellIndex);
+                this.updateUndetectedCellsCount();
+                return cellIndex;
             }
         }
 
-        this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+        return -1;
+    }
+
+    onMouseMove(event) {
+        const cellIndex = this.detectCell(event);
+        if (cellIndex !== -1) {
+            this.removeCellParticles(cellIndex);
+            this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+        }
+    }
+
+    removeCellParticles(cellIndex) {
+        if (this.cells[cellIndex]) {
+            this.cells[cellIndex].forEach((index) => {
+                if (this.activeParticles[index]) {
+                    this.activeParticles[index] = false;
+                    this.removeParticle(index);
+                    this.displacedParticles++;
+                }
+            });
+
+            delete this.cells[cellIndex];
+
+            if (this.displacedParticles >= this.initialPositions.length) {
+                this.fadeOutGroup();
+            }
+        }
     }
 
     removeParticle(index) {
@@ -154,6 +219,11 @@ export default class Photo {
         positions[index * 3] = NaN;
         positions[index * 3 + 1] = NaN;
         positions[index * 3 + 2] = NaN;
+    }
+
+    updateUndetectedCellsCount() {
+        const undetectedCells = this.rows * this.columns - this.detectedCells.size;
+        console.log(`Undetected Cells: ${undetectedCells}`);
     }
 
     fadeOutGroup(duration = 2000) {
