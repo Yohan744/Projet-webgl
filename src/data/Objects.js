@@ -14,7 +14,7 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 0.5,
         outlineScale: 1.05, // false to deactivate, type number to activate
-        propSound: '', // not set yet
+        propSound: 'walkman', // not set yet
         spotId: 2 // spot where object belongs
     },
     cassette: {
@@ -50,7 +50,7 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 0.6,
         outlineScale: 1.05,
-        propSound: '',
+        propSound: 'rubiksCube',
         spotId: 3
     },
     tv: {
@@ -59,7 +59,7 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.05,
-        propSound: '',
+        propSound: 'tv',
         spotId: 3
     },
     tourne_disque1: {
@@ -68,7 +68,7 @@ export const objectsData = {
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.05,
-        propSound: '',
+        propSound: 'recordPlayer',
         spotId: 1
     },
 }
