@@ -29,6 +29,7 @@ export default class Envelop {
         this.init();
         this.setEvents();
         this.setWatchers();
+        this.bindKeyEvents();
     }
 
     setWatchers() {
@@ -361,6 +362,31 @@ export default class Envelop {
         }
     }
 
+    bindKeyEvents() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                this.rotateObjects(event.key === 'ArrowRight');
+            }
+        });
+    }
+
+    rotateObjects(clockwise = true) {
+        if (clockwise) {
+            const first = this.itemGroup.children.shift();
+            this.itemGroup.children.push(first);
+        } else {
+            const last = this.itemGroup.children.pop();
+            this.itemGroup.children.unshift(last);
+        }
+        this.updatePositions();
+    }
+
+    updatePositions() {
+        this.itemGroup.children.forEach((obj, index) => {
+            obj.position.x = (index - 1) * 0.3; 
+        });
+    }
+    
     destroy() {
         this.scene.remove(this.envelopModel);
         this.envelopModel.geometry.dispose();
