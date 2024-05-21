@@ -42,24 +42,24 @@ export default class Cassette extends Prop {
             this.scene.add(this.experience.objectGroup);
         }
 
-        const isCassetteAndPencilInFront = this.gameManager.state.isPencilInFrontOfCamera && this.gameManager.state.isCassetteInFrontOfCamera;
-        const isCassetteAndWalkmanInFront = this.gameManager.state.isWalkmanInFrontOfCamera && this.gameManager.state.isCassetteInFrontOfCamera;
-
-        if (isCassetteAndPencilInFront) {
-            this.mesh.position.set(0.3, 0, 0);
-        } else if (isCassetteAndWalkmanInFront) {
-            this.mesh.position.set(0.3, 0, 0.3);
-            this.moveWalkmanBack();
-        } else {
-            this.mesh.position.set(0, 0, 0);
-        }
+        const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
 
         this.experience.objectGroup.add(this.mesh);
 
-        gsap.to(this.experience.objectGroup.position, {
+        if (walkman) {
+            gsap.to(walkman.position, {
+                x: targetPosition.x,
+                y: targetPosition.y,
+                z: targetPosition.z - 0.3,
+                duration: 2,
+                ease: 'power2.inOut'
+            });
+        }
+
+        gsap.to(this.mesh.position, {
             x: targetPosition.x,
             y: targetPosition.y,
-            z: targetPosition.z,
+            z: walkman ? targetPosition.z + 0.9 : targetPosition.z,
             duration: 2,
             ease: 'power2.inOut'
         });
@@ -74,22 +74,6 @@ export default class Cassette extends Prop {
 
         this.gameManager.setCassetteInFrontOfCamera(true);
         this.gameManager.state.isObjectOut = true;
-    }
-
-    moveWalkmanBack() {
-        const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
-        if (walkman) {
-            gsap.to(walkman.position, {
-                z: walkman.position.z - 2,
-                duration: 1,
-                ease: 'power2.inOut'
-            });
-            gsap.to(this.mesh.position, {
-                z: this.mesh.position.z + 2,
-                duration: 1,
-                ease: 'power2.inOut'
-            });
-        }
     }
 
     onClick() {
