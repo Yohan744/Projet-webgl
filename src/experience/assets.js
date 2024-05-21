@@ -24,30 +24,29 @@ export default [
             },
 
             {
-                name: 'malleModel',
-                source: '/assets/models/malle-ouverture.glb',
-                type: 'model',
-            },
-            {
                 name: 'drawerModel',
                 source: '/assets/models/commode.glb',
                 type: 'model',
             },
+
             {
                 name: 'envelopModel',
                 source: '/assets/models/enveloppe.glb',
                 type: 'model',
             },
+
             {
                 name: 'cassetteModel',
                 source: '/assets/models/cassette.glb',
                 type: 'model',
             },
+
             {
                 name: 'dahliaModel',
                 source: '/assets/models/dahlia.glb',
                 type: 'model',
             },
+
             {
                 name: 'letterModel',
                 source: '/assets/models/lettre.glb',
