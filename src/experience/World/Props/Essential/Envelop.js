@@ -112,9 +112,8 @@ export default class Envelop {
             if (!this.hasAnimatedToCamera) {
                 this.camera.moveCameraToInitialPosition(() => {
                     this.animateEnvelope(() => {
-                        CameraUtils.animateToCamera(this.envelopModel, this.camera.instance, () => {
-                            this.animateItemGroup();
-                        });
+                        CameraUtils.animateToCamera(this.envelopModel, this.camera.instance, 0.5);
+                        this.animateItemGroup();
                     });
                 });
                 this.hasAnimatedToCamera = true;
@@ -168,6 +167,7 @@ export default class Envelop {
         }
     }
 
+    // A supprimer pour rester above.
     animateEnvelope(onComplete) {
         const liftUp = { y: this.envelopModel.position.y + 0.5 };
 
