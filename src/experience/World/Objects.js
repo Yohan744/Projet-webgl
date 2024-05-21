@@ -119,6 +119,11 @@ export default class Objects {
                     if (name === 'tableau_gauche1') child.material = this.materialLibrary.getRightPaintingMaterial()
                     if (name === 'tableau_gauche1_1') child.material = this.materialLibrary.getLeftPaintingMaterial()
 
+                } else if (name.includes("box")) {
+                    if (name.includes("gauche")) child.material = this.materialLibrary.getFirstBoxMaterial()
+                    if (name.includes("fond")) child.material = this.materialLibrary.getSecondBoxMaterial()
+                    if (name.includes("tv")) child.material = this.materialLibrary.getThirdBoxMaterial()
+
                 } else if (name.includes("baton")) {
                     child.material = this.materialLibrary.getStickMaterial()
 
@@ -129,7 +134,7 @@ export default class Objects {
                     child.material = this.materialLibrary.getVaseMaterial()
 
                 } else {
-                    // console.log(name)
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true

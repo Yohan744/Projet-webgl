@@ -142,6 +142,16 @@ export default [
             },
 
             {
+                name: 'box',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/box/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/box/diffuse2.webp',
+                    diffuse3: 'assets/textures/objects/box/diffuse3.webp',
+                }
+            },
+
+            {
                 name: 'carpet',
                 type: 'group',
                 textures: {
@@ -387,6 +397,22 @@ export default [
             },
 
             {
+                name: 'telecran',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/telecran/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'telephone',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/telephone/diffuse.webp',
+                }
+            },
+
+            {
                 name: 'recordPlayer',
                 type: 'group',
                 textures: {
@@ -407,6 +433,39 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objectsInteractable/enveloppe/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'postalCard',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/postalCard/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'dahlia',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/dahlia/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'letter',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/letter/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'magazine',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/magazine/diffuse.webp',
+                    diffuse2: 'assets/textures/objectsInteractable/magazine/diffuse2.webp',
                 }
             },
 

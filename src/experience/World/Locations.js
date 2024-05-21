@@ -18,13 +18,16 @@ export default class Locations {
         this.debug = this.experience.debug
         this.gameManager = this.experience.gameManager
         this.materialLibrary = materialLibrary
+        this.material = this.materialLibrary.getLocationsMaterial()
 
         this.spots = []
+
+        this.isSpotsVisible = true
 
         this.locationsPositions = [
             new THREE.Vector3(-1.75, 0, 4.1),
             new THREE.Vector3(-2, 0, -2.5),
-            new THREE.Vector3(1.75, 0, -2.25),
+            new THREE.Vector3(1.5, 0, -2.25),
             new THREE.Vector3(0.8, 0, 2.75),
         ]
 
@@ -66,7 +69,7 @@ export default class Locations {
 
             const location = new THREE.Mesh(
                 geometry,
-                this.materialLibrary.getLocationsMaterial()
+                this.material
             )
 
             location.matrixAutoUpdate = false
@@ -90,6 +93,7 @@ export default class Locations {
     }
 
     setLocationsVisibility(state) {
+        this.isSpotsVisible = state
         this.spots.forEach((spot) => {
 
             let delay = 0.5 + Math.random() * 0.5
@@ -126,6 +130,12 @@ export default class Locations {
 
         })
 
+    }
+
+    update() {
+        if (this.isSpotsVisible) {
+            this.material.uniforms.uTime.value = this.experience.time.elapsed * 0.001
+        }
     }
 
     destroy() {
