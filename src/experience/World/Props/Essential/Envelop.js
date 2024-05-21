@@ -70,18 +70,18 @@ export default class Envelop {
 
         this.scene.add(this.itemGroup);
 
-        this.positions = [
-            { x: 0, y: 0.2, z: 0 },
-            { x: -0.2, y: -0.1, z: -0.2 },
-            { x: 0.2, y: 0.1, z: -0.2 }
-        ];
+        // this.positions = [
+        //     { x: 0, y: 0.2, z: 0 },
+        //     { x: -0.2, y: -0.1, z: -0.2 },
+        //     { x: 0.2, y: 0.1, z: -0.2 }
+        // ];
 
-        if (this.gameManager.inventory.cassette) {
-            this.positions = [
-                { x: 0.2, y: 0, z: 0.2 },
-                { x: -0.2, y: 0, z: -0.2 }
-            ];
-        }
+        // if (this.gameManager.inventory.cassette) {
+        //     this.positions = [
+        //         { x: 0.2, y: 0, z: 0.2 },
+        //         { x: -0.2, y: 0, z: -0.2 }
+        //     ];
+        // }
     }
 
     setupMorphTargets() {
@@ -112,8 +112,8 @@ export default class Envelop {
             if (!this.hasAnimatedToCamera) {
                 this.camera.moveCameraToInitialPosition(() => {
                     this.animateEnvelope(() => {
-                        CameraUtils.animateToCamera(this.envelopModel, this.camera.instance, 0.5);
-                        this.animateItemGroup();
+                        CameraUtils.animateToCamera(this.envelopModel, this.camera.instance, 0.4);
+                       // this.animateItemGroup();
                     });
                 });
                 this.hasAnimatedToCamera = true;
@@ -124,7 +124,7 @@ export default class Envelop {
                 y: mousePosition.y,
             };
         } else {
-            this.resetItemPositions();
+           // this.resetItemPositions();
         }
     }
 
@@ -183,15 +183,27 @@ export default class Envelop {
     animateItemGroup() {
         this.itemGroup.position.copy(this.envelopModel.position);
         this.itemGroup.rotation.copy(this.envelopModel.rotation);
+        this.itemGroup.rotateY(35 * (Math.PI / 180)); 
+        this.positions = [
+            { x: 0, y: 0, z: 0 },
+            { x: -0.35, y: 0, z: 0 },
+            { x: 0.35, y: 0, z: 0 }
+        ];
 
+        if (this.gameManager.inventory.cassette) {
+            this.positions = [
+                { x: 0.35, y: 0, z: 0 },
+                { x: -0.35, y: 0, z: 0}
+            ];
+        }
         gsap.to(this.itemGroup.position, {
-            x: this.itemGroup.position.x + 0.2,
+            x: this.itemGroup.position.x + 0.1,
             duration: 1,
             ease: "power2.inOut",
             onComplete: () => {
                 gsap.to(this.itemGroup.position, {
-                    x: this.itemGroup.position.x - 0.2,
-                    z: this.itemGroup.position.z + 0.1,
+                    x: this.itemGroup.position.x - 0.05,
+                    z: this.itemGroup.position.z + 0.05,
                     duration: 1,
                     ease: "power2.inOut",
                     onComplete: () => {
@@ -204,6 +216,7 @@ export default class Envelop {
         });
     }
 
+    // a garder
     animateEnvelopeBackToDrawer() {
         const drawerPosition = new THREE.Vector3();
         const drawer = this.experience.scene.getObjectByName("tirroir-haut");
@@ -236,13 +249,15 @@ export default class Envelop {
     separateItemsToTriangle() {
         this.carouselIsSet = true;
         const itemPositions = this.gameManager.inventory.cassette ? [
-            { x: 0.2, y: 0, z: 0.2 },
-            { x: -0.2, y: 0, z: -0.2 }
+            { x: 0.35, y: 0, z: 0 },
+            { x: -0.35, y: 0, z: 0}
         ] : [
-            { x: 0, y: 0.2, z: 0 },
-            { x: -0.2, y: -0.3, z: -0.2 },
-            { x: 0.2, y: -0.3, z: -0.2 }
+            { x: 0, y: 0, z: 0 },
+            { x: -0.35, y: 0, z: 0 },
+            { x: 0.35, y: 0, z: 0 }
         ];
+        
+       
 
         this.items.forEach((item, index) => {
             gsap.to(item.position, {
@@ -317,13 +332,14 @@ export default class Envelop {
         this.gameManager.updatePocketButtonState(frontItem === this.cassette);
     }
 
-    resetItemPositions() {
-        if (this.currentSelectedItem) {
-            this.currentSelectedItem = null;
-            this.animateItems();
-            this.hidePocketButton();
-        }
-    }
+    // a supprimer
+    // resetItemPositions() {
+    //     if (this.currentSelectedItem) {
+    //         this.currentSelectedItem = null;
+    //         this.animateItems();
+    //         this.hidePocketButton();
+    //     }
+    // }
 
     hidePocketButton() {
         this.gameManager.updatePocketButtonState(false);
@@ -371,21 +387,28 @@ export default class Envelop {
     }
 
     rotateObjects(clockwise = true) {
+        this.itemGroup.visible = true;
+        this.isAnimating = true;
         if (clockwise) {
-            const first = this.itemGroup.children.shift();
-            this.itemGroup.children.push(first);
+            this.rotateItemsRight();
         } else {
-            const last = this.itemGroup.children.pop();
-            this.itemGroup.children.unshift(last);
+            this.rotateItemsLeft();
         }
-        this.updatePositions();
+        // if (clockwise) {
+        //     const first = this.itemGroup.children.shift();
+        //     this.itemGroup.children.push(first);
+        // } else {
+        //     const last = this.itemGroup.children.pop();
+        //     this.itemGroup.children.unshift(last);
+        // }
+        // this.updatePositions();
     }
 
-    updatePositions() {
-        this.itemGroup.children.forEach((obj, index) => {
-            obj.position.x = (index - 1) * 0.3; 
-        });
-    }
+    // updatePositions() {
+    //     this.itemGroup.children.forEach((obj, index) => {
+    //         obj.position.x = (index - 1) * 0.3; 
+    //     });
+    // }
     
     destroy() {
         this.scene.remove(this.envelopModel);
