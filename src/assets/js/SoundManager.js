@@ -39,9 +39,6 @@ export default class SoundManager {
         if (this.sounds[key].state() === 'unloaded') this.loadSongs()
         if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
             this.sounds[key].play();
-        } else {
-            console.log(this.sounds[key].playing())
-            console.log("zebi")
         }
     }
 

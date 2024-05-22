@@ -104,10 +104,10 @@ export default class ObjectsInteractable {
                     this.recordPlayer = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     interactableObjects.recordPLayer = this.recordPlayer
 
-                } else if (name.includes("photo") || name.includes("diapo") || name.includes("rail")) {
-
+                } else if (name.includes("photo") || name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
+                    child.visible = false
                 } else {
-                    // console.log(name)
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true

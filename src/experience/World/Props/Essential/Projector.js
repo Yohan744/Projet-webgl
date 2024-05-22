@@ -85,6 +85,7 @@ export default class Projector {
                     this.moveRail();
                 } else if (intersects[0].object.name === 'BoutonOn') {
                     this.toggleSpotlight(intersects[0].object);
+                    this.experience.camera.updateFocusMode(true)
                 }
             }
         }

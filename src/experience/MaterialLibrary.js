@@ -2,7 +2,7 @@ import {
     AdditiveBlending,
     BackSide, Color,
     DoubleSide,
-    FrontSide, MeshBasicMaterial,
+    FrontSide, MeshBasicMaterial, MeshLambertMaterial,
     MeshStandardMaterial, RepeatWrapping, ShaderMaterial,
 } from "three";
 import Experience from "./Experience";
@@ -293,7 +293,7 @@ export default class MaterialLibrary {
 
     getSheetMaterial() {
         if (!sheetMaterial) {
-            sheetMaterial = new MeshBasicMaterial({
+            sheetMaterial = new MeshLambertMaterial({
                 map: this.resources.items.sheet.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })

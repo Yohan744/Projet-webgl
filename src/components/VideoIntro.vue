@@ -86,6 +86,7 @@ export default {
     width: 100%;
     object-fit: cover;
     z-index: 5;
+    cursor: none;
     opacity: 0;
     transition: opacity 2.5s ease-in-out;
   }

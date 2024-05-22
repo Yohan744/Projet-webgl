@@ -221,7 +221,7 @@ export default class Photo {
 
             delete this.cells[cellIndex];
 
-            if (this.displacedParticles >= this.initialPositions.length) {
+            if (this.displacedParticles >= 5000) {
                 this.fadeOut(this.group);
             } else {
                 this.fadeOut(this.cellMeshes[cellIndex]);
