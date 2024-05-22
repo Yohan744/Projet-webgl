@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
+import dustFragmentShader from "./../../../Shaders/Dust/fragment.glsl";
 
 export default class Photo {
     constructor() {
@@ -11,12 +12,17 @@ export default class Photo {
         this.pointer = this.experience.pointer;
         this.mouse = new THREE.Vector2();
         this.raycaster = new THREE.Raycaster();
-        this.isHovering = false;
         this.displacedParticles = 0;
-        this.group = null; 
+        this.group = null;
         this.initialPositions = [];
         this.activeParticles = [];
-        
+        this.rows = 40;
+        this.columns = 40;
+        this.particlesPerCell = 10;
+        this.cells = {};
+        this.cellMeshes = [];
+        this.detectedCells = new Set();
+
         this.init();
     }
 
@@ -24,115 +30,252 @@ export default class Photo {
         this.setupPhotoModel();
         this.setupGroup();
         this.setupParticles();
+        this.setupGridCells();
         this.setupMouseEvents();
     }
 
     setupPhotoModel() {
         this.photoModel = this.resources.items.photoModel.scene;
-        this.photoModel.position.set(0, 2.25, 9.32);
+        this.photoModel.position.set(0, 2.25, 9.25);
         this.photoModel.rotation.x = Math.PI / 2;
-        this.scene.add(this.photoModel);
     }
 
     setupGroup() {
         this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        this.group.add(this.photoModel);
         this.scene.add(this.group);
-
-        const t = this.resources.items.backgroundTreeTexture
-        t.flipY = true
+        const texture = this.resources.items.backgroundTreeTexture;
 
         const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
         const rectangleMaterial = new THREE.MeshBasicMaterial({
-            map: t,
+            map: texture,
             side: THREE.DoubleSide,
             transparent: true,
         });
         this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
-        this.rectangleMesh.position.set(0, 0, 0.01);
+        this.rectangleMesh.position.set(0, 0, 0);
         this.group.add(this.rectangleMesh);
     }
 
     setupParticles() {
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 20000;
+        const particlesCount = this.rows * this.columns * this.particlesPerCell;
         const posArray = new Float32Array(particlesCount * 3);
+        const scaleArray = new Float32Array(particlesCount);
 
-        for (let i = 0; i < particlesCount; i++) {
-            const x = (Math.random() - 0.5) * 0.17;
-            const y = (Math.random() - 0.5) * 0.12;
-            const z = 0;
-            posArray[i * 3] = x;
-            posArray[i * 3 + 1] = y;
-            posArray[i * 3 + 2] = z;
-            this.initialPositions.push(new THREE.Vector3(x, y, z));
-            this.activeParticles.push(true);
+        const width = 0.17;
+        const height = 0.12;
+        const xSpacing = width / (this.columns - 1);
+        const ySpacing = height / (this.rows - 1);
+
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.columns; j++) {
+                const startIndex = (i * this.columns + j) * this.particlesPerCell;
+                this.createParticlesForCell(i, j, xSpacing, ySpacing, width, height, posArray, scaleArray, startIndex);
+            }
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.01,
-            color: '#9f9f9f',
+        particlesGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1));
+
+        const particlesMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+                uSize: { value: 7 }
+            },
+            vertexShader: `
+                uniform float uPixelRatio;
+                uniform float uSize;
+                attribute float aScale;
+
+                void main() {
+                    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                    vec4 viewPosition = viewMatrix * modelPosition;
+                    vec4 projectionPosition = projectionMatrix * viewPosition;
+                    gl_Position = projectionPosition;
+                    gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
+                }
+            `,
+            fragmentShader: dustFragmentShader,
             transparent: true,
-            opacity: 0.3
+            blending: THREE.AdditiveBlending,
+            depthTest: false,
         });
 
         this.particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        this.rectangleMesh.add(this.particlesMesh);
+        this.group.add(this.particlesMesh);
+        this.particlesMesh.position.set(0, 0, 0.001);
+    }
+
+    createParticlesForCell(row, column, xSpacing, ySpacing, width, height, posArray, scaleArray, startIndex) {
+        const cellIndex = row * this.columns + column;
+        const cellParticles = [];
+
+        for (let k = 0; k < this.particlesPerCell; k++) {
+            const index = startIndex + k;
+            const x = column * xSpacing - width / 2 + (Math.random() - 0.5) * xSpacing;
+            const y = row * ySpacing - height / 2 + (Math.random() - 0.5) * ySpacing;
+            const z = 0;
+
+            posArray[index * 3] = x;
+            posArray[index * 3 + 1] = y;
+            posArray[index * 3 + 2] = z;
+
+            this.initialPositions.push(new THREE.Vector3(x, y, z));
+            this.activeParticles.push(true);
+            cellParticles.push(index);
+
+            scaleArray[index] = Math.random();
+        }
+
+        this.cells[cellIndex] = cellParticles;
+    }
+
+    setupGridCells() {
+        const width = 0.17;
+        const height = 0.12;
+        const xSpacing = width / this.columns;
+        const ySpacing = height / this.rows;
+
+        const cellGeometry = new THREE.PlaneGeometry(xSpacing, ySpacing);
+        const cellMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            wireframe: true,
+            visible: false,
+            side: THREE.DoubleSide
+        });
+
+        for (let i = 0; i < this.rows * this.columns; i++) {
+            const cellMesh = new THREE.Mesh(cellGeometry, cellMaterial);
+            const row = Math.floor(i / this.columns);
+            const column = i % this.columns;
+            cellMesh.position.set(
+                column * xSpacing - width / 2 + xSpacing / 2,
+                row * ySpacing - height / 2 + ySpacing / 2,
+                0
+            );
+            this.group.add(cellMesh);
+            this.cellMeshes.push(cellMesh);
+        }
     }
 
     setupMouseEvents() {
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
     }
 
-    onMouseMove(event) {
+    detectCells(event) {
         const rect = this.renderer.domElement.getBoundingClientRect();
-        const mouseX = ((event.clientX - rect.left) / rect.width) * 0.17 - 0.085;
-        const mouseY = -((event.clientY - rect.top) / rect.height) * 0.12 + 0.06;
+        this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-        const positions = this.particlesMesh.geometry.attributes.position.array;
-        const radius = 0.005;
-        const radiusSquared = radius * radius; 
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.cellMeshes);
 
-        for (let i = 0; i < this.initialPositions.length; i++) {
-            if (!this.activeParticles[i]) continue;
-
-            const pos = this.initialPositions[i];
-            const dx = mouseX - pos.x;
-            const dy = mouseY - pos.y;
-            const distanceSquared = dx * dx + dy * dy;
-
-            if (distanceSquared < radiusSquared) {
-                this.activeParticles[i] = false;
-                positions[i * 3] = NaN;
-                positions[i * 3 + 1] = NaN;
-                this.displacedParticles++;
-                if (this.displacedParticles >= this.initialPositions.length / 2) {
-                    this.removeGroup();
-                    break;
-                }
-            } else if (distanceSquared < radiusSquared * 4) {
-                const distance = Math.sqrt(distanceSquared);
-                const directionX = dx / distance;
-                const directionY = dy / distance;
-                const targetX = mouseX + directionX * radius;
-                const targetY = mouseY + directionY * radius;
-
-                positions[i * 3] += (targetX - pos.x) * 0.1;
-                positions[i * 3 + 1] += (targetY - pos.y) * 0.1;
+        if (intersects.length > 0) {
+            const cellIndex = this.cellMeshes.indexOf(intersects[0].object);
+            if (!this.detectedCells.has(cellIndex)) {
+                this.detectedCells.add(cellIndex);
+                return [cellIndex, ...this.getNeighboringCells(cellIndex)];
             }
         }
+
+        return [];
+    }
+
+    getNeighboringCells(cellIndex) {
+        const neighbors = [];
+        const row = Math.floor(cellIndex / this.columns);
+        const column = cellIndex % this.columns;
+
+        // Top neighbor
+        if (row > 0) neighbors.push(cellIndex - this.columns);
+        // Bottom neighbor
+        if (row < this.rows - 1) neighbors.push(cellIndex + this.columns);
+        // Left neighbor
+        if (column > 0) neighbors.push(cellIndex - 1);
+        // Right neighbor
+        if (column < this.columns - 1) neighbors.push(cellIndex + 1);
+
+        return neighbors;
+    }
+
+    onMouseMove(event) {
+        const cellIndices = this.detectCells(event);
+        cellIndices.forEach((cellIndex) => {
+            this.removeCellParticles(cellIndex);
+        });
         this.particlesMesh.geometry.attributes.position.needsUpdate = true;
     }
 
-    removeGroup() {
-        this.scene.remove(this.group);
-        this.group.traverse((object) => {
+    removeCellParticles(cellIndex) {
+        if (this.cells[cellIndex]) {
+            this.cells[cellIndex].forEach((index) => {
+                if (this.activeParticles[index]) {
+                    this.activeParticles[index] = false;
+                    this.removeParticle(index);
+                    this.displacedParticles++;
+                }
+            });
+
+            delete this.cells[cellIndex];
+
+            if (this.displacedParticles >= this.initialPositions.length) {
+                this.fadeOut(this.group);
+            } else {
+                this.fadeOut(this.cellMeshes[cellIndex]);
+            }
+        }
+    }
+
+    removeParticle(index) {
+        const positions = this.particlesMesh.geometry.attributes.position.array;
+        positions[index * 3] = NaN;
+        positions[index * 3 + 1] = NaN;
+        positions[index * 3 + 2] = NaN;
+    }
+
+    fadeOut(object, duration = 2000) {
+        const startTime = performance.now();
+        const fade = () => {
+            const currentTime = performance.now();
+            const elapsed = currentTime - startTime;
+            const opacity = THREE.MathUtils.clamp(1 - elapsed / duration, 0, 1);
+
+            if (object instanceof THREE.Group) {
+                object.traverse((child) => {
+                    if (child.material) {
+                        child.material.opacity = opacity;
+                        child.material.transparent = true;
+                    }
+                });
+            } else if (object.material) {
+                object.material.opacity = opacity;
+                object.material.transparent = true;
+            }
+
+            if (opacity > 0) {
+                requestAnimationFrame(fade);
+            } else {
+                this.removeObject(object);
+            }
+        };
+        fade();
+    }
+
+    removeObject(object) {
+        if (object instanceof THREE.Group) {
+            this.scene.remove(object);
+            object.traverse((child) => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+        } else {
+            this.group.remove(object);
             if (object.geometry) object.geometry.dispose();
             if (object.material) object.material.dispose();
-        });
+        }
     }
 
     destroy() {
