@@ -56,14 +56,14 @@ let mirrorMaterial,
     tableMagazineMaterial,
     firstBoxMaterial,
     secondBoxMaterial,
-    thirdBoxMaterial;
+    thirdBoxMaterial,
+    chestDrawerMaterial;
 
 let recordPlayerMaterial,
     rubiksCubeMaterial,
     telecranMaterial,
     televisionMaterial,
     telephoneMaterial,
-    chestDrawerMaterial,
     drawerMaterial,
     cassetteMaterial,
     enveloppeMaterial,
@@ -71,7 +71,11 @@ let recordPlayerMaterial,
     postalCardMaterial,
     closedMagazineMaterial,
     openMagazineMaterial,
-    letterMaterial;
+    letterMaterial,
+    walkmanMaterial,
+    bottomChestMaterial,
+    topChestMaterial,
+    pencilMaterial;
 
 
 let outlineMaterial,
@@ -564,7 +568,7 @@ export default class MaterialLibrary {
         if (!cubeTableMaterial) {
             cubeTableMaterial = new MeshBasicMaterial({
                 map: this.resources.items.cube.diffuse2,
-                side: this.debug ? DoubleSide : FrontSide
+                side: this.debug ? DoubleSide : DoubleSide
             })
 
             this.materialsUsed.push(cubeTableMaterial)
@@ -742,8 +746,6 @@ export default class MaterialLibrary {
         return thirdBoxMaterial
     }
 
-    //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
-
     getChestDrawerMaterial() {
         if (!chestDrawerMaterial) {
             chestDrawerMaterial = new MeshBasicMaterial({
@@ -756,6 +758,8 @@ export default class MaterialLibrary {
 
         return chestDrawerMaterial
     }
+
+    //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
 
     getDrawerMaterial() {
         if (!drawerMaterial) {
@@ -924,6 +928,58 @@ export default class MaterialLibrary {
         }
 
         return letterMaterial
+    }
+
+    getWalkmanMaterial() {
+        if (!walkmanMaterial) {
+            walkmanMaterial = new MeshBasicMaterial({
+                map: this.resources.items.walkman.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(walkmanMaterial)
+        }
+
+        return walkmanMaterial
+    }
+
+    getBottomChestMaterial() {
+        if (!bottomChestMaterial) {
+            bottomChestMaterial = new MeshBasicMaterial({
+                map: this.resources.items.chest.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(bottomChestMaterial)
+        }
+
+        return bottomChestMaterial
+    }
+
+    getTopChestMaterial() {
+        if (!topChestMaterial) {
+            topChestMaterial = new MeshBasicMaterial({
+                map: this.resources.items.chest.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(topChestMaterial)
+        }
+
+        return topChestMaterial
+    }
+
+    getPencilMaterial() {
+        if (!pencilMaterial) {
+            pencilMaterial = new MeshBasicMaterial({
+                map: this.resources.items.pencil.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(pencilMaterial)
+        }
+
+        return pencilMaterial
     }
 
     ///////////////////////// TEXTURE MATERIALS /////////////////////////////

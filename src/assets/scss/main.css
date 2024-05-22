@@ -141,6 +141,9 @@
   user-select: none;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+#experience-layer .settings-wrapper * {
+  pointer-events: none;
+}
 #experience-layer .settings-wrapper.visible {
   opacity: 1;
   pointer-events: all;
@@ -149,6 +152,9 @@
 #experience-layer .settings-wrapper.visible .settings-panel {
   transform: translateY(0);
   opacity: 1;
+}
+#experience-layer .settings-wrapper.visible * {
+  pointer-events: all;
 }
 #experience-layer .settings-wrapper .settings-panel {
   position: relative;

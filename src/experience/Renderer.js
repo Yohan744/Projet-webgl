@@ -104,7 +104,7 @@ export default class Renderer {
         this.dofEffect = new BokehEffect({
             focus: 0.010,
             aperture: 0, // 0.184
-            maxBlur: 0.025,
+            maxBlur: 0.015,
             width: this.config.width,
             height: this.config.height
         });
@@ -129,7 +129,7 @@ export default class Renderer {
         gsap.to(this.dofEffect.uniforms.get('aperture'), {
             value: value ? 1 : 0,
             delay: value ? 0.35 : 0,
-            duration: 3,
+            duration: value ? 3 : 2.5,
             ease: 'power1.out',
             onStart: () => {
                 if (value) {

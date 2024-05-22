@@ -11,5 +11,5 @@ void main() {
     float distanceToCenter = length(vUv - vec2(0.5));
     float alpha = 1.0 - step(r, distanceToCenter);
 
-    gl_FragColor = vec4(vec3(1.0), r);
+    gl_FragColor = vec4(vec3(1.0), alpha);
 }

@@ -468,6 +468,31 @@ export default [
                 }
             },
 
+            {
+                name: 'walkman',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/walkman/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'pencil',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/pencil/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'chest',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/chest/diffuse.webp',
+                    diffuse2: 'assets/textures/objectsInteractable/chest/diffuse2.webp',
+                }
+            },
+
         ]
     },
 

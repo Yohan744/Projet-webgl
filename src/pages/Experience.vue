@@ -21,6 +21,7 @@ import {useRouter} from "vue-router";
 import ExperienceLayer from "../components/ExperienceLayer.vue";
 import {useSoundManager} from "../main";
 import {useGameManager} from "../assets/js/GameManager";
+import gsap from "gsap";
 
 export default {
   name: 'ExperiencePage',
@@ -93,9 +94,13 @@ export default {
       });
 
       this.experience.on('assetLoading', (value) => {
-        const progress = Math.round(value * 100);
-        if (progress > this.progress) {
-          this.progress = Math.min(progress, 100);
+        const p = Math.min(Math.round(value * 100), 100);
+        if (p > this.progress) {
+          gsap.to(this, {
+            progress: p,
+            duration: 0.5,
+            ease: 'power2.out'
+          });
         }
       });
 

@@ -1,6 +1,8 @@
 import Experience from "../Experience";
 import {objectsData} from "../../data/Objects";
 
+const interactableObjects = {}
+
 export default class ObjectsInteractable {
 
     constructor(materialLibrary) {
@@ -9,8 +11,6 @@ export default class ObjectsInteractable {
         this.resources = this.experience.resources
         this.scene = this.experience.scene
         this.materialLibrary = materialLibrary
-
-        this.objects = []
 
         if (this.scene) {
             this.init()
@@ -31,8 +31,9 @@ export default class ObjectsInteractable {
                 // if (!data) return
 
                 if (name.includes("walkman")) {
+                    child.material = this.materialLibrary.getWalkmanMaterial()
                     this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.walkman)
+                    interactableObjects.walkman = this.walkman
 
                 } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial()
@@ -47,29 +48,43 @@ export default class ObjectsInteractable {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial()
                     if (name.includes('fermé')) child.material = this.materialLibrary.getClosedMagazineMaterial()
 
+                }  else if (name.includes("malle")) {
+                    if (name.includes('haut')) {
+                        child.material = this.materialLibrary.getTopChestMaterial()
+                        this.topChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.topChest = this.topChest
+                    }
+
+                    if (name.includes('bas')) {
+                        child.material = this.materialLibrary.getBottomChestMaterial()
+                        this.bottomChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.bottomChest = this.bottomChest
+                    }
+
                 } else if (name.includes("cassette")) {
                     child.material = this.materialLibrary.getCassetteMaterial()
                     this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.cassette)
+                    interactableObjects.cassette = this.cassette
 
                 }  else if (name.includes("crayon")) {
+                    child.material = this.materialLibrary.getPencilMaterial()
                     this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.pencil)
+                    interactableObjects.pencil = this.pencil
 
                 } else if (name.includes("telephone")) {
                     child.material = this.materialLibrary.getTelephoneMaterial()
                     this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.telephone)
+                    interactableObjects.telephone = this.telephone
 
                 } else if (name.includes("rubicub")) {
                     child.material = this.materialLibrary.getRubiksCubeMaterial()
                     this.rubikscube = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.rubikscube)
+                    interactableObjects.rubiksCube = this.rubikscube
 
                 } else if (name.includes("tv")) {
                     child.material = this.materialLibrary.getTvMaterial()
                     this.television = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.television)
+                    interactableObjects.television = this.television
 
                 } else if (name.includes("enveloppe")) {
                     child.material = this.materialLibrary.getEnveloppeMaterial()
@@ -77,22 +92,22 @@ export default class ObjectsInteractable {
                 } else if (name.includes("lettre")) {
                     child.material = this.materialLibrary.getLetterMaterial()
                     this.letter = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.letter)
+                    interactableObjects.letter = this.letter
 
                 } else if (name.includes("tableau_magique1")) {
                     child.material = this.materialLibrary.getTelecranMaterial()
                     this.telecran = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.telecran)
+                    interactableObjects.telecran = this.telecran
 
                 } else if (name.includes("tourne_disque")) {
                     child.material = this.materialLibrary.getRecordPlayerMaterial()
                     this.recordPlayer = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    this.objects.push(this.recordPlayer)
+                    interactableObjects.recordPLayer = this.recordPlayer
 
                 } else if (name.includes("photo") || name.includes("diapo") || name.includes("rail")) {
 
                 } else {
-                    console.log(name)
+                    // console.log(name)
                 }
 
                 child.material.needsUpdate = true
@@ -118,8 +133,10 @@ export default class ObjectsInteractable {
             })
             this.scene.remove(this.objectsInteractableModel)
         }
-        this.objects.forEach(object => object.destroy())
+        interactableObjects.forEach(object => object.destroy())
     }
 
 
 }
+
+export const useInteractableObjects = () => interactableObjects

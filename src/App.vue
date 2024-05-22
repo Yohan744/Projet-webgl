@@ -10,6 +10,19 @@
 
 export default {
   name: 'App',
+  mounted() {
+    window.addEventListener("keydown", (e) => this.goFullScreen(e))
+  },
+  beforeUnmount() {
+    window.removeEventListener("keydown", (e) => this.goFullScreen(e))
+  },
+  methods: {
+    goFullScreen(e) {
+      if (e.code === "KeyF") {
+        document.documentElement.requestFullscreen()
+      }
+    }
+  }
 }
 </script>
 

@@ -29,6 +29,9 @@ export class MouseUtils extends EventEmitter{
     init() {
         this.fakeCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 5);
         this.fakeCamera.position.copy(this.camera.position);
+        this.fakeCamera.quaternion.copy(this.mesh.quaternion);
+        this.fakeCamera.matrixWorldNeedsUpdate = true;
+        this.fakeCamera.needsUpdate = true
 
         this.controls = new OrbitControls(this.fakeCamera, this.experience.targetElement);
         this.controls.enableZoom = false;
@@ -43,6 +46,7 @@ export class MouseUtils extends EventEmitter{
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
         if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot && this.gameManager.state.isInteractingWithObject && this.gameManager.state.isOrbitControlsEnabled) {
             this.isDragging = true;
+            this.fakeCamera.quaternion.copy(this.mesh.quaternion);
             this.controls.enabled = true;
             this.update();
         }

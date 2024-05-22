@@ -124,6 +124,9 @@ export default class Prop extends EventEmitter {
         });
 
         gsap.to(this.mesh.rotation, {
+            // x: "+=" + this.desiredRotation.x,
+            // y: "+=" + this.desiredRotation.y,
+            // z: "+=" + this.desiredRotation.z,
             x: this.desiredRotation.x,
             y: this.desiredRotation.y,
             z: this.desiredRotation.z,
