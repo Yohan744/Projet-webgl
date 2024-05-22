@@ -180,7 +180,7 @@ export default class Camera {
                 ease: 'power1.inOut',
                 onComplete: () => {
                     this.isMoving = false
-                    if (isGoingOnASpot) this.gameManager.updateCameraOnSpot(true)
+                    if (isGoingOnASpot !== null) this.gameManager.updateCameraOnSpot(isGoingOnASpot)
                 }
             });
             gsap.to(this.modes.default.instance, {

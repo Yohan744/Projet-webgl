@@ -90,7 +90,7 @@ export default class Renderer {
             luminanceSmoothing: 0.025,
             intensity: 1.5,
             radius: 0.6,
-            levels: 12,
+            levels: 6,
             mipmapBlur: true,
         });
 
@@ -104,7 +104,7 @@ export default class Renderer {
         this.dofEffect = new BokehEffect({
             focus: 0.010,
             aperture: 0, // 0.184
-            maxBlur: 0.015,
+            maxBlur: 0.005,
             width: this.config.width,
             height: this.config.height
         });

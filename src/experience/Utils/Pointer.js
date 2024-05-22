@@ -63,11 +63,10 @@ export default class Pointer extends EventEmitter {
         this.updateMousePosition(_event)
         this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
         const intersects = this.raycaster.intersectObjects(this.locations, false);
-        if (intersects.length > 0) {
+        if (intersects.length > 0 && !this.gameManager.state.isCameraOnSpot && !this.gameManager.state.isInteractingWithObject && !this.experience.camera.isMoving) {
             const position = intersects[0].object.position.clone()
             const lookingPoint = intersects[0].object.data.lookingPoint
             this.trigger('spot-clicked', [position, lookingPoint])
-            this.gameManager.setSpotId(intersects[0].object.data.id)
             this.experience.world.locations.setLocationsVisibility(false)
         }
         this.trigger('click')

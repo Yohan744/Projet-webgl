@@ -124,7 +124,7 @@ export default class Projector {
         spotlight.position.copy(this.projectorModel.position);
         spotlight.target.position.set(this.projectorModel.position.x + 0.7, this.projectorModel.position.y + 0.02, this.projectorModel.position.z);
 
-        spotlight.angle = 0.1;
+        spotlight.angle = 0.14;
         spotlight.penumbra = 0.7;
         spotlight.decay = 1;
         spotlight.distance = 0;

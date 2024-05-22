@@ -52,7 +52,6 @@ export default class Locations {
             watch(() => this.gameManager.state.isCameraOnSpot, (state) => {
                 if (!state) {
                     this.setLocationsVisibility(true)
-                    this.gameManager.setSpotId(null)
                 }
             })
 
@@ -64,7 +63,7 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
-            const geometry = new THREE.CircleGeometry(0.375, 32)
+            const geometry = new THREE.PlaneGeometry(0.75, 0.75)
             geometry.rotateX(-Math.PI * 0.5)
 
             const location = new THREE.Mesh(
@@ -76,7 +75,6 @@ export default class Locations {
 
             location.position.copy(this.locationsPositions[i]).add(this.locationsOffset[i])
             location.data = {
-                id: i,
                 lookingPoint: this.locationsLookingPoint[i]
             };
 
@@ -99,13 +97,8 @@ export default class Locations {
             let delay = 0.5 + Math.random() * 0.5
             const id = spot.data.id
 
-            if (id === this.gameManager.state.spotId) {
-                delay = 0
-            }
-
             gsap.to(spot.material, {
                 opacity: state ? 0.65 : 0,
-                delay: delay * 0.8,
                 duration: 3,
                 ease: 'power2.out',
                 onStart: () => {
@@ -120,7 +113,6 @@ export default class Locations {
                 x: state ? 1 : 0,
                 y: state ? 1 : 0,
                 z: state ? 1 : 0,
-                delay: delay,
                 duration: 3,
                 ease: 'power2.out',
                 onUpdate: () => {

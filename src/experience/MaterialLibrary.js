@@ -1023,10 +1023,12 @@ export default class MaterialLibrary {
                 uniforms: {
                     uTime: {value: 0},
                     uRadius: {value: 0.5},
+                    uInnerRadius: {value: 0.43},
+                    uPointRadius: {value: 0.05},
+                    uColorReductionInCenter: {value: 0.9},
                 },
                 side: FrontSide,
                 transparent: true,
-                opacity: 0.65,
             })
 
             this.materialsUsed.push(locationsMaterial)
