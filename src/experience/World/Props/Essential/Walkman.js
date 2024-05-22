@@ -25,6 +25,7 @@ export default class Walkman extends Prop {
         this.isAnimating = false;
         this.dragDistance = 0.15;
         this.mouseStartClickPosition = { x: 0, y: 0 };
+        this.hasMoveInFront = false;
 
         this.setupMorphTargets();
         this.init();
@@ -116,6 +117,17 @@ export default class Walkman extends Prop {
             }
         }
     }
+    onPointerMove(mouse) {
+        if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
+
+        if ( (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
+            this.handleForwardDrag();
+        } else if ((this.mouseStartClickPosition.x + 1) - (mouse.x + 1) > this.dragDistance) {
+            this.handleBackwardDrag();
+        } else {
+            console.log("pas assez loin");
+        }
+    }
 
     startDragging(mousePosition) {
         this.isDragging = true;
@@ -126,20 +138,6 @@ export default class Walkman extends Prop {
             y: mousePosition.y,
         };
         console.log("ready to drag");
-    }
-
-    onPointerMove(mouse) {
-        if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
-
-        this.desiredRotation = null;
-
-        if ((mouse.y + 1) - (this.mouseStartClickPosition.y + 1) > this.dragDistance) {
-            this.handleForwardDrag();
-        } else if ((this.mouseStartClickPosition.y + 1) - (mouse.y + 1) > this.dragDistance) {
-            this.handleBackwardDrag();
-        } else {
-            console.log("pas assez loin");
-        }
     }
 
     handleForwardDrag() {

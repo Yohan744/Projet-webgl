@@ -5,8 +5,8 @@ import Prop from '../Prop';
 import { watch } from "vue";
 
 export default class Cassette extends Prop {
-    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound) {
-        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, distanceToCamera, isOutlined, propSound);
+    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound, spotId) {
+        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, distanceToCamera, isOutlined, propSound, spotId);
 
         this.experience = new Experience();
         this.resources = this.experience.resources;
@@ -59,7 +59,7 @@ export default class Cassette extends Prop {
         gsap.to(this.mesh.position, {
             x: targetPosition.x,
             y: targetPosition.y,
-            z: walkman ? targetPosition.z + 0.9 : targetPosition.z,
+            z: walkman ? targetPosition.z + 0.3 : targetPosition.z,
             duration: 2,
             ease: 'power2.inOut'
         });

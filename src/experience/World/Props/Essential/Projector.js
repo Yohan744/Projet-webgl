@@ -45,7 +45,7 @@ export default class Projector {
 
     init() {
         this.projectorModel = this.experience.resources.items.projectorModel.scene;
-        this.projectorModel.position.set(-3.8, 1.15, 4.5);
+        this.projectorModel.position.set(-3.7, 1.0, 4.8);
         this.scene.add(this.projectorModel);
 
         this.mesh = this.projectorModel;
