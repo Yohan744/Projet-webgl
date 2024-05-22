@@ -47,8 +47,8 @@ export default class Objects {
                     if (name.includes("vieux")) child.material = this.materialLibrary.getSecondCarpetMaterial()
 
                 } else if (name.includes('magazine')) {
-                    if (name.includes("table")) child.material = this.materialLibrary.getMagazineMaterial()
-                    if (name.includes("carton")) child.material = this.materialLibrary.getTableMagazineMaterial()
+                    if (name.includes("carton")) child.material = this.materialLibrary.getMagazineMaterial()
+                    if (name.includes("table")) child.material = this.materialLibrary.getTableMagazineMaterial()
 
                 } else if (name.includes("drap_qui_tombe")) {
                     child.material = this.materialLibrary.getSheetMaterial()
@@ -108,16 +108,19 @@ export default class Objects {
                 } else if (name.includes("chaise")) {
                     child.material = this.materialLibrary.getChairMaterial()
 
-                } else if (name.includes("fauteuil_avant")) {
-                    child.material = this.materialLibrary.getSheetChairMaterial()
-
-                } else if (name.includes("fauteuil_fond")) {
-                    child.material = this.materialLibrary.getSecondSheetChairMaterial()
+                } else if (name.includes("fauteuil")) {
+                    if (name.includes('avant')) child.material = this.materialLibrary.getSheetChairMaterial()
+                    if (name.includes('fond')) child.material = this.materialLibrary.getSecondSheetChairMaterial()
 
                 } else if (name.includes("tableau")) {
-                    if (name === 'tableau_gauche') child.material = this.materialLibrary.getRightBigPaintingMaterial()
-                    if (name === 'tableau_gauche1') child.material = this.materialLibrary.getRightPaintingMaterial()
-                    if (name === 'tableau_gauche1_1') child.material = this.materialLibrary.getLeftPaintingMaterial()
+                    if (name === 'tableau_grand_droit') child.material = this.materialLibrary.getRightBigPaintingMaterial()
+                    if (name === 'tableau_petit__droit') child.material = this.materialLibrary.getRightPaintingMaterial()
+                    if (name === 'tableau_gauche1') child.material = this.materialLibrary.getLeftPaintingMaterial()
+
+                } else if (name.includes("box")) {
+                    if (name.includes("gauche")) child.material = this.materialLibrary.getFirstBoxMaterial()
+                    if (name.includes("fond")) child.material = this.materialLibrary.getSecondBoxMaterial()
+                    if (name.includes("tv")) child.material = this.materialLibrary.getThirdBoxMaterial()
 
                 } else if (name.includes("baton")) {
                     child.material = this.materialLibrary.getStickMaterial()

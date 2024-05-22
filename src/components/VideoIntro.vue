@@ -21,7 +21,7 @@ export default {
     const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
     return {
       appStore,
-      videoUrl: `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/videoplayback_mwcxl6.mp4`,
+      videoUrl: `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/intro.mp4`,
     };
   },
   methods: {

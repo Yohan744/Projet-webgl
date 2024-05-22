@@ -1,6 +1,6 @@
 <template>
   <div class="loading-wrapper">
-    <p>Loading {{progress}}%</p>
+    <p>Loading {{Math.round(progress)}}%</p>
   </div>
 </template>
 

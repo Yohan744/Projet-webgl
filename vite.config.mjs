@@ -7,6 +7,7 @@ export default defineConfig({
     root: '.',
     server: {
         open: true,
+        hmr: false
     },
     publicDir: 'public',
     build: {

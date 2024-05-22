@@ -59,7 +59,7 @@ export default class Renderer {
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = false
         this.instance.toneMapping = THREE.NoToneMapping
-        this.instance.toneMappingExposure = 1.5
+        this.instance.toneMappingExposure = 1.1
         this.instance.outputColorSpace = THREE.SRGBColorSpace
 
         if (this.stats && this.stats.instance) {
@@ -88,7 +88,7 @@ export default class Renderer {
             blendFunction: BlendFunction.SCREEN,
             luminanceThreshold: 0.6,
             luminanceSmoothing: 0.025,
-            intensity: 2.25,
+            intensity: 1.5,
             radius: 0.6,
             levels: 12,
             mipmapBlur: true,
@@ -104,7 +104,7 @@ export default class Renderer {
         this.dofEffect = new BokehEffect({
             focus: 0.010,
             aperture: 0, // 0.184
-            maxBlur: 0.025,
+            maxBlur: 0.015,
             width: this.config.width,
             height: this.config.height
         });
@@ -114,6 +114,7 @@ export default class Renderer {
         this.toneAndBlurPass = new EffectPass(this.camera.instance, this.toneMappingEffect, this.dofEffect);
 
         this.composer.addPass(this.renderPass);
+        this.composer.addPass(this.depthPass);
         this.composer.addPass(this.globalPass);
         this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
     }
@@ -128,7 +129,7 @@ export default class Renderer {
         gsap.to(this.dofEffect.uniforms.get('aperture'), {
             value: value ? 1 : 0,
             delay: value ? 0.35 : 0,
-            duration: 3,
+            duration: value ? 3 : 2.5,
             ease: 'power1.out',
             onStart: () => {
                 if (value) {
@@ -220,18 +221,6 @@ export default class Renderer {
         })
 
         /////////////////
-
-        // this.bloom = new SelectiveBloomEffect(this.scene, this.camera.instance, {
-        //     blendFunction: BlendFunction.SCREEN,
-        //     luminanceThreshold: 0.7,
-        //     luminanceSmoothing: 0.025,
-        //     intensity: 3,
-        //     radius: 0.925,
-        //     levels: 8,
-        //     mipmapBlur: true,
-        // });
-
-        console.log(this.bloom)
 
         this.debugFolder.addBinding(this.bloom.uniforms.get('intensity'), 'value', {
             min: 0,

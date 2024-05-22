@@ -42,6 +42,7 @@ export default class World {
         this.attic?.update()
         this.objects?.update()
         this.objectsInteractable?.update()
+        this.locations?.update()
     }
 
     destroy() {

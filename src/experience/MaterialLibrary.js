@@ -3,9 +3,11 @@ import {
     BackSide, Color,
     DoubleSide,
     FrontSide, MeshBasicMaterial,
-    MeshStandardMaterial, RepeatWrapping,
+    MeshStandardMaterial, RepeatWrapping, ShaderMaterial,
 } from "three";
 import Experience from "./Experience";
+import locationsVertexShader from './Shaders/Locations/vertex.glsl'
+import locationsFragmentShader from './Shaders/Locations/fragment.glsl'
 
 let groundMaterial,
     windowWallMaterial,
@@ -51,15 +53,29 @@ let mirrorMaterial,
     backSuitCaseMaterial,
     vinylRowMaterial,
     magazineMaterial,
-    tableMagazineMaterial;
+    tableMagazineMaterial,
+    firstBoxMaterial,
+    secondBoxMaterial,
+    thirdBoxMaterial,
+    chestDrawerMaterial;
 
 let recordPlayerMaterial,
     rubiksCubeMaterial,
+    telecranMaterial,
     televisionMaterial,
-    chestDrawerMaterial,
+    telephoneMaterial,
     drawerMaterial,
     cassetteMaterial,
-    enveloppeMaterial;
+    enveloppeMaterial,
+    dahliaMaterial,
+    postalCardMaterial,
+    closedMagazineMaterial,
+    openMagazineMaterial,
+    letterMaterial,
+    walkmanMaterial,
+    bottomChestMaterial,
+    topChestMaterial,
+    pencilMaterial;
 
 
 let outlineMaterial,
@@ -236,7 +252,7 @@ export default class MaterialLibrary {
     getCardBoardMaterial() {
         if (!cardBoardMaterial) {
             cardBoardMaterial = new MeshBasicMaterial({
-                map: this.resources.items.cardboard.diffuse2,
+                map: this.resources.items.cardboard.diffuse,
                 // aoMap: this.resources.items.cardboard.ao,
                 side: this.debug ? DoubleSide : DoubleSide
             })
@@ -552,7 +568,7 @@ export default class MaterialLibrary {
         if (!cubeTableMaterial) {
             cubeTableMaterial = new MeshBasicMaterial({
                 map: this.resources.items.cube.diffuse2,
-                side: this.debug ? DoubleSide : FrontSide
+                side: this.debug ? DoubleSide : DoubleSide
             })
 
             this.materialsUsed.push(cubeTableMaterial)
@@ -691,7 +707,44 @@ export default class MaterialLibrary {
         return tableMagazineMaterial
     }
 
-    //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
+    getFirstBoxMaterial() {
+        if (!firstBoxMaterial) {
+            firstBoxMaterial = new MeshBasicMaterial({
+                map: this.resources.items.box.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(firstBoxMaterial)
+        }
+
+        return firstBoxMaterial
+    }
+
+    getSecondBoxMaterial() {
+        if (!secondBoxMaterial) {
+            secondBoxMaterial = new MeshBasicMaterial({
+                map: this.resources.items.box.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(secondBoxMaterial)
+        }
+
+        return secondBoxMaterial
+    }
+
+    getThirdBoxMaterial() {
+        if (!thirdBoxMaterial) {
+            thirdBoxMaterial = new MeshBasicMaterial({
+                map: this.resources.items.box.diffuse3,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(thirdBoxMaterial)
+        }
+
+        return thirdBoxMaterial
+    }
 
     getChestDrawerMaterial() {
         if (!chestDrawerMaterial) {
@@ -705,6 +758,8 @@ export default class MaterialLibrary {
 
         return chestDrawerMaterial
     }
+
+    //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
 
     getDrawerMaterial() {
         if (!drawerMaterial) {
@@ -732,6 +787,19 @@ export default class MaterialLibrary {
         return rubiksCubeMaterial
     }
 
+    getTelecranMaterial() {
+        if (!telecranMaterial) {
+            telecranMaterial = new MeshBasicMaterial({
+                map: this.resources.items.telecran.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(telecranMaterial)
+        }
+
+        return telecranMaterial
+    }
+
     getTvMaterial() {
         if (!televisionMaterial) {
             televisionMaterial = new MeshBasicMaterial({
@@ -743,6 +811,19 @@ export default class MaterialLibrary {
         }
 
         return televisionMaterial
+    }
+
+    getTelephoneMaterial() {
+        if (!telephoneMaterial) {
+            telephoneMaterial = new MeshBasicMaterial({
+                map: this.resources.items.telephone.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(telephoneMaterial)
+        }
+
+        return telephoneMaterial
     }
 
     getRecordPlayerMaterial() {
@@ -784,6 +865,123 @@ export default class MaterialLibrary {
         return enveloppeMaterial
     }
 
+    getDahliaMaterial() {
+        if (!dahliaMaterial) {
+            dahliaMaterial = new MeshBasicMaterial({
+                map: this.resources.items.dahlia.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(dahliaMaterial)
+        }
+
+        return dahliaMaterial
+    }
+
+    getPostalCardMaterial() {
+        if (!postalCardMaterial) {
+            postalCardMaterial = new MeshBasicMaterial({
+                map: this.resources.items.postalCard.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(postalCardMaterial)
+        }
+
+        return postalCardMaterial
+    }
+
+    getOpenMagazineMaterial() {
+        if (!openMagazineMaterial) {
+            openMagazineMaterial = new MeshBasicMaterial({
+                map: this.resources.items.magazine.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(openMagazineMaterial)
+        }
+
+        return openMagazineMaterial
+    }
+
+    getClosedMagazineMaterial() {
+        if (!closedMagazineMaterial) {
+            closedMagazineMaterial = new MeshBasicMaterial({
+                map: this.resources.items.magazine.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(closedMagazineMaterial)
+        }
+
+        return closedMagazineMaterial
+    }
+
+    getLetterMaterial() {
+        if (!letterMaterial) {
+            letterMaterial = new MeshBasicMaterial({
+                map: this.resources.items.letter.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(letterMaterial)
+        }
+
+        return letterMaterial
+    }
+
+    getWalkmanMaterial() {
+        if (!walkmanMaterial) {
+            walkmanMaterial = new MeshBasicMaterial({
+                map: this.resources.items.walkman.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(walkmanMaterial)
+        }
+
+        return walkmanMaterial
+    }
+
+    getBottomChestMaterial() {
+        if (!bottomChestMaterial) {
+            bottomChestMaterial = new MeshBasicMaterial({
+                map: this.resources.items.chest.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(bottomChestMaterial)
+        }
+
+        return bottomChestMaterial
+    }
+
+    getTopChestMaterial() {
+        if (!topChestMaterial) {
+            topChestMaterial = new MeshBasicMaterial({
+                map: this.resources.items.chest.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(topChestMaterial)
+        }
+
+        return topChestMaterial
+    }
+
+    getPencilMaterial() {
+        if (!pencilMaterial) {
+            pencilMaterial = new MeshBasicMaterial({
+                map: this.resources.items.pencil.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(pencilMaterial)
+        }
+
+        return pencilMaterial
+    }
+
     ///////////////////////// TEXTURE MATERIALS /////////////////////////////
 
     getBackgroundTreeMaterial() {
@@ -819,8 +1017,13 @@ export default class MaterialLibrary {
 
     getLocationsMaterial() {
         if (!locationsMaterial) {
-            locationsMaterial = new MeshBasicMaterial({
-                color: '#dcdcdc',
+            locationsMaterial = new ShaderMaterial({
+                vertexShader: locationsVertexShader,
+                fragmentShader: locationsFragmentShader,
+                uniforms: {
+                    uTime: {value: 0},
+                    uRadius: {value: 0.5},
+                },
                 side: FrontSide,
                 transparent: true,
                 opacity: 0.65,
