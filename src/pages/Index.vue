@@ -5,7 +5,7 @@
 <script>
 import Masthead from "../components/Masthead.vue";
 import {onBeforeRouteLeave} from "vue-router";
-import {useAppStore} from "../stores/appStore";
+import {useGameManager} from "../assets/js/GameManager";
 
 export default {
   name: 'Index',
@@ -14,8 +14,8 @@ export default {
   },
   setup() {
     onBeforeRouteLeave((to, from, next) => {
-      const appStore = useAppStore()
-      appStore.setLastVisitedRoute(from.fullPath);
+      const gameManager = useGameManager();
+      gameManager.setLastVisitedRoute(from.fullPath);
       next();
     });
   }

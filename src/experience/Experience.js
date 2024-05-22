@@ -15,6 +15,7 @@ import Pointer from "./Utils/Pointer";
 import EventEmitter from "./Utils/EventEmitter";
 import {useAppStore} from "../stores/appStore";
 import {useSoundManager} from "../main";
+import {useGameManager} from "../assets/js/GameManager";
 
 export default class Experience extends EventEmitter {
     static instance
@@ -30,6 +31,7 @@ export default class Experience extends EventEmitter {
         this.targetElement = _options.targetElement
 
         this.setAppStore()
+        this.setGameManager()
         this.pointer = new Pointer()
         this.time = new Time()
         this.sizes = new Sizes()
@@ -42,7 +44,11 @@ export default class Experience extends EventEmitter {
         this.setResources()
         this.setWorld()
         this.setSoundManager()
+        this.setWatchers()
 
+    }
+
+    setWatchers() {
         this.sizes.on('resize', () => {
             this.resize()
         })
@@ -51,6 +57,11 @@ export default class Experience extends EventEmitter {
             this.trigger('ready')
             this.update()
             this.camera.updateLerpCameraAfterFirstFrame()
+        })
+
+        this.resources.on('progress', (data) => {
+            const progress = data.loaded / data.toLoad
+            this.trigger('assetLoading', [progress])
         })
     }
 
@@ -85,6 +96,10 @@ export default class Experience extends EventEmitter {
 
     setAppStore() {
         this.appStore = useAppStore()
+    }
+
+    setGameManager() {
+        this.gameManager = useGameManager()
     }
 
     setScene() {

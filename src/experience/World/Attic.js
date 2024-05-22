@@ -31,27 +31,27 @@ export default class Attic {
 
                 if (name.includes("sol")) {
                     child.material = this.materialLibrary.getGroundMaterial()
-                    child.castShadow = true
-                    child.receiveShadow = true
+
                 } else if (name.includes("mur_fenetre")) {
                     child.material = this.materialLibrary.getWindowWallMaterial()
-                    child.castShadow = true
-                    child.receiveShadow = true
+
                 } else if (name.includes("murs_bas")) {
                     child.material = this.materialLibrary.getWallsMaterial()
-                    child.receiveShadow = true
+
                 } else if (name.includes("toit")) {
                     child.material = this.materialLibrary.getRoofMaterial()
-                    child.receiveShadow = true
+
                 } else if (name.includes("vitre")) {
                     child.material = this.materialLibrary.getWindowMaterial()
-                    child.castShadow = true
-                    child.receiveShadow = true
+                    child.layers.enable(11)
+
                 } else if (name === 'fenetre') {
                     child.material = this.materialLibrary.getSideWindowMaterial()
+
                 }  else if (name.includes("poutres")) {
                     child.material = this.materialLibrary.getBeamMaterial()
-                }  else if (name.includes("godray")) {
+
+                }  else if (name.includes("lumière")) {
                     this.godRayMeshs.push(child)
                 }
 

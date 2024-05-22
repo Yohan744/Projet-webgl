@@ -1,9 +1,11 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{ visible: showStartButton }">
+    <div ref="startButton" class="start-button" @click="handleClickStartButton"
+         v-bind:class="{ visible: showStartButton }">
       <p>start experience</p>
     </div>
-    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"/>
+    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"
+             :progress="progress"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
     <ExperienceLayer :soundManager="soundManager"/>
     <div ref="experienceContainer" class="experience"></div>
@@ -18,26 +20,30 @@ import Loading from "../components/Loading.vue";
 import {useRouter} from "vue-router";
 import ExperienceLayer from "../components/ExperienceLayer.vue";
 import {useSoundManager} from "../main";
+import {useGameManager} from "../assets/js/GameManager";
 
 export default {
   name: 'ExperiencePage',
   components: {ExperienceLayer, Loading, VideoIntro},
   data() {
     const appStore = useAppStore();
+    const gameManager = useGameManager();
     const router = useRouter()
     return {
       appStore,
+      gameManager,
       router,
       routeCheck: false,
       isLoaded: false,
       experience: null,
       soundManager: useSoundManager,
-      isVideoIntroWatched: appStore.isVideoIntroWatched,
+      progress: 0,
+      isVideoIntroWatched: appStore.$state.isVideoIntroWatched,
       showStartButton: false
     };
   },
   beforeMount() {
-    if (this.appStore.lastVisitedRoute !== '/' && !this.appStore.isVideoIntroWatched) {
+    if (this.gameManager.state.lastVisitedRoute !== '/' && !this.appStore.$state.isVideoIntroWatched) {
       this.router.push('/');
     } else {
       this.routeCheck = true;
@@ -69,21 +75,34 @@ export default {
   },
   methods: {
     initExperience() {
-      this.experience?.destroy();
+      if (this.experience) {
+        this.experience.destroy();
+        this.experience = null;
+      }
+
       this.experience = new Experience({
         targetElement: this.$refs.experienceContainer
       });
+
       this.experience.resources.on('ready', () => {
         this.isLoaded = true;
-        this.showStartButton = this.appStore.$state.lastVisitedRoute === null && this.appStore.$state.isVideoIntroWatched
+        this.showStartButton = this.gameManager.state.lastVisitedRoute === null && this.appStore.$state.isVideoIntroWatched
         if (this.isVideoIntroWatched && !this.showStartButton) {
           this.setExperienceOpacity();
         }
       });
+
+      this.experience.on('assetLoading', (value) => {
+        const progress = Math.round(value * 100);
+        if (progress > this.progress) {
+          this.progress = Math.min(progress, 100);
+        }
+      });
+
     },
     setExperienceOpacity() {
       if (this.$refs.experienceContainer) {
-        this.appStore.setExperienceVisible()
+        this.gameManager.setExperienceVisible()
         this.$refs.experienceContainer.style.opacity = 1;
         this.showStartButton = false;
         this.soundManager?.play('background')

@@ -1,12 +1,12 @@
-const s = './src/assets/sounds/'
-const g = './src/assets/sounds/general/'
-const p = './src/assets/sounds/props/'
+const s = './assets/sounds/';
+const g = './assets/sounds/general/';
+const p = './assets/sounds/props/';
 
 export const data = {
 
     background: {
         src: s + 'background.mp3',
-        volume: 0.25,
+        volume: 0.5,
         autoplay: false,
         preload: true,
         loop: true,
@@ -15,7 +15,35 @@ export const data = {
     //////// PROPS SOUNDS ////////
 
     telephone: {
-        src: p + 'telephone.mp3',
+        src: p + 'telephone.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    tv: {
+        src: p + 'tv.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    rubiksCube: {
+        src: p + 'rubiksCube.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    recordPlayer: {
+        src: p + 'recordPlayer.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    walkman: {
+        src: p + 'walkman.m4a',
         volume: 0.75,
         preload: true,
         loop: false,

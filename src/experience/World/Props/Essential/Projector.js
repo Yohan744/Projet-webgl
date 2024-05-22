@@ -10,7 +10,7 @@ export default class Projector {
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.pointer = this.experience.pointer;
-        this.appStore = this.experience.appStore;
+        this.gameManager = this.experience.gameManager;
 
         this.animations = [];
 
@@ -80,7 +80,7 @@ export default class Projector {
                         y: mousePosition.y,
                     };
                     console.log("ready");
-                    this.appStore.updateInteractingState(true);
+                    this.gameManager.updateInteractingState(true);
                 } else if (intersects[0].object.name === 'EnsembleRail' && this.isFirstAnimationIsDone) {
                     this.moveRail();
                 } else if (intersects[0].object.name === 'BoutonOn') {
@@ -282,7 +282,7 @@ export default class Projector {
         if (this.isDragging) {
             this.isDragging = false;
             this.draggableModel = null;
-            this.appStore.updateInteractingState(false);
+            this.gameManager.updateInteractingState(false);
         }
     }
 

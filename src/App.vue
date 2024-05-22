@@ -7,24 +7,9 @@
 </template>
 
 <script>
-import {useAppStore} from "./stores/appStore";
 
 export default {
   name: 'App',
-  setup() {
-    const appStore = useAppStore();
-
-    const onBeforeUnload = () => {
-      appStore.resetSomeStatesOnReload()
-    };
-
-    window.addEventListener('beforeunload', onBeforeUnload);
-
-    onBeforeUnload(() => {
-      window.removeEventListener('beforeunload', onBeforeUnload);
-    });
-  },
-
 }
 </script>
 

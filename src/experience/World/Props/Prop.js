@@ -14,7 +14,7 @@ export default class Prop extends EventEmitter {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.pointer = this.experience.pointer
-        this.appStore = this.experience.appStore;
+        this.gameManager = this.experience.gameManager;
         this.camera = this.experience.camera.modes.default.instance;
         this.renderer = this.experience.renderer;
         this.soundManager = this.experience.soundManager;
@@ -33,7 +33,12 @@ export default class Prop extends EventEmitter {
         this.spotId = spotId
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
-        if (this.animatePropsToCameraOnClick) this.mouseUtils = new MouseUtils(this.mesh);
+        if (this.animatePropsToCameraOnClick) {
+            this.mouseUtils = new MouseUtils(this.mesh);
+            this.mouseUtils.on('dragging', () => {
+                this.outline?.updateOutlineMeshRotation(this.mesh.rotation)
+            })
+        }
 
         this.init()
         this.setWatchers()
@@ -46,12 +51,12 @@ export default class Prop extends EventEmitter {
 
     setWatchers() {
         this.pointer.on("click", this.handleClick.bind(this));
-        watch(() => this.appStore.$state.isInteractingWithObject, (state) => {
+        watch(() => this.gameManager.state.isInteractingWithObject, (state) => {
             if (!state) {
                 this.animatePropsToBasicPosition()
                 this.outline?.showOutline()
-                this.appStore.updateOrbitsControlsState(false)
-                this.appStore.setActualObjectInteractingName(null)
+                this.gameManager.updateOrbitsControlsState(false)
+                this.gameManager.setActualObjectInteractingName(null)
                 this.renderer.toggleBlurEffect(false)
             }
         })
@@ -59,17 +64,16 @@ export default class Prop extends EventEmitter {
 
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
-        if (intersects.length > 0 && this.appStore.$state.isCameraOnSpot) {
+        if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot) {
             this.onClickGeneral()
-            console.log(this.mesh.name)
-            if (this.animatePropsToCameraOnClick && !this.appStore.$state.isInteractingWithObject && this.spotId === this.appStore.$state.spotId && this.appStore.$state.actualObjectInteractingName === null) {
+            if (this.animatePropsToCameraOnClick && !this.gameManager.state.isInteractingWithObject && this.spotId === this.gameManager.state.spotId && this.gameManager.state.actualObjectInteractingName === null) {
 
                 this.animatePropsToCamera()
                 this.playSoundOnClick()
                 this.onClick()
 
-                this.appStore.updateInteractingState(true)
-                this.appStore.setActualObjectInteractingName(this.mesh.name.toLowerCase())
+                this.gameManager.updateInteractingState(true)
+                this.gameManager.setActualObjectInteractingName(this.mesh.name.toLowerCase())
                 this.outline?.removeOutline()
                 this.renderer.toggleBlurEffect(true)
 
@@ -116,7 +120,7 @@ export default class Prop extends EventEmitter {
             onUpdate: () => {
                 this.outline?.updateOutlineMeshPosition(this.mesh.position)
             }, onComplete: () => {
-                this.appStore.updateOrbitsControlsState(true)
+                this.gameManager.updateOrbitsControlsState(true)
             }
         });
 

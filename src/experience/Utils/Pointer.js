@@ -14,7 +14,7 @@ export default class Pointer extends EventEmitter {
         Pointer.instance = this
 
         this.experience = new Experience()
-        this.appStore = this.experience.appStore
+        this.gameManager = this.experience.gameManager
 
         this.raycaster = new Raycaster()
         this.intersects = []
@@ -53,7 +53,7 @@ export default class Pointer extends EventEmitter {
             this.trigger('movement', [this.mouse]);
         }
 
-        if (this.appStore.$state.isInteractingWithObject) {
+        if (this.gameManager.state.isInteractingWithObject) {
             this.trigger('movement-orbit', [this.mouse]);
         }
 
@@ -67,7 +67,7 @@ export default class Pointer extends EventEmitter {
             const position = intersects[0].object.position.clone()
             const lookingPoint = intersects[0].object.data.lookingPoint
             this.trigger('spot-clicked', [position, lookingPoint])
-            this.appStore.setSpotId(intersects[0].object.data.id)
+            this.gameManager.setSpotId(intersects[0].object.data.id)
             this.experience.world.locations.setLocationsVisibility(false)
         }
         this.trigger('click')
@@ -94,6 +94,7 @@ export default class Pointer extends EventEmitter {
     }
 
     destroy() {
+        Pointer.instance = null
         window.removeEventListener("pointermove", (_event) => this.onMovement(_event))
         window.removeEventListener('pointerdown', this.onClick.bind(this), false);
         window.removeEventListener('pointerup', this.onClickRelease.bind(this), false);

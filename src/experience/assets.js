@@ -1,4 +1,5 @@
 export default [
+
     {
         name: 'models',
         data: {},
@@ -80,8 +81,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/ground/diffuse.webp',
-                    roughness: 'assets/textures/attic/ground/roughness.webp',
-                    normal: 'assets/textures/attic/ground/normal.webp',
                 }
             },
 
@@ -90,8 +89,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/windowWall/diffuse.webp',
-                    roughness: 'assets/textures/attic/windowWall/roughness.webp',
-                    normal: 'assets/textures/attic/windowWall/normal.webp',
                 }
             },
 
@@ -100,8 +97,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/walls/diffuse.webp',
-                    roughness: 'assets/textures/attic/walls/roughness.webp',
-                    normal: 'assets/textures/attic/walls/normal.webp',
                 }
             },
 
@@ -110,8 +105,22 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/attic/beam/diffuse.webp',
-                    roughness: 'assets/textures/attic/beam/roughness.webp',
-                    normal: 'assets/textures/attic/beam/normal.webp',
+                }
+            },
+
+            {
+                name: 'sideWindow',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/attic/sideWindow/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'roof',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/attic/roof/diffuse.webp',
                 }
             },
 
@@ -145,6 +154,8 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/cardboard/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/cardboard/diffuse2.webp',
+                    ao: 'assets/textures/objects/cardboard/ao.webp',
                 }
             },
 
@@ -161,14 +172,6 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/chestDrawer/diffuse.webp',
-                }
-            },
-
-            {
-                name: 'drawer',
-                type: 'group',
-                textures: {
-                    diffuse: 'assets/textures/objects/drawer/diffuse.webp',
                 }
             },
 
@@ -221,30 +224,6 @@ export default [
             },
 
             {
-                name: 'rubiksCube',
-                type: 'group',
-                textures: {
-                    diffuse: 'assets/textures/objects/rubiksCube/diffuse.webp',
-                }
-            },
-
-            {
-                name: 'television',
-                type: 'group',
-                textures: {
-                    diffuse: 'assets/textures/objects/television/diffuse.webp',
-                }
-            },
-
-            {
-                name: 'recordPlayer',
-                type: 'group',
-                textures: {
-                    diffuse: 'assets/textures/objects/recordPlayer/diffuse.webp',
-                }
-            },
-
-            {
                 name: 'rockingChair',
                 type: 'group',
                 textures: {
@@ -281,6 +260,152 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/sheetChair/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/sheetChair/diffuse2.webp',
+                }
+            },
+
+            {
+                name: 'pillow',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/pillow/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/pillow/diffuse2.webp',
+                }
+            },
+
+            {
+                name: 'sheet',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/sheet/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'stick',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/stick/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'painting',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/painting/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/painting/diffuse2.webp',
+                    diffuse3: 'assets/textures/objects/painting/diffuse3.webp',
+                }
+            },
+
+            {
+                name: 'cube',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/cube/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/cube/diffuse2.webp',
+                }
+            },
+
+            {
+                name: 'vase',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/vase/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'books',
+                type: 'group',
+                textures: {
+                    groundDiffuse: 'assets/textures/objects/books/diffuse.webp',
+                    stackDiffuse: 'assets/textures/objects/books/diffuse2.webp',
+                    rowLibraryDiffuse: 'assets/textures/objects/books/diffuse3.webp',
+                    rowDeskDiffuse: 'assets/textures/objects/books/diffuse4.webp',
+                }
+            },
+
+            {
+                name: 'suitcase',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/suitcase/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/suitcase/diffuse2.webp',
+                }
+            },
+
+            {
+                name: 'vinylRow',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/vinylRow/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'magazine',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/magazine/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/magazine/diffuse2.webp',
+                }
+            },
+
+        ]
+    },
+
+    {
+        name: 'objectsInteractableTextures',
+        data: {},
+        items: [
+
+            {
+                name: 'drawer',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/drawer/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'rubiksCube',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/rubiksCube/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'television',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/television/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'recordPlayer',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/recordPlayer/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'cassette',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/cassette/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'enveloppe',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/enveloppe/diffuse.webp',
                 }
             },
 
@@ -305,11 +430,6 @@ export default [
             },
 
             {
-                name: 'godRayTexture',
-                source: '/assets/textures/attic/godRay/alpha.png',
-                type: 'texture',
-            },
-            {
                 name: 'backgroundTreeTexture',
                 source: '/assets/textures/attic/background/backgroundTree.webp',
                 type: 'texture',
@@ -320,5 +440,6 @@ export default [
                 type: 'texture',
             },
         ]
-    },
+    }
+
 ]

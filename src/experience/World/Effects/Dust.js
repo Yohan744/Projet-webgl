@@ -11,7 +11,7 @@ export default class Dust {
         this.config = this.experience.config
         this.scene = this.experience.scene
 
-        this.dustNumber = 1300
+        this.dustNumber = 550
         this.size = 45
 
         this.init()
@@ -28,7 +28,7 @@ export default class Dust {
             this.positionArray[i * 3] = (Math.random() - 0.5) * 8
             this.positionArray[i * 3 + 1] = Math.random() * 4
             this.positionArray[i * 3 + 2] = (Math.random() - 0.5) * 14
-            this.scaleArray[i] = Math.random()
+            this.scaleArray[i] = 0.4 + Math.random() * 0.75
 
         }
 
