@@ -61,7 +61,6 @@ export default class Projector {
         this.tireuse = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'tireuse');
         this.oeil = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'oeil');
 
-        this.projectorModelPosition = this.projectorModel.position.clone();
 
         if (this.rail) {
             this.railOriginalPosition.copy(this.rail.position);
@@ -142,7 +141,9 @@ export default class Projector {
         //this.removeSpotlight();
         console.log("lààààààà")
 
-        let spotlight = new THREE.SpotLight(0xffffff, 10000, 0, Math.PI * 0.05);
+        let spotlight = new THREE.SpotLight(0xffffff, 60, 0, Math.PI * 0.05);
+        const spotLightHelper = new THREE.SpotLightHelper( spotlight );
+        this.scene.add( spotLightHelper );
         spotlight.position.copy(this.oeil);
         spotlight.target.position.set(this.oeil.x + 0.5, this.oeil.y + 0.02, this.oeil.z);
         console.log(this.oeil);

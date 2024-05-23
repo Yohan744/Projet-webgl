@@ -18,7 +18,6 @@ export default class Pencil extends Prop {
         this.gameManager = this.experience.gameManager;
         this.init();
     }
-
     init() {
 
         watch(() => this.gameManager.state.pencilIconClicked, (newVal) => {
@@ -26,7 +25,6 @@ export default class Pencil extends Prop {
                 this.showInFrontOfCamera();
             }
         });
-
         watch(() => this.gameManager.state.objectToPocket, (newVal) => {
             if (newVal) {
                 this.moveToPocket();

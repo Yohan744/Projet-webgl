@@ -12,14 +12,6 @@ import BottomChest from "../experience/World/Props/Essential/BottomChest";
 import TopChest from "../experience/World/Props/Essential/TopChest";
 
 export const objectsData = {
-    walkman: {
-        file: Walkman,
-        //rotationOnClick: new THREE.Vector3(0, 0, 0),
-        animateToCameraOnClick: true,
-        distanceToCamera: 0.5,
-        outlineScale: 1.05, // false to deactivate, type number to activate
-        propSound: 'walkman', // not set yet
-    },
     cassette: {
         file: Cassette,
         rotationOnClick: new THREE.Vector3(1.33, 0.04, -0.44),

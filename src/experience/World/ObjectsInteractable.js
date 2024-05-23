@@ -1,5 +1,7 @@
 import Experience from "../Experience";
 import {objectsData} from "../../data/Objects";
+import Projector from "./Props/Essential/Projector";
+import Walkman from "./Props/Essential/Walkman";
 
 const interactableObjects = {}
 const interactableMesh = []
@@ -13,6 +15,8 @@ export default class ObjectsInteractable {
         this.scene = this.experience.scene
         this.materialLibrary = materialLibrary
 
+        this.projectorModel = [];
+
         if (this.scene) {
             this.init()
         }
@@ -21,6 +25,7 @@ export default class ObjectsInteractable {
     init() {
 
         this.objectsInteractableModel = this.resources.items.objectsInteractableModel.scene
+        console.log(this.objectsInteractableModel.morphTargetInfluences);
 
         this.objectsInteractableModel.traverse(child => {
             if (child.isMesh) {
@@ -123,8 +128,10 @@ export default class ObjectsInteractable {
                     interactableObjects.recordPLayer = this.recordPlayer
                     interactableMesh.push(child)
 
-                } else if (name === 'photo') {
-                    child.material = this.materialLibrary.getPictureMaterial()
+                } else if (name.includes("rail_diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1') {
+                    child.material = this.materialLibrary.getRecordPlayerMaterial()
+                    this.projectorModel.push(child);
+                    console.log(this.projectorModel);
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
                     child.material = this.materialLibrary.getVinylMaterial()
@@ -135,10 +142,14 @@ export default class ObjectsInteractable {
                     console.log(name)
                 }
 
+                console.log(name)
+
                 child.material.needsUpdate = true
 
             }
         })
+
+        this.projector = new Projector(this.projectorModel);
 
         this.scene.add(this.objectsInteractableModel)
 

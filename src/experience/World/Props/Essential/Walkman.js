@@ -4,20 +4,16 @@ import Prop from "../Prop";
 import { gsap } from 'gsap';
 import { watch } from 'vue';
 
-export default class Walkman extends Prop {
-    constructor(mesh, desiredRotationOnClick = null, animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound, spotId) {
-        super(mesh, desiredRotationOnClick, animatePropsToCameraOnClick, distanceToCamera, isOutlined, propSound, spotId);
+export default class Walkman {
+    constructor() {
 
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.offsetFromCamera = 0.6;
-        this.desiredRotation = desiredRotationOnClick || new THREE.Vector3(0, 0, 0);
         this.objectCanRotate = true;
-
         this.gameManager = this.experience.gameManager;
-
         this.morphTargetName = 'clapet';
         this.morphMesh = null;
         this.morphTargetMeshes = {};
@@ -31,23 +27,19 @@ export default class Walkman extends Prop {
         this.init();
         this.setEvents();
     }
-
     init() {
         watch(() => this.gameManager.state.isCassetteInFrontOfCamera, (newVal) => {
             if (newVal && this.gameManager.state.isWalkmanInFrontOfCamera) {
                 this.alignObjectsInFront();
             }
         });
-
         watch(() => this.gameManager.state.isCassetteInFrontOfCamera && this.gameManager.state.isWalkmanInFrontOfCamera, () => {
             this.checkObjectsInFront();
         });
-
         const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
         this.mesh.traverse((child) => {
             if (child.isMesh) {
                 child.material = material;
-
                 const edges = new THREE.EdgesGeometry(child.geometry);
                 const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
                 const lines = new THREE.LineSegments(edges, lineMaterial);
@@ -59,28 +51,23 @@ export default class Walkman extends Prop {
             this.mesh.morphTargetInfluences.forEach((_, i) => this.mesh.morphTargetInfluences[i] = 0);
         }
     }
-
     setupMorphTargets() {
         if (this.mesh.isMesh && this.mesh.morphTargetInfluences) {
             console.log("Morph Targets Found in:", this.mesh);
             this.morphMesh = this.mesh;
-
             const morphTargetGeometry = this.mesh.geometry.clone();
             morphTargetGeometry.morphAttributes = { position: this.mesh.geometry.morphAttributes.position };
             const morphTargetMesh = new THREE.Mesh(morphTargetGeometry, new THREE.MeshBasicMaterial({ visible: false }));
             morphTargetMesh.name = 'morphTargetMesh_' + this.mesh.name;
             this.morphTargetMeshes[this.morphTargetName] = morphTargetMesh;
-
             this.scene.add(morphTargetMesh);
         }
-
         if (!this.morphMesh) {
             console.error(`Morph target mesh not found.`);
         } else if (!(this.morphTargetName in this.morphTargetMeshes)) {
             console.error(`Morph target "${this.morphTargetName}" not found in the morph target dictionary.`);
         }
     }
-
     setEvents() {
         this.pointerDown = this.onPointerDown.bind(this);
         this.pointerMove = this.onPointerMove.bind(this);
@@ -94,17 +81,12 @@ export default class Walkman extends Prop {
     checkObjectsInFront() {
         const isCassetteInFront = this.gameManager.state.isCassetteInFrontOfCamera;
         const isWalkmanInFront = this.gameManager.state.showingInventoryObjectInFrontOfCamera === 'walkman';
-
         this.objectCanRotate = !(isCassetteInFront && isWalkmanInFront);
-
         if (isCassetteInFront && isWalkmanInFront) {
             this.desiredRotation = null;
             this.alignObjectsInFront();
         }
-
-        console.log(`ObjectCanRotate: ${this.objectCanRotate}`);
     }
-
     onPointerDown() {
         const mousePosition = this.pointer.getMousePosition();
         this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
@@ -120,15 +102,14 @@ export default class Walkman extends Prop {
     onPointerMove(mouse) {
         if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
 
-        if ( (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
+        if ( (mouse.y + 1) - (this.mouseStartClickPosition.y + 1) > this.dragDistance) {
             this.handleForwardDrag();
-        } else if ((this.mouseStartClickPosition.x + 1) - (mouse.x + 1) > this.dragDistance) {
+        } else if ((this.mouseStartClickPosition.y + 1) - (mouse.y + 1) > this.dragDistance) {
             this.handleBackwardDrag();
         } else {
             console.log("pas assez loin");
         }
     }
-
     startDragging(mousePosition) {
         this.isDragging = true;
         this.draggableModel = this.morphMesh;
@@ -139,7 +120,6 @@ export default class Walkman extends Prop {
         };
         console.log("ready to drag");
     }
-
     handleForwardDrag() {
         console.log("Dragging en avant");
         this.isAnimating = true;
@@ -151,7 +131,6 @@ export default class Walkman extends Prop {
             }
         });
     }
-
     handleBackwardDrag() {
         console.log("Dragging en arrière");
         this.isAnimating = true;
@@ -184,12 +163,10 @@ export default class Walkman extends Prop {
         }
 
         this.experience.objectGroup.add(this.mesh);
-
         const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
         if (cassette) {
             this.experience.objectGroup.add(cassette);
         }
-
         gsap.to(this.mesh.position, {
             x: targetPosition.x,
             y: targetPosition.y,
@@ -197,7 +174,6 @@ export default class Walkman extends Prop {
             duration: 2,
             ease: 'power2.inOut'
         });
-
         if (cassette) {
             gsap.to(cassette.position, {
                 x: targetPosition.x,
@@ -207,7 +183,6 @@ export default class Walkman extends Prop {
                 ease: 'power2.inOut'
             });
         }
-
         this.gameManager.setWalkmanInFrontOfCamera(true);
         this.gameManager.setCassetteInFrontOfCamera(true);
         this.gameManager.state.isObjectOut = true;
