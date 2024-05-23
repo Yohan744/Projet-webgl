@@ -48,6 +48,7 @@ export default class Envelop {
         this.scene.add(this.envelopModel);
         this.setupMorphTargets();
         this.createCarouselItems();
+        this.hidePocketButton(); // Ensure the button is hidden initially
     }
 
     createCarouselItems() {
@@ -314,10 +315,8 @@ export default class Envelop {
     updatePocketButtonVisibility() {
         const frontItem = this.items[0];
         const isCassette = frontItem === this.cassette;
-        if (isCassette) {
-            this.gameManager.setCassetteInFrontOfCamera(true);
-            this.gameManager.updatePocketButtonState(true);
-        }
+        this.gameManager.updatePocketButtonState(isCassette);
+        this.gameManager.state.isCassetteInFrontOfCamera = isCassette;
     }
 
     resetItemPositions() {
