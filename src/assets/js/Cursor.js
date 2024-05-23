@@ -1,11 +1,15 @@
+import {useGlobalEvents} from "./GlobalEvents";
 import defaultCursor from '../icons/cursor.svg'
 import blackCursor from '../icons/cursor-black.svg'
-import {useGlobalEvents} from "./GlobalEvents";
+import grabCursor from '../icons/grab.svg'
 
 const cursors = {
     default: defaultCursor,
     black: blackCursor,
+    grab: grabCursor
 }
+
+let actualCursor = null
 
 export default class Cursor {
 
@@ -30,21 +34,17 @@ export default class Cursor {
     setupEvents() {
         if (this.cursor && this.settingsWrapper) {
             window.addEventListener('mousemove', this.handleMouseMove.bind(this))
-            // window.addEventListener('focus', () => this.cursor.style.opacity = 1)
-            // window.addEventListener('blur', () => this.cursor.style.opacity = 0)
+            window.addEventListener('focus', () => this.handleCursorOpacity(true))
+            window.addEventListener('blur', () => this.handleCursorOpacity(false))
 
-            const settingsPanel = this.settingsWrapper.querySelector('.settings-panel')
-            settingsPanel.addEventListener('mouseenter', () => this.handleMouseEnterSettings(true))
-            settingsPanel.addEventListener('mouseleave', () => this.handleMouseEnterSettings(false))
-
-            this.eventEmitter.on('change-cursor', (name) => this.changeCursorTo(name))
+            this.eventEmitter.on('change-cursor', (value) => this.changeCursorTo(value.name))
 
         }
     }
 
     handleMouseMove(e) {
-        const x = e.clientX - this.cursor.offsetWidth * 0.5
-        const y = e.clientY - this.cursor.offsetHeight * 0.5
+        const x = e.clientX
+        const y = e.clientY
         this.cursor.style.transform = `translate(${x}px, ${y}px)`;
     }
 
@@ -55,14 +55,14 @@ export default class Cursor {
     }
 
     changeCursorTo(name) {
-        if (cursors[name] === undefined) return console.error(`Cursor ${name} does not exist`)
+        if (cursors[name] === undefined) return console.error(`Cursor named ${name} does not exist`)
+        if (this.cursor.src === cursors[name]) return console.warn(`Cursor is already set to ${name}`)
         this.cursor.src = cursors[name]
+        actualCursor = name
     }
 
     destroy() {
         window.removeEventListener('mousemove', this.handleMouseMove.bind(this))
-        // window.removeEventListener('focus', () => this.cursor.style.opacity = 1)
-        // window.removeEventListener('blur', () => this.cursor.style.opacity = 0)
         this.settingsWrapper.querySelector('.settings-panel').removeEventListener('mouseenter', () => this.handleMouseEnterSettings())
         Cursor.instance = null
     }
@@ -70,3 +70,4 @@ export default class Cursor {
 }
 
 export const useCursor = () => new Cursor()
+export const getActualCursor = () => actualCursor

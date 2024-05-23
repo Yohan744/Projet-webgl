@@ -164,7 +164,6 @@ export default [
                 textures: {
                     diffuse: 'assets/textures/objects/cardboard/diffuse.webp',
                     diffuse2: 'assets/textures/objects/cardboard/diffuse2.webp',
-                    ao: 'assets/textures/objects/cardboard/ao.webp',
                 }
             },
 
@@ -322,6 +321,14 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/vase/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'pencils',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/pencil/diffuse.webp',
                 }
             },
 

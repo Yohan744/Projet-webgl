@@ -21,10 +21,11 @@ export default {
     const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
     return {
       appStore,
-      videoUrl: `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/intro.mp4`,
+      videoUrl: `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/videoplayback_mwcxl6.mp4`,
     };
   },
   methods: {
+    //videoUrl: `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/intro.mp4`, // motion
     playVideo() {
       this.updateOpacityTo(1, () => {
         this.$refs.videoElement?.play();
@@ -37,6 +38,7 @@ export default {
       this.updateOpacityTo(0, () => {
         this.$refs.videoWrapper?.remove();
         this.appStore.setVideoIntroWatched();
+        console.log("lalalala")
       });
 
     },
@@ -71,11 +73,12 @@ export default {
 }
 
 .video-intro-wrapper {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
+  z-index: 100;
 
   video {
     position: absolute;

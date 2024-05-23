@@ -1,5 +1,4 @@
 import Experience from "../Experience";
-import {remapMaterialUVs} from "../Utils/Functions";
 
 export default class Objects {
 
@@ -36,10 +35,6 @@ export default class Objects {
                     if (name.includes("drap")) child.material = this.materialLibrary.getSheetCardBoardMaterial()
                     else {
                         child.material = this.materialLibrary.getCardBoardMaterial()
-                        // remapMaterialUVs(child.material, {
-                        //     map: 'texcoord_0',
-                        //     aoMap: 'texcoord_2'
-                        // });
                     }
 
                 } else if (name.includes('tapis')) {
@@ -131,8 +126,11 @@ export default class Objects {
                 } else if (name.includes("vase")) {
                     child.material = this.materialLibrary.getVaseMaterial()
 
+                } else if (name.includes("crayon")) {
+                    child.material = this.materialLibrary.getPencilsMaterial()
+
                 } else {
-                    // console.log(name)
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true

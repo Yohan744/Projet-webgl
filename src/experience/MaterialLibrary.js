@@ -57,7 +57,8 @@ let mirrorMaterial,
     firstBoxMaterial,
     secondBoxMaterial,
     thirdBoxMaterial,
-    chestDrawerMaterial;
+    chestDrawerMaterial,
+    pencilsMaterial;
 
 let recordPlayerMaterial,
     rubiksCubeMaterial,
@@ -757,6 +758,19 @@ export default class MaterialLibrary {
         }
 
         return chestDrawerMaterial
+    }
+
+    getPencilsMaterial() {
+        if (!pencilsMaterial) {
+            pencilsMaterial = new MeshBasicMaterial({
+                map: this.resources.items.pencils.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(pencilsMaterial)
+        }
+
+        return pencilsMaterial
     }
 
     //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////

@@ -63,6 +63,7 @@ export default class Locations {
             location.matrixAutoUpdate = false
 
             location.position.copy(this.locationsPositions[i]).add(this.locationsOffset[i])
+            location.name = 'location-' + i
             location.data = {
                 lookingPoint: this.locationsLookingPoint[i]
             };

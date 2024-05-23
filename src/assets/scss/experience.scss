@@ -46,12 +46,17 @@
     left: 0;
     height: 20px;
     width: auto;
-    z-index: 100000;
+    z-index: 99;
     pointer-events: none;
     user-select: none;
     user-focus: none;
     transform: translate(-5vh, -5vw);
+    opacity: 0;
     transition: opacity 0.8s $ease-power3-out;
+
+    &.visible {
+      opacity: 1;
+    }
 
     @media only screen and (max-width: 992px) {
       display: none;
