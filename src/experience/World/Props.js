@@ -20,7 +20,7 @@ export default class Props {
     init() {
          this.drawer = new Drawer();
          this.envelop = new Envelop();
-         //this.cassette = new Cassette();
+         this.cassette = new Cassette();
         //this.projector = new Projector();
         this.photo = new Photo();
     }

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import Experience from "../../../Experience";
 import Prop from '../Prop';
-import {watch} from "vue";
+import { watch } from 'vue';
 
 export default class Pencil extends Prop {
     constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound) {
@@ -18,26 +18,19 @@ export default class Pencil extends Prop {
         this.gameManager = this.experience.gameManager;
         this.init();
     }
-    init() {
 
-        watch(() => this.gameManager.state.pencilIconClicked, (newVal) => {
-            if (newVal) {
+    init() {
+        watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
+            if (newVal === 'pencil') {
                 this.showInFrontOfCamera();
             }
         });
+
         watch(() => this.gameManager.state.objectToPocket, (newVal) => {
-            if (newVal) {
+            if (newVal === 'pencil') {
                 this.moveToPocket();
             }
         });
-
-        watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
-            if (newVal === 'pencil') {
-                this.showInFrontOfCamera()
-            }
-        });
-
-
     }
 
     showInFrontOfCamera() {
@@ -62,8 +55,8 @@ export default class Pencil extends Prop {
             duration: 2,
             ease: 'power2.inOut'
         });
-        this.gameManager.state.isObjectOut = true;
 
+        this.gameManager.state.isPencilInFrontOfCamera = true;
         this.scene.add(this.mesh);
     }
 
@@ -86,8 +79,10 @@ export default class Pencil extends Prop {
 
     onClick() {
         console.log('Pencil clicked');
-        if(!this.gameManager.state.isObjectOut)
-        this.gameManager.updatePocketButtonState(true);
+        this.gameManager.setPencilInFrontOfCamera(true);
+        if (!this.gameManager.state.isObjectOut) {
+            this.gameManager.updatePocketButtonState(true);
+        }
     }
 
     destroy() {

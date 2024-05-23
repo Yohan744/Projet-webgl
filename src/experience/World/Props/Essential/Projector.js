@@ -40,9 +40,6 @@ export default class Projector {
         this.railMoveCount = 0;
         this.railOriginalPosition = new THREE.Vector3();
 
-        this.minZPosition = -0.1;
-        this.maxZPosition = 0.1;
-
         this.setEvents();
         this.init(objects);
     }
@@ -60,6 +57,7 @@ export default class Projector {
         this.boutonOn = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'boutonon');
         this.tireuse = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'tireuse');
         this.oeil = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'oeil');
+        console.log(this.projectorObjects[0].position);
 
 
         if (this.rail) {
@@ -109,7 +107,6 @@ export default class Projector {
         const targetPosition = modelPosition.clone().add(offset);
         this.experience.camera.lookAtSheet(targetPosition);
         this.isCameraMoved = true;
-
         this.addOutlineToButton();
     }
 
@@ -138,14 +135,14 @@ export default class Projector {
     }
 
     setupSpotlight(withTexture) {
-        //this.removeSpotlight();
+        this.removeSpotlight();
         console.log("lààààààà")
 
         let spotlight = new THREE.SpotLight(0xffffff, 60, 0, Math.PI * 0.05);
         const spotLightHelper = new THREE.SpotLightHelper( spotlight );
         this.scene.add( spotLightHelper );
-        spotlight.position.copy(this.oeil);
-        spotlight.target.position.set(this.oeil.x + 0.5, this.oeil.y + 0.02, this.oeil.z);
+        spotlight.position.set(-3.8, 1.15, 4.5);
+        spotlight.target.position.set(spotlight.position.x + 0.5, spotlight.position.y + 0.02, spotlight.position.z);
         console.log(this.oeil);
         console.log(spotlight);
         spotlight.angle = 0.1;
@@ -223,7 +220,7 @@ export default class Projector {
         console.log("Parfait");
         this.isAnimating = true;
         gsap.to(this.draggableModel.position, {
-            z: -0.05,
+            z: 0,
             duration: 1,
             onComplete: () => {
                 this.isAnimating = false;

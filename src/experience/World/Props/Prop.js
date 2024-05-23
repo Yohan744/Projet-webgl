@@ -55,11 +55,7 @@ export default class Prop extends EventEmitter {
         })
         watch(() => this.gameManager.state.isPencilInFrontOfCamera, (newVal) => {
             if (newVal && this.gameManager.state.isCassetteInFrontOfCamera) {
-                const pencil = this.experience.objectGroup.children.find(obj => obj.userData.type === 'pencil');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
 
-                if (pencil) pencil.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
             }
         });
         watch(() => this.gameManager.state.isCassetteInFrontOfCamera, (newVal) => {
