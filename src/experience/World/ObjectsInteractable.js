@@ -133,7 +133,10 @@ export default class ObjectsInteractable {
             })
             this.scene.remove(this.objectsInteractableModel)
         }
-        interactableObjects.forEach(object => object.destroy())
+        Object.keys(interactableObjects).forEach(key => {
+            interactableObjects[key].destroy()
+        })
+
     }
 
 

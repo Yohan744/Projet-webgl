@@ -22,9 +22,9 @@ export const objectsData = {
     },
     cassette: {
         file: Cassette,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
+        rotationOnClick: new THREE.Vector3(1.33, 0.04, -0.44),
         animateToCameraOnClick: true,
-        distanceToCamera: 0.3,
+        distanceToCamera: 0.2,
         outlineScale: 1.05,
         propSound: 'cassette',
     },
@@ -46,9 +46,9 @@ export const objectsData = {
     },
     rubicub: {
         file: RubiksCube,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
+        rotationOnClick: new THREE.Vector3(0, -Math.PI * 0.2, 0),
         animateToCameraOnClick: true,
-        distanceToCamera: 0.5,
+        distanceToCamera: 0.6,
         outlineScale: 1.05,
         propSound: 'rubiksCube',
     },
@@ -62,7 +62,7 @@ export const objectsData = {
     },
     tableau_magique1: {
         file: Telecran,
-        rotationOnClick: new THREE.Vector3(0, Math.PI, 0),
+        rotationOnClick: new THREE.Vector3(0, 0, -Math.PI * 0.35),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.05,
@@ -78,7 +78,7 @@ export const objectsData = {
     },
     lettre: {
         file: Letter,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
+        rotationOnClick: new THREE.Vector3(1.2, 1.88, 0.04),
         animateToCameraOnClick: true,
         distanceToCamera: 0.4,
         outlineScale: 1.05,

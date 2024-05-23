@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
-import {watch} from "vue";
 import gsap from "gsap";
 
 export default class Locations {
@@ -15,10 +14,7 @@ export default class Locations {
         Locations.instance = this
 
         this.experience = new Experience()
-        this.debug = this.experience.debug
-        this.gameManager = this.experience.gameManager
-        this.materialLibrary = materialLibrary
-        this.material = this.materialLibrary.getLocationsMaterial()
+        this.material = materialLibrary.getLocationsMaterial()
 
         this.spots = []
 
@@ -28,14 +24,14 @@ export default class Locations {
             new THREE.Vector3(-1.75, 0, 4.1),
             new THREE.Vector3(-2, 0, -2.5),
             new THREE.Vector3(1.5, 0, -2.25),
-            new THREE.Vector3(0.8, 0, 2.75),
+            new THREE.Vector3(0.65, 0, 2.25),
         ]
 
         this.locationsLookingPoint = [
             new THREE.Vector3(-3, -0.5, -0.5),
             new THREE.Vector3(-9, -0.5, -15),
-            new THREE.Vector3(10, -3.5, -5),
-            new THREE.Vector3(5, -2, -3),
+            new THREE.Vector3(10, -3.5, -2.5),
+            new THREE.Vector3(5, -2, -1),
         ]
 
         this.locationsOffset = [
@@ -48,13 +44,6 @@ export default class Locations {
         this.experience.on('ready', () => {
             this.scene = this.experience.scene
             this.init()
-
-            watch(() => this.gameManager.state.isCameraOnSpot, (state) => {
-                if (!state) {
-                    this.setLocationsVisibility(true)
-                }
-            })
-
         })
 
     }

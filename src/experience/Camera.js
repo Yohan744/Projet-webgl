@@ -181,6 +181,7 @@ export default class Camera {
                 onComplete: () => {
                     this.isMoving = false
                     if (isGoingOnASpot !== null) this.gameManager.updateCameraOnSpot(isGoingOnASpot)
+                    if (!isGoingOnASpot) this.experience.world.locations.setLocationsVisibility(true)
                 }
             });
             gsap.to(this.modes.default.instance, {

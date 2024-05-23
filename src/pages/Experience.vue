@@ -9,6 +9,7 @@
     <VideoIntro v-if="!isVideoIntroWatched"/>
     <ExperienceLayer :soundManager="soundManager"/>
     <div ref="experienceContainer" class="experience"></div>
+    <img id="cursor" src="../assets/icons/cursor.svg" alt="Cursor" v-if="!isMobile()">
   </main>
 </template>
 
@@ -22,6 +23,8 @@ import ExperienceLayer from "../components/ExperienceLayer.vue";
 import {useSoundManager} from "../main";
 import {useGameManager} from "../assets/js/GameManager";
 import gsap from "gsap";
+import {useCursor} from "../assets/js/Cursor";
+import {isMobile} from "../assets/js/utils";
 
 export default {
   name: 'ExperiencePage',
@@ -58,6 +61,9 @@ export default {
     }
   },
   mounted() {
+
+    this.cursor = useCursor();
+
     if (this.routeCheck) {
 
       this.$refs.videoElement?.load();
@@ -73,8 +79,10 @@ export default {
       this.experience.destroy();
       this.experience = null;
     }
+    this.cursor?.destroy()
   },
   methods: {
+    isMobile,
     initExperience() {
       if (this.experience) {
         this.experience.destroy();
@@ -122,51 +130,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-
-#experienceWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100dvh;
-  width: 100dvw;
-
-  .start-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    opacity: 0;
-    z-index: -1;
-    cursor: pointer;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.8s ease-in-out;
-
-    p {
-      position: relative;
-      font-size: 30px;
-      color: white;
-    }
-
-    &.visible {
-      pointer-events: all;
-      z-index: 1;
-      opacity: 1;
-    }
-
-  }
-
-  .experience {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    opacity: 0;
-    transition: opacity 2.5s ease-in-out;
-  }
-
-}
-
-</style>

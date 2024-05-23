@@ -20,6 +20,7 @@ export default class Prop extends EventEmitter {
         this.soundManager = this.experience.soundManager;
 
         this.mesh = mesh
+        this.mesh.rotation.order = "YXZ"
         this.animatePropsToCameraOnClick = animatePropsToCameraOnClick
         this.isOutlined = isOutlined
         this.propSound = propSound

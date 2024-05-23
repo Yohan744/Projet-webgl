@@ -1,5 +1,6 @@
 @import "eases";
 @import "masthead";
+@import "experience";
 @import "experience-layer";
 @import "404";
 
@@ -34,12 +35,6 @@ html, body {
 }
 
 ///////////////////////////////////////////////////////////////
-
-.experience {
-  position: fixed;
-  width: 100dvh;
-  height: 100dvh;
-}
 
 a {
   -webkit-touch-callout: none; /* iOS Safari */
