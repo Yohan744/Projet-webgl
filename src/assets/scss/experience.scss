@@ -14,18 +14,23 @@
     z-index: -1;
     pointer-events: none;
     transform: translate(-50%, -50%);
-    transition: opacity 0.8s ease-in-out;
+    transition: opacity 0.8s $ease-power3-out;
 
     p {
       position: relative;
       font-size: 30px;
       color: white;
+      transition: color 0.8s $ease-power3-out;
     }
 
     &.visible {
       pointer-events: all;
       z-index: 1;
       opacity: 1;
+    }
+
+    &:hover p{
+      color: #8a8a8a;
     }
 
   }

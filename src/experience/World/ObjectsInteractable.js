@@ -121,7 +121,7 @@ export default class ObjectsInteractable {
                     interactableObjects.recordPLayer = this.recordPlayer
                     interactableMesh.push(child)
 
-                } else if (name.includes("photo") || name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
+                } else if (name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
                     child.visible = false
                 } else {
                     console.log(name)
@@ -129,6 +129,8 @@ export default class ObjectsInteractable {
 
                 child.material.needsUpdate = true
 
+            } else {
+                console.log("zebi", child.name)
             }
         })
 

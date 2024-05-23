@@ -1,14 +1,18 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <div ref="startButton" class="start-button" @click="handleClickStartButton"
-         v-bind:class="{ visible: showStartButton }">
+
+    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{visible: showStartButton}">
       <p>start experience</p>
     </div>
+
     <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}" :progress="progress"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
     <ExperienceLayer :soundManager="soundManager"/>
+
     <div ref="experienceContainer" class="experience"></div>
+
     <img id="cursor" ref="cursor" src="../assets/icons/cursor.svg" alt="Cursor" v-if="!isMobile()">
+
   </main>
 </template>
 
@@ -63,6 +67,10 @@ export default {
   mounted() {
 
     this.cursor = useCursor();
+
+    if (this.appStore.$state.isVideoIntroWatched) {
+      this.$refs.cursor?.classList.add('visible');
+    }
 
     if (this.routeCheck) {
 

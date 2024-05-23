@@ -34,9 +34,6 @@ export default class Cursor {
     setupEvents() {
         if (this.cursor && this.settingsWrapper) {
             window.addEventListener('mousemove', this.handleMouseMove.bind(this))
-            window.addEventListener('focus', () => this.handleCursorOpacity(true))
-            window.addEventListener('blur', () => this.handleCursorOpacity(false))
-
             this.eventEmitter.on('change-cursor', (value) => this.changeCursorTo(value.name))
 
         }
