@@ -30,8 +30,8 @@ export default class Cursor {
     setupEvents() {
         if (this.cursor && this.settingsWrapper) {
             window.addEventListener('mousemove', this.handleMouseMove.bind(this))
-            window.addEventListener('focus', () => this.cursor.style.opacity = 1)
-            window.addEventListener('blur', () => this.cursor.style.opacity = 0)
+            // window.addEventListener('focus', () => this.cursor.style.opacity = 1)
+            // window.addEventListener('blur', () => this.cursor.style.opacity = 0)
 
             const settingsPanel = this.settingsWrapper.querySelector('.settings-panel')
             settingsPanel.addEventListener('mouseenter', () => this.handleMouseEnterSettings(true))
@@ -61,8 +61,8 @@ export default class Cursor {
 
     destroy() {
         window.removeEventListener('mousemove', this.handleMouseMove.bind(this))
-        window.removeEventListener('focus', () => this.cursor.style.opacity = 1)
-        window.removeEventListener('blur', () => this.cursor.style.opacity = 0)
+        // window.removeEventListener('focus', () => this.cursor.style.opacity = 1)
+        // window.removeEventListener('blur', () => this.cursor.style.opacity = 0)
         this.settingsWrapper.querySelector('.settings-panel').removeEventListener('mouseenter', () => this.handleMouseEnterSettings())
         Cursor.instance = null
     }
