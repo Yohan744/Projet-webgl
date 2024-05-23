@@ -57,11 +57,12 @@ export default class Pointer extends EventEmitter {
             this.trigger('movement-orbit', [this.mouse]);
         }
 
+        this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
+
     }
 
     onClick(_event) {
         this.updateMousePosition(_event)
-        this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
         const intersects = this.raycaster.intersectObjects(this.locations, false);
         if (intersects.length > 0 && !this.gameManager.state.isCameraOnSpot && !this.gameManager.state.isInteractingWithObject && !this.experience.camera.isMoving) {
             const position = intersects[0].object.position.clone()

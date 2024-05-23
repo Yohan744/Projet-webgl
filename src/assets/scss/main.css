@@ -27,9 +27,6 @@
   width: 100dvw;
   cursor: none;
 }
-#experienceWrapper:hover > #cursor {
-  opacity: 1;
-}
 #experienceWrapper .start-button {
   position: absolute;
   top: 50%;
@@ -65,7 +62,6 @@
   left: 0;
   height: 20px;
   width: auto;
-  opacity: 0;
   z-index: 100000;
   pointer-events: none;
   user-select: none;
@@ -257,6 +253,16 @@
 #experience-layer .settings-wrapper .settings-panel a {
   margin-top: 20px;
   cursor: none;
+}
+
+#masthead-outro {
+  position: relative;
+  height: 100dvh;
+  width: 100dvw;
+  background: white;
+}
+#masthead-outro h1 {
+  color: black;
 }
 
 #errorWrapper {

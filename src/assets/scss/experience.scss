@@ -6,10 +6,6 @@
   width: 100dvw;
   cursor: none;
 
-  &:hover > #cursor {
-    opacity: 1;
-  }
-
   .start-button {
     position: absolute;
     top: 50%;
@@ -50,7 +46,6 @@
     left: 0;
     height: 20px;
     width: auto;
-    opacity: 0;
     z-index: 100000;
     pointer-events: none;
     user-select: none;

@@ -16,6 +16,7 @@ import EventEmitter from "./Utils/EventEmitter";
 import {useAppStore} from "../stores/appStore";
 import {useSoundManager} from "../main";
 import {useGameManager} from "../assets/js/GameManager";
+import {useGlobalEvents} from "../assets/js/GlobalEvents";
 
 export default class Experience extends EventEmitter {
     static instance
@@ -32,6 +33,7 @@ export default class Experience extends EventEmitter {
 
         this.setAppStore()
         this.setGameManager()
+        this.setGlobalEvents()
         this.pointer = new Pointer()
         this.time = new Time()
         this.sizes = new Sizes()
@@ -100,6 +102,10 @@ export default class Experience extends EventEmitter {
 
     setGameManager() {
         this.gameManager = useGameManager()
+    }
+
+    setGlobalEvents() {
+        this.globalEvents = useGlobalEvents()
     }
 
     setScene() {

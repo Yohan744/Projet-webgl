@@ -6,6 +6,6 @@ export function useGlobalEvents () {
     return {
         trigger: emitter.emit,
         on: emitter.on,
-        removeListen: emitter.off,
+        off: emitter.off,
     };
 }
