@@ -38,9 +38,7 @@ export default class ObjectsInteractable {
 
                 if (name.includes("walkman")) {
                     child.material = this.materialLibrary.getWalkmanMaterial()
-                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.walkman = this.walkman
-                    interactableMesh.push(child)
+                    this.walkman = new Walkman(child);
 
                 } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial()

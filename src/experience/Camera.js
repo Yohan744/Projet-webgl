@@ -164,6 +164,12 @@ export default class Camera {
 
     moveCamera(position = false, lookingPoint = false, mult = 1, isGoingOnASpot = true, duration = 3) {
         let distanceToPoint = null
+        gsap.to(this.modes.default.instance, {
+            fov: 50,
+            ease: "power1.out",
+            delay: 2,
+            duration: 2,
+        });
 
         if (position) {
 
@@ -184,6 +190,7 @@ export default class Camera {
                     if (!isGoingOnASpot) this.experience.world.locations.setLocationsVisibility(true)
                 }
             });
+
             gsap.to(this.modes.default.instance, {
                 fov: 50,
                 ease: "power1.out",
@@ -301,6 +308,13 @@ export default class Camera {
             onComplete: () => {
                 this.gameManager.updateCameraOnSpot(true);
                 this.isMoving = false;
+
+                gsap.to(this.instance, {
+                    fov: 50,
+                    ease: "power1.out",
+                    delay: 2,
+                    duration: 2,
+                });
             }
         });
         tl.to(this.lookingPoint, {
@@ -330,16 +344,13 @@ export default class Camera {
                 duration: 2,
                 ease: 'power2.inOut'
             });
+            gsap.to(this.instance, {
+                fov: 50,
+                ease: "power1.out",
+                delay: 2,
+                duration: 2,
+            });
         }
-        gsap.to(this.instance, {
-            fov: 50,
-            ease: "power1.out",
-            delay: 2,
-            duration: 2,
-            onUpdate: () => {
-                this.updateFocusMode(true);
-            }
-        });
     }
 
     getNormalizedLookingPoint(position, point) {

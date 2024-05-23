@@ -314,9 +314,9 @@ export default class Envelop {
     updatePocketButtonVisibility() {
         const frontItem = this.items[0];
         const isCassette = frontItem === this.cassette;
-        this.gameManager.updatePocketButtonState('cassette');
         if (isCassette) {
             this.gameManager.setCassetteInFrontOfCamera(true);
+            this.gameManager.updatePocketButtonState(true);
         }
     }
 

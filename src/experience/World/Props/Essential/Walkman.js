@@ -1,229 +1,375 @@
 import * as THREE from "three";
+import { gsap } from "gsap";
+import { watch } from "vue";
 import Experience from "../../../Experience";
-import Prop from "../Prop";
-import { gsap } from 'gsap';
-import { watch } from 'vue';
+import { CameraUtils } from "../../Utils/CameraUtils";
 
-export default class Walkman {
+export default class Envelop {
     constructor() {
-
         this.experience = new Experience();
-        this.resources = this.experience.resources;
         this.scene = this.experience.scene;
-        this.camera = this.experience.camera.instance;
-        this.offsetFromCamera = 0.6;
-        this.objectCanRotate = true;
+        this.resources = this.experience.resources;
+        this.camera = this.experience.camera;
+        this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
-        this.morphTargetName = 'clapet';
-        this.morphMesh = null;
-        this.morphTargetMeshes = {};
+
+        this.hasAnimatedToCamera = false;
+        this.carouselIsSet = false;
         this.isDragging = false;
         this.isAnimating = false;
-        this.dragDistance = 0.15;
-        this.mouseStartClickPosition = { x: 0, y: 0 };
-        this.hasMoveInFront = false;
+        this.mouseStartClickPosition = {
+            x: 0,
+            y: 0,
+        };
+        this.hasOpenEnvelop = false;
+        this.dragDistance = 0.2;
+        this.initialEnvelopePosition = new THREE.Vector3(0, -0.05, -0.05);
+        this.currentSelectedItem = null;
 
-        this.setupMorphTargets();
         this.init();
         this.setEvents();
+        this.setWatchers();
     }
+
+    setWatchers() {
+        watch(
+            () => this.gameManager.state.objectToPocket,
+            (newVal) => {
+                if (newVal) {
+                    this.putObjectInPocket();
+                }
+            }
+        );
+    }
+
     init() {
-        watch(() => this.gameManager.state.isCassetteInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isWalkmanInFrontOfCamera) {
-                this.alignObjectsInFront();
-            }
-        });
-        watch(() => this.gameManager.state.isCassetteInFrontOfCamera && this.gameManager.state.isWalkmanInFrontOfCamera, () => {
-            this.checkObjectsInFront();
-        });
-        const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        this.mesh.traverse((child) => {
-            if (child.isMesh) {
-                child.material = material;
-                const edges = new THREE.EdgesGeometry(child.geometry);
-                const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
-                const lines = new THREE.LineSegments(edges, lineMaterial);
-                child.add(lines);
-            }
-        });
-        if (this.mesh.isMesh && Array.isArray(this.mesh.morphTargetInfluences)) {
-            console.log(this.mesh.morphTargetInfluences);
-            this.mesh.morphTargetInfluences.forEach((_, i) => this.mesh.morphTargetInfluences[i] = 0);
-        }
-    }
-    setupMorphTargets() {
-        if (this.mesh.isMesh && this.mesh.morphTargetInfluences) {
-            console.log("Morph Targets Found in:", this.mesh);
-            this.morphMesh = this.mesh;
-            const morphTargetGeometry = this.mesh.geometry.clone();
-            morphTargetGeometry.morphAttributes = { position: this.mesh.geometry.morphAttributes.position };
-            const morphTargetMesh = new THREE.Mesh(morphTargetGeometry, new THREE.MeshBasicMaterial({ visible: false }));
-            morphTargetMesh.name = 'morphTargetMesh_' + this.mesh.name;
-            this.morphTargetMeshes[this.morphTargetName] = morphTargetMesh;
-            this.scene.add(morphTargetMesh);
-        }
-        if (!this.morphMesh) {
-            console.error(`Morph target mesh not found.`);
-        } else if (!(this.morphTargetName in this.morphTargetMeshes)) {
-            console.error(`Morph target "${this.morphTargetName}" not found in the morph target dictionary.`);
-        }
-    }
-    setEvents() {
-        this.pointerDown = this.onPointerDown.bind(this);
-        this.pointerMove = this.onPointerMove.bind(this);
-        this.pointerUp = this.onPointerUp.bind(this);
-
-        this.pointer.on('click', this.pointerDown);
-        this.pointer.on('movement-orbit', this.pointerMove);
-        this.pointer.on('click-release', this.pointerUp);
+        this.envelopModel = this.resources.items.envelopModel.scene;
+        this.envelopModel.position.copy(this.initialEnvelopePosition);
+        this.scene.add(this.envelopModel);
+        this.setupMorphTargets();
+        this.createCarouselItems();
+        this.hidePocketButton(); // Ensure the button is hidden initially
     }
 
-    checkObjectsInFront() {
-        const isCassetteInFront = this.gameManager.state.isCassetteInFrontOfCamera;
-        const isWalkmanInFront = this.gameManager.state.showingInventoryObjectInFrontOfCamera === 'walkman';
-        this.objectCanRotate = !(isCassetteInFront && isWalkmanInFront);
-        if (isCassetteInFront && isWalkmanInFront) {
-            this.desiredRotation = null;
-            this.alignObjectsInFront();
-        }
-    }
-    onPointerDown() {
-        const mousePosition = this.pointer.getMousePosition();
-        this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
-        const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
-        if (intersects.length > 0) {
-            if (!this.hasMoveInFront) {
-                this.bringObjectsInFrontOfCamera();
-            } else {
-                this.startDragging(mousePosition);
-            }
-        }
-    }
-    onPointerMove(mouse) {
-        if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
+    createCarouselItems() {
+        this.itemGroup = new THREE.Group();
 
-        if ( (mouse.y + 1) - (this.mouseStartClickPosition.y + 1) > this.dragDistance) {
-            this.handleForwardDrag();
-        } else if ((this.mouseStartClickPosition.y + 1) - (mouse.y + 1) > this.dragDistance) {
-            this.handleBackwardDrag();
+        this.dahlia = this.resources.items.dahliaModel.scene;
+        this.letter = this.resources.items.letterModel.scene;
+
+        if (!this.gameManager.inventory.cassette) {
+            this.cassette = this.resources.items.cassetteModel.scene;
+            this.itemGroup.add(this.cassette);
+            this.items = [this.dahlia, this.cassette, this.letter];
         } else {
-            console.log("pas assez loin");
+            this.items = [this.dahlia, this.letter];
+        }
+
+        this.itemGroup.add(this.dahlia);
+        this.itemGroup.add(this.letter);
+
+        this.scene.add(this.itemGroup);
+
+        this.positions = [
+            { x: 0, y: 0.2, z: 0 },
+            { x: -0.2, y: -0.1, z: -0.2 },
+            { x: 0.2, y: 0.1, z: -0.2 }
+        ];
+
+        if (this.gameManager.inventory.cassette) {
+            this.positions = [
+                { x: 0.2, y: 0, z: 0.2 },
+                { x: -0.2, y: 0, z: -0.2 }
+            ];
         }
     }
-    startDragging(mousePosition) {
-        this.isDragging = true;
-        this.draggableModel = this.morphMesh;
-        this.desiredRotation = null;
-        this.mouseStartClickPosition = {
-            x: mousePosition.x,
-            y: mousePosition.y,
-        };
-        console.log("ready to drag");
-    }
-    handleForwardDrag() {
-        console.log("Dragging en avant");
-        this.isAnimating = true;
-        gsap.to(this.draggableModel.morphTargetInfluences, {
-            [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: 1,
-            duration: 1,
-            onComplete: () => {
-                this.isAnimating = false;
-            }
-        });
-    }
-    handleBackwardDrag() {
-        console.log("Dragging en arrière");
-        this.isAnimating = true;
-        gsap.to(this.draggableModel.morphTargetInfluences, {
-            [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: 0,
-            duration: 1,
-            onComplete: () => {
-                this.isAnimating = false;
+
+    setupMorphTargets() {
+        this.envelopModel.traverse((child) => {
+            if (child.isMesh && child.morphTargetInfluences) {
+                console.log("Morph Targets Found in:", child);
+                this.morphMesh = child;
+                this.morphTargets = child.morphTargetInfluences;
+                this.morphTargets[41] = 1;
+                child.morphTargetInfluences[40] = 1;
             }
         });
     }
 
-    onPointerUp() {
-        if (this.isDragging) {
+    setEvents() {
+        this.pointer.on("click", this.handleClick.bind(this));
+        this.pointer.on("movement", this.handleMouseMove.bind(this));
+        this.pointer.on("click-release", this.handleMouseUp.bind(this));
+    }
+
+    handleClick() {
+        const mousePosition = this.pointer.getMousePosition();
+        const intersects = this.pointer.raycaster.intersectObjects([this.envelopModel, this.itemGroup, ...this.itemGroup.children], true);
+        if (intersects.length > 0) {
+            if (this.hasOpenEnvelop) {
+                this.separateItemsToTriangle();
+            }
+            if (!this.hasAnimatedToCamera) {
+                this.camera.moveCameraToInitialPosition(() => {
+                    this.animateEnvelope(() => {
+                        CameraUtils.animateToCamera(this.envelopModel, this.camera.instance, () => {
+                            this.animateItemGroup();
+                        });
+                    });
+                });
+                this.hasAnimatedToCamera = true;
+            }
+            this.isDragging = true;
+            this.mouseStartClickPosition = {
+                x: mousePosition.x,
+                y: mousePosition.y,
+            };
+        } else {
+            this.resetItemPositions();
+        }
+    }
+
+    handleMouseMove(mouse) {
+        if (!this.isDragging) return;
+        if (!this.isAnimating && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
+            this.startAnimationOfMorphTargets();
+            this.itemGroup.visible = true;
+            this.isAnimating = true;
             this.isDragging = false;
-            this.draggableModel = null;
+        } else if (this.carouselIsSet) {
+            this.itemGroup.visible = true;
+            this.isAnimating = true;
+            if ((mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
+                this.rotateItemsRight();
+                this.isDragging = false;
+            } else {
+                this.rotateItemsLeft();
+            }
         }
     }
 
-    bringObjectsInFrontOfCamera() {
-        const cameraDirection = new THREE.Vector3();
-        this.camera.getWorldDirection(cameraDirection);
+    handleMouseUp() {
+        this.isDragging = false;
+        this.isAnimating = false;
+    }
 
-        const targetPosition = new THREE.Vector3();
-        targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
-
-        if (!this.experience.objectGroup) {
-            this.experience.objectGroup = new THREE.Group();
-            this.scene.add(this.experience.objectGroup);
+    startAnimationOfMorphTargets() {
+        if (this.morphTargets) {
+            for (let i = 0; i < this.morphTargets.length; i++) {
+                gsap.to(this.morphMesh.morphTargetInfluences, {
+                    [40]: "-=1",
+                    duration: 2,
+                    ease: "power1.inOut",
+                    onComplete: () => {
+                        this.animateItemGroup();
+                    }
+                });
+            }
         }
+    }
 
-        this.experience.objectGroup.add(this.mesh);
-        const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-        if (cassette) {
-            this.experience.objectGroup.add(cassette);
-        }
-        gsap.to(this.mesh.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: cassette ? targetPosition.z - 0.3 : targetPosition.z,
+    animateEnvelope(onComplete) {
+        const liftUp = { y: this.envelopModel.position.y + 0.5 };
+
+        const tl = gsap.timeline({ onComplete });
+
+        tl.to(this.envelopModel.position, {
+            y: liftUp.y,
             duration: 2,
-            ease: 'power2.inOut'
+            ease: "power2.inOut",
         });
-        if (cassette) {
-            gsap.to(cassette.position, {
-                x: targetPosition.x,
-                y: targetPosition.y,
-                z: targetPosition.z + 0.3,
-                duration: 2,
-                ease: 'power2.inOut'
-            });
-        }
-        this.gameManager.setWalkmanInFrontOfCamera(true);
-        this.gameManager.setCassetteInFrontOfCamera(true);
-        this.gameManager.state.isObjectOut = true;
-        this.hasMoveInFront = true;
     }
 
-    alignObjectsInFront() {
-        const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
-        const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
+    animateItemGroup() {
+        this.itemGroup.position.copy(this.envelopModel.position);
+        this.itemGroup.rotation.copy(this.envelopModel.rotation);
 
-        if (walkman && cassette) {
-            const cameraDirection = new THREE.Vector3();
-            this.camera.getWorldDirection(cameraDirection);
+        gsap.to(this.itemGroup.position, {
+            x: this.itemGroup.position.x + 0.2,
+            duration: 1,
+            ease: "power2.inOut",
+            onComplete: () => {
+                gsap.to(this.itemGroup.position, {
+                    x: this.itemGroup.position.x - 0.2,
+                    z: this.itemGroup.position.z + 0.1,
+                    duration: 1,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        this.animateEnvelopeBackToDrawer();
+                        this.separateItemsToTriangle();
+                        this.hasOpenEnvelop = true;
+                    }
+                });
+            }
+        });
+    }
 
-            const targetPosition = new THREE.Vector3();
-            targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
+    animateEnvelopeBackToDrawer() {
+        const drawerPosition = new THREE.Vector3();
+        const drawer = this.experience.scene.getObjectByName("tirroir-haut");
+        drawer.getWorldPosition(drawerPosition);
 
-            gsap.to(walkman.position, {
-                x: targetPosition.x,
-                y: targetPosition.y,
-                z: targetPosition.z - 0.3,
+        const envelopPositionX = drawerPosition.x;
+        const envelopPositionY = drawerPosition.y + 0.1;
+        const envelopPositionZ = drawerPosition.z - 0.4;
+
+        gsap.to(this.envelopModel.position, {
+            x: envelopPositionX,
+            y: envelopPositionY,
+            z: envelopPositionZ,
+            duration: 2,
+            ease: "power2.inOut"
+        });
+
+        gsap.to(this.envelopModel.rotation, {
+            x: -Math.PI * 2,
+            y: this.envelopModel.rotation.y + 0.6,
+            z: 0,
+            duration: 2,
+            ease: "power2.inOut",
+            onComplete: () => {
+                this.scene.remove(this.envelopModel);
+            }
+        });
+    }
+
+    separateItemsToTriangle() {
+        this.carouselIsSet = true;
+        const itemPositions = this.gameManager.inventory.cassette ? [
+            { x: 0.2, y: 0, z: 0.2 },
+            { x: -0.2, y: 0, z: -0.2 }
+        ] : [
+            { x: 0, y: 0.2, z: 0 },
+            { x: -0.2, y: -0.3, z: -0.2 },
+            { x: 0.2, y: -0.3, z: -0.2 }
+        ];
+
+        this.items.forEach((item, index) => {
+            gsap.to(item.position, {
+                x: itemPositions[index].x,
+                y: itemPositions[index].y,
+                z: itemPositions[index].z,
                 duration: 2,
-                ease: 'power2.inOut'
+                ease: "power2.inOut",
             });
+        });
 
-            gsap.to(cassette.position, {
-                x: targetPosition.x,
-                y: targetPosition.y,
-                z: targetPosition.z + 0.3,
+        this.updatePocketButtonVisibility();
+    }
+
+    rotateItemsRight() {
+        if (this.items.length === 2) {
+            this.rotateTwoItems(true);
+        } else {
+            const temp = this.items.pop();
+            this.items.unshift(temp);
+            this.animateItems();
+        }
+        this.updatePocketButtonVisibility();
+    }
+
+    rotateItemsLeft() {
+        if (this.items.length === 2) {
+            this.rotateTwoItems(false);
+        } else {
+            const temp = this.items.shift();
+            this.items.push(temp);
+            this.animateItems();
+        }
+        this.updatePocketButtonVisibility();
+    }
+
+    rotateTwoItems(clockwise) {
+        const [firstItem, secondItem] = this.items;
+        const center = new THREE.Vector3().addVectors(firstItem.position, secondItem.position).multiplyScalar(0.5);
+
+        const angle = clockwise ? Math.PI : -Math.PI;
+        gsap.to(firstItem.position, {
+            x: center.x + (firstItem.position.x - center.x) * Math.cos(angle) - (firstItem.position.z - center.z) * Math.sin(angle),
+            z: center.z + (firstItem.position.x - center.x) * Math.sin(angle) + (firstItem.position.z - center.z) * Math.cos(angle),
+            duration: 2,
+            ease: "power2.inOut"
+        });
+        gsap.to(secondItem.position, {
+            x: center.x + (secondItem.position.x - center.x) * Math.cos(angle) - (secondItem.position.z - center.z) * Math.sin(angle),
+            z: center.z + (secondItem.position.x - center.x) * Math.sin(angle) + (secondItem.position.z - center.z) * Math.cos(angle),
+            duration: 2,
+            ease: "power2.inOut"
+        });
+
+        this.items = [secondItem, firstItem];
+    }
+
+    animateItems() {
+        this.items.forEach((item, index) => {
+            gsap.to(item.position, {
+                x: this.positions[index].x,
+                y: this.positions[index].y,
+                z: this.positions[index].z,
                 duration: 2,
-                ease: 'power2.inOut'
+                ease: "power2.inOut",
+            });
+        });
+    }
+
+    updatePocketButtonVisibility() {
+        const frontItem = this.items[0];
+        const isCassette = frontItem === this.cassette;
+        this.gameManager.updatePocketButtonState(isCassette);
+        this.gameManager.state.isCassetteInFrontOfCamera = isCassette;
+    }
+
+    resetItemPositions() {
+        if (this.currentSelectedItem) {
+            this.currentSelectedItem = null;
+            this.animateItems();
+            this.hidePocketButton();
+        }
+    }
+
+    hidePocketButton() {
+        this.gameManager.updatePocketButtonState(false);
+    }
+
+    bringItemToFront(item) {
+        this.currentSelectedItem = item;
+        const frontPosition = { x: 0, y: 0.2, z: 0 };
+
+        gsap.to(item.position, {
+            x: frontPosition.x,
+            y: frontPosition.y,
+            z: frontPosition.z,
+            duration: 2,
+            ease: "power2.inOut",
+        });
+    }
+
+    putObjectInPocket() {
+        const frontItem = this.items[0];
+        if (frontItem === this.cassette) {
+            gsap.to(this.cassette.position, {
+                z: this.cassette.position.z + 2,
+                y: this.cassette.position.y - 1,
+                duration: 2,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    this.scene.remove(this.cassette);
+                    this.items = this.items.filter(item => item !== this.cassette);
+                    this.positions.pop();
+                    this.animateItems();
+                    this.gameManager.updatePocketButtonState(false);
+                    this.gameManager.setCassetteInFrontOfCamera(false);
+                    this.gameManager.addObjectToInventory('cassette');
+                }
             });
         }
     }
 
     destroy() {
-        super.destroy();
-        this.pointer.off('click', this.pointerDown);
-        this.pointer.off('movement-orbit', this.pointerMove);
-        this.pointer.off('click-release', this.pointerUp);
-        this.scene.remove(this.walkman);
-        this.outline.destroy();
+        this.scene.remove(this.envelopModel);
+        this.envelopModel.geometry.dispose();
+        this.pointer.off("click", this.handleClick);
+        this.pointer.off("movement", this.handleMouseMove);
+        this.pointer.off("click-release", this.handleMouseUp);
     }
 }
