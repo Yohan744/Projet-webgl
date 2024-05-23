@@ -4,14 +4,17 @@ import Experience from "../../../Experience";
 import Prop from '../Prop';
 import { watch } from "vue";
 
-export default class Cassette {
-    constructor() {
+export default class Cassette extends Prop {
+    constructor(mesh, animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound, spotId) {
+        super(mesh, animatePropsToCameraOnClick, distanceToCamera, isOutlined, propSound, spotId);
 
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.offsetFromCamera = 0.6;
+        this.desiredRotation = desiredRotationOnClick;
+        this.mesh = mesh;
 
         this.gameManager = this.experience.gameManager;
         this.init();
