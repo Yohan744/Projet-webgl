@@ -22,6 +22,11 @@ export default class Envelop {
         this.dragDistance = 0.2;
         this.initialEnvelopePosition = new THREE.Vector3(0, -0.05, -0.05);
         this.mesh = mesh;
+        this.envelopePosition = new THREE.Vector3();
+        this.envelopeRotation = new THREE.Euler();
+
+        this.interactableObjects = useInteractableObjects();
+        this.items = [];
 
         this.init();
         this.setEvents();
@@ -39,16 +44,14 @@ export default class Envelop {
         );
     }
 
-    init() {
-    }
+    init() {}
 
     createCarouselItems() {
-        this.itemGroup = new THREE.Group();
+        const dahlia = this.interactableObjects.dahlia ? this.interactableObjects.dahlia.mesh : null;
+        const cassetteMeshes = this.interactableObjects.cassette ? this.interactableObjects.cassette : null;
+        const letter = this.interactableObjects.lettre ? this.interactableObjects.lettre.mesh : null;
 
-        const interactableObjects = useInteractableObjects();
-        const dahlia = interactableObjects.dahlia ? interactableObjects.dahlia.mesh : null;
-        const cassette = interactableObjects.cassette ? interactableObjects.cassette.mesh : null;
-        const letter = interactableObjects.lettre ? interactableObjects.lettre.mesh : null;
+        const cassette = cassetteMeshes ? this.mergeMeshes(cassetteMeshes) : null;
 
         if (!this.gameManager.inventory.cassette) {
             this.items = [dahlia, cassette, letter].filter(Boolean);
@@ -56,11 +59,21 @@ export default class Envelop {
             this.items = [dahlia, letter].filter(Boolean);
         }
 
-        this.items.forEach(item => this.itemGroup.add(item));
-        this.scene.add(this.itemGroup);
+        this.items.forEach(item => {
+            item.position.copy(this.envelopePosition);
+            this.scene.add(item);
+        });
+    }
 
-        this.mesh.position.set(-3.5, 0, -4);
-        this.itemGroup.position.set(-3.5, 0, -4);
+    mergeMeshes(meshes) {
+        const combined = new THREE.Group();
+
+        meshes.forEach(mesh => {
+            const meshClone = mesh.clone();
+            combined.add(meshClone);
+        });
+
+        return combined;
     }
 
     setupMorphTargets() {
@@ -85,23 +98,22 @@ export default class Envelop {
     }
 
     handleClick() {
-        const interactableObjects = useInteractableObjects();
-        this.mesh = interactableObjects.envelopModel;
-        this.mesh.visible = false;
-
-        console.log(interactableObjects);
-
         const mousePosition = this.pointer.getMousePosition();
-        const intersects = this.pointer.raycaster.intersectObjects([this.mesh, this.itemGroup, ...this.itemGroup.children], true);
+        const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
         if (intersects.length > 0) {
-
             this.setupMorphTargets();
-            this.createCarouselItems();
+            if (!this.hasOpenEnvelop) {
+                this.createCarouselItems();
+            }
             this.hidePocketButton();
             if (this.hasOpenEnvelop) this.separateItemsToTriangle();
             if (!this.hasAnimatedToCamera) {
                 this.camera.moveCameraToInitialPosition(() => {
-                    this.animateEnvelope(() => CameraUtils.animateToCamera(this.mesh, this.camera.instance, 0.4));
+                    this.animateEnvelope(() => {
+                        CameraUtils.animateToCamera(this.mesh, this.camera.instance, 0.6);
+                        this.envelopePosition.set(-2.94133, 1.421451, -3.830488);
+                        this.envelopeRotation.set(Math.PI / 2, 0, 0);
+                    });
                 });
                 this.hasAnimatedToCamera = true;
             }
@@ -117,7 +129,7 @@ export default class Envelop {
         const raycaster = this.experience.pointer.raycaster;
         raycaster.setFromCamera({ x: mouseX, y: mouseY }, this.camera.instance);
 
-        const intersects = raycaster.intersectObjects([this.mesh, ...this.itemGroup.children], true);
+        const intersects = raycaster.intersectObject(this.mesh, true);
 
         if (intersects.length === 0) {
             if (mouseX < 0) this.rotateItemsLeft();
@@ -133,11 +145,9 @@ export default class Envelop {
         if (!this.isDragging) return;
         if (!this.isAnimating && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
             this.startAnimationOfMorphTargets();
-            this.itemGroup.visible = true;
             this.isAnimating = true;
             this.isDragging = false;
         } else if (this.carouselIsSet) {
-            this.itemGroup.visible = true;
             this.isAnimating = true;
             if ((mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
                 this.rotateItemsRight();
@@ -154,12 +164,13 @@ export default class Envelop {
     }
 
     startAnimationOfMorphTargets() {
+        this.animateItemGroup();
         if (this.morphTargets) {
             gsap.to(this.morphMesh.morphTargetInfluences, {
                 [40]: "-=1",
                 duration: 2,
                 ease: "power1.inOut",
-                onComplete: () => this.animateItemGroup()
+                onComplete: () => console.log("Morph targets animated")
             });
         }
     }
@@ -174,17 +185,18 @@ export default class Envelop {
     }
 
     animateItemGroup() {
-        this.itemGroup.position.copy(this.mesh.position);
-        this.itemGroup.rotation.copy(this.mesh.rotation);
-        this.itemGroup.rotateY(35 * (Math.PI / 180));
-        gsap.to(this.itemGroup.position, {
-            x: this.itemGroup.position.x + 0.1,
+        this.items.forEach(item => {
+            item.position.set(this.envelopePosition.x + 4, this.envelopePosition.y, this.envelopePosition.z);
+        });
+
+        gsap.to(this.items.map(item => item.position), {
+            x: this.mesh.position.x + 0.1,
             duration: 1,
             ease: "power2.inOut",
             onComplete: () => {
-                gsap.to(this.itemGroup.position, {
-                    x: this.itemGroup.position.x - 0.05,
-                    z: this.itemGroup.position.z + 0.05,
+                gsap.to(this.items.map(item => item.position), {
+                    x: this.mesh.position.x - 0.05,
+                    z: this.mesh.position.z + 0.05,
                     duration: 1,
                     ease: "power2.inOut",
                     onComplete: () => {
@@ -198,14 +210,18 @@ export default class Envelop {
     }
 
     animateEnvelopeBackToDrawer() {
-        const drawer = this.scene.getObjectByName("tirroir-haut");
+        const drawerMesh = this.interactableObjects.drawer?.mesh;
+        if (!drawerMesh) {
+            console.error("Drawer not found");
+            return;
+        }
         const drawerPosition = new THREE.Vector3();
-        drawer.getWorldPosition(drawerPosition);
+        drawerMesh.getWorldPosition(drawerPosition);
 
         gsap.to(this.mesh.position, {
             x: drawerPosition.x,
             y: drawerPosition.y + 0.1,
-            z: drawerPosition.z - 0.4,
+            z: drawerPosition.z - 0.04,
             duration: 2,
             ease: "power2.inOut"
         });
@@ -222,23 +238,35 @@ export default class Envelop {
 
     separateItemsToTriangle() {
         this.carouselIsSet = true;
-        this.positions = this.getDefaultPositions();
+        this.positions = this.getFixedPositions();
+        this.items.forEach(item => {
+            item.position.set(this.envelopePosition.x + 4, this.envelopePosition.y, this.envelopePosition.z);
+        });
 
         this.items.forEach((item, index) => {
-            gsap.to(item.position, {
-                x: this.positions[index].x,
-                y: this.positions[index].y,
-                z: this.positions[index].z,
-                duration: 2,
-                ease: "power2.inOut"
-            });
+            if (item && this.positions[index]) {
+                gsap.to(item.position, {
+                    x: this.positions[index].x,
+                    y: this.positions[index].y,
+                    z: this.positions[index].z,
+                    duration: 2,
+                    ease: "power2.inOut"
+                });
+                gsap.to(item.rotation, {
+                    x: this.envelopeRotation.x,
+                    y: this.envelopeRotation.y,
+                    z: this.envelopeRotation.z,
+                    duration: 2,
+                    ease: "power2.inOut"
+                });
+            }
         });
 
         this.updatePocketButtonVisibility();
     }
 
     rotateItemsRight() {
-        if (!this.positions) this.positions = this.getDefaultPositions();
+        if (!this.positions) this.positions = this.getFixedPositions();
 
         if (this.items.length === 2) {
             this.rotateTwoItems(true);
@@ -252,7 +280,7 @@ export default class Envelop {
     }
 
     rotateItemsLeft() {
-        if (!this.positions) this.positions = this.getDefaultPositions();
+        if (!this.positions) this.positions = this.getFixedPositions();
 
         if (this.items.length === 2) {
             this.rotateTwoItems(false);
@@ -289,9 +317,8 @@ export default class Envelop {
 
     animateItems() {
         this.items.forEach((item, index) => {
-            const position = item.position;
-            if (this.positions[index]) {
-                gsap.to(position, {
+            if (item && this.positions[index]) {
+                gsap.to(item.position, {
                     x: this.positions[index].x,
                     y: this.positions[index].y,
                     z: this.positions[index].z,
@@ -302,35 +329,39 @@ export default class Envelop {
         });
     }
 
-    getDefaultPositions() {
+    getFixedPositions() {
         return this.gameManager.inventory.cassette ? [
-            { x: 0.35, y: 0, z: 0 },
-            { x: -0.35, y: 0, z: 0 }
+            { x: -2.5, y: 1.9, z: -3.5 },
+            { x: -3.0, y: 1.9, z: -3.5 }
         ] : [
-            { x: 0, y: 0, z: 0 },
-            { x: -0.35, y: 0, z: 0 },
-            { x: 0.35, y: 0, z: 0 }
+            { x: -2.5, y: 1.9, z: -3.5 },
+            { x: -3.0, y: 1.9, z: -3.5 },
+            { x: -2.0, y: 1.9, z: -3.5 }
         ];
     }
 
     updatePocketButtonVisibility() {
-        const frontItem = this.items[0];
-        const isCassette = frontItem === this.cassette;
-        this.gameManager.updatePocketButtonState(isCassette);
-        this.gameManager.state.isCassetteInFrontOfCamera = isCassette;
+        if (this.hasOpenEnvelop) {
+            const frontItem = this.items[0];
+            const isCassette = frontItem === this.interactableObjects.cassette;
+            this.gameManager.updatePocketButtonState(isCassette);
+            this.gameManager.state.isCassetteInFrontOfCamera = isCassette;
+        } else {
+            this.gameManager.updatePocketButtonState(false);
+        }
     }
 
     putObjectInPocket() {
         const frontItem = this.items[0];
-        if (frontItem === this.cassette) {
-            gsap.to(this.cassette.position, {
-                z: this.cassette.position.z + 2,
-                y: this.cassette.position.y - 1,
+        if (frontItem === this.interactableObjects.cassette) {
+            gsap.to(frontItem.position, {
+                z: frontItem.position.z + 2,
+                y: frontItem.position.y - 1,
                 duration: 2,
                 ease: "power2.inOut",
                 onComplete: () => {
-                    this.scene.remove(this.cassette);
-                    this.items = this.items.filter(item => item !== this.cassette);
+                    this.scene.remove(frontItem);
+                    this.items = this.items.filter(item => item !== frontItem);
                     this.positions.pop();
                     this.animateItems();
                     this.gameManager.updatePocketButtonState(false);
@@ -350,7 +381,6 @@ export default class Envelop {
     }
 
     rotateObjects(clockwise = true) {
-        this.itemGroup.visible = true;
         this.isAnimating = true;
         clockwise ? this.rotateItemsRight() : this.rotateItemsLeft();
     }

@@ -23,6 +23,7 @@ export default class Cassette {
         };
 
         this.dragDistance = 0.07;
+        this.hasBeenCalled = false;
         this.pointerDown = this.onPointerDown.bind(this);
         this.pointerMove = this.onPointerMove.bind(this);
         this.pointerUp = this.onPointerUp.bind(this);
@@ -63,8 +64,8 @@ export default class Cassette {
     onPointerDown() {
         if (this.gameManager.state.isCameraOnSpot) {
             if(!this.isFirstAnimationIsDone) {
-                this.showInFrontOfCamera();
-                this.gameManager.updateInteractingState(true);
+                 //   this.showInFrontOfCamera();
+                 //   this.gameManager.updateInteractingState(true);
             }
 
         }

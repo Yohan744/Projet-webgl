@@ -7,10 +7,13 @@ import Drawer from "./Props/Essential/Drawer";
 import Envelop from "./Props/Essential/Envelop";
 import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
-import {watch} from "vue";
+import { watch } from "vue";
+import * as THREE from "three";
 
-const interactableObjects = {}
-const interactableMesh = []
+
+const interactableObjects = {};
+const interactableMesh = [];
+const itemGroup = new THREE.Group();
 
 export default class ObjectsInteractable {
 
@@ -75,6 +78,7 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getDahliaMaterial();
                     this.dahlia = new Dahlia(child);
                     interactableObjects.dahlia = this.dahlia;
+                    itemGroup.dalhia = child;
 
                 } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial();
@@ -103,6 +107,8 @@ export default class ObjectsInteractable {
                 } else if (name === 'corps') {
                     child.material = this.materialLibrary.getCassetteMaterial();
                     this.cassetteModel.push(child);
+                    interactableObjects.cassette = this.cassetteModel;
+                    itemGroup.add(this.cassetteModel);
 
                 } else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilMaterial();
@@ -130,13 +136,14 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("enveloppe")) {
                     child.material = this.materialLibrary.getEnveloppeMaterial();
-                    interactableObjects.envelopModel = child;
                     interactableObjects.envelopModel = new Envelop(child);
                     console.log(interactableObjects);
+
                 } else if (name.includes("lettre")) {
                     child.material = this.materialLibrary.getLetterMaterial();
                     this.lettre = new Letter(child);
                     interactableObjects.lettre = this.lettre;
+                    itemGroup.lettre = child;
 
                 } else if (name.includes("tableau_magique1")) {
                     child.material = this.materialLibrary.getTelecranMaterial();
@@ -175,7 +182,7 @@ export default class ObjectsInteractable {
                 child.material.needsUpdate = true
 
             }
-        })
+        });
 
         this.projector = new Projector(this.projectorModel);
         this.cassette = new Cassette(this.cassetteModel);
@@ -195,17 +202,14 @@ export default class ObjectsInteractable {
                     child.geometry.dispose()
                     child.material.dispose()
                 }
-            })
-            this.scene.remove(this.objectsInteractableModel)
+            });
+            this.scene.remove(this.objectsInteractableModel);
         }
         Object.keys(interactableObjects).forEach(key => {
-            interactableObjects[key].destroy()
-        })
-
+            interactableObjects[key].destroy();
+        });
     }
-
-
 }
 
-export const useInteractableObjects = () => interactableObjects
-export const getInteractablesMesh = () => interactableMesh
+export const useInteractableObjects = () => interactableObjects;
+export const getInteractablesMesh = () => interactableMesh;

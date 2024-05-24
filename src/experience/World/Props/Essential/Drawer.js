@@ -20,8 +20,7 @@ export default class Drawer {
         this.setEvents();
     }
 
-    init() {
-    }
+    init() {}
 
     setEvents() {
         this.pointer.on("click", this.click);
@@ -31,9 +30,15 @@ export default class Drawer {
         const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
         if (intersects.length > 0 && !this.isOpen) {
             const interactableObjects = useInteractableObjects();
-            console.log(interactableObjects)
-            this.envelopModel = interactableObjects.envelopModel;
-            this.animateDrawer(this.mesh);
+            this.envelopModel = interactableObjects.envelopModel?.mesh || null;
+            console.log(this.envelopModel);
+
+            if (this.envelopModel) {
+                this.animateDrawer(this.mesh);
+                console.log(this.envelopModel)
+            } else {
+                console.error("Envelop model not found");
+            }
         }
     }
 
@@ -45,7 +50,7 @@ export default class Drawer {
                 duration: 1,
                 onComplete: () => {
                     this.isOpen = true;
-                    this.positionEnvelopeInDrawer(this.mesh);
+                    this.positionEnvelopeInDrawer();
                     this.experience.camera.moveCameraToDrawer(this.mesh);
                 }
             });
@@ -67,17 +72,16 @@ export default class Drawer {
         }
     }
 
-    positionEnvelopeInDrawer(drawer) {
+    positionEnvelopeInDrawer() {
         const drawerPosition = new THREE.Vector3();
-        drawer.getWorldPosition(drawerPosition);
+        this.mesh.getWorldPosition(drawerPosition);
+
         const envelopPositionX = drawerPosition.x;
         const envelopPositionY = drawerPosition.y + 0.1;
-        const envelopPositionZ = drawerPosition.z - 0.3;
+        const envelopPositionZ = drawerPosition.z;
 
-        this.envelopModel.rotation.x = -Math.PI * 2;
-        this.envelopModel.rotation.y += 0.6;
-        this.envelopModel.rotation.z = 0;
-
+        this.envelopModel.rotation.set(-Math.PI * 2, 0.6, 0);
+        console.log(this.envelopModel.position);
         this.envelopModel.position.set(envelopPositionX, envelopPositionY, envelopPositionZ);
         this.envelopModel.visible = true;
     }

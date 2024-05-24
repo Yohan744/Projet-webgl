@@ -21,13 +21,8 @@
       </div>
     </div>
 
-    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible }">
+    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible && gameManager.state.isCassetteInFrontOfCamera }">
       <p>Mettre dans la poche</p>
-    </div>
-
-    <div class="carousel">
-      <button class="left-button">left</button>
-      <button class="right-button">right</button>
     </div>
 
     <div class="inventory-wrapper" v-if="isAnyItemInInventory">
@@ -136,9 +131,7 @@ export default {
       }
     },
     handlePocketButtonClick() {
-      if (this.gameManager.state.isPencilInFrontOfCamera) {
-        this.gameManager.updateObjectToPocket('pencil');
-      } else if (this.gameManager.state.isCassetteInFrontOfCamera) {
+      if (this.gameManager.state.isCassetteInFrontOfCamera) {
         this.gameManager.updateObjectToPocket('cassette');
       }
     },
