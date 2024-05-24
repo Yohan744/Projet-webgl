@@ -57,9 +57,9 @@ export default class Projector {
         this.boutonOn = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'boutonon');
         this.tireuse = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'tireuse');
         this.oeil = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'oeil');
-        console.log(this.projectorObjects[0].position);
-        this.outline = new Outline(this.projectorModel, 1.05)
-        this.outline?.showOutline()
+        // console.log(this.projectorObjects[0].position);
+        // this.outline = new Outline(this.projectorModel, 1.05)
+        // this.outline?.showOutline()
         
 
         if (this.boutonOn) {

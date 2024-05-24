@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { gsap } from "gsap";
-import { watch, toRaw } from "vue";
+import {gsap} from "gsap";
+import {watch, toRaw} from "vue";
 import Experience from "../../../Experience";
-import { CameraUtils } from "../../Utils/CameraUtils";
+import {CameraUtils} from "../../Utils/CameraUtils";
 
 export default class Envelop {
     constructor() {
@@ -17,11 +17,10 @@ export default class Envelop {
         this.carouselIsSet = false;
         this.isDragging = false;
         this.isAnimating = false;
-        this.mouseStartClickPosition = { x: 0, y: 0 };
+        this.mouseStartClickPosition = {x: 0, y: 0};
         this.hasOpenEnvelop = false;
         this.dragDistance = 0.2;
         this.initialEnvelopePosition = new THREE.Vector3(0, -0.05, -0.05);
-        this.currentSelectedItem = null;
 
         this.init();
         this.setEvents();
@@ -101,7 +100,7 @@ export default class Envelop {
                 this.hasAnimatedToCamera = true;
             }
             this.isDragging = true;
-            this.mouseStartClickPosition = { x: mousePosition.x, y: mousePosition.y };
+            this.mouseStartClickPosition = {x: mousePosition.x, y: mousePosition.y};
         }
     }
 
@@ -110,7 +109,7 @@ export default class Envelop {
         const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
         const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera({ x: mouseX, y: mouseY }, this.camera.instance);
+        raycaster.setFromCamera({x: mouseX, y: mouseY}, this.camera.instance);
 
         const intersects = raycaster.intersectObjects([this.envelopModel, ...this.itemGroup.children], true);
 
@@ -118,6 +117,10 @@ export default class Envelop {
             if (mouseX < 0) this.rotateItemsLeft();
             else this.rotateItemsRight();
         }
+    }
+
+    hidePocketButton() {
+        this.gameManager.updatePocketButtonState(false);
     }
 
     handleMouseMove(mouse) {
@@ -156,7 +159,7 @@ export default class Envelop {
     }
 
     animateEnvelope(onComplete) {
-        gsap.timeline({ onComplete })
+        gsap.timeline({onComplete})
             .to(this.envelopModel.position, {
                 y: this.envelopModel.position.y + 0.5,
                 duration: 2,
@@ -295,12 +298,12 @@ export default class Envelop {
 
     getDefaultPositions() {
         return this.gameManager.inventory.cassette ? [
-            { x: 0.35, y: 0, z: 0 },
-            { x: -0.35, y: 0, z: 0 }
+            {x: 0.35, y: 0, z: 0},
+            {x: -0.35, y: 0, z: 0}
         ] : [
-            { x: 0, y: 0, z: 0 },
-            { x: -0.35, y: 0, z: 0 },
-            { x: 0.35, y: 0, z: 0 }
+            {x: 0, y: 0, z: 0},
+            {x: -0.35, y: 0, z: 0},
+            {x: 0.35, y: 0, z: 0}
         ];
     }
 
@@ -309,16 +312,6 @@ export default class Envelop {
         const isCassette = frontItem === this.cassette;
         this.gameManager.updatePocketButtonState(isCassette);
         this.gameManager.state.isCassetteInFrontOfCamera = isCassette;
-    }
-
-    bringItemToFront(item) {
-        gsap.to(item.position, {
-            x: 0,
-            y: 0.2,
-            z: 0,
-            duration: 2,
-            ease: "power2.inOut"
-        });
     }
 
     putObjectInPocket() {

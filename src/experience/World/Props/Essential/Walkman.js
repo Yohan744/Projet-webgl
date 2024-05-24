@@ -29,7 +29,7 @@ export default class Walkman {
     init() {
         watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera === "cassette", (newVal) => {
             if (newVal && this.gameManager.state.isWalkmanInFrontOfCamera) {
-                console.log("Cassette and Walkman are both in front");
+                // console.log("Cassette and Walkman are both in front");
                 this.alignObjectsInFront();
             }
         });
@@ -42,11 +42,11 @@ export default class Walkman {
 
     setupMorphTargets() {
         if (this.mesh.isMesh && this.mesh.morphTargetInfluences) {
-            console.log("Morph Targets Found in:", this.mesh);
+            // console.log("Morph Targets Found in:", this.mesh);
             this.morphMesh = this.mesh;
-            console.log("Morph target dictionary:", this.morphMesh.morphTargetDictionary);
+            // console.log("Morph target dictionary:", this.morphMesh.morphTargetDictionary);
         } else {
-            console.error(`Morph target mesh not found.`);
+            // console.error(`Morph target mesh not found.`);
         }
     }
 
@@ -71,7 +71,7 @@ export default class Walkman {
     }
 
     onPointerDown() {
-        console.log("Pointer down");
+        // console.log("Pointer down");
         const mousePosition = this.pointer.getMousePosition();
         this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
@@ -88,14 +88,14 @@ export default class Walkman {
         if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
 
         const deltaY = mouse.y - this.mouseStartClickPosition.y;
-        console.log("Mouse move deltaY:", deltaY);
+        // console.log("Mouse move deltaY:", deltaY);
 
         if (deltaY > this.dragDistance) {
             this.handleForwardDrag(deltaY);
         } else if (-deltaY > this.dragDistance) {
             this.handleBackwardDrag(deltaY);
         } else {
-            console.log("pas assez loin");
+            // console.log("pas assez loin");
         }
     }
 
@@ -106,12 +106,12 @@ export default class Walkman {
             x: mousePosition.x,
             y: mousePosition.y,
         };
-        console.log("ready to drag");
+        // console.log("ready to drag");
     }
 
     handleForwardDrag(deltaY) {
         const influence = Math.min(1, deltaY / this.dragDistance);
-        console.log("Dragging forward, influence:", influence);
+        // console.log("Dragging forward, influence:", influence);
         gsap.to(this.draggableModel.morphTargetInfluences, {
             [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: influence,
             duration: 0.1,
@@ -121,7 +121,7 @@ export default class Walkman {
 
     handleBackwardDrag(deltaY) {
         const influence = Math.max(0, deltaY / this.dragDistance);
-        console.log("Dragging backward, influence:", influence);
+        // console.log("Dragging backward, influence:", influence);
         gsap.to(this.draggableModel.morphTargetInfluences, {
             [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: influence,
             duration: 0.1,
@@ -131,14 +131,14 @@ export default class Walkman {
 
     onPointerUp() {
         if (this.isDragging) {
-            console.log("Pointer up, stopping drag");
+            // console.log("Pointer up, stopping drag");
             this.isDragging = false;
             this.draggableModel = null;
         }
     }
 
     bringObjectsInFrontOfCamera() {
-        console.log("Bringing objects in front of camera");
+        // console.log("Bringing objects in front of camera");
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
 
@@ -181,7 +181,7 @@ export default class Walkman {
     }
 
     alignObjectsInFront() {
-        console.log("Aligning objects in front");
+        // console.log("Aligning objects in front");
         const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
         const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
 
@@ -212,13 +212,13 @@ export default class Walkman {
 
     applyBasicMaterial() {
         if (this.mesh.isMesh && Array.isArray(this.mesh.morphTargetInfluences)) {
-            console.log("Initial morph target influences:", this.mesh.morphTargetInfluences);
+            // console.log("Initial morph target influences:", this.mesh.morphTargetInfluences);
             this.mesh.morphTargetInfluences.forEach((_, i) => this.mesh.morphTargetInfluences[i] = 0);
         }
     }
 
     destroy() {
-        console.log("Destroying Walkman");
+        // console.log("Destroying Walkman");
         this.pointer.off('click', this.pointerDown);
         this.pointer.off('movement-orbit', this.pointerMove);
         this.pointer.off('click-release', this.pointerUp);
