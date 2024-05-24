@@ -17,8 +17,8 @@ export default class Props {
     }
 
     init() {
-        // this.drawer = new Drawer();
-        // this.envelop = new Envelop()
+        this.drawer = new Drawer();
+        this.envelop = new Envelop()
         this.projector = new Projector()
         this.photo = new Photo()
     }

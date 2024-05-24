@@ -266,6 +266,9 @@
   margin-top: 20px;
   cursor: none;
 }
+#experience-layer .carousel button {
+  background-color: blue;
+}
 
 #masthead-outro {
   position: relative;
