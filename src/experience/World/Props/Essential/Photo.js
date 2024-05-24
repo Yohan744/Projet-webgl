@@ -18,7 +18,7 @@ export default class Photo {
         this.activeParticles = [];
         this.rows = 60;
         this.columns = 60;
-        this.particlesPerCell = 20;
+        this.particlesPerCell = 30;
         this.cells = {};
         this.cellMeshes = [];
         this.detectedCells = new Set();
@@ -45,17 +45,22 @@ export default class Photo {
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
         this.scene.add(this.group);
-        const texture = this.resources.items.backgroundTreeTexture;
 
-        const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
-        const rectangleMaterial = new THREE.MeshBasicMaterial({
-            map: texture,
-            side: THREE.DoubleSide,
-            transparent: true,
+        const texture = this.resources.items.monabouquet;
+        texture.repeat.set(1, -1); 
+        texture.offset.set(0, 1); 
+    
+        this.photoModel.traverse((child) => {
+            if (child.isMesh) {
+                child.material = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                });
+            }
         });
-        this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
-        this.rectangleMesh.position.set(0, 0, 0);
-        this.group.add(this.rectangleMesh);
+
+        this.group.add(this.photoModel);
     }
 
     setupParticles() {
@@ -64,8 +69,8 @@ export default class Photo {
         const posArray = new Float32Array(particlesCount * 3);
         const scaleArray = new Float32Array(particlesCount);
 
-        const width = 0.165;
-        const height = 0.115;
+        const width = 0.175;
+        const height = 0.125;
         const xSpacing = width / (this.columns - 1);
         const ySpacing = height / (this.rows - 1);
 
@@ -105,7 +110,7 @@ export default class Photo {
 
                 float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
 
-                vec4 color = vec4(0.4, 0.4, 0.4, alpha * 0.2); 
+                vec4 color = vec4(0.3, 0.3, 0.3, alpha * 0.3); 
 
                 gl_FragColor = color;
             }
@@ -313,7 +318,7 @@ export default class Photo {
             if (progress < 1) {
                 requestAnimationFrame(rotate);
             } else {
-                setTimeout(() => this.fadeOut(this.group), 3000); 
+                setTimeout(() => this.fadeOut(this.group), 5000); 
             }
         };
         rotate();
