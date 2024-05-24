@@ -446,6 +446,8 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objectsInteractable/postalCard/diffuse.webp',
+                    diffuse2: 'assets/textures/objectsInteractable/postalCard/diffuse2.webp',
+                    diffuse3: 'assets/textures/objectsInteractable/postalCard/diffuse3.webp',
                 }
             },
 
@@ -504,6 +506,14 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objectsInteractable/picture/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'vinyl',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/vinyl/diffuse.webp',
                 }
             },
 
