@@ -18,7 +18,7 @@ export default class Photo {
         this.activeParticles = [];
         this.rows = 60;
         this.columns = 60;
-        this.particlesPerCell = 30;
+        this.particlesPerCell = 50;
         this.cells = {};
         this.cellMeshes = [];
         this.detectedCells = new Set();
@@ -88,7 +88,7 @@ export default class Photo {
             uniforms: {
                 uTime: { value: 0 },
                 uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-                uSize: { value: 5 }
+                uSize: { value: 3 }
             },
             vertexShader: `
             uniform float uPixelRatio;
@@ -110,7 +110,7 @@ export default class Photo {
 
                 float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
 
-                vec4 color = vec4(0.3, 0.3, 0.3, alpha * 0.3); 
+                vec4 color = vec4(0.3, 0.3, 0.3, alpha * 0.5); 
 
                 gl_FragColor = color;
             }
@@ -274,19 +274,19 @@ export default class Photo {
     getRemovalPercentage(distance) {
         switch (distance) {
             case 1:
-                return 0.175;
+                return 0.165;
             case 2:
-                return 0.15;
+                return 0.155;
             case 3:
-                return 0.125;
+                return 0.145;
             case 4:
-                return 0.1;
+                return 0.135;
             case 5:
-                return 0.075;
+                return 0.125;
             case 6:
-                return 0.05;
+                return 0.115;
             case 7:
-                return 0.25;
+                return 0.105;
             default:
                 return 0;
         }
