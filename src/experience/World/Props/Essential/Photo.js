@@ -188,18 +188,28 @@ export default class Photo {
         const neighbors = [];
         const row = Math.floor(cellIndex / this.columns);
         const column = cellIndex % this.columns;
-
-        // Top neighbor
-        if (row > 0) neighbors.push(cellIndex - this.columns);
-        // Bottom neighbor
-        if (row < this.rows - 1) neighbors.push(cellIndex + this.columns);
-        // Left neighbor
-        if (column > 0) neighbors.push(cellIndex - 1);
-        // Right neighbor
-        if (column < this.columns - 1) neighbors.push(cellIndex + 1);
-
+    
+        const addNeighbor = (r, c) => {
+            if (r >= 0 && r < this.rows && c >= 0 && c < this.columns) {
+                const distance = Math.sqrt(Math.pow(row - r, 2) + Math.pow(column - c, 2));
+                if (distance <= 5) {
+                    neighbors.push(r * this.columns + c);
+                }
+            }
+        };
+    
+        for (let i = -5; i <= 5; i++) {
+            for (let j = -5; j <= 5; j++) {
+                if (i !== 0 || j !== 0) {
+                    addNeighbor(row + i, column + j);
+                }
+            }
+        }
+    
         return neighbors;
     }
+    
+    
 
     onMouseMove(event) {
         const cellIndices = this.detectCells(event);
@@ -208,6 +218,7 @@ export default class Photo {
         });
         this.particlesMesh.geometry.attributes.position.needsUpdate = true;
     }
+    
 
     removeCellParticles(cellIndex) {
         if (this.cells[cellIndex]) {
@@ -221,7 +232,7 @@ export default class Photo {
 
             delete this.cells[cellIndex];
 
-            if (this.displacedParticles >= 5000) {
+            if (this.displacedParticles >= this.initialPositions.length) {
                 this.fadeOut(this.group);
             } else {
                 this.fadeOut(this.cellMeshes[cellIndex]);
