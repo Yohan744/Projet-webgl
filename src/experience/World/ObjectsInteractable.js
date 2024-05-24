@@ -135,6 +135,8 @@ export default class ObjectsInteractable {
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
                     child.material = this.materialLibrary.getVinylMaterial()
+                } else if (name === 'photo') {
+                    child.material = this.materialLibrary.getPictureMaterial()
                 } else {
                     // console.log(name)
                 }
