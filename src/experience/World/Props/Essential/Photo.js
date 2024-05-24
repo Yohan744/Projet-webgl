@@ -180,7 +180,6 @@ export default class Photo {
                 return [cellIndex, ...this.getNeighboringCells(cellIndex)];
             }
         }
-
         return [];
     }
 
@@ -229,16 +228,40 @@ export default class Photo {
                     this.displacedParticles++;
                 }
             });
-
+    
             delete this.cells[cellIndex];
-
+    
             if (this.displacedParticles >= this.initialPositions.length) {
-                this.fadeOut(this.group);
+                this.rotatePhoto();
             } else {
                 this.fadeOut(this.cellMeshes[cellIndex]);
             }
         }
     }
+    
+    rotatePhoto() {
+        const duration = 2000;
+        const targetRotation = Math.PI; 
+    
+        const startRotation = this.group.rotation.z;
+        const startTime = performance.now();
+    
+        const rotate = () => {
+            const currentTime = performance.now();
+            const elapsed = currentTime - startTime;
+            const progress = THREE.MathUtils.clamp(elapsed / duration, 0, 1);
+    
+            this.group.rotation.y = startRotation + progress * targetRotation;
+    
+            if (progress < 1) {
+                requestAnimationFrame(rotate);
+            } else {
+                setTimeout(() => this.fadeOut(this.group), 1000); 
+            }
+        };
+        rotate();
+    }
+    
 
     removeParticle(index) {
         const positions = this.particlesMesh.geometry.attributes.position.array;
