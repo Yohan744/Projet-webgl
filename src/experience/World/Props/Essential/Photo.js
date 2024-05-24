@@ -202,14 +202,14 @@ export default class Photo {
         const addNeighbor = (r, c) => {
             if (r >= 0 && r < this.rows && c >= 0 && c < this.columns) {
                 const distance = Math.sqrt(Math.pow(row - r, 2) + Math.pow(column - c, 2));
-                if (distance <= 5) {
+                if (distance <= 7) {
                     neighbors.push(r * this.columns + c);
                 }
             }
         };
     
-        for (let i = -5; i <= 5; i++) {
-            for (let j = -5; j <= 5; j++) {
+        for (let i = -7; i <= 7; i++) {
+            for (let j = -7; j <= 7; j++) {
                 if (i !== 0 || j !== 0) {
                     addNeighbor(row + i, column + j);
                 }
@@ -231,13 +231,14 @@ export default class Photo {
 
     removeCellParticles(cellIndex) {
         if (this.cells[cellIndex]) {
-            this.cells[cellIndex].forEach((index) => {
-                if (this.activeParticles[index]) {
-                    this.activeParticles[index] = false;
-                    this.removeParticle(index);
-                    this.displacedParticles++;
-                }
+            const neighbors = this.getNeighboringCells(cellIndex);
+            neighbors.forEach((neighbor) => {
+                const distance = this.getDistanceBetweenCells(cellIndex, neighbor);
+                const percentage = this.getRemovalPercentage(distance);
+                this.removeParticlesInCell(neighbor, percentage);
             });
+    
+            this.removeParticlesInCell(cellIndex, 1);
     
             delete this.cells[cellIndex];
     
@@ -248,6 +249,52 @@ export default class Photo {
             }
         }
     }
+    
+    removeParticlesInCell(cellIndex, percentage) {
+        if (this.cells[cellIndex]) {
+            this.cells[cellIndex].forEach((index) => {
+                if (this.activeParticles[index] && Math.random() < percentage) {
+                    this.activeParticles[index] = false;
+                    this.removeParticle(index);
+                    this.displacedParticles++;
+                }
+            });
+    
+            if (percentage === 1) {
+                delete this.cells[cellIndex];
+            }
+        }
+    }
+    
+    getRemovalPercentage(distance) {
+        switch (distance) {
+            case 1:
+                return 0.175;
+            case 2:
+                return 0.15;
+            case 3:
+                return 0.125;
+            case 4:
+                return 0.1;
+            case 5:
+                return 0.075;
+            case 6:
+                return 0.05;
+            case 7:
+                return 0.25;
+            default:
+                return 0;
+        }
+    }
+    
+    getDistanceBetweenCells(cellIndex1, cellIndex2) {
+        const row1 = Math.floor(cellIndex1 / this.columns);
+        const column1 = cellIndex1 % this.columns;
+        const row2 = Math.floor(cellIndex2 / this.columns);
+        const column2 = cellIndex2 % this.columns;
+        return Math.sqrt(Math.pow(row1 - row2, 2) + Math.pow(column1 - column2, 2));
+    }
+    
     
     rotatePhoto() {
         const duration = 2000;
