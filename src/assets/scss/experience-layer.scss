@@ -18,7 +18,7 @@
     }
   }
 
-  .go-back-icon, .settings-icon, {
+  .go-back-icon, .settings-icon {
     position: absolute;
     top: 35px;
     left: 35px;
@@ -209,6 +209,12 @@
         margin-top: 20px;
         cursor: none;
       }
+    }
+  }
+
+  .carousel {
+    button {
+      background-color: blue;
     }
   }
 
