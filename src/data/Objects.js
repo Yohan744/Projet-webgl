@@ -60,14 +60,6 @@ export const objectsData = {
         outlineScale: 1.02,
         propSound: 'recordPlayer',
     },
-    lettre: {
-        file: Letter,
-        rotationOnClick: new THREE.Vector3(1.2, 1.88, 0.04),
-        animateToCameraOnClick: true,
-        distanceToCamera: 0.4,
-        outlineScale: 1.05,
-        propSound: '',
-    },
     malle_bas: {
         file: BottomChest,
         rotationOnClick: new THREE.Vector3(0, 0, 0),

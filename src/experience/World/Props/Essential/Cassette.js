@@ -6,7 +6,6 @@ import { watch } from "vue";
 
 export default class Cassette {
     constructor(objects) {
-        //console.log(objects);
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
@@ -46,6 +45,13 @@ export default class Cassette {
         this.corps = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'corps');
 
         this.objectsToAnimate = [this.bobine1, this.bobine2, this.bobine3, this.corps].filter(Boolean);
+
+        this.objectsToAnimate.forEach(object => {
+            if (object.morphTargetInfluences) {
+                console.log('Morph targets found in:', object.name);
+                object.morphTargetDictionary = object.morphTargetDictionary || {};
+            }
+        });
     }
 
     setEvents() {
@@ -56,14 +62,11 @@ export default class Cassette {
 
     onPointerDown() {
         if (this.gameManager.state.isCameraOnSpot) {
-            const mousePosition = this.pointer.getMousePosition();
-            this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
-            const intersects = this.pointer.raycaster.intersectObjects(this.objectsToAnimate, true);
-            if (intersects.length > 0) {
-                //console.log(intersects[0].object.name);
+            if(!this.isFirstAnimationIsDone) {
                 this.showInFrontOfCamera();
                 this.gameManager.updateInteractingState(true);
             }
+
         }
     }
 
@@ -101,8 +104,25 @@ export default class Cassette {
             });
         });
 
+        this.animateMorphTargets(true);
+        this.isFirstAnimationIsDone = true;
+
         this.gameManager.setCassetteInFrontOfCamera(true);
         this.gameManager.state.isObjectOut = true;
+    }
+
+    animateMorphTargets(isForward) {
+        this.objectsToAnimate.forEach(object => {
+            if (object.morphTargetInfluences) {
+                const targetValue = isForward ? 1 : 0;
+                const morphIndex = object.morphTargetDictionary['morphTargetName'] || 0; // Remplacez 'morphTargetName' par le nom correct de la morph target
+                gsap.to(object.morphTargetInfluences, {
+                    [morphIndex]: targetValue,
+                    duration: 1,
+                    ease: 'power2.inOut'
+                });
+            }
+        });
     }
 
     onPointerMove(mouse) {

@@ -1,17 +1,19 @@
 import Experience from "../../../Experience";
 import * as THREE from "three";
 import gsap from "gsap";
+import { useInteractableObjects } from "../../ObjectsInteractable";
 
 export default class Drawer {
-    constructor() {
+    constructor(mesh) {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
         this.camera = this.experience.camera;
         this.pointer = this.experience.pointer;
+        this.mesh = mesh;
 
         this.isOpen = false;
-        this.click = this.handleClick.bind(this)
+        this.click = this.handleClick.bind(this);
         this.originalCameraPosition = null;
 
         this.init();
@@ -19,15 +21,6 @@ export default class Drawer {
     }
 
     init() {
-        this.drawerModel = this.resources.items.drawerModel.scene;
-        this.drawerModel.position.set(-3.5, 0, -4);
-        this.scene.add(this.drawerModel);
-
-        this.topDrawer = this.drawerModel.getObjectByName("tirroir-haut");
-
-        this.envelopModel = this.resources.items.envelopModel.scene;
-        this.envelopModel.visible = true;
-        this.scene.add(this.envelopModel);
     }
 
     setEvents() {
@@ -35,23 +28,25 @@ export default class Drawer {
     }
 
     handleClick() {
-        const intersects = this.pointer.raycaster.intersectObject(this.topDrawer, true);
+        const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
         if (intersects.length > 0 && !this.isOpen) {
-            this.animateDrawer(this.topDrawer);
+            const interactableObjects = useInteractableObjects();
+            console.log(interactableObjects)
+            this.envelopModel = interactableObjects.envelopModel;
+            this.animateDrawer(this.mesh);
         }
     }
 
     animateDrawer(drawer) {
         if (!this.isOpen) {
             gsap.to(drawer.position, {
-                x: drawer.position.x + 0.5,
+                x: drawer.position.x + 0.3,
+                z: drawer.position.z + 0.3,
                 duration: 1,
-                onUpdate: () => {
-                },
                 onComplete: () => {
                     this.isOpen = true;
-                    this.positionEnvelopeInDrawer(this.topDrawer);
-                    this.experience.camera.moveCameraToDrawer(this.topDrawer);
+                    this.positionEnvelopeInDrawer(this.mesh);
+                    this.experience.camera.moveCameraToDrawer(this.mesh);
                 }
             });
         } else {
@@ -64,6 +59,7 @@ export default class Drawer {
             });
         }
     }
+
     restoreCameraPosition() {
         if (this.originalCameraPosition) {
             this.camera.instance.position.copy(this.originalCameraPosition);
@@ -86,11 +82,10 @@ export default class Drawer {
         this.envelopModel.visible = true;
     }
 
-
     destroy() {
-        this.pointer.off("click");
-        this.scene.remove(this.drawerModel);
-        this.drawerModel.traverse((child) => {
+        this.pointer.off("click", this.click);
+        this.scene.remove(this.mesh);
+        this.mesh.traverse((child) => {
             if (child.isMesh) {
                 child.geometry.dispose();
                 child.material.dispose();
