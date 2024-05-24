@@ -22,6 +22,7 @@ export default class Photo {
         this.cells = {};
         this.cellMeshes = [];
         this.detectedCells = new Set();
+        this.rotationInitiated = false;
 
         this.init();
     }
@@ -223,8 +224,6 @@ export default class Photo {
         return neighbors;
     }
     
-    
-
     onMouseMove(event) {
         const cellIndices = this.detectCells(event);
         cellIndices.forEach((cellIndex) => {
@@ -233,7 +232,6 @@ export default class Photo {
         this.particlesMesh.geometry.attributes.position.needsUpdate = true;
     }
     
-
     removeCellParticles(cellIndex) {
         if (this.cells[cellIndex]) {
             const neighbors = this.getNeighboringCells(cellIndex);
@@ -247,7 +245,8 @@ export default class Photo {
     
             delete this.cells[cellIndex];
     
-            if (this.displacedParticles >= this.initialPositions.length) {
+            if (this.displacedParticles >= this.initialPositions.length * 0.9 && !this.rotationInitiated) {
+                this.rotationInitiated = true; 
                 this.rotatePhoto();
             } else {
                 this.fadeOut(this.cellMeshes[cellIndex]);
@@ -300,7 +299,6 @@ export default class Photo {
         return Math.sqrt(Math.pow(row1 - row2, 2) + Math.pow(column1 - column2, 2));
     }
     
-    
     rotatePhoto() {
         const duration = 2000;
         const targetRotation = Math.PI; 
@@ -324,7 +322,6 @@ export default class Photo {
         rotate();
     }
     
-
     removeParticle(index) {
         const positions = this.particlesMesh.geometry.attributes.position.array;
         positions[index * 3] = NaN;
