@@ -69,7 +69,9 @@ let recordPlayerMaterial,
     cassetteMaterial,
     enveloppeMaterial,
     dahliaMaterial,
-    postalCardMaterial,
+    postalCardBiarritzMaterial,
+    postalCardBeachMaterial,
+    postalCardHouseMaterial,
     closedMagazineMaterial,
     openMagazineMaterial,
     letterMaterial,
@@ -77,7 +79,8 @@ let recordPlayerMaterial,
     bottomChestMaterial,
     topChestMaterial,
     pencilMaterial,
-    pictureMaterial
+    pictureMaterial,
+    vinylMaterial
 
 
 let outlineMaterial,
@@ -893,17 +896,43 @@ export default class MaterialLibrary {
         return dahliaMaterial
     }
 
-    getPostalCardMaterial() {
-        if (!postalCardMaterial) {
-            postalCardMaterial = new MeshBasicMaterial({
+    getPostalCardBiarritzMaterial() {
+        if (!postalCardBiarritzMaterial) {
+            postalCardBiarritzMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
-            this.materialsUsed.push(postalCardMaterial)
+            this.materialsUsed.push(postalCardBiarritzMaterial)
         }
 
-        return postalCardMaterial
+        return postalCardBiarritzMaterial
+    }
+
+    getPostalCardBeachMaterial() {
+        if (!postalCardBeachMaterial) {
+            postalCardBeachMaterial = new MeshBasicMaterial({
+                map: this.resources.items.postalCard.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(postalCardBeachMaterial)
+        }
+
+        return postalCardBeachMaterial
+    }
+
+    getPostalCardHouseMaterial() {
+        if (!postalCardHouseMaterial) {
+            postalCardHouseMaterial = new MeshBasicMaterial({
+                map: this.resources.items.postalCard.diffuse3,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(postalCardHouseMaterial)
+        }
+
+        return postalCardHouseMaterial
     }
 
     getOpenMagazineMaterial() {
@@ -1008,6 +1037,19 @@ export default class MaterialLibrary {
         }
 
         return pictureMaterial
+    }
+
+    getVinylMaterial() {
+        if (!vinylMaterial) {
+            vinylMaterial = new MeshBasicMaterial({
+                map: this.resources.items.vinyl.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(vinylMaterial)
+        }
+
+        return vinylMaterial
     }
 
     ///////////////////////// TEXTURE MATERIALS /////////////////////////////

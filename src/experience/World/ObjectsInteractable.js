@@ -41,8 +41,10 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getDrawerMaterial()
                     interactableMesh.push(child)
 
-                } else if (name.includes("cartepostale")) {
-                    child.material = this.materialLibrary.getPostalCardMaterial()
+                } else if (name.includes("cartepostale") || name.includes('cartespostales')) {
+                    if (name.includes('biarritz')) child.material = this.materialLibrary.getPostalCardBiarritzMaterial()
+                    if (name.includes('plage')) child.material = this.materialLibrary.getPostalCardBeachMaterial()
+                    if (name.includes('maison')) child.material = this.materialLibrary.getPostalCardHouseMaterial()
                     interactableMesh.push(child)
 
                 }  else if (name.includes("dahlia")) {
@@ -123,6 +125,9 @@ export default class ObjectsInteractable {
 
                 } else if (name === 'photo') {
                     child.material = this.materialLibrary.getPictureMaterial()
+
+                } else if (name === 'vynyle' || name === 'vynyle1') {
+                    child.material = this.materialLibrary.getVinylMaterial()
 
                 } else if (name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
                     child.visible = false
