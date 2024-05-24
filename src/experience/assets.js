@@ -499,6 +499,14 @@ export default [
                 }
             },
 
+            {
+                name: 'picture',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/picture/diffuse.webp',
+                }
+            },
+
         ]
     },
 

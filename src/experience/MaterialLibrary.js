@@ -76,7 +76,8 @@ let recordPlayerMaterial,
     walkmanMaterial,
     bottomChestMaterial,
     topChestMaterial,
-    pencilMaterial;
+    pencilMaterial,
+    pictureMaterial
 
 
 let outlineMaterial,
@@ -994,6 +995,19 @@ export default class MaterialLibrary {
         }
 
         return pencilMaterial
+    }
+
+    getPictureMaterial() {
+        if (!pictureMaterial) {
+            pictureMaterial = new MeshBasicMaterial({
+                map: this.resources.items.picture.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(pictureMaterial)
+        }
+
+        return pictureMaterial
     }
 
     ///////////////////////// TEXTURE MATERIALS /////////////////////////////

@@ -98,37 +98,41 @@ export default class Pointer extends EventEmitter {
 
     checkIntersections() {
 
-        if (this.gameManager.state.isCameraOnSpot) {
+        if (!this.gameManager.state.isSettingsOpen) {
 
-            const interactableMesh = this.raycaster.intersectObjects(getInteractablesMesh(), false)
+            if (this.gameManager.state.isCameraOnSpot) {
 
-            if (this.gameManager.state.isInteractingWithObject) {
+                const interactableMesh = this.raycaster.intersectObjects(getInteractablesMesh(), false)
 
-                // logic here
+                if (this.gameManager.state.isInteractingWithObject) {
+
+                    // logic here
+
+                } else {
+
+                    if (interactableMesh.length > 0 && getActualCursor() !== 'grab') {
+                        this.globalEvents.trigger('change-cursor', {name: 'grab'})
+                    }
+                }
+
+                if (interactableMesh.length === 0 && getActualCursor() !== 'default') {
+                    this.globalEvents.trigger('change-cursor', {name: 'default'})
+                }
 
             } else {
 
-                if (interactableMesh.length > 0 && getActualCursor() !== 'grab') {
+                const locations = this.raycaster.intersectObjects(this.locations, false)
+
+                if (locations.length > 0 && getActualCursor() !== 'grab') {
                     this.globalEvents.trigger('change-cursor', {name: 'grab'})
                 }
+
+                if (locations.length === 0 && getActualCursor() !== 'default') {
+                    this.globalEvents.trigger('change-cursor', {name: 'default'})
+                }
+
+
             }
-
-            if (interactableMesh.length === 0 && getActualCursor() !== 'default') {
-                this.globalEvents.trigger('change-cursor', {name: 'default'})
-            }
-
-        } else {
-
-            const locations = this.raycaster.intersectObjects(this.locations, false)
-
-            if (locations.length > 0 && getActualCursor() !== 'grab') {
-                this.globalEvents.trigger('change-cursor', {name: 'grab'})
-            }
-
-            if (locations.length === 0 && getActualCursor() !== 'default') {
-                this.globalEvents.trigger('change-cursor', {name: 'default'})
-            }
-
 
         }
 

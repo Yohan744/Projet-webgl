@@ -7,7 +7,7 @@ import {
     BlendFunction,
     RenderPass,
     ToneMappingMode,
-    BokehEffect, SelectiveBloomEffect, VignetteEffect, VignetteTechnique, DepthPass
+    BokehEffect, SelectiveBloomEffect, VignetteEffect, VignetteTechnique
 } from "postprocessing";
 import gsap from 'gsap'
 
@@ -71,7 +71,6 @@ export default class Renderer {
         this.composer = new EffectComposer(this.instance);
 
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
-        this.depthPass = new DepthPass(this.scene, this.camera.instance);
 
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.DARKEN,
@@ -114,7 +113,6 @@ export default class Renderer {
         this.toneAndBlurPass = new EffectPass(this.camera.instance, this.toneMappingEffect, this.dofEffect);
 
         this.composer.addPass(this.renderPass);
-        this.composer.addPass(this.depthPass);
         this.composer.addPass(this.globalPass);
         this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
     }
