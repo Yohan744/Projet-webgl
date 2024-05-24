@@ -3,8 +3,8 @@ import gsap from "gsap";
 
 export class CameraUtils {
 
-    static animateToCamera(model, camera) {
-        const distance = 1;
+    static animateToCamera(model, camera, distance = 1) {
+       // const distance = 1;
         const forward = new THREE.Vector3(0, 0, -1);
         forward.applyQuaternion(camera.quaternion);
 
