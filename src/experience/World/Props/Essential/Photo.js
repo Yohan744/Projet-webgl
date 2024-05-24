@@ -16,9 +16,9 @@ export default class Photo {
         this.group = null;
         this.initialPositions = [];
         this.activeParticles = [];
-        this.rows = 40;
-        this.columns = 40;
-        this.particlesPerCell = 30;
+        this.rows = 60;
+        this.columns = 60;
+        this.particlesPerCell = 20;
         this.cells = {};
         this.cellMeshes = [];
         this.detectedCells = new Set();
@@ -83,25 +83,36 @@ export default class Photo {
             uniforms: {
                 uTime: { value: 0 },
                 uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-                uSize: { value: 7 }
+                uSize: { value: 5 }
             },
             vertexShader: `
-                uniform float uPixelRatio;
-                uniform float uSize;
-                attribute float aScale;
+            uniform float uPixelRatio;
+            uniform float uSize;
+            attribute float aScale;
 
-                void main() {
-                    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-                    vec4 viewPosition = viewMatrix * modelPosition;
-                    vec4 projectionPosition = projectionMatrix * viewPosition;
-                    gl_Position = projectionPosition;
-                    gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
-                }
-            `,
-            fragmentShader: dustFragmentShader,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthTest: false,
+            void main() {
+                vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                vec4 viewPosition = viewMatrix * modelPosition;
+                vec4 projectionPosition = projectionMatrix * viewPosition;
+                gl_Position = projectionPosition;
+                gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
+            }
+        `,
+        fragmentShader: `
+            void main() {
+                vec2 uv = gl_PointCoord.xy * 2.0 - 1.0;
+                float dist = length(uv);
+
+                float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
+
+                vec4 color = vec4(0.4, 0.4, 0.4, alpha * 0.2); 
+
+                gl_FragColor = color;
+            }
+        `,
+        transparent: true,
+        blending: THREE.NormalBlending, 
+        depthTest: false,
         });
 
         this.particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
@@ -204,7 +215,6 @@ export default class Photo {
                 }
             }
         }
-    
         return neighbors;
     }
     
