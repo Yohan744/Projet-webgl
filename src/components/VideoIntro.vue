@@ -2,6 +2,9 @@
   <div ref="videoWrapper" class="video-intro-wrapper">
     <div v-if="videoElement">
       <video ref="videoElement" :src="videoUrl" autoplay playsinline @canplaythrough="playVideo" @ended="onVideoEnded"></video>
+      <div class="skip" @click="skipVideo">
+        <p>Skip</p>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +32,11 @@ export default {
       return this.videoManagerState.videoElement;
     }
   },
+  mounted() {
+    if (this.videoElement) {
+      this.$refs.videoWrapper.appendChild(this.videoElement);
+    }
+  },
   methods: {
     playVideo() {
       this.updateOpacityTo(1, () => {
@@ -53,11 +61,9 @@ export default {
           callback();
         }
       }, 3000);
-    }
-  },
-  mounted() {
-    if (this.videoElement) {
-      this.$refs.videoWrapper.appendChild(this.videoElement);
+    },
+    skipVideo() {
+      this.markVideoWatched();
     }
   }
 };
@@ -84,5 +90,26 @@ export default {
     opacity: 0;
     transition: opacity 2.5s ease-in-out;
   }
+
+  .skip {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    background: white;
+    z-index: 6;
+    cursor: pointer;
+    border-radius: 10px;
+
+    p {
+      position: relative;
+      font-size: 20px;
+    }
+
+  }
+
 }
 </style>
