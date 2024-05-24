@@ -32,6 +32,11 @@
       <p>Mettre dans la poche</p>
     </div>
 
+    <div class="carousel">
+      <button class="left-button">left</button>
+      <button class="right-button">right</button>
+    </div>
+
     <div class="inventory-wrapper" v-if="isAnyItemInInventory">
 
       <div v-if="gameManager.inventory.cassette" @click="handleInventoryObjectClick('cassette')">
