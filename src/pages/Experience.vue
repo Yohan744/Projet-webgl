@@ -1,14 +1,18 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <div ref="startButton" class="start-button" @click="handleClickStartButton"
-         v-bind:class="{ visible: showStartButton }">
+
+    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{visible: showStartButton}">
       <p>start experience</p>
     </div>
-    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"
-             :progress="progress"/>
+
+    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}" :progress="progress"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
     <ExperienceLayer :soundManager="soundManager"/>
+
     <div ref="experienceContainer" class="experience"></div>
+
+    <img id="cursor" ref="cursor" src="../assets/icons/cursor.svg" alt="Cursor" v-if="!isMobile()">
+
   </main>
 </template>
 
@@ -21,6 +25,9 @@ import {useRouter} from "vue-router";
 import ExperienceLayer from "../components/ExperienceLayer.vue";
 import {useSoundManager} from "../main";
 import {useGameManager} from "../assets/js/GameManager";
+import gsap from "gsap";
+import {useCursor} from "../assets/js/Cursor";
+import {isMobile} from "../assets/js/utils";
 
 export default {
   name: 'ExperiencePage',
@@ -53,10 +60,18 @@ export default {
     'appStore.$state.isVideoIntroWatched': function () {
       if (this.isLoaded) {
         this.setExperienceOpacity();
+        this.$refs.cursor?.classList.add('visible');
       }
     }
   },
   mounted() {
+
+    this.cursor = useCursor();
+
+    if (this.appStore.$state.isVideoIntroWatched) {
+      this.$refs.cursor?.classList.add('visible');
+    }
+
     if (this.routeCheck) {
 
       this.$refs.videoElement?.load();
@@ -72,8 +87,10 @@ export default {
       this.experience.destroy();
       this.experience = null;
     }
+    this.cursor?.destroy()
   },
   methods: {
+    isMobile,
     initExperience() {
       if (this.experience) {
         this.experience.destroy();
@@ -93,9 +110,13 @@ export default {
       });
 
       this.experience.on('assetLoading', (value) => {
-        const progress = Math.round(value * 100);
-        if (progress > this.progress) {
-          this.progress = Math.min(progress, 100);
+        const p = Math.min(Math.round(value * 100), 100);
+        if (p > this.progress) {
+          gsap.to(this, {
+            progress: p,
+            duration: 0.5,
+            ease: 'power2.out'
+          });
         }
       });
 
@@ -117,51 +138,3 @@ export default {
   },
 }
 </script>
-
-<style scoped lang="scss">
-
-#experienceWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100dvh;
-  width: 100dvw;
-
-  .start-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    opacity: 0;
-    z-index: -1;
-    cursor: pointer;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.8s ease-in-out;
-
-    p {
-      position: relative;
-      font-size: 30px;
-      color: white;
-    }
-
-    &.visible {
-      pointer-events: all;
-      z-index: 1;
-      opacity: 1;
-    }
-
-  }
-
-  .experience {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    opacity: 0;
-    transition: opacity 2.5s ease-in-out;
-  }
-
-}
-
-</style>

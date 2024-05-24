@@ -180,7 +180,8 @@ export default class Camera {
                 ease: 'power1.inOut',
                 onComplete: () => {
                     this.isMoving = false
-                    if (isGoingOnASpot) this.gameManager.updateCameraOnSpot(true)
+                    if (isGoingOnASpot !== null) this.gameManager.updateCameraOnSpot(isGoingOnASpot)
+                    if (!isGoingOnASpot) this.experience.world.locations.setLocationsVisibility(true)
                 }
             });
             gsap.to(this.modes.default.instance, {

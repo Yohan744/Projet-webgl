@@ -7,7 +7,7 @@ import {
     BlendFunction,
     RenderPass,
     ToneMappingMode,
-    BokehEffect, SelectiveBloomEffect, VignetteEffect, VignetteTechnique, DepthPass
+    BokehEffect, SelectiveBloomEffect, VignetteEffect, VignetteTechnique
 } from "postprocessing";
 import gsap from 'gsap'
 
@@ -59,7 +59,7 @@ export default class Renderer {
         this.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.instance.shadowMap.enabled = false
         this.instance.toneMapping = THREE.NoToneMapping
-        this.instance.toneMappingExposure = 1.5
+        this.instance.toneMappingExposure = 1.1
         this.instance.outputColorSpace = THREE.SRGBColorSpace
 
         if (this.stats && this.stats.instance) {
@@ -71,7 +71,6 @@ export default class Renderer {
         this.composer = new EffectComposer(this.instance);
 
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
-        this.depthPass = new DepthPass(this.scene, this.camera.instance);
 
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.DARKEN,
@@ -88,9 +87,9 @@ export default class Renderer {
             blendFunction: BlendFunction.SCREEN,
             luminanceThreshold: 0.6,
             luminanceSmoothing: 0.025,
-            intensity: 2.25,
+            intensity: 1.5,
             radius: 0.6,
-            levels: 12,
+            levels: 6,
             mipmapBlur: true,
         });
 
@@ -104,7 +103,7 @@ export default class Renderer {
         this.dofEffect = new BokehEffect({
             focus: 0.010,
             aperture: 0, // 0.184
-            maxBlur: 0.025,
+            maxBlur: 0.004,
             width: this.config.width,
             height: this.config.height
         });
@@ -128,7 +127,7 @@ export default class Renderer {
         gsap.to(this.dofEffect.uniforms.get('aperture'), {
             value: value ? 1 : 0,
             delay: value ? 0.35 : 0,
-            duration: 3,
+            duration: 2.5,
             ease: 'power1.out',
             onStart: () => {
                 if (value) {
@@ -220,18 +219,6 @@ export default class Renderer {
         })
 
         /////////////////
-
-        // this.bloom = new SelectiveBloomEffect(this.scene, this.camera.instance, {
-        //     blendFunction: BlendFunction.SCREEN,
-        //     luminanceThreshold: 0.7,
-        //     luminanceSmoothing: 0.025,
-        //     intensity: 3,
-        //     radius: 0.925,
-        //     levels: 8,
-        //     mipmapBlur: true,
-        // });
-
-        console.log(this.bloom)
 
         this.debugFolder.addBinding(this.bloom.uniforms.get('intensity'), 'value', {
             min: 0,

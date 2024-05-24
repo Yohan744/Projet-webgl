@@ -24,30 +24,29 @@ export default [
             },
 
             {
-                name: 'malleModel',
-                source: '/assets/models/malle-ouverture.glb',
-                type: 'model',
-            },
-            {
                 name: 'drawerModel',
                 source: '/assets/models/commode.glb',
                 type: 'model',
             },
+
             {
                 name: 'envelopModel',
                 source: '/assets/models/enveloppe.glb',
                 type: 'model',
             },
+
             {
                 name: 'cassetteModel',
                 source: '/assets/models/cassette.glb',
                 type: 'model',
             },
+
             {
                 name: 'dahliaModel',
                 source: '/assets/models/dahlia.glb',
                 type: 'model',
             },
+
             {
                 name: 'letterModel',
                 source: '/assets/models/lettre.glb',
@@ -59,7 +58,6 @@ export default [
                 source: '/assets/models/photo.glb',
                 type: 'model',
             },
-
             {
                 name: 'projectorModel',
                 source: '/assets/models/visionneuse.glb',
@@ -142,6 +140,16 @@ export default [
             },
 
             {
+                name: 'box',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/box/diffuse.webp',
+                    diffuse2: 'assets/textures/objects/box/diffuse2.webp',
+                    diffuse3: 'assets/textures/objects/box/diffuse3.webp',
+                }
+            },
+
+            {
                 name: 'carpet',
                 type: 'group',
                 textures: {
@@ -156,7 +164,6 @@ export default [
                 textures: {
                     diffuse: 'assets/textures/objects/cardboard/diffuse.webp',
                     diffuse2: 'assets/textures/objects/cardboard/diffuse2.webp',
-                    ao: 'assets/textures/objects/cardboard/ao.webp',
                 }
             },
 
@@ -318,6 +325,14 @@ export default [
             },
 
             {
+                name: 'pencils',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/pencil/diffuse.webp',
+                }
+            },
+
+            {
                 name: 'books',
                 type: 'group',
                 textures: {
@@ -387,6 +402,22 @@ export default [
             },
 
             {
+                name: 'telecran',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/telecran/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'telephone',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/telephone/diffuse.webp',
+                }
+            },
+
+            {
                 name: 'recordPlayer',
                 type: 'group',
                 textures: {
@@ -407,6 +438,72 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objectsInteractable/enveloppe/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'postalCard',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/postalCard/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'dahlia',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/dahlia/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'letter',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/letter/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'magazine',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/magazine/diffuse.webp',
+                    diffuse2: 'assets/textures/objectsInteractable/magazine/diffuse2.webp',
+                }
+            },
+
+            {
+                name: 'walkman',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/walkman/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'pencil',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/pencil/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'chest',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/chest/diffuse.webp',
+                    diffuse2: 'assets/textures/objectsInteractable/chest/diffuse2.webp',
+                }
+            },
+
+            {
+                name: 'picture',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objectsInteractable/picture/diffuse.webp',
                 }
             },
 
@@ -435,7 +532,11 @@ export default [
                 source: '/assets/textures/attic/background/backgroundTree.webp',
                 type: 'texture',
             },
-
+            {
+                name: 'photoTexture',
+                source: '/assets/textures/objects/photo/photo.webp',
+                type: 'texture',
+            },
         ]
     }
 

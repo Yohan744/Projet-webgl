@@ -15,8 +15,76 @@
   cursor: pointer;
   transition: text-underline-offset 0.35s;
 }
-#masthead a:hover {
+#masthead a.disabled {
+  pointer-events: none;
+  color: #5e5e5e;
+}
+#masthead a:not(.disabled):hover {
   text-underline-offset: 2px;
+}
+
+#experienceWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  cursor: none;
+}
+#experienceWrapper .start-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+#experienceWrapper .start-button p {
+  position: relative;
+  font-size: 30px;
+  color: white;
+  transition: color 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+#experienceWrapper .start-button.visible {
+  pointer-events: all;
+  z-index: 1;
+  opacity: 1;
+}
+#experienceWrapper .start-button:hover p {
+  color: #8a8a8a;
+}
+#experienceWrapper .experience {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 2.5s ease-in-out;
+}
+#experienceWrapper #cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: auto;
+  z-index: 99;
+  pointer-events: none;
+  user-select: none;
+  user-focus: none;
+  transform: translate(-5vh, -5vw);
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+#experienceWrapper #cursor.visible {
+  opacity: 1;
+}
+@media only screen and (max-width: 992px) {
+  #experienceWrapper #cursor {
+    display: none;
+  }
 }
 
 #experience-layer {
@@ -26,6 +94,7 @@
   height: 100%;
   width: 100%;
   z-index: 20;
+  cursor: none;
   pointer-events: none;
   opacity: 0;
   transition: opacity 2.5s ease-in-out;
@@ -40,12 +109,11 @@
   position: absolute;
   top: 35px;
   left: 35px;
-  height: 35px;
-  width: 35px;
+  height: 40px;
+  width: 40px;
   display: flex;
   place-items: center;
   pointer-events: none;
-  cursor: pointer;
   opacity: 0;
   scale: 0.9;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), scale 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -61,6 +129,9 @@
   opacity: 1;
   scale: 1;
   pointer-events: all;
+}
+#experience-layer .go-back-icon:hover {
+  opacity: 0.6;
 }
 #experience-layer .settings-icon {
   top: 35px;
@@ -88,7 +159,6 @@
   align-content: center;
   border-radius: 10px;
   background-color: white;
-  cursor: pointer;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), background-color 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -119,7 +189,6 @@
   height: 35px;
   width: 35px;
   margin-left: 20px;
-  cursor: pointer;
 }
 #experience-layer .inventory-wrapper div img {
   position: relative;
@@ -141,6 +210,9 @@
   user-select: none;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+#experience-layer .settings-wrapper * {
+  pointer-events: none;
+}
 #experience-layer .settings-wrapper.visible {
   opacity: 1;
   pointer-events: all;
@@ -149,6 +221,9 @@
 #experience-layer .settings-wrapper.visible .settings-panel {
   transform: translateY(0);
   opacity: 1;
+}
+#experience-layer .settings-wrapper.visible * {
+  pointer-events: all;
 }
 #experience-layer .settings-wrapper .settings-panel {
   position: relative;
@@ -169,7 +244,6 @@
   margin-bottom: 20px;
   font-size: 20px;
   color: black;
-  cursor: pointer;
 }
 #experience-layer .settings-wrapper .settings-panel .volume-wrapper {
   position: relative;
@@ -186,9 +260,21 @@
 #experience-layer .settings-wrapper .settings-panel .volume-wrapper input {
   position: relative;
   margin: 0 12px;
+  cursor: none;
 }
 #experience-layer .settings-wrapper .settings-panel a {
   margin-top: 20px;
+  cursor: none;
+}
+
+#masthead-outro {
+  position: relative;
+  height: 100dvh;
+  width: 100dvw;
+  background: white;
+}
+#masthead-outro h1 {
+  color: black;
 }
 
 #errorWrapper {
@@ -235,12 +321,6 @@ html, body {
 
 .tp-dfwv {
   width: 280px !important;
-}
-
-.experience {
-  position: fixed;
-  width: 100dvh;
-  height: 100dvh;
 }
 
 a {

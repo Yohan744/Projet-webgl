@@ -14,8 +14,29 @@ export const data = {
 
     //////// PROPS SOUNDS ////////
 
+    walkman: {
+        src: p + 'walkman.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    cassette: {
+        src: p + 'cassette.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
     telephone: {
         src: p + 'telephone.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    telecran: {
+        src: p + 'telecran.m4a',
         volume: 0.75,
         preload: true,
         loop: false,
@@ -42,12 +63,6 @@ export const data = {
         loop: false,
     },
 
-    walkman: {
-        src: p + 'walkman.m4a',
-        volume: 0.75,
-        preload: true,
-        loop: false,
-    },
 
     //////// GENERAL SOUNDS ////////
 

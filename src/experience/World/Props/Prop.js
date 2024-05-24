@@ -8,7 +8,7 @@ import {MouseUtils} from "../Utils/MouseUtils";
 
 export default class Prop extends EventEmitter {
 
-    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound = '', spotId = 0) {
+    constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound = '') {
         super();
 
         this.experience = new Experience();
@@ -20,6 +20,7 @@ export default class Prop extends EventEmitter {
         this.soundManager = this.experience.soundManager;
 
         this.mesh = mesh
+        this.mesh.rotation.order = "YXZ"
         this.animatePropsToCameraOnClick = animatePropsToCameraOnClick
         this.isOutlined = isOutlined
         this.propSound = propSound
@@ -30,15 +31,8 @@ export default class Prop extends EventEmitter {
         this.offsetFromCamera = distanceToCamera;
         this.chanceOfPlayingASong = 0.4
         this.propsSongHasBeenPlayed = false
-        this.spotId = spotId
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
-        if (this.animatePropsToCameraOnClick) {
-            this.mouseUtils = new MouseUtils(this.mesh);
-            this.mouseUtils.on('dragging', () => {
-                this.outline?.updateOutlineMeshRotation(this.mesh.rotation)
-            })
-        }
 
         this.init()
         this.setWatchers()
@@ -55,7 +49,6 @@ export default class Prop extends EventEmitter {
             if (!state) {
                 this.animatePropsToBasicPosition()
                 this.outline?.showOutline()
-                this.gameManager.updateOrbitsControlsState(false)
                 this.gameManager.setActualObjectInteractingName(null)
                 this.renderer.toggleBlurEffect(false)
             }
@@ -66,7 +59,7 @@ export default class Prop extends EventEmitter {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
         if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot) {
             this.onClickGeneral()
-            if (this.animatePropsToCameraOnClick && !this.gameManager.state.isInteractingWithObject && this.spotId === this.gameManager.state.spotId && this.gameManager.state.actualObjectInteractingName === null) {
+            if (this.animatePropsToCameraOnClick && !this.gameManager.state.isInteractingWithObject && intersects[0].distance < 4 && this.gameManager.state.actualObjectInteractingName === null) {
 
                 this.animatePropsToCamera()
                 this.playSoundOnClick()
@@ -119,15 +112,13 @@ export default class Prop extends EventEmitter {
             ease: "power2.inOut",
             onUpdate: () => {
                 this.outline?.updateOutlineMeshPosition(this.mesh.position)
-            }, onComplete: () => {
-                this.gameManager.updateOrbitsControlsState(true)
             }
         });
 
         gsap.to(this.mesh.rotation, {
-            x: this.desiredRotation.x,
-            y: this.desiredRotation.y,
-            z: this.desiredRotation.z,
+            x: "+=" + this.desiredRotation.x,
+            y: "+=" + this.desiredRotation.y,
+            z: "+=" + this.desiredRotation.z,
             duration: 2,
             ease: "power2.inOut",
             onUpdate: () => {
@@ -168,7 +159,6 @@ export default class Prop extends EventEmitter {
         this.mesh?.geometry?.dispose()
         this.mesh?.material?.dispose()
         this.scene?.remove(this.mesh)
-        this.mouseUtils?.destroy()
         this.pointer.off("click", this.handleClick.bind(this));
     }
 

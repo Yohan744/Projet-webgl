@@ -1,0 +1,72 @@
+#experienceWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  cursor: none;
+
+  .start-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.8s $ease-power3-out;
+
+    p {
+      position: relative;
+      font-size: 30px;
+      color: white;
+      transition: color 0.8s $ease-power3-out;
+    }
+
+    &.visible {
+      pointer-events: all;
+      z-index: 1;
+      opacity: 1;
+    }
+
+    &:hover p{
+      color: #8a8a8a;
+    }
+
+  }
+
+  .experience {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 2.5s ease-in-out;
+  }
+
+  #cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: auto;
+    z-index: 99;
+    pointer-events: none;
+    user-select: none;
+    user-focus: none;
+    transform: translate(-5vh, -5vw);
+    opacity: 0;
+    transition: opacity 0.8s $ease-power3-out;
+
+    &.visible {
+      opacity: 1;
+    }
+
+    @media only screen and (max-width: 992px) {
+      display: none;
+    }
+
+  }
+
+}

@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import Experience from "../Experience";
-import {watch} from "vue";
 import gsap from "gsap";
 
 export default class Locations {
@@ -15,24 +14,24 @@ export default class Locations {
         Locations.instance = this
 
         this.experience = new Experience()
-        this.debug = this.experience.debug
-        this.gameManager = this.experience.gameManager
-        this.materialLibrary = materialLibrary
+        this.material = materialLibrary.getLocationsMaterial()
 
         this.spots = []
+
+        this.isSpotsVisible = true
 
         this.locationsPositions = [
             new THREE.Vector3(-1.75, 0, 4.1),
             new THREE.Vector3(-2, 0, -2.5),
-            new THREE.Vector3(1.75, 0, -2.25),
-            new THREE.Vector3(0.8, 0, 2.75),
+            new THREE.Vector3(1.5, 0, -2.25),
+            new THREE.Vector3(0.65, 0, 2.25),
         ]
 
         this.locationsLookingPoint = [
             new THREE.Vector3(-3, -0.5, -0.5),
             new THREE.Vector3(-9, -0.5, -15),
-            new THREE.Vector3(10, -3.5, -5),
-            new THREE.Vector3(5, -2, -3),
+            new THREE.Vector3(10, -3.5, -2.5),
+            new THREE.Vector3(5, -2, -1),
         ]
 
         this.locationsOffset = [
@@ -45,14 +44,6 @@ export default class Locations {
         this.experience.on('ready', () => {
             this.scene = this.experience.scene
             this.init()
-
-            watch(() => this.gameManager.state.isCameraOnSpot, (state) => {
-                if (!state) {
-                    this.setLocationsVisibility(true)
-                    this.gameManager.setSpotId(null)
-                }
-            })
-
         })
 
     }
@@ -61,19 +52,19 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
-            const geometry = new THREE.CircleGeometry(0.375, 32)
+            const geometry = new THREE.PlaneGeometry(0.75, 0.75)
             geometry.rotateX(-Math.PI * 0.5)
 
             const location = new THREE.Mesh(
                 geometry,
-                this.materialLibrary.getLocationsMaterial()
+                this.material
             )
 
             location.matrixAutoUpdate = false
 
             location.position.copy(this.locationsPositions[i]).add(this.locationsOffset[i])
+            location.name = 'location-' + i
             location.data = {
-                id: i,
                 lookingPoint: this.locationsLookingPoint[i]
             };
 
@@ -90,18 +81,14 @@ export default class Locations {
     }
 
     setLocationsVisibility(state) {
+        this.isSpotsVisible = state
         this.spots.forEach((spot) => {
 
             let delay = 0.5 + Math.random() * 0.5
             const id = spot.data.id
 
-            if (id === this.gameManager.state.spotId) {
-                delay = 0
-            }
-
             gsap.to(spot.material, {
                 opacity: state ? 0.65 : 0,
-                delay: delay * 0.8,
                 duration: 3,
                 ease: 'power2.out',
                 onStart: () => {
@@ -116,7 +103,6 @@ export default class Locations {
                 x: state ? 1 : 0,
                 y: state ? 1 : 0,
                 z: state ? 1 : 0,
-                delay: delay,
                 duration: 3,
                 ease: 'power2.out',
                 onUpdate: () => {
@@ -126,6 +112,12 @@ export default class Locations {
 
         })
 
+    }
+
+    update() {
+        if (this.isSpotsVisible) {
+            this.material.uniforms.uTime.value = this.experience.time.elapsed * 0.001
+        }
     }
 
     destroy() {

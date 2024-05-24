@@ -5,6 +5,7 @@
   height: 100%;
   width: 100%;
   z-index: 20;
+  cursor: none;
   pointer-events: none;
   opacity: 0;
   transition: opacity 2.5s ease-in-out;
@@ -21,12 +22,11 @@
     position: absolute;
     top: 35px;
     left: 35px;
-    height: 35px;
-    width: 35px;
+    height: 40px;
+    width: 40px;
     display: flex;
     place-items: center;
     pointer-events: none;
-    cursor: pointer;
     opacity: 0;
     scale: 0.9;
     transition: opacity 0.8s $ease-power3-out, scale 0.8s $ease-power3-out;
@@ -44,6 +44,14 @@
       scale: 1;
       pointer-events: all;
     }
+  }
+
+  .go-back-icon {
+
+    &:hover {
+      opacity: 0.6;
+    }
+
   }
 
   .settings-icon {
@@ -75,7 +83,6 @@
     align-content: center;
     border-radius: 10px;
     background-color: white;
-    cursor: pointer;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.8s $ease-power3-out, background-color 0.8s $ease-power3-out;
@@ -111,7 +118,6 @@
       height: 35px;
       width: 35px;
       margin-left: 20px;
-      cursor: pointer;
 
       img {
         position: relative;
@@ -138,6 +144,10 @@
     user-select: none;
     transition: opacity 0.8s $ease-power3-out;
 
+    * {
+      pointer-events: none;
+    }
+
     &.visible {
       opacity: 1;
       pointer-events: all;
@@ -147,6 +157,11 @@
         transform: translateY(0);
         opacity: 1;
       }
+
+      * {
+        pointer-events: all;
+      }
+
     }
 
     .settings-panel {
@@ -168,7 +183,6 @@
         margin-bottom: 20px;
         font-size: 20px;
         color: black;
-        cursor: pointer;
       }
 
       .volume-wrapper {
@@ -187,11 +201,13 @@
         input {
           position: relative;
           margin: 0 12px;
+          cursor: none;
         }
       }
 
       a {
         margin-top: 20px;
+        cursor: none;
       }
     }
   }

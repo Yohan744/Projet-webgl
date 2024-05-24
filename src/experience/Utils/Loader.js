@@ -46,8 +46,7 @@ export default class Loader extends EventEmitter {
 
         // Draco
         const dracoLoader = new DRACOLoader()
-        // dracoLoader.setDecoderPath('draco/');
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
         dracoLoader.setDecoderConfig({type: 'js'})
         dracoLoader.preload();
 
@@ -56,7 +55,6 @@ export default class Loader extends EventEmitter {
             action: (_resource) => {
                 dracoLoader.load(_resource.source, (_data) => {
                     this.fileLoadEnd(_resource, _data)
-
                     DRACOLoader.dispose()
                 })
             }

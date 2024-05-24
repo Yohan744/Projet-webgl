@@ -1,6 +1,8 @@
 import Experience from "../Experience";
 import {Raycaster} from "three";
 import EventEmitter from "./EventEmitter";
+import {getActualCursor} from "../../assets/js/Cursor";
+import {getInteractablesMesh} from "../World/ObjectsInteractable";
 
 export default class Pointer extends EventEmitter {
     static instance
@@ -15,6 +17,7 @@ export default class Pointer extends EventEmitter {
 
         this.experience = new Experience()
         this.gameManager = this.experience.gameManager
+        this.globalEvents = this.experience.globalEvents
 
         this.raycaster = new Raycaster()
         this.intersects = []
@@ -57,17 +60,17 @@ export default class Pointer extends EventEmitter {
             this.trigger('movement-orbit', [this.mouse]);
         }
 
+        this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
+        this.checkIntersections()
     }
 
     onClick(_event) {
         this.updateMousePosition(_event)
-        this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
         const intersects = this.raycaster.intersectObjects(this.locations, false);
-        if (intersects.length > 0) {
+        if (intersects.length > 0 && !this.gameManager.state.isCameraOnSpot && !this.gameManager.state.isInteractingWithObject && !this.experience.camera.isMoving) {
             const position = intersects[0].object.position.clone()
             const lookingPoint = intersects[0].object.data.lookingPoint
             this.trigger('spot-clicked', [position, lookingPoint])
-            this.gameManager.setSpotId(intersects[0].object.data.id)
             this.experience.world.locations.setLocationsVisibility(false)
         }
         this.trigger('click')
@@ -91,6 +94,48 @@ export default class Pointer extends EventEmitter {
 
     getOldMousePosition() {
         return this.oldMouse
+    }
+
+    checkIntersections() {
+
+        if (!this.gameManager.state.isSettingsOpen) {
+
+            if (this.gameManager.state.isCameraOnSpot) {
+
+                const interactableMesh = this.raycaster.intersectObjects(getInteractablesMesh(), false)
+
+                if (this.gameManager.state.isInteractingWithObject) {
+
+                    // logic here
+
+                } else {
+
+                    if (interactableMesh.length > 0 && getActualCursor() !== 'grab') {
+                        this.globalEvents.trigger('change-cursor', {name: 'grab'})
+                    }
+                }
+
+                if (interactableMesh.length === 0 && getActualCursor() !== 'default') {
+                    this.globalEvents.trigger('change-cursor', {name: 'default'})
+                }
+
+            } else {
+
+                const locations = this.raycaster.intersectObjects(this.locations, false)
+
+                if (locations.length > 0 && getActualCursor() !== 'grab') {
+                    this.globalEvents.trigger('change-cursor', {name: 'grab'})
+                }
+
+                if (locations.length === 0 && getActualCursor() !== 'default') {
+                    this.globalEvents.trigger('change-cursor', {name: 'default'})
+                }
+
+
+            }
+
+        }
+
     }
 
     destroy() {

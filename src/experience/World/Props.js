@@ -17,11 +17,10 @@ export default class Props {
     }
 
     init() {
-        this.drawer = new Drawer();
-        this.envelop = new Envelop()
+        // this.drawer = new Drawer();
+        // this.envelop = new Envelop()
         this.projector = new Projector()
-        this.malle = new Malle()
-        // this.photo = new Photo()
+        this.photo = new Photo()
     }
 
     // ce fichier va être supprimé bientôt

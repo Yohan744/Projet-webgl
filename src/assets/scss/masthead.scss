@@ -15,7 +15,12 @@
     cursor: pointer;
     transition: text-underline-offset 0.35s;
 
-    &:hover {
+    &.disabled {
+      pointer-events: none;
+      color: #5e5e5e;
+    }
+
+    &:not(.disabled):hover {
       text-underline-offset: 2px;
     }
 
