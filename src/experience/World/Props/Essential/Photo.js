@@ -18,7 +18,7 @@ export default class Photo {
         this.activeParticles = [];
         this.rows = 40;
         this.columns = 40;
-        this.particlesPerCell = 10;
+        this.particlesPerCell = 30;
         this.cells = {};
         this.cellMeshes = [];
         this.detectedCells = new Set();
@@ -64,8 +64,8 @@ export default class Photo {
         const posArray = new Float32Array(particlesCount * 3);
         const scaleArray = new Float32Array(particlesCount);
 
-        const width = 0.17;
-        const height = 0.12;
+        const width = 0.165;
+        const height = 0.115;
         const xSpacing = width / (this.columns - 1);
         const ySpacing = height / (this.rows - 1);
 
@@ -256,7 +256,7 @@ export default class Photo {
             if (progress < 1) {
                 requestAnimationFrame(rotate);
             } else {
-                setTimeout(() => this.fadeOut(this.group), 1000); 
+                setTimeout(() => this.fadeOut(this.group), 3000); 
             }
         };
         rotate();
