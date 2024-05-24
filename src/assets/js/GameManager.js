@@ -9,6 +9,9 @@ const state = reactive({
     isSettingsOpen: false,
     isPocketButtonVisible: false,
     objectToPocket: false,
+    isPencilInFrontOfCamera: false,
+    isCassetteInFrontOfCamera: false,
+    isWalkmanInFrontOfCamera: false,
     showingInventoryObjectInFrontOfCamera: null,
 });
 
@@ -49,6 +52,17 @@ export function useGameManager() {
 
     function updateObjectToPocket(stateValue) {
         state.objectToPocket = stateValue;
+    }
+
+    function setPencilInFrontOfCamera(stateValue) {
+        state.isPencilInFrontOfCamera = stateValue;
+    }
+
+    function setCassetteInFrontOfCamera(stateValue) {
+        state.isCassetteInFrontOfCamera = stateValue;
+    }
+    function setWalkmanInFrontOfCamera(stateValue) {
+        state.isWalkmanInFrontOfCamera = stateValue;
     }
 
     function addObjectToInventory(objectName) {
@@ -93,6 +107,9 @@ export function useGameManager() {
         updatePocketButtonState,
         addObjectToInventory,
         updateObjectToPocket,
+        setPencilInFrontOfCamera,
+        setCassetteInFrontOfCamera,
+        setWalkmanInFrontOfCamera,
         setInventoryObjectInFrontOfCamera,
         resetAll,
     };

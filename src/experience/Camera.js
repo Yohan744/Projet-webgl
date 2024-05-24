@@ -178,19 +178,20 @@ export default class Camera {
                 z: position.z,
                 duration: distanceToPoint * this.movingSpeedMultiplier * mult,
                 ease: 'power1.inOut',
+                onUpdate: () => {
+                    gsap.to(this.instance, {
+                        fov: 50,
+                        ease: "power1.out",
+                        duration: 2,
+                        onUpdate: () => {
+                            this.instance.updateProjectionMatrix();
+                        }
+                    });
+                },
                 onComplete: () => {
                     this.isMoving = false
                     if (isGoingOnASpot !== null) this.gameManager.updateCameraOnSpot(isGoingOnASpot)
                     if (!isGoingOnASpot) this.experience.world.locations.setLocationsVisibility(true)
-                }
-            });
-            gsap.to(this.modes.default.instance, {
-                fov: 50,
-                ease: "power1.out",
-                delay: distanceToPoint * this.movingSpeedMultiplier * mult,
-                duration: distanceToPoint * this.movingSpeedMultiplier * mult,
-                onUpdate: () => {
-                    this.updateFocusMode(false);
                 }
             });
 
@@ -301,6 +302,7 @@ export default class Camera {
             onComplete: () => {
                 this.gameManager.updateCameraOnSpot(true);
                 this.isMoving = false;
+                console.log("peut-être que ça pourra marcher")
             }
         });
         tl.to(this.lookingPoint, {
@@ -330,16 +332,8 @@ export default class Camera {
                 duration: 2,
                 ease: 'power2.inOut'
             });
+
         }
-        gsap.to(this.instance, {
-            fov: 50,
-            ease: "power1.out",
-            delay: 2,
-            duration: 2,
-            onUpdate: () => {
-                this.updateFocusMode(true);
-            }
-        });
     }
 
     getNormalizedLookingPoint(position, point) {

@@ -45,6 +45,7 @@ export default class Envelop {
         this.scene.add(this.envelopModel);
         this.setupMorphTargets();
         this.createCarouselItems();
+        this.hidePocketButton();
     }
 
     createCarouselItems() {
@@ -305,7 +306,9 @@ export default class Envelop {
 
     updatePocketButtonVisibility() {
         const frontItem = this.items[0];
-        this.gameManager.updatePocketButtonState(frontItem === this.cassette);
+        const isCassette = frontItem === this.cassette;
+        this.gameManager.updatePocketButtonState(isCassette);
+        this.gameManager.state.isCassetteInFrontOfCamera = isCassette;
     }
 
     bringItemToFront(item) {
@@ -332,6 +335,7 @@ export default class Envelop {
                     this.positions.pop();
                     this.animateItems();
                     this.gameManager.updatePocketButtonState(false);
+                    this.gameManager.setCassetteInFrontOfCamera(false);
                     this.gameManager.addObjectToInventory('cassette');
                 }
             });

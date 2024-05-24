@@ -2,10 +2,10 @@ import * as THREE from "three";
 import { DoubleSide } from "three";
 import Experience from "../../../Experience";
 import gsap from "gsap";
-import Prop from "../Prop";
+import Outline from "../../Effects/Outline";
 
 export default class Projector {
-    constructor() {
+    constructor(objects) {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
@@ -20,6 +20,7 @@ export default class Projector {
             this.experience.resources.items.backgroundTreeTexture
         ];
 
+
         this.isDragging = false;
         this.isAnimating = false;
         this.isFirstAnimationIsDone = false;
@@ -30,7 +31,7 @@ export default class Projector {
             y: 0,
         };
 
-        this.dragDistance = 0.3;
+        this.dragDistance = 0.07;
         this.isSpotlight = false;
         this.pointerDown = this.onPointerDown.bind(this);
         this.pointerMove = this.onPointerMove.bind(this);
@@ -40,19 +41,33 @@ export default class Projector {
         this.railOriginalPosition = new THREE.Vector3();
 
         this.setEvents();
-        this.init();
+        this.init(objects);
     }
 
-    init() {
-        this.projectorModel = this.experience.resources.items.projectorModel.scene;
-        this.projectorModel.position.set(-3.8, 1.15, 4.5);
-        this.scene.add(this.projectorModel);
+    init(objects) {
+        if (!objects || !Array.isArray(objects)) {
+            console.error('Invalid objects array passed to Projector');
+            return;
+        }
 
-        this.mesh = this.projectorModel;
+        this.projectorObjects = objects;
 
-        const rail = this.projectorModel.getObjectByName('rail_Diapo');
-        if (rail) {
-            this.railOriginalPosition.copy(rail.position);
+        this.projectorModel = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'cube');
+        this.rail = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'rail_diapo');
+        this.boutonOn = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'boutonon');
+        this.tireuse = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'tireuse');
+        this.oeil = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'oeil');
+        console.log(this.projectorObjects[0].position);
+        this.outline = new Outline(this.projectorModel, 1.05)
+        this.outline?.showOutline()
+        
+
+        if (this.boutonOn) {
+            this.boutonOn.scale.set(1.7, 1.7, 1.7);
+        }
+
+        if (this.rail) {
+            this.railOriginalPosition.copy(this.rail.position);
         }
     }
 
@@ -63,44 +78,54 @@ export default class Projector {
     }
 
     onPointerDown() {
-        const mousePosition = this.pointer.getMousePosition();
-        this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
-        const intersects = this.pointer.raycaster.intersectObjects([this.projectorModel], true);
-        if (intersects.length > 0) {
-            console.log(intersects[0].object.name);
-            if (!this.isCameraMoved) {
-                this.onModelClicked(intersects[0]);
-                this.isCameraMoved = true;
-            } else {
-                if (intersects[0].object.name === 'tireuse') {
-                    this.isDragging = true;
-                    this.draggableModel = intersects[0].object;
-                    this.mouseStartClickPosition = {
-                        x: mousePosition.x,
-                        y: mousePosition.y,
-                    };
-                    console.log("ready");
-                    this.gameManager.updateInteractingState(true);
-                } else if (intersects[0].object.name === 'EnsembleRail' && this.isFirstAnimationIsDone) {
-                    this.moveRail();
-                } else if (intersects[0].object.name === 'BoutonOn') {
-                    this.toggleSpotlight(intersects[0].object);
-                    this.experience.camera.updateFocusMode(true)
+        if(this.gameManager.state.isCameraOnSpot) {
+            const mousePosition = this.pointer.getMousePosition();
+            this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
+            const intersects = this.pointer.raycaster.intersectObjects(this.projectorObjects, true);
+            if (intersects.length > 0) {
+                console.log(intersects[0].object.name);
+                if (!this.isCameraMoved) {
+                    this.onModelClicked(intersects[0]);
+                    this.isCameraMoved = true;
+                } else {
+                    if (intersects[0].object === this.tireuse) {
+                        this.isDragging = true;
+                        this.draggableModel = intersects[0].object;
+                        this.mouseStartClickPosition = {
+                            x: mousePosition.x,
+                            y: mousePosition.y,
+                        };
+                        console.log("ready");
+                        this.gameManager.updateInteractingState(true);
+                    } else if (intersects[0].object === this.rail && this.isFirstAnimationIsDone) {
+                        this.moveRail();
+                    } else if (intersects[0].object === this.boutonOn) {
+                        console.log("here");
+                        this.toggleSpotlight(intersects[0].object);
+                        this.experience.camera.updateFocusMode(true);
+                    }
                 }
             }
         }
     }
 
     onModelClicked(intersect) {
-        const offset = new THREE.Vector3(-1.3, 0.28, 0.5);
+        const offset = new THREE.Vector3(-1, 0.28, 0.5);
         const modelPosition = intersect.object.getWorldPosition(new THREE.Vector3());
         const targetPosition = modelPosition.clone().add(offset);
         this.experience.camera.lookAtSheet(targetPosition);
         this.isCameraMoved = true;
+        this.addOutlineToButton();
     }
 
-    toggleSpotlight(button) {
-        gsap.to(button.position, {
+    addOutlineToButton() {
+        if (this.boutonOn) {
+            this.outline?.showOutline()
+        }
+    }
+
+    toggleSpotlight() {
+        gsap.to(this.boutonOn.position, {
             y: "-=0.003",
             duration: 0.5,
             onComplete: () => {
@@ -109,7 +134,7 @@ export default class Projector {
                 } else {
                     this.removeSpotlight();
                 }
-                gsap.to(button.position, {
+                gsap.to(this.boutonOn.position, {
                     y: "+=0.003",
                     duration: 0.5,
                 });
@@ -119,15 +144,18 @@ export default class Projector {
 
     setupSpotlight(withTexture) {
         this.removeSpotlight();
+        console.log("lààààààà")
 
         let spotlight = new THREE.SpotLight(0xffffff, 60, 0, Math.PI * 0.05);
-        spotlight.position.copy(this.projectorModel.position);
-        spotlight.target.position.set(this.projectorModel.position.x + 0.7, this.projectorModel.position.y + 0.02, this.projectorModel.position.z);
-
-        spotlight.angle = 0.14;
+        const spotLightHelper = new THREE.SpotLightHelper( spotlight );
+        this.scene.add( spotLightHelper );
+        spotlight.position.set(-3.8, 1.15, 4.5);
+        spotlight.target.position.set(spotlight.position.x + 0.5, spotlight.position.y + 0.02, spotlight.position.z);
+        console.log(this.oeil);
+        console.log(spotlight);
+        spotlight.angle = 0.1;
         spotlight.penumbra = 0.7;
         spotlight.decay = 1;
-        spotlight.distance = 0;
 
         spotlight.castShadow = true;
         spotlight.shadow.mapSize.width = 1024;
@@ -161,26 +189,32 @@ export default class Projector {
             this.scene.remove(this.spotlightWithTexture);
             this.spotlightWithTexture = null;
         }
+        if (this.spotlight) {
+            this.scene.remove(this.spotlight);
+            this.spotlight = null;
+        }
         this.isSpotlight = false;
     }
 
     onPointerMove(mouse) {
         if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
 
-        if (!this.isFirstAnimationIsDone && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
-            this.handleForwardDrag();
-        } else if (this.isFirstAnimationIsDone && (this.mouseStartClickPosition.x + 1) - (mouse.x + 1) > this.dragDistance) {
-            this.handleBackwardDrag();
+        const newZPosition = this.draggableModel.position.z + (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) * this.dragDistance;
+
+        if (!this.isFirstAnimationIsDone && newZPosition) {
+            this.handleForwardDrag(newZPosition);
+        } else if (this.isFirstAnimationIsDone && newZPosition) {
+            this.handleBackwardDrag(newZPosition);
         } else {
             console.log("pas assez loin");
         }
     }
 
-    handleForwardDrag() {
+    handleForwardDrag(newZPosition) {
         console.log("Parfait");
         this.isAnimating = true;
         gsap.to(this.draggableModel.position, {
-            z: "+=0.05",
+            z: 0.05,
             duration: 1,
             onComplete: () => {
                 this.isAnimating = false;
@@ -190,11 +224,11 @@ export default class Projector {
         this.animateTextureDisappearance();
     }
 
-    handleBackwardDrag() {
+    handleBackwardDrag(newZPosition) {
         console.log("Parfait");
         this.isAnimating = true;
         gsap.to(this.draggableModel.position, {
-            z: "-=0.05",
+            z: 0,
             duration: 1,
             onComplete: () => {
                 this.isAnimating = false;
@@ -205,11 +239,10 @@ export default class Projector {
     }
 
     moveRail() {
-        const rail = this.projectorModel.getObjectByName('rail_Diapo');
-        if (rail) {
+        if (this.rail) {
             this.railMoveCount++;
             if (this.railMoveCount > 10) {
-                gsap.to(rail.position, {
+                gsap.to(this.rail.position, {
                     x: this.railOriginalPosition.x,
                     y: this.railOriginalPosition.y,
                     z: this.railOriginalPosition.z,
@@ -220,7 +253,7 @@ export default class Projector {
                     }
                 });
             } else {
-                gsap.to(rail.position, {
+                gsap.to(this.rail.position, {
                     x: "+=0.005",
                     duration: 1,
                     onComplete: () => {

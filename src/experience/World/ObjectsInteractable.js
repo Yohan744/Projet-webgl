@@ -1,5 +1,8 @@
 import Experience from "../Experience";
 import {objectsData} from "../../data/Objects";
+import Projector from "./Props/Essential/Projector";
+import Walkman from "./Props/Essential/Walkman";
+import Cassette from "./Props/Essential/Cassette";
 
 const interactableObjects = {}
 const interactableMesh = []
@@ -13,6 +16,9 @@ export default class ObjectsInteractable {
         this.scene = this.experience.scene
         this.materialLibrary = materialLibrary
 
+        this.projectorModel = [];
+        this.cassetteModel = [];
+
         if (this.scene) {
             this.init()
         }
@@ -21,6 +27,7 @@ export default class ObjectsInteractable {
     init() {
 
         this.objectsInteractableModel = this.resources.items.objectsInteractableModel.scene
+      //  console.log(this.objectsInteractableModel.morphTargetInfluences);
 
         this.objectsInteractableModel.traverse(child => {
             if (child.isMesh) {
@@ -33,9 +40,7 @@ export default class ObjectsInteractable {
 
                 if (name.includes("walkman")) {
                     child.material = this.materialLibrary.getWalkmanMaterial()
-                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.walkman = this.walkman
-                    interactableMesh.push(child)
+                    this.walkman = new Walkman(child);
 
                 } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial()
@@ -47,16 +52,16 @@ export default class ObjectsInteractable {
                     if (name.includes('maison')) child.material = this.materialLibrary.getPostalCardHouseMaterial()
                     interactableMesh.push(child)
 
-                }  else if (name.includes("dahlia")) {
+                } else if (name.includes("dahlia")) {
                     child.material = this.materialLibrary.getDahliaMaterial()
                     interactableMesh.push(child)
 
-                }  else if (name.includes("magazine")) {
+                } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial()
                     if (name.includes('fermé')) child.material = this.materialLibrary.getClosedMagazineMaterial()
                     interactableMesh.push(child)
 
-                }  else if (name.includes("malle")) {
+                } else if (name.includes("malle")) {
                     if (name.includes('haut')) {
                         child.material = this.materialLibrary.getTopChestMaterial()
                         this.topChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
@@ -70,78 +75,76 @@ export default class ObjectsInteractable {
                         interactableObjects.bottomChest = this.bottomChest
                         interactableMesh.push(child)
                     }
+                    } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3") || name.includes("corps")) {
+                        child.material = this.materialLibrary.getCassetteMaterial()
+                        this.cassetteModel.push(child);
+                        console.log(this.cassetteModel);
 
-                } else if (name === 'corps') {
-                    child.material = this.materialLibrary.getCassetteMaterial()
-                    // this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    // interactableObjects.cassette = this.cassette
-                    // interactableMesh.push(child)
+                    } else if (name.includes("crayon")) {
+                        child.material = this.materialLibrary.getPencilMaterial()
+                        this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.pencil = this.pencil
+                        interactableMesh.push(child)
 
-                } else if (name === 'bobine1' || name === 'bobine2' || name === 'bobine3') {
-                    child.material = this.materialLibrary.getBlackMaterial()
+                    } else if (name.includes("telephone")) {
+                        child.material = this.materialLibrary.getTelephoneMaterial()
+                        this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.telephone = this.telephone
+                        interactableMesh.push(child)
 
-                }  else if (name.includes("crayon")) {
-                    child.material = this.materialLibrary.getPencilMaterial()
-                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.pencil = this.pencil
-                    interactableMesh.push(child)
+                    } else if (name.includes("rubicub")) {
+                        child.material = this.materialLibrary.getRubiksCubeMaterial()
+                        this.rubikscube = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.rubiksCube = this.rubikscube
+                        interactableMesh.push(child)
 
-                } else if (name.includes("telephone")) {
-                    child.material = this.materialLibrary.getTelephoneMaterial()
-                    this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.telephone = this.telephone
-                    interactableMesh.push(child)
+                    } else if (name.includes("tv")) {
+                        child.material = this.materialLibrary.getTvMaterial()
+                        this.television = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.television = this.television
+                        interactableMesh.push(child)
 
-                } else if (name.includes("rubicub")) {
-                    child.material = this.materialLibrary.getRubiksCubeMaterial()
-                    this.rubikscube = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.rubiksCube = this.rubikscube
-                    interactableMesh.push(child)
+                    } else if (name.includes("enveloppe")) {
+                        child.material = this.materialLibrary.getEnveloppeMaterial()
+                        interactableMesh.push(child)
 
-                } else if (name.includes("tv")) {
-                    child.material = this.materialLibrary.getTvMaterial()
-                    this.television = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.television = this.television
-                    interactableMesh.push(child)
+                    } else if (name.includes("lettre")) {
+                        child.material = this.materialLibrary.getLetterMaterial()
+                        this.letter = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.letter = this.letter
+                        interactableMesh.push(child)
 
-                } else if (name.includes("enveloppe")) {
-                    child.material = this.materialLibrary.getEnveloppeMaterial()
-                    interactableMesh.push(child)
+                    } else if (name.includes("tableau_magique1")) {
+                        child.material = this.materialLibrary.getTelecranMaterial()
+                        this.telecran = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.telecran = this.telecran
+                        interactableMesh.push(child)
 
-                } else if (name.includes("lettre")) {
-                    child.material = this.materialLibrary.getLetterMaterial()
-                    this.letter = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.letter = this.letter
-                    interactableMesh.push(child)
+                    } else if (name.includes("tourne_disque")) {
+                        child.material = this.materialLibrary.getRecordPlayerMaterial()
+                        this.recordPlayer = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                        interactableObjects.recordPLayer = this.recordPlayer
+                        interactableMesh.push(child)
 
-                } else if (name.includes("tableau_magique1")) {
-                    child.material = this.materialLibrary.getTelecranMaterial()
-                    this.telecran = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.telecran = this.telecran
-                    interactableMesh.push(child)
+                    } else if (name.includes("rail_diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1') {
+                        child.material = this.materialLibrary.getRecordPlayerMaterial()
+                        this.projectorModel.push(child);
 
-                } else if (name.includes("tourne_disque")) {
-                    child.material = this.materialLibrary.getRecordPlayerMaterial()
-                    this.recordPlayer = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.recordPLayer = this.recordPlayer
-                    interactableMesh.push(child)
+                    } else if (name === 'vynyle' || name === 'vynyle1') {
+                        child.material = this.materialLibrary.getVinylMaterial()
+                    } else {
+                       // console.log(name)
+                    }
 
-                } else if (name === 'photo') {
-                    child.material = this.materialLibrary.getPictureMaterial()
+                    //console.log(name)
 
-                } else if (name === 'vynyle' || name === 'vynyle1') {
-                    child.material = this.materialLibrary.getVinylMaterial()
+                    child.material.needsUpdate = true
 
-                } else if (name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
-                    child.visible = false
-                } else {
-                    console.log(name)
                 }
-
-                child.material.needsUpdate = true
-
-            }
         })
+
+        this.projector = new Projector(this.projectorModel);
+        this.cassette = new Cassette(this.cassetteModel);
 
         this.scene.add(this.objectsInteractableModel)
 

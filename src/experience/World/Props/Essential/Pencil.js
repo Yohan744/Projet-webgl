@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import Experience from "../../../Experience";
 import Prop from '../Prop';
-import { watch } from "vue";
+import { watch } from 'vue';
 
 export default class Pencil extends Prop {
     constructor(mesh, desiredRotationOnClick = new THREE.Vector3(0, 0, 0), animatePropsToCameraOnClick = true, distanceToCamera = 0.6, isOutlined = 1.05, propSound) {
@@ -20,26 +20,17 @@ export default class Pencil extends Prop {
     }
 
     init() {
-
-        watch(() => this.gameManager.state.pencilIconClicked, (newVal) => {
-            if (newVal) {
+        watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
+            if (newVal === 'pencil') {
                 this.showInFrontOfCamera();
             }
         });
 
         watch(() => this.gameManager.state.objectToPocket, (newVal) => {
-            if (newVal) {
+            if (newVal === 'pencil') {
                 this.moveToPocket();
             }
         });
-
-        watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
-            if (newVal === 'pencil') {
-                console.log("je dois montrer le pencil devant la camera")
-            }
-        });
-
-
     }
 
     showInFrontOfCamera() {
@@ -65,6 +56,7 @@ export default class Pencil extends Prop {
             ease: 'power2.inOut'
         });
 
+        this.gameManager.state.isPencilInFrontOfCamera = true;
         this.scene.add(this.mesh);
     }
 
@@ -87,7 +79,10 @@ export default class Pencil extends Prop {
 
     onClick() {
         console.log('Pencil clicked');
-        this.gameManager.updatePocketButtonState(true);
+        this.gameManager.setPencilInFrontOfCamera(true);
+        if (!this.gameManager.state.isObjectOut) {
+            this.gameManager.updatePocketButtonState(true);
+        }
     }
 
     destroy() {
