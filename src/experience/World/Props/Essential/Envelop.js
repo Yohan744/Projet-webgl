@@ -48,7 +48,7 @@ export default class Envelop {
         this.scene.add(this.envelopModel);
         this.setupMorphTargets();
         this.createCarouselItems();
-        this.hidePocketButton(); // Ensure the button is hidden initially
+        this.hidePocketButton();
     }
 
     createCarouselItems() {

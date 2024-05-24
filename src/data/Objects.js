@@ -12,14 +12,6 @@ import BottomChest from "../experience/World/Props/Essential/BottomChest";
 import TopChest from "../experience/World/Props/Essential/TopChest";
 
 export const objectsData = {
-    cassette: {
-        file: Cassette,
-        rotationOnClick: new THREE.Vector3(1.33, 0.04, -0.44),
-        animateToCameraOnClick: true,
-        distanceToCamera: 0.2,
-        outlineScale: 1.05,
-        propSound: 'cassette',
-    },
     crayon: {
         file: Pencil,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
