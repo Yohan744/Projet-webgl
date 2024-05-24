@@ -136,6 +136,8 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
                     child.visible = false
+                } else if (name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
+                    child.visible = false
                 } else {
                     console.log(name)
                 }
@@ -177,4 +179,3 @@ export default class ObjectsInteractable {
 }
 
 export const useInteractableObjects = () => interactableObjects
-export const getInteractablesMesh = () => interactableMesh

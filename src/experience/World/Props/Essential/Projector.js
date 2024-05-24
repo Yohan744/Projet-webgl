@@ -13,13 +13,13 @@ export default class Projector {
         this.gameManager = this.experience.gameManager;
 
         this.animations = [];
-        this.outline = null;
 
         this.textures = [
             this.experience.resources.items.monasurf,
             this.experience.resources.items.monabouquet,
             this.experience.resources.items.backgroundTreeTexture
         ];
+
 
         this.isDragging = false;
         this.isAnimating = false;
@@ -58,7 +58,13 @@ export default class Projector {
         this.tireuse = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'tireuse');
         this.oeil = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'oeil');
         console.log(this.projectorObjects[0].position);
+        this.outline = new Outline(this.projectorModel, 1.05)
+        this.outline?.showOutline()
+        
 
+        if (this.boutonOn) {
+            this.boutonOn.scale.set(1.7, 1.7, 1.7);
+        }
 
         if (this.rail) {
             this.railOriginalPosition.copy(this.rail.position);
@@ -72,37 +78,39 @@ export default class Projector {
     }
 
     onPointerDown() {
-        const mousePosition = this.pointer.getMousePosition();
-        this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
-        const intersects = this.pointer.raycaster.intersectObjects(this.projectorObjects, true);
-        if (intersects.length > 0) {
-            console.log(intersects[0].object.name);
-            if (!this.isCameraMoved) {
-                this.onModelClicked(intersects[0]);
-                this.isCameraMoved = true;
-            } else {
-                if (intersects[0].object === this.tireuse) {
-                    this.isDragging = true;
-                    this.draggableModel = intersects[0].object;
-                    this.mouseStartClickPosition = {
-                        x: mousePosition.x,
-                        y: mousePosition.y,
-                    };
-                    console.log("ready");
-                    this.gameManager.updateInteractingState(true);
-                } else if (intersects[0].object === this.rail && this.isFirstAnimationIsDone) {
-                    this.moveRail();
-                } else if (intersects[0].object === this.boutonOn) {
-                    console.log("here");
-                    this.toggleSpotlight(intersects[0].object);
-                    this.experience.camera.updateFocusMode(true);
+        if(this.gameManager.state.isCameraOnSpot) {
+            const mousePosition = this.pointer.getMousePosition();
+            this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
+            const intersects = this.pointer.raycaster.intersectObjects(this.projectorObjects, true);
+            if (intersects.length > 0) {
+                console.log(intersects[0].object.name);
+                if (!this.isCameraMoved) {
+                    this.onModelClicked(intersects[0]);
+                    this.isCameraMoved = true;
+                } else {
+                    if (intersects[0].object === this.tireuse) {
+                        this.isDragging = true;
+                        this.draggableModel = intersects[0].object;
+                        this.mouseStartClickPosition = {
+                            x: mousePosition.x,
+                            y: mousePosition.y,
+                        };
+                        console.log("ready");
+                        this.gameManager.updateInteractingState(true);
+                    } else if (intersects[0].object === this.rail && this.isFirstAnimationIsDone) {
+                        this.moveRail();
+                    } else if (intersects[0].object === this.boutonOn) {
+                        console.log("here");
+                        this.toggleSpotlight(intersects[0].object);
+                        this.experience.camera.updateFocusMode(true);
+                    }
                 }
             }
         }
     }
 
     onModelClicked(intersect) {
-        const offset = new THREE.Vector3(-1.3, 0.28, 0.5);
+        const offset = new THREE.Vector3(-1, 0.28, 0.5);
         const modelPosition = intersect.object.getWorldPosition(new THREE.Vector3());
         const targetPosition = modelPosition.clone().add(offset);
         this.experience.camera.lookAtSheet(targetPosition);
@@ -112,7 +120,7 @@ export default class Projector {
 
     addOutlineToButton() {
         if (this.boutonOn) {
-            this.outline = new Outline(this.boutonOn, 1.05);
+            this.outline?.showOutline()
         }
     }
 

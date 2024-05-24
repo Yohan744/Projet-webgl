@@ -211,16 +211,6 @@ export default class Walkman {
     }
 
     applyBasicMaterial() {
-        const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        this.mesh.traverse((child) => {
-            if (child.isMesh) {
-                child.material = material;
-                const edges = new THREE.EdgesGeometry(child.geometry);
-                const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
-                const lines = new THREE.LineSegments(edges, lineMaterial);
-                child.add(lines);
-            }
-        });
         if (this.mesh.isMesh && Array.isArray(this.mesh.morphTargetInfluences)) {
             console.log("Initial morph target influences:", this.mesh.morphTargetInfluences);
             this.mesh.morphTargetInfluences.forEach((_, i) => this.mesh.morphTargetInfluences[i] = 0);
