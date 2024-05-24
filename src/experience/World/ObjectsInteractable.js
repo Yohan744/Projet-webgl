@@ -71,11 +71,14 @@ export default class ObjectsInteractable {
                         interactableMesh.push(child)
                     }
 
-                } else if (name.includes("cassette")) {
+                } else if (name === 'corps') {
                     child.material = this.materialLibrary.getCassetteMaterial()
-                    this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.cassette = this.cassette
-                    interactableMesh.push(child)
+                    // this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
+                    // interactableObjects.cassette = this.cassette
+                    // interactableMesh.push(child)
+
+                } else if (name === 'bobine1' || name === 'bobine2' || name === 'bobine3') {
+                    child.material = this.materialLibrary.getBlackMaterial()
 
                 }  else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilMaterial()

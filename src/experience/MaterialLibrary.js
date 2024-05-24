@@ -80,13 +80,15 @@ let recordPlayerMaterial,
     topChestMaterial,
     pencilMaterial,
     pictureMaterial,
-    vinylMaterial
+    vinylMaterial;
 
 
 let outlineMaterial,
     locationsMaterial;
 
 let backgroundTreeMaterial;
+
+let blackMaterial;
 
 export default class MaterialLibrary {
 
@@ -1067,6 +1069,20 @@ export default class MaterialLibrary {
         return backgroundTreeMaterial
     }
 
+    /////////////////////// CLASSIC MATERIALS /////////////////////////
+
+    getBlackMaterial() {
+        if (!blackMaterial) {
+            blackMaterial = new MeshBasicMaterial({
+                color: 0x000000,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(blackMaterial)
+        }
+
+        return blackMaterial
+    }
 
     //////////////////////// EFFECTS MATERIALS ////////////////////////
 
