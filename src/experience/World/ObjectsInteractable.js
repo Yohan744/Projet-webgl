@@ -64,7 +64,7 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getWalkmanMaterial();
                     this.walkman = new Walkman(child);
 
-                } else if (name.includes("tirroir")) {
+                } else if (name.includes("tirroir_haut")) {
                     child.material = this.materialLibrary.getDrawerMaterial();
                     this.drawer = new Drawer(child);
 
@@ -108,7 +108,7 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getCassetteMaterial();
                     this.cassetteModel.push(child);
                     interactableObjects.cassette = this.cassetteModel;
-                    itemGroup.add(this.cassetteModel);
+                    itemGroup.cassette = this.cassetteModel;
 
                 } else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilMaterial();

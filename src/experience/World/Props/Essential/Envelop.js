@@ -17,6 +17,7 @@ export default class Envelop {
         this.carouselIsSet = false;
         this.isDragging = false;
         this.isAnimating = false;
+        this.morphTargetPlayed = false;
         this.mouseStartClickPosition = { x: 0, y: 0 };
         this.hasOpenEnvelop = false;
         this.dragDistance = 0.2;
@@ -60,8 +61,11 @@ export default class Envelop {
         }
 
         this.items.forEach(item => {
-            item.position.copy(this.envelopePosition);
-            this.scene.add(item);
+            if (item) {
+                item.position.copy(this.envelopePosition);
+                item.rotation.set(Math.PI / 2, 0, 0);
+                this.scene.add(item);
+            }
         });
     }
 
@@ -81,8 +85,9 @@ export default class Envelop {
             if (child.isMesh && child.morphTargetInfluences) {
                 this.morphMesh = child;
                 this.morphTargets = child.morphTargetInfluences;
-                this.morphTargets[41] = 1;
-                this.morphTargets[40] = 1;
+                for (let i = 0; i <= 41; i++) {
+                    this.morphTargets[i] = 0;
+                }
             }
         });
     }
@@ -102,9 +107,6 @@ export default class Envelop {
         const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
         if (intersects.length > 0) {
             this.setupMorphTargets();
-            if (!this.hasOpenEnvelop) {
-                this.createCarouselItems();
-            }
             this.hidePocketButton();
             if (this.hasOpenEnvelop) this.separateItemsToTriangle();
             if (!this.hasAnimatedToCamera) {
@@ -112,7 +114,9 @@ export default class Envelop {
                     this.animateEnvelope(() => {
                         CameraUtils.animateToCamera(this.mesh, this.camera.instance, 0.6);
                         this.envelopePosition.set(-2.94133, 1.421451, -3.830488);
+                        this.mesh.position.copy(this.envelopePosition);
                         this.envelopeRotation.set(Math.PI / 2, 0, 0);
+                        this.mesh.rotation.copy(this.envelopeRotation);
                     });
                 });
                 this.hasAnimatedToCamera = true;
@@ -144,7 +148,7 @@ export default class Envelop {
     handleMouseMove(mouse) {
         if (!this.isDragging) return;
         if (!this.isAnimating && (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) > this.dragDistance) {
-            this.startAnimationOfMorphTargets();
+            this.startMorphTargetAnimation();
             this.isAnimating = true;
             this.isDragging = false;
         } else if (this.carouselIsSet) {
@@ -163,15 +167,45 @@ export default class Envelop {
         this.isAnimating = false;
     }
 
-    startAnimationOfMorphTargets() {
-        this.animateItemGroup();
-        if (this.morphTargets) {
-            gsap.to(this.morphMesh.morphTargetInfluences, {
-                [40]: "-=1",
-                duration: 2,
-                ease: "power1.inOut",
-                onComplete: () => console.log("Morph targets animated")
+    startMorphTargetAnimation() {
+        if (this.morphTargets && !this.morphTargetPlayed) {
+            this.morphTargetPlayed = true; // Marquez le morph target comme joué
+            const timeline = gsap.timeline({
+                onComplete: () => {
+                    gsap.to(this.morphMesh.morphTargetInfluences, {
+                        [40]: "-=1",
+                        duration: 2,
+                        ease: "power1.inOut",
+                        onComplete: () => this.animateItemGroup()
+                    });
+                    this.morphTargets[0] = 1;
+                }
             });
+            for (let i = 41; i >= 0; i--) {
+                timeline.to(this.morphMesh.morphTargetInfluences, {
+                    [i]: 1,
+                    duration: 0.01,
+                    ease: "power1.inOut"
+                }, `+=0`)
+                    .to(this.morphMesh.morphTargetInfluences, {
+                        [i]: 0.5,
+                        [i - 1]: 0.5,
+                        duration: 0.01,
+                        ease: "power1.inOut"
+                    }, `+=0.05`)
+                    .to(this.morphMesh.morphTargetInfluences, {
+                        [i]: 0,
+                        [i - 1]: 1,
+                        duration: 0.01,
+                        ease: "power1.inOut"
+                    }, `+=0.05`);
+            }
+            timeline.to(this.morphMesh.morphTargetInfluences, {
+                [0]: 1,
+                duration: 0.01,
+                ease: "power1.inOut"
+            });
+            timeline.play();
         }
     }
 
@@ -185,8 +219,10 @@ export default class Envelop {
     }
 
     animateItemGroup() {
+        this.createCarouselItems();
+
         this.items.forEach(item => {
-            item.position.set(this.envelopePosition.x + 4, this.envelopePosition.y, this.envelopePosition.z);
+            item.position.copy(this.mesh.position);
         });
 
         gsap.to(this.items.map(item => item.position), {
@@ -239,27 +275,15 @@ export default class Envelop {
     separateItemsToTriangle() {
         this.carouselIsSet = true;
         this.positions = this.getFixedPositions();
-        this.items.forEach(item => {
-            item.position.set(this.envelopePosition.x + 4, this.envelopePosition.y, this.envelopePosition.z);
-        });
 
         this.items.forEach((item, index) => {
-            if (item && this.positions[index]) {
-                gsap.to(item.position, {
-                    x: this.positions[index].x,
-                    y: this.positions[index].y,
-                    z: this.positions[index].z,
-                    duration: 2,
-                    ease: "power2.inOut"
-                });
-                gsap.to(item.rotation, {
-                    x: this.envelopeRotation.x,
-                    y: this.envelopeRotation.y,
-                    z: this.envelopeRotation.z,
-                    duration: 2,
-                    ease: "power2.inOut"
-                });
-            }
+            gsap.to(item.position, {
+                x: this.positions[index].x,
+                y: this.positions[index].y,
+                z: this.positions[index].z,
+                duration: 2,
+                ease: "power2.inOut"
+            });
         });
 
         this.updatePocketButtonVisibility();
