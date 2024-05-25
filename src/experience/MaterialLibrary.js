@@ -80,7 +80,14 @@ let recordPlayerMaterial,
     topChestMaterial,
     pencilMaterial,
     pictureMaterial,
-    vinylMaterial;
+    vinylMaterial,
+    projectorTireuseMaterial,
+    projectorRailMaterial,
+    projectorButtonMaterial,
+    projectorCubeMaterial,
+    projectorOeilMaterial,
+    projectorBoxMaterial,
+    projectorDoorMaterial;
 
 
 let outlineMaterial,
@@ -691,7 +698,7 @@ export default class MaterialLibrary {
     getMagazineMaterial() {
         if (!magazineMaterial) {
             magazineMaterial = new MeshBasicMaterial({
-                map: this.resources.items.magazine.diffuse,
+                map: this.resources.items.magazineClosed.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -704,7 +711,7 @@ export default class MaterialLibrary {
     getTableMagazineMaterial() {
         if (!tableMagazineMaterial) {
             tableMagazineMaterial = new MeshBasicMaterial({
-                map: this.resources.items.magazine.diffuse2,
+                map: this.resources.items.magazineClosed.diffuse2,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -1052,6 +1059,99 @@ export default class MaterialLibrary {
         }
 
         return vinylMaterial
+    }
+
+    /////////////////////////// PROJECTOR MATERIALS ///////////////////////////
+
+    getProjectorTireuseMaterial() {
+        if (!projectorTireuseMaterial) {
+            projectorTireuseMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.tireuse,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorTireuseMaterial)
+        }
+
+        return projectorTireuseMaterial
+    }
+
+    getProjectorRailMaterial() {
+        if (!projectorRailMaterial) {
+            projectorRailMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.rail,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorRailMaterial)
+        }
+
+        return projectorRailMaterial
+    }
+
+    getProjectorButtonMaterial() {
+        if (!projectorButtonMaterial) {
+            projectorButtonMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.button,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorButtonMaterial)
+        }
+
+        return projectorButtonMaterial
+    }
+
+    getProjectorCubeMaterial() {
+        if (!projectorCubeMaterial) {
+            projectorCubeMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.cube,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorCubeMaterial)
+        }
+
+        return projectorCubeMaterial
+    }
+
+    getProjectorOeilMaterial() {
+        if (!projectorOeilMaterial) {
+            projectorOeilMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.oeil,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorOeilMaterial)
+        }
+
+        return projectorOeilMaterial
+    }
+
+    getProjectorBoxMaterial() {
+        if (!projectorBoxMaterial) {
+            projectorBoxMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.box,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorBoxMaterial)
+        }
+
+        return projectorBoxMaterial
+    }
+
+    getProjectorDoorMaterial() {
+        if (!projectorDoorMaterial) {
+            projectorDoorMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.door,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorDoorMaterial)
+        }
+
+        return projectorDoorMaterial
     }
 
     ///////////////////////// TEXTURE MATERIALS /////////////////////////////

@@ -129,16 +129,26 @@ export default class ObjectsInteractable {
                     interactableObjects.recordPLayer = this.recordPlayer
                     interactableMesh.push(child)
 
-                } else if (name.includes("rail_diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1') {
-                    child.material = this.materialLibrary.getRecordPlayerMaterial()
+                } else if (name.includes("rail_diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite001' || name === 'porte') {
+
+                    if (name.includes("oeil")) child.material = this.materialLibrary.getProjectorOeilMaterial()
+                    if (name.includes("boite001")) child.material = this.materialLibrary.getProjectorBoxMaterial()
+                    if (name.includes("tireuse")) child.material = this.materialLibrary.getProjectorTireuseMaterial()
+                    if (name.includes("boutonon")) child.material = this.materialLibrary.getProjectorButtonMaterial()
+                    if (name.includes("cube")) child.material = this.materialLibrary.getProjectorCubeMaterial()
+                    if (name === 'porte') child.material = this.materialLibrary.getProjectorDoorMaterial()
+                    // if (name.includes("sphere")) child.material = this.materialLibrary.getProjectorTireuseMaterial()
+                    if (name.includes("rail_diapo")) child.material = this.materialLibrary.getProjectorRailMaterial()
+
                     this.projectorModel.push(child);
+                    interactableMesh.push(child)
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
                     child.material = this.materialLibrary.getVinylMaterial()
                 } else if (name === 'photo') {
                     child.material = this.materialLibrary.getPictureMaterial()
                 } else {
-                    // console.log(name)
+                    console.log(name)
                 }
 
                 child.material.needsUpdate = true

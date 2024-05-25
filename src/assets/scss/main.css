@@ -33,6 +33,7 @@
 }
 #experienceWrapper .start-button {
   position: absolute;
+  padding: 20px 0;
   top: 50%;
   left: 50%;
   opacity: 0;

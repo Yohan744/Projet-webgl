@@ -53,13 +53,13 @@ export default class SoundManager {
 
     fadeIn(key, duration) {
         if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
-            this.sounds[key].fade(0, this.sounds[key].volume(), duration);
+            this.sounds[key].fade(0, this.sounds[key].volume(), duration, this.sounds[key]);
         }
     }
 
     fadeOut(key, duration) {
         if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
-            this.sounds[key].fade(this.sounds[key].volume(), 0, duration);
+            this.sounds[key].fade(this.sounds[key].volume(), 0, duration, this.sounds[key]);
         }
     }
 

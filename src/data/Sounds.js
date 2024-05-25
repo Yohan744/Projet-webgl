@@ -1,6 +1,7 @@
 const s = './assets/sounds/';
 const g = './assets/sounds/general/';
 const p = './assets/sounds/props/';
+const fx = './assets/sounds/fx/';
 
 export const data = {
 
@@ -72,15 +73,33 @@ export const data = {
         preload: true,
         loop: false,
     },
+
     general2: {
         src: g + 'general2.mp3',
         volume: 0.75,
         preload: true,
         loop: false,
     },
+
     general3: {
         src: g + 'general3.mp3',
         volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    //////// FX SOUNDS ////////
+
+    projectorSound: {
+        src: fx + 'projectorSound.mp3',
+        volume: 0.15,
+        preload: true,
+        loop: true,
+    },
+
+    projectorDiapoChanged: {
+        src: fx + 'projectorDiapoChanged.mp3',
+        volume: 0.4,
         preload: true,
         loop: false,
     },

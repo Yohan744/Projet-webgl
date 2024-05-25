@@ -14,10 +14,11 @@ export default class Prop extends EventEmitter {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.pointer = this.experience.pointer
-        this.gameManager = this.experience.gameManager;
         this.camera = this.experience.camera.modes.default.instance;
         this.renderer = this.experience.renderer;
         this.soundManager = this.experience.soundManager;
+        this.gameManager = this.experience.gameManager;
+        this.globalEvents = this.experience.globalEvents;
 
         this.mesh = mesh
         this.mesh.rotation.order = "YXZ"
@@ -49,9 +50,14 @@ export default class Prop extends EventEmitter {
             if (!state) {
                 this.animatePropsToBasicPosition()
                 this.outline?.showOutline()
-                this.gameManager.setActualObjectInteractingName(null)
                 this.renderer.toggleBlurEffect(false)
+
+                if (this.gameManager.state.actualObjectInteractingName !== 'projector') {
+                    this.gameManager.setActualObjectInteractingName(null)
+                }
+
             }
+            if (state) this.outline?.removeOutline()
         })
         watch(() => this.gameManager.state.isPencilInFrontOfCamera, (newVal) => {
             if (newVal && this.gameManager.state.isCassetteInFrontOfCamera) {
@@ -81,6 +87,7 @@ export default class Prop extends EventEmitter {
 
                 this.animatePropsToCamera()
                 this.playSoundOnClick()
+                this.globalEvents.trigger('change-cursor', {name: 'default'})
                 this.onClick()
 
                 this.gameManager.updateInteractingState(true)
