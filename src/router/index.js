@@ -3,6 +3,7 @@ import Index from '../pages/Index.vue';
 import Experience from '../pages/Experience.vue';
 import Outro from '../pages/Outro.vue';
 import ErrorPage from '../pages/Error.vue';
+import Inside from '../pages/Inside.vue';
 
 const routes = [
     {
@@ -22,6 +23,12 @@ const routes = [
         name: 'Outro',
         component: Outro,
         alias: '/outro/'
+    },
+    {
+        path: '/inside',
+        name: 'Inside',
+        component: Inside,
+        alias: '/inside/'
     },
     {
         path: '/:pathMatch(.*)*',

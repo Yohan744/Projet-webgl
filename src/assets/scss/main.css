@@ -317,8 +317,8 @@
   }
 }
 html, body {
-  overflow: hidden;
-  overscroll-behavior: none;
+  /* overflow: hidden;
+  overscroll-behavior: none; */
   background: black;
 }
 
