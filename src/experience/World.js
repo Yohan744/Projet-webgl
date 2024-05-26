@@ -31,7 +31,7 @@ export default class World {
         this.objectsInteractable = new ObjectsInteractable(this.materialLibrary)
         this.locations = new Locations(this.materialLibrary)
         this.background = new Background(this.materialLibrary)
-        // this.props = new Props()
+        this.props = new Props()
     }
 
     resize() {

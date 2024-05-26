@@ -16,12 +16,13 @@ export default class Photo {
         this.group = null;
         this.initialPositions = [];
         this.activeParticles = [];
-        this.rows = 40;
-        this.columns = 40;
-        this.particlesPerCell = 10;
+        this.rows = 60;
+        this.columns = 60;
+        this.particlesPerCell = 50;
         this.cells = {};
         this.cellMeshes = [];
         this.detectedCells = new Set();
+        this.rotationInitiated = false;
 
         this.init();
     }
@@ -45,17 +46,22 @@ export default class Photo {
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
         this.scene.add(this.group);
-        const texture = this.resources.items.backgroundTreeTexture;
 
-        const rectangleGeometry = new THREE.PlaneGeometry(0.17, 0.12);
-        const rectangleMaterial = new THREE.MeshBasicMaterial({
-            map: texture,
-            side: THREE.DoubleSide,
-            transparent: true,
+        const texture = this.resources.items.monabouquet;
+        texture.repeat.set(1, -1); 
+        texture.offset.set(0, 1); 
+    
+        this.photoModel.traverse((child) => {
+            if (child.isMesh) {
+                child.material = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                });
+            }
         });
-        this.rectangleMesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
-        this.rectangleMesh.position.set(0, 0, 0);
-        this.group.add(this.rectangleMesh);
+
+        this.group.add(this.photoModel);
     }
 
     setupParticles() {
@@ -64,8 +70,8 @@ export default class Photo {
         const posArray = new Float32Array(particlesCount * 3);
         const scaleArray = new Float32Array(particlesCount);
 
-        const width = 0.17;
-        const height = 0.12;
+        const width = 0.175;
+        const height = 0.125;
         const xSpacing = width / (this.columns - 1);
         const ySpacing = height / (this.rows - 1);
 
@@ -83,25 +89,36 @@ export default class Photo {
             uniforms: {
                 uTime: { value: 0 },
                 uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-                uSize: { value: 7 }
+                uSize: { value: 3 }
             },
             vertexShader: `
-                uniform float uPixelRatio;
-                uniform float uSize;
-                attribute float aScale;
+            uniform float uPixelRatio;
+            uniform float uSize;
+            attribute float aScale;
 
-                void main() {
-                    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-                    vec4 viewPosition = viewMatrix * modelPosition;
-                    vec4 projectionPosition = projectionMatrix * viewPosition;
-                    gl_Position = projectionPosition;
-                    gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
-                }
-            `,
-            fragmentShader: dustFragmentShader,
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthTest: false,
+            void main() {
+                vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                vec4 viewPosition = viewMatrix * modelPosition;
+                vec4 projectionPosition = projectionMatrix * viewPosition;
+                gl_Position = projectionPosition;
+                gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
+            }
+        `,
+        fragmentShader: `
+            void main() {
+                vec2 uv = gl_PointCoord.xy * 2.0 - 1.0;
+                float dist = length(uv);
+
+                float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
+
+                vec4 color = vec4(0.3, 0.3, 0.3, alpha * 0.5); 
+
+                gl_FragColor = color;
+            }
+        `,
+        transparent: true,
+        blending: THREE.NormalBlending, 
+        depthTest: false,
         });
 
         this.particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
@@ -180,7 +197,6 @@ export default class Photo {
                 return [cellIndex, ...this.getNeighboringCells(cellIndex)];
             }
         }
-
         return [];
     }
 
@@ -188,19 +204,26 @@ export default class Photo {
         const neighbors = [];
         const row = Math.floor(cellIndex / this.columns);
         const column = cellIndex % this.columns;
-
-        // Top neighbor
-        if (row > 0) neighbors.push(cellIndex - this.columns);
-        // Bottom neighbor
-        if (row < this.rows - 1) neighbors.push(cellIndex + this.columns);
-        // Left neighbor
-        if (column > 0) neighbors.push(cellIndex - 1);
-        // Right neighbor
-        if (column < this.columns - 1) neighbors.push(cellIndex + 1);
-
+    
+        const addNeighbor = (r, c) => {
+            if (r >= 0 && r < this.rows && c >= 0 && c < this.columns) {
+                const distance = Math.sqrt(Math.pow(row - r, 2) + Math.pow(column - c, 2));
+                if (distance <= 7) {
+                    neighbors.push(r * this.columns + c);
+                }
+            }
+        };
+    
+        for (let i = -7; i <= 7; i++) {
+            for (let j = -7; j <= 7; j++) {
+                if (i !== 0 || j !== 0) {
+                    addNeighbor(row + i, column + j);
+                }
+            }
+        }
         return neighbors;
     }
-
+    
     onMouseMove(event) {
         const cellIndices = this.detectCells(event);
         cellIndices.forEach((cellIndex) => {
@@ -208,27 +231,97 @@ export default class Photo {
         });
         this.particlesMesh.geometry.attributes.position.needsUpdate = true;
     }
-
+    
     removeCellParticles(cellIndex) {
         if (this.cells[cellIndex]) {
-            this.cells[cellIndex].forEach((index) => {
-                if (this.activeParticles[index]) {
-                    this.activeParticles[index] = false;
-                    this.removeParticle(index);
-                    this.displacedParticles++;
-                }
+            const neighbors = this.getNeighboringCells(cellIndex);
+            neighbors.forEach((neighbor) => {
+                const distance = this.getDistanceBetweenCells(cellIndex, neighbor);
+                const percentage = this.getRemovalPercentage(distance);
+                this.removeParticlesInCell(neighbor, percentage);
             });
-
+    
+            this.removeParticlesInCell(cellIndex, 1);
+    
             delete this.cells[cellIndex];
-
-            if (this.displacedParticles >= 5000) {
-                this.fadeOut(this.group);
+    
+            if (this.displacedParticles >= this.initialPositions.length * 0.9 && !this.rotationInitiated) {
+                this.rotationInitiated = true; 
+                this.rotatePhoto();
             } else {
                 this.fadeOut(this.cellMeshes[cellIndex]);
             }
         }
     }
-
+    
+    removeParticlesInCell(cellIndex, percentage) {
+        if (this.cells[cellIndex]) {
+            this.cells[cellIndex].forEach((index) => {
+                if (this.activeParticles[index] && Math.random() < percentage) {
+                    this.activeParticles[index] = false;
+                    this.removeParticle(index);
+                    this.displacedParticles++;
+                }
+            });
+    
+            if (percentage === 1) {
+                delete this.cells[cellIndex];
+            }
+        }
+    }
+    
+    getRemovalPercentage(distance) {
+        switch (distance) {
+            case 1:
+                return 0.165;
+            case 2:
+                return 0.155;
+            case 3:
+                return 0.145;
+            case 4:
+                return 0.135;
+            case 5:
+                return 0.125;
+            case 6:
+                return 0.115;
+            case 7:
+                return 0.105;
+            default:
+                return 0;
+        }
+    }
+    
+    getDistanceBetweenCells(cellIndex1, cellIndex2) {
+        const row1 = Math.floor(cellIndex1 / this.columns);
+        const column1 = cellIndex1 % this.columns;
+        const row2 = Math.floor(cellIndex2 / this.columns);
+        const column2 = cellIndex2 % this.columns;
+        return Math.sqrt(Math.pow(row1 - row2, 2) + Math.pow(column1 - column2, 2));
+    }
+    
+    rotatePhoto() {
+        const duration = 2000;
+        const targetRotation = Math.PI; 
+    
+        const startRotation = this.group.rotation.z;
+        const startTime = performance.now();
+    
+        const rotate = () => {
+            const currentTime = performance.now();
+            const elapsed = currentTime - startTime;
+            const progress = THREE.MathUtils.clamp(elapsed / duration, 0, 1);
+    
+            this.group.rotation.y = startRotation + progress * targetRotation;
+    
+            if (progress < 1) {
+                requestAnimationFrame(rotate);
+            } else {
+                setTimeout(() => this.fadeOut(this.group), 5000); 
+            }
+        };
+        rotate();
+    }
+    
     removeParticle(index) {
         const positions = this.particlesMesh.geometry.attributes.position.array;
         positions[index * 3] = NaN;
