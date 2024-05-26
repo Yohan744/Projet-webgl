@@ -1,6 +1,7 @@
 import {reactive} from 'vue';
 
 const state = reactive({
+    gameStepId: -1,
     lastVisitedRoute: null,
     isExperienceVisible: false,
     isCameraOnSpot: false,
@@ -21,6 +22,16 @@ const inventory = reactive({
 });
 
 export function useGameManager() {
+
+    function incrementGameStepId() {
+        state.gameStepId++;
+        console.log("new gameStepId: " + state.gameStepId)
+    }
+
+    function setGameStepId(id) {
+        state.gameStepId = id;
+        console.log("new gameStepId: " + state.gameStepId)
+    }
 
     function setLastVisitedRoute(route) {
         state.lastVisitedRoute = route;
@@ -79,6 +90,7 @@ export function useGameManager() {
     }
 
     function resetAll() {
+        state.gameStepId = 0;
         state.lastVisitedRoute = null;
         state.isExperienceVisible = false;
         state.isCameraOnSpot = false;
@@ -98,6 +110,8 @@ export function useGameManager() {
     return {
         state,
         inventory,
+        incrementGameStepId,
+        setGameStepId,
         setLastVisitedRoute,
         setExperienceVisible,
         updateCameraOnSpot,

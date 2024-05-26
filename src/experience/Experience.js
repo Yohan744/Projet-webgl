@@ -86,7 +86,25 @@ export default class Experience extends EventEmitter {
 
     setDebug() {
         if (this.config.debug) {
-            this.debug = new Pane()
+            this.debug = new Pane({
+                title: 'Debug',
+                expanded: true
+            })
+
+            this.debugFolder = this.debug.addFolder({
+                title: 'Game Debug',
+                expanded: true
+            })
+
+            const params = {
+                id: 0
+            }
+
+            const gameIdDebug = this.debugFolder.addBinding(params, 'id', {min: 0, max: 8, step: 1, label: 'Game Step Id'})
+            gameIdDebug.on('change', value => {
+                this.gameManager.setGameStepId(value.value)
+            })
+
         }
     }
 

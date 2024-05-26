@@ -68,7 +68,7 @@ export default class Pointer extends EventEmitter {
     onClick(_event) {
         this.updateMousePosition(_event)
         const intersects = this.raycaster.intersectObjects(this.locations, false);
-        if (intersects.length > 0 && !this.gameManager.state.isCameraOnSpot && !this.gameManager.state.isInteractingWithObject && !this.experience.camera.isMoving) {
+        if (intersects.length > 0 && !this.gameManager.state.isCameraOnSpot && !this.gameManager.state.isInteractingWithObject && !this.experience.camera.isMoving && intersects[0].object.visible) {
             const position = intersects[0].object.position.clone()
             const lookingPoint = intersects[0].object.data.lookingPoint
             this.trigger('spot-clicked', [position, lookingPoint])
@@ -125,7 +125,7 @@ export default class Pointer extends EventEmitter {
 
                 const locations = this.raycaster.intersectObjects(this.locations, false)
 
-                if (locations.length > 0 && getActualCursor() !== 'grab') {
+                if (locations.length > 0 && getActualCursor() !== 'grab' && locations[0]?.object?.visible) {
                     this.globalEvents.trigger('change-cursor', {name: 'grab'})
                 }
 

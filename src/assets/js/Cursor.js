@@ -90,7 +90,6 @@ export default class Cursor {
         if (this.cursor.src === cursors[name]) return console.warn(`Cursor is already set to ${name}`)
         this.cursor.src = cursors[name]
         actualCursor = name
-        console.log('Cursor changed to ', name)
     }
 
     destroy() {

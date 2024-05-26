@@ -5,6 +5,7 @@ uniform float uTime;
 attribute float aScale;
 
 void main() {
+
     vec4 modelPosition = modelMatrix * vec4(position, 1.0);
     modelPosition.x -= cos(uTime * 0.3 + modelPosition.x * 1000.0) * aScale * 0.5;
     modelPosition.y += sin(uTime + modelPosition.y * 100.0) * aScale * 0.15;
@@ -16,6 +17,4 @@ void main() {
     gl_Position = projectionPosition;
     gl_PointSize = uSize * aScale * uPixelRatio * (1.0 / -viewPosition.z);
 
-    // Add minimum and maximum size constraints to prevent extreme sizes
-    gl_PointSize = clamp(gl_PointSize, 1.0, 100.0); // Adjust these values as needed
 }

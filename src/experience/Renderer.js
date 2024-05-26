@@ -30,7 +30,7 @@ export default class Renderer {
 
             this.debugFolder = this.debug.addFolder({
                 title: 'Renderer',
-                expanded: true
+                expanded: false
             })
 
             this.setDebug()

@@ -289,6 +289,7 @@ export default class Projector {
                     x: "+=0.02",
                     duration: 1,
                     onComplete: () => {
+                        if (this.railMoveCount === 1 && this.gameManager.state.gameStepId === 1) this.gameManager.incrementGameStepId();
                     }
                 });
             }
