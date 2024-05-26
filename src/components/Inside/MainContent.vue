@@ -15,6 +15,9 @@
     <section id="section-4">
       <Section4 />
     </section>
+    <section id="section-5">
+      <Section5 />
+    </section>
   </div>
 </template>
 

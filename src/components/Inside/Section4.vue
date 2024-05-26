@@ -1,15 +1,16 @@
 <template>
-  <div class="section-content">
-    <h1>Section 4</h1>
-    <p>Content for section 4.</p>
-    <div class="additional-content">
+  <div class="new-section">
+    <div class="left">
+      <iframe src="https://open.spotify.com/embed/playlist/19tq2QerDNgEqwNLcSuwL3" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+    <div class="right">
       <div class="image-container">
+        <img src="/src/assets/img/section1_photo.jpg" alt="Image description">
       </div>
       <div class="text-container">
-        <p>Additional content for section 4.</p>
-      </div>
-      <div class="buttons">
-        <button @click="handleButtonClick">Click Me</button>
+        <p>
+          heritage
+        </p>
       </div>
     </div>
   </div>
@@ -17,14 +18,43 @@
 
 <script>
 export default {
-  name: 'Section4',
-  methods: {
-    handleButtonClick() {
-      alert('Button clicked in section 4');
-    }
-  }
+  name: 'NewSection',
 }
 </script>
 
 <style scoped>
+.new-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.left {
+  flex: 1;
+  padding: 10px;
+}
+
+.right {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.text-container {
+  width: 100%;
+  text-align: center;
+}
 </style>
