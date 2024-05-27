@@ -8,13 +8,13 @@
       <div v-for="(year, index) in years" :key="year" class="year-section" :class="'year-section-' + index">
         <div class="media-container media-left" :class="'media-left-' + index">
           <div v-for="(media, i) in mediaData[year].left" :key="`left-${i}`" class="media-item">
-            <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-left-' + i"></component>
+            <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-left-' + i" class="media-element"></component>
             <p>{{ media.text }}</p>
           </div>
         </div>
         <div class="media-container media-right" :class="'media-right-' + index">
           <div v-for="(media, i) in mediaData[year].right" :key="`right-${i}`" class="media-item">
-            <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-right-' + i"></component>
+            <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-right-' + i" class="media-element"></component>
             <p>{{ media.text }}</p>
           </div>
         </div>
@@ -42,6 +42,11 @@ export default {
   },
   mounted() {
     this.setupAnimations();
+    this.adjustMediaSizes();
+    window.addEventListener('resize', this.adjustMediaSizes);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.adjustMediaSizes);
   },
   methods: {
     setupAnimations() {
@@ -77,8 +82,25 @@ export default {
           .to(`.media-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.4 }, "<");
       });
     },
-  },
-};
+    adjustMediaSizes() {
+      const mediaContainers = document.querySelectorAll('.media-container');
+      mediaContainers.forEach(container => {
+        const totalHeight = 80 * window.innerHeight / 100; 
+        const textElements = container.querySelectorAll('p');
+        let textHeight = 0;
+        textElements.forEach(text => {
+          textHeight += text.offsetHeight;
+        });
+        const mediaElements = container.querySelectorAll('.media-element');
+        const availableHeight = totalHeight - textHeight - (20 * mediaElements.length);
+        const mediaHeight = availableHeight / mediaElements.length;
+        mediaElements.forEach(media => {
+          media.style.maxHeight = `${mediaHeight}px`;
+        });
+      });
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -125,19 +147,22 @@ export default {
 
 .media-container {
   width: 40%;
+  max-height: 80vh; 
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* overflow-y: auto; */
 }
 
 .media-item {
-  margin-bottom: 20px;
+  margin-bottom: -40px
 }
 
 .media-item iframe, .media-item img {
   width: 100%;
   height: auto;
   border-radius: 8px;
+  object-fit: contain; 
 }
 
 @media (max-width: 768px) {

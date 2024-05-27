@@ -18,36 +18,41 @@
     "1981": {
       "left": [
         {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-          "text": "This is the text for the left video of 1981."
+            "type": "image",
+            "src": "/src/assets/img/years/1981-2.png",
+            "text": ""
+        },
+        {
+            "type": "image",
+            "src": "/src/assets/img/years/1981-1.png",
+            "text": ""
         }
       ],
       "right": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1981-2.png",
-          "text": "This is the text for the right image of 1981."
+          "type": "video",
+          "src": "https://www.youtube.com/embed/JVHvh0dyShI?si=YqeF7H1WxTuZLw_G",
+          "text": ""
         },
         {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-          "text": "This is the text for the second right video of 1981."
-        }
+            "type": "image",
+            "src": "/src/assets/img/years/1981-3.png",
+            "text": "This is the text for the second right video of 1981."
+          }
       ]
     },
     "1982": {
       "left": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1982-1.png",
+          "type": "video",
+          "src": "https://www.youtube.com/embed/QcC4G9Ia7Xc?si=UU3qk5BTW7JLPzs9s",
           "text": "This is the text for the left image of 1982."
         }
       ],
       "right": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1982-2.png",
+          "type": "video",
+          "src": "https://www.youtube.com/embed/BDWAc1xluoc?si=OaQLlywrfkpnsCGu",
           "text": "This is the text for the right image of 1982."
         }
       ]
@@ -55,36 +60,43 @@
     "1983": {
       "left": [
         {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-          "text": "This is the text for the left video of 1983."
+            "type": "image",
+            "src": "/src/assets/img/years/1983-3.png",
+            "text": "This is the text for the right image of 1983."
         }
       ],
       "right": [
         {
           "type": "image",
-          "src": "/src/assets/img/years/1983-1.png",
-          "text": "This is the text for the right image of 1983."
-        }
+          "src": "/src/assets/img/years/1983-1.png"
+        },
+        {
+            "type": "image",
+            "src": "/src/assets/img/years/1983-2.png",
+            "text": "This is the text for the right image of 1983."
+          }
       ]
     },
     "1984": {
       "left": [
         {
           "type": "image",
-          "src": "/src/assets/img/years/1984-1.png",
-          "text": "This is the text for the left image of 1984."
-        }
+          "src": "/src/assets/img/years/1984-1.png"
+        },
+        {
+            "type": "image",
+            "src": "/src/assets/img/years/1984-2.png"
+          },
+          {
+            "type": "image",
+            "src": "/src/assets/img/years/1984-3.png",
+            "text": "This is the text for the left image of 1984."
+          }
       ],
       "right": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1984-2.png",
-          "text": "This is the text for the right image of 1984."
-        },
-        {
           "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "src": "https://www.youtube.com/embed/IUi-VDnehpY?si=qnOLAuVHZLd4bYqd",
           "text": "This is the text for the second right video of 1984."
         }
       ]
@@ -99,83 +111,70 @@
       ],
       "right": [
         {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-          "text": "This is the text for the right video of 1985."
-        }
+          "type": "image",
+          "src": "/src/assets/img/years/1985-2.png"
+        },
+        {
+            "type": "image",
+            "src": "/src/assets/img/years/1985-3.png",
+          "text": "This is the text for the left image of 1985."
+          }
       ]
     },
     "1986": {
       "left": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1986-1.png",
+          "type": "video",
+          "src": "https://enseignants.lumni.fr/export/player/00000000668",
           "text": "This is the text for the left image of 1986."
         }
       ],
       "right": [
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1986-2.png",
-          "text": "This is the text for the right image of 1986."
-        }
       ]
     },
     "1987": {
       "left": [
         {
           "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-          "text": "This is the text for the left video of 1987."
-        }
+          "src": "https://www.youtube.com/embed/NightOxaRrA?si=LJQ3HHPI5qFNmIrG"
+        },
+        {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Xl2MFGI2i40?si=irGYzPK-f1Wf9yap",
+            "text": "This is the text for the right image of 1987."
+          }
       ],
       "right": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1987-1.png",
-          "text": "This is the text for the right image of 1987."
-        }
+            "type": "video",
+            "src": "https://www.youtube.com/embed/H2M_vHvvAc0?si=JEERAf7vQJeyyM7O"
+          },
+          {
+              "type": "image",
+              "src": "http://www.gettyimages.com/detail/1218921100",
+              "text": "This is the text for the right image of 1987."
+            }
       ]
     },
     "1988": {
       "left": [
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1988-1.png",
-          "text": "This is the text for the left image of 1988."
-        },
-        {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-          "text": "This is the text for the second left video of 1988."
-        }
       ],
       "right": [
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1988-2.png",
-          "text": "This is the text for the right image of 1988."
-        }
       ]
     },
     "1989": {
       "left": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1989-1.png",
-          "text": "This is the text for the left image of 1989."
-        }
+            "type": "image",
+            "src": "http://www.gettyimages.com/detail/967075816",
+            "text": "This is the text for the second right image of 1989."
+          }
       ],
       "right": [
         {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-          "text": "This is the text for the right video of 1989."
-        },
-        {
           "type": "image",
-          "src": "/src/assets/img/years/1989-2.png",
-          "text": "This is the text for the second right image of 1989."
+          "src": "http://www.gettyimages.com/detail/965979444",
+          "text": "This is the text for the left image of 1989."
         }
       ]
     }
