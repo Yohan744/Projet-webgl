@@ -22,12 +22,12 @@ export default {
   data() {
     return {
       items: [
-        { name: 'Maud FLEURIET', title: 'Designer' },
-        { name: 'Lucie LESNIER', title: 'Développeur' },
-        { name: 'Anaïs MOREAU', title: 'Développeur' },
+        { name: 'Maud FLEURIET', title: 'Designeuse' },
+        { name: 'Lucie LESNIER', title: 'Développeuse' },
+        { name: 'Anaïs MOREAU', title: 'Développeuse' },
         { name: 'Yohan QUINQUIS', title: 'Développeur' },
-        { name: 'Léa SIMONET', title: 'Designer' },
-        { name: 'Mathilde VAUQUIERES', title: 'Designer' }
+        { name: 'Léa SIMONET', title: 'Designeuse' },
+        { name: 'Mathilde VAUQUIERES', title: 'Designeuse' }
       ]
     };
   }

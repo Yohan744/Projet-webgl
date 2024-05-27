@@ -6,11 +6,11 @@
     </div>
     <div class="content">
       <div v-for="(year, index) in years" :key="year" class="year-section" :class="'year-section-' + index">
-        <div class="image-left" :class="'image-left-' + index">
-          <img src="/src/assets/img/section1_photo.jpg" alt="Image {{ year }}-1">
+        <div class="media-left" :class="'media-left-' + index">
+          <component :is="mediaComponents[index][0]" :src="mediaSources[index][0]" :alt="'Media ' + year + '-1'"></component>
         </div>
-        <div class="image-right" :class="'image-right-' + index">
-          <img src="/src/assets/img/section1_photo.jpg" alt="Image {{ year }}-2">
+        <div class="media-right" :class="'media-right-' + index">
+          <component :is="mediaComponents[index][1]" :src="mediaSources[index][1]" :alt="'Media ' + year + '-2'"></component>
         </div>
       </div>
     </div>
@@ -20,6 +20,7 @@
 <script>
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import videoLinks from '/src/assets/img/years/videoLinks.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,12 +31,49 @@ export default {
       years: Array.from({ length: 10 }, (_, i) => 1980 + i),
       currentYear: 1980,
       isFixed: false,
+      mediaComponents: Array.from({ length: 10 }, () => ['', '']),
+      mediaSources: Array.from({ length: 10 }, () => ['', '']),
     };
   },
-  mounted() {
+  async mounted() {
+    await this.loadMedia();
     this.setupAnimations();
   },
   methods: {
+    async loadMedia() {
+      const promises = this.years.map((year, index) => {
+        return Promise.all([
+          this.loadMediaSource(year, 1).then(({ component, src }) => {
+            this.mediaComponents[index][0] = component;
+            this.mediaSources[index][0] = src;
+          }),
+          this.loadMediaSource(year, 2).then(({ component, src }) => {
+            this.mediaComponents[index][1] = component;
+            this.mediaSources[index][1] = src;
+          })
+        ]);
+      });
+      await Promise.all(promises);
+    },
+    async loadMediaSource(year, index) {
+      try {
+        const videoLink = videoLinks[year] && videoLinks[year][index];
+        if (videoLink) {
+          return { component: 'iframe', src: videoLink };
+        } else {
+          const imagePath = `/src/assets/img/years/${year}-${index}.png`;
+          const image = await import(/* @vite-ignore */ imagePath).catch(() => null);
+          if (image) {
+            return { component: 'img', src: image.default };
+          } else {
+            throw new Error(`No media found for year ${year}, index ${index}`);
+          }
+        }
+      } catch (error) {
+        console.error(`Error loading media ${year}-${index}:`, error);
+        return { component: 'div', src: '' };
+      }
+    },
     setupAnimations() {
       const years = this.years;
 
@@ -63,10 +101,10 @@ export default {
         });
 
         timeline
-          .fromTo(`.image-left-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5 })
-          .fromTo(`.image-right-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5, delay: 0.4 }, "<")
-          .to(`.image-left-${index}`, { y: -100, opacity: 0.05, duration: 0.5 })
-          .to(`.image-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.4 }, "<");
+          .fromTo(`.media-left-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5 })
+          .fromTo(`.media-right-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5, delay: 0.4 }, "<")
+          .to(`.media-left-${index}`, { y: -100, opacity: 0.05, duration: 0.5 })
+          .to(`.media-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.4 }, "<");
       });
     },
   },
@@ -103,25 +141,25 @@ export default {
 }
 
 .content {
-  margin-top: 50vh; 
+  margin-top: 50vh;
 }
 
 .year-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 30vh; 
-  padding: 0 5%; 
-  margin: 5vh 0; 
+  min-height: 30vh;
+  padding: 0 5%;
+  margin: 5vh 0;
 }
 
-.image-left, .image-right {
+.media-left, .media-right {
   width: 40%;
   display: flex;
   justify-content: center;
 }
 
-.image-left img, .image-right img {
+.media-left img, .media-right img {
   width: 100%;
   height: auto;
   border-radius: 8px;
@@ -132,7 +170,7 @@ export default {
     flex-direction: column;
   }
 
-  .image-left, .image-right {
+  .media-left, .media-right {
     width: 80%;
     margin: 20px 0;
   }
