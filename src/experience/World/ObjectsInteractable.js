@@ -64,9 +64,10 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getWalkmanMaterial();
                     this.walkman = new Walkman(child);
 
-                } else if (name.includes("tirroir_haut")) {
+                } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial();
                     this.drawer = new Drawer(child);
+                    interactableObjects.drawer = this.drawer;
 
                 } else if (name.includes("cartepostale") || name.includes('cartespostales')) {
                     if (name.includes('biarritz')) child.material = this.materialLibrary.getPostalCardBiarritzMaterial();

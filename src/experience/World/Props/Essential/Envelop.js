@@ -21,13 +21,14 @@ export default class Envelop {
         this.mouseStartClickPosition = { x: 0, y: 0 };
         this.hasOpenEnvelop = false;
         this.dragDistance = 0.2;
-        this.initialEnvelopePosition = new THREE.Vector3(0, -0.05, -0.05);
         this.mesh = mesh;
-        this.envelopePosition = new THREE.Vector3();
-        this.envelopeRotation = new THREE.Euler();
+        this.initialCarouselPosition = new THREE.Vector3();
+        this.carouselRotation = new THREE.Euler();
 
         this.interactableObjects = useInteractableObjects();
         this.items = [];
+        this.itemGroup = new THREE.Group();
+        this.scene.add(this.itemGroup);
 
         this.init();
         this.setEvents();
@@ -62,9 +63,9 @@ export default class Envelop {
 
         this.items.forEach(item => {
             if (item) {
-                item.position.copy(this.envelopePosition);
-                item.rotation.set(Math.PI / 2, 0, 0);
-                this.scene.add(item);
+                item.position.copy(this.initialCarouselPosition);
+               // item.rotation.copy(this.carouselRotation);
+                this.itemGroup.add(item);
             }
         });
     }
@@ -108,15 +109,12 @@ export default class Envelop {
         if (intersects.length > 0) {
             this.setupMorphTargets();
             this.hidePocketButton();
-            if (this.hasOpenEnvelop) this.separateItemsToTriangle();
             if (!this.hasAnimatedToCamera) {
                 this.camera.moveCameraToInitialPosition(() => {
                     this.animateEnvelope(() => {
                         CameraUtils.animateToCamera(this.mesh, this.camera.instance, 0.6);
-                        this.envelopePosition.set(-2.94133, 1.421451, -3.830488);
-                        this.mesh.position.copy(this.envelopePosition);
-                        this.envelopeRotation.set(Math.PI / 2, 0, 0);
-                        this.mesh.rotation.copy(this.envelopeRotation);
+                        this.initializeCarouselPosition();
+                        this.startMorphTargetAnimation();
                     });
                 });
                 this.hasAnimatedToCamera = true;
@@ -169,14 +167,18 @@ export default class Envelop {
 
     startMorphTargetAnimation() {
         if (this.morphTargets && !this.morphTargetPlayed) {
-            this.morphTargetPlayed = true; // Marquez le morph target comme joué
+            this.morphTargetPlayed = true;
             const timeline = gsap.timeline({
                 onComplete: () => {
                     gsap.to(this.morphMesh.morphTargetInfluences, {
-                        [40]: "-=1",
+                        [0]: 1,
                         duration: 2,
                         ease: "power1.inOut",
-                        onComplete: () => this.animateItemGroup()
+                        onComplete: () => {
+                            this.animateEnvelopeBackToDrawer()
+                            this.createCarouselItems();
+                            this.separateItemsToTriangle();
+                        }
                     });
                     this.morphTargets[0] = 1;
                 }
@@ -218,31 +220,12 @@ export default class Envelop {
             });
     }
 
-    animateItemGroup() {
-        this.createCarouselItems();
-
-        this.items.forEach(item => {
-            item.position.copy(this.mesh.position);
-        });
-
-        gsap.to(this.items.map(item => item.position), {
-            x: this.mesh.position.x + 0.1,
-            duration: 1,
-            ease: "power2.inOut",
-            onComplete: () => {
-                gsap.to(this.items.map(item => item.position), {
-                    x: this.mesh.position.x - 0.05,
-                    z: this.mesh.position.z + 0.05,
-                    duration: 1,
-                    ease: "power2.inOut",
-                    onComplete: () => {
-                        this.animateEnvelopeBackToDrawer();
-                        this.separateItemsToTriangle();
-                        this.hasOpenEnvelop = true;
-                    }
-                });
-            }
-        });
+    initializeCarouselPosition() {
+        const camera = this.camera.instance;
+        const distance = 0.5;
+        const targetPosition = new THREE.Vector3(0, 0, -distance).applyMatrix4(camera.matrixWorld);
+        this.initialCarouselPosition.copy(targetPosition);
+        this.carouselRotation.copy(camera.rotation);
     }
 
     animateEnvelopeBackToDrawer() {
@@ -274,13 +257,20 @@ export default class Envelop {
 
     separateItemsToTriangle() {
         this.carouselIsSet = true;
-        this.positions = this.getFixedPositions();
+
+        const finalEnvelopePosition = this.initialCarouselPosition.clone();
+
+        const triangleOffsets = [
+            new THREE.Vector3(0.2, 0, 0),
+            new THREE.Vector3(-0.2, 0, 0.2),
+            new THREE.Vector3(-0.2, 0, -0.2),
+        ];
 
         this.items.forEach((item, index) => {
             gsap.to(item.position, {
-                x: this.positions[index].x,
-                y: this.positions[index].y,
-                z: this.positions[index].z,
+                x: finalEnvelopePosition.x + triangleOffsets[index].x,
+                y: finalEnvelopePosition.y + triangleOffsets[index].y,
+                z: finalEnvelopePosition.z + triangleOffsets[index].z,
                 duration: 2,
                 ease: "power2.inOut"
             });
