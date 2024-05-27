@@ -3,6 +3,7 @@ import {objectsData} from "../../data/Objects";
 import Projector from "./Props/Essential/Projector";
 import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
+import Picture from "./Props/Essential/Picture";
 
 const interactableObjects = {}
 const interactableMesh = []
@@ -147,6 +148,8 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getVinylMaterial()
                 } else if (name === 'photo') {
                     child.material = this.materialLibrary.getPictureMaterial()
+                    this.picture = new Picture(child)
+                    interactableObjects.picture = this.picture
                 } else {
                     console.log(name)
                 }

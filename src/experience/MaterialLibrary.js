@@ -1039,7 +1039,8 @@ export default class MaterialLibrary {
         if (!pictureMaterial) {
             pictureMaterial = new MeshBasicMaterial({
                 map: this.resources.items.picture.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                transparent: true,
+                side: FrontSide
             })
 
             this.materialsUsed.push(pictureMaterial)

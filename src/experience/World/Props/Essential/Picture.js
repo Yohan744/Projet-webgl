@@ -6,15 +6,14 @@ import gsap from "gsap";
 
 export default class Picture {
 
-    constructor() {
+    constructor(mesh) {
 
         this.experience = new Experience();
         this.scene = this.experience.scene;
-        this.resources = this.experience.resources;
         this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
 
-
+        this.photoModel = mesh;
         this.displacedParticles = 0;
         this.initialPositions = [];
         this.activeParticles = [];
@@ -27,42 +26,27 @@ export default class Picture {
         this.rotationInitiated = false;
 
         if (this.gameManager.state.gameStepId === 0) {
-            this.setupPhotoModel();
-            this.setupGroup();
+            this.init();
             this.setupParticles();
             this.setupGridCells();
             this.setupMouseEvents();
+            this.experience.renderer.toggleBlurEffect(true);
         }
 
     }
 
-    setupPhotoModel() {
-        this.photoModel = this.resources.items.photoModel.scene;
-        this.photoModel.position.set(0, 2.25, 9.25);
-        this.photoModel.rotation.x = Math.PI / 2;
-    }
+    init() {
+        this.photoModel.position.set(0, 2.22, 9.28);
+        this.photoModel.rotation.set(-Math.PI * 0.5, 0, -Math.PI);
+        this.photoModel.material.depthTest = false;
+        this.experience.renderer.toggleBlurEffect(true);
 
-    setupGroup() {
         this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        this.scene.add(this.group);
-
-        const texture = this.resources.items.monabouquet;
-        texture.repeat.set(1, -1);
-        texture.offset.set(0, 1);
-
-        this.photoModel.traverse((child) => {
-            if (child.isMesh) {
-                child.material = new THREE.MeshBasicMaterial({
-                    map: texture,
-                    side: THREE.DoubleSide,
-                    transparent: true,
-                });
-            }
-        });
-
+        this.group.rotation.set(-0.27, 0, 0)
         this.group.add(this.photoModel);
+        this.scene.add(this.group);
     }
 
     setupParticles() {
@@ -268,24 +252,26 @@ export default class Picture {
             y: Math.PI,
             duration: 3,
             ease: 'power2.inOut'
-        });
-
-        this.group.traverse((child) => {
-            if (child.isMesh) {
-                tl.to(child.material, {
-                    opacity: 0,
-                    delay: 3,
-                    duration: 2,
-                    ease: 'power2.inOut',
-                }, 0);
-            }
         })
+
+        tl.to(this.photoModel.material, {
+            opacity: 0,
+            delay: 3,
+            duration: 5,
+            ease: 'power2.inOut',
+        }, 0);
 
         tl.to(this.particlesMaterial.uniforms.uOpacity, {
             value: 0,
             delay: 3,
-            duration: 2,
+            duration: 5,
             ease: 'power2.inOut',
+            onStart: () => {
+                this.experience.renderer.toggleBlurEffect(false);
+                gsap.delayedCall(3, () => {
+                    this.experience.renderer.setNormalPostProcessValues();
+                })
+            },
         }, 0);
 
     }
