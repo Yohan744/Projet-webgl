@@ -6,11 +6,17 @@
     </div>
     <div class="content">
       <div v-for="(year, index) in years" :key="year" class="year-section" :class="'year-section-' + index">
-        <div class="media-left" :class="'media-left-' + index">
-          <component :is="mediaComponents[index][0]" :src="mediaSources[index][0]" :alt="'Media ' + year + '-1'"></component>
+        <div class="media-container media-left" :class="'media-left-' + index">
+          <div v-for="(media, i) in mediaData[year].left" :key="`left-${i}`" class="media-item">
+            <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-left-' + i"></component>
+            <p>{{ media.text }}</p>
+          </div>
         </div>
-        <div class="media-right" :class="'media-right-' + index">
-          <component :is="mediaComponents[index][1]" :src="mediaSources[index][1]" :alt="'Media ' + year + '-2'"></component>
+        <div class="media-container media-right" :class="'media-right-' + index">
+          <div v-for="(media, i) in mediaData[year].right" :key="`right-${i}`" class="media-item">
+            <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-right-' + i"></component>
+            <p>{{ media.text }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -20,7 +26,7 @@
 <script>
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import videoLinks from '/src/assets/img/years/videoLinks.json';
+import mediaData from '/src/assets/img/years/videoLinks.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,52 +34,16 @@ export default {
   name: "ParallaxComponent",
   data() {
     return {
-      years: Array.from({ length: 10 }, (_, i) => 1980 + i),
+      years: Object.keys(mediaData),
       currentYear: 1980,
       isFixed: false,
-      mediaComponents: Array.from({ length: 10 }, () => ['', '']),
-      mediaSources: Array.from({ length: 10 }, () => ['', '']),
+      mediaData
     };
   },
-  async mounted() {
-    await this.loadMedia();
+  mounted() {
     this.setupAnimations();
   },
   methods: {
-    async loadMedia() {
-      const promises = this.years.map((year, index) => {
-        return Promise.all([
-          this.loadMediaSource(year, 1).then(({ component, src }) => {
-            this.mediaComponents[index][0] = component;
-            this.mediaSources[index][0] = src;
-          }),
-          this.loadMediaSource(year, 2).then(({ component, src }) => {
-            this.mediaComponents[index][1] = component;
-            this.mediaSources[index][1] = src;
-          })
-        ]);
-      });
-      await Promise.all(promises);
-    },
-    async loadMediaSource(year, index) {
-      try {
-        const videoLink = videoLinks[year] && videoLinks[year][index];
-        if (videoLink) {
-          return { component: 'iframe', src: videoLink };
-        } else {
-          const imagePath = `/src/assets/img/years/${year}-${index}.png`;
-          const image = await import(/* @vite-ignore */ imagePath).catch(() => null);
-          if (image) {
-            return { component: 'img', src: image.default };
-          } else {
-            throw new Error(`No media found for year ${year}, index ${index}`);
-          }
-        }
-      } catch (error) {
-        console.error(`Error loading media ${year}-${index}:`, error);
-        return { component: 'div', src: '' };
-      }
-    },
     setupAnimations() {
       const years = this.years;
 
@@ -147,19 +117,24 @@ export default {
 .year-section {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   min-height: 30vh;
   padding: 0 5%;
   margin: 5vh 0;
 }
 
-.media-left, .media-right {
+.media-container {
   width: 40%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-.media-left img, .media-right img {
+.media-item {
+  margin-bottom: 20px;
+}
+
+.media-item iframe, .media-item img {
   width: 100%;
   height: auto;
   border-radius: 8px;
@@ -170,7 +145,7 @@ export default {
     flex-direction: column;
   }
 
-  .media-left, .media-right {
+  .media-container {
     width: 80%;
     margin: 20px 0;
   }

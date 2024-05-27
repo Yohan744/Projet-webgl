@@ -1,12 +1,183 @@
 {
     "1980": {
-      "1": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
-      "2": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim"
+      "left": [
+        {
+        "type": "image",
+            "src": "/src/assets/img/years/1980-1.png",
+          "text": ""
+        },
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1980-2.png",
+          "text": "La Boum sort au cinéma en 1980 et devient un succès nationale. Les fêtes d’anniversaires sont alors remplacées par des boum où les ados attendent les slows pour initier un contact avec leur bien aimé"
+        }
+      ],
+      "right": [
+      ]
+    },
+    "1981": {
+      "left": [
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the left video of 1981."
+        }
+      ],
+      "right": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1981-2.png",
+          "text": "This is the text for the right image of 1981."
+        },
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the second right video of 1981."
+        }
+      ]
+    },
+    "1982": {
+      "left": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1982-1.png",
+          "text": "This is the text for the left image of 1982."
+        }
+      ],
+      "right": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1982-2.png",
+          "text": "This is the text for the right image of 1982."
+        }
+      ]
     },
     "1983": {
-      "1": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim"
+      "left": [
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the left video of 1983."
+        }
+      ],
+      "right": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1983-1.png",
+          "text": "This is the text for the right image of 1983."
+        }
+      ]
+    },
+    "1984": {
+      "left": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1984-1.png",
+          "text": "This is the text for the left image of 1984."
+        }
+      ],
+      "right": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1984-2.png",
+          "text": "This is the text for the right image of 1984."
+        },
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the second right video of 1984."
+        }
+      ]
+    },
+    "1985": {
+      "left": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1985-1.png",
+          "text": "This is the text for the left image of 1985."
+        }
+      ],
+      "right": [
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the right video of 1985."
+        }
+      ]
     },
     "1986": {
-        "1": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim"
-      }
+      "left": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1986-1.png",
+          "text": "This is the text for the left image of 1986."
+        }
+      ],
+      "right": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1986-2.png",
+          "text": "This is the text for the right image of 1986."
+        }
+      ]
+    },
+    "1987": {
+      "left": [
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the left video of 1987."
+        }
+      ],
+      "right": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1987-1.png",
+          "text": "This is the text for the right image of 1987."
+        }
+      ]
+    },
+    "1988": {
+      "left": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1988-1.png",
+          "text": "This is the text for the left image of 1988."
+        },
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the second left video of 1988."
+        }
+      ],
+      "right": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1988-2.png",
+          "text": "This is the text for the right image of 1988."
+        }
+      ]
+    },
+    "1989": {
+      "left": [
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1989-1.png",
+          "text": "This is the text for the left image of 1989."
+        }
+      ],
+      "right": [
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/rbb7fq_2EYs?si=okNG2ZwxHJI-4Cim",
+          "text": "This is the text for the right video of 1989."
+        },
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1989-2.png",
+          "text": "This is the text for the second right image of 1989."
+        }
+      ]
+    }
   }
+  
