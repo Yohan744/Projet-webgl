@@ -92,7 +92,7 @@ export const data = {
 
     projectorSound: {
         src: fx + 'projectorSound.mp3',
-        volume: 0.15,
+        volume: 0.125,
         preload: true,
         loop: true,
     },

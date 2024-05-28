@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
-import pictureVertexShader from "./../../../Shaders/Picture/vertex.glsl";
-import pictureFragmentShader from "./../../../Shaders/Picture/fragment.glsl";
+import MaterialLibrary from "../../../MaterialLibrary";
 import gsap from "gsap";
 
 export default class Picture {
@@ -12,6 +11,7 @@ export default class Picture {
         this.scene = this.experience.scene;
         this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
+        this.materialLibrary = new MaterialLibrary()
 
         this.photoModel = mesh;
         this.displacedParticles = 0;
@@ -38,13 +38,13 @@ export default class Picture {
     init() {
         this.photoModel.position.set(0, 2.22, 9.28);
         this.photoModel.rotation.set(-Math.PI * 0.5, 0, -Math.PI);
-        this.photoModel.material.depthTest = false;
+        this.photoModel.material.depthWrite = false;
         this.experience.renderer.toggleBlurEffect(true);
 
         this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        this.group.rotation.set(-0.27, 0, 0)
+        this.group.rotation.set(-0.23, 0, 0)
         this.group.add(this.photoModel);
         this.scene.add(this.group);
     }
@@ -70,18 +70,7 @@ export default class Picture {
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         particlesGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1));
 
-        this.particlesMaterial = new THREE.ShaderMaterial({
-            vertexShader: pictureVertexShader,
-            fragmentShader: pictureFragmentShader,
-            uniforms: {
-                uTime: {value: 0},
-                uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
-                uSize: {value: 3},
-                uOpacity: {value: 1}
-            },
-            transparent: true,
-            depthTest: false,
-        });
+        this.particlesMaterial = this.materialLibrary.getDustPictureMaterial()
 
         this.particlesMesh = new THREE.Points(particlesGeometry, this.particlesMaterial);
         this.group.add(this.particlesMesh);
@@ -250,25 +239,24 @@ export default class Picture {
 
         tl.to(this.group.rotation, {
             y: Math.PI,
+            delay: 0.25,
             duration: 3,
-            ease: 'power2.inOut'
+            ease: 'power4.inOut'
         })
+
+        tl.set(this.particlesMaterial.uniforms.uOpacity, {
+            value: 0,
+            delay: 3,
+        }, 0);
 
         tl.to(this.photoModel.material, {
             opacity: 0,
-            delay: 3,
-            duration: 5,
-            ease: 'power2.inOut',
-        }, 0);
-
-        tl.to(this.particlesMaterial.uniforms.uOpacity, {
-            value: 0,
-            delay: 3,
-            duration: 5,
-            ease: 'power2.inOut',
+            delay: 5,
+            duration: 2.5,
+            ease: 'power1.inOut',
             onStart: () => {
                 this.experience.renderer.toggleBlurEffect(false);
-                gsap.delayedCall(3, () => {
+                gsap.delayedCall(1, () => {
                     this.experience.renderer.setNormalPostProcessValues();
                 })
             },

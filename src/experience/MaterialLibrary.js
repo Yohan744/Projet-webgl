@@ -3,11 +3,13 @@ import {
     BackSide, Color,
     DoubleSide,
     FrontSide, MeshBasicMaterial, MeshLambertMaterial,
-    MeshStandardMaterial, RepeatWrapping, ShaderMaterial,
+    MeshStandardMaterial, NormalBlending, RepeatWrapping, ShaderMaterial,
 } from "three";
 import Experience from "./Experience";
 import locationsVertexShader from './Shaders/Locations/vertex.glsl'
 import locationsFragmentShader from './Shaders/Locations/fragment.glsl'
+import pictureVertexShader from "./Shaders/Picture/vertex.glsl";
+import pictureFragmentShader from "./Shaders/Picture/fragment.glsl";
 
 let groundMaterial,
     windowWallMaterial,
@@ -91,7 +93,8 @@ let recordPlayerMaterial,
 
 
 let outlineMaterial,
-    locationsMaterial;
+    locationsMaterial,
+    dustPictureMaterial;
 
 let backgroundTreeMaterial;
 
@@ -1222,6 +1225,27 @@ export default class MaterialLibrary {
         }
 
         return locationsMaterial
+    }
+
+    getDustPictureMaterial() {
+        if (!dustPictureMaterial) {
+            dustPictureMaterial = new ShaderMaterial({
+                vertexShader: pictureVertexShader,
+                fragmentShader: pictureFragmentShader,
+                uniforms: {
+                    uTime: {value: 0},
+                    uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
+                    uSize: {value: 3},
+                    uOpacity: {value: 1}
+                },
+                transparent: true,
+                depthWrite: false,
+            });
+
+            this.materialsUsed.push(dustPictureMaterial)
+        }
+
+        return dustPictureMaterial
     }
 
     destroy() {

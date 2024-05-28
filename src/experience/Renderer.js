@@ -103,9 +103,9 @@ export default class Renderer {
         })
 
         this.dofEffect = new BokehEffect({
-            focus: gameStepId === 0 ? 0.75 : 0.010,
+            focus: gameStepId === 0 ? 0.89 : 0.010,
             aperture: 0, // 0.184
-            dof: gameStepId === 0 ? 0.488 : 0.02,
+            dof: gameStepId === 0 ? 0.716 : 0.02,
             maxBlur: 0.004,
             width: this.config.width,
             height: this.config.height
