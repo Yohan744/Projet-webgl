@@ -60,7 +60,8 @@ let mirrorMaterial,
     secondBoxMaterial,
     thirdBoxMaterial,
     chestDrawerMaterial,
-    pencilsMaterial;
+    pencilsMaterial,
+    paperMaterial;
 
 let recordPlayerMaterial,
     rubiksCubeMaterial,
@@ -787,6 +788,19 @@ export default class MaterialLibrary {
         }
 
         return pencilsMaterial
+    }
+
+    getPaperMaterial() {
+        if (!paperMaterial) {
+            paperMaterial = new MeshBasicMaterial({
+                map: this.resources.items.paper.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(paperMaterial)
+        }
+
+        return paperMaterial
     }
 
     //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////

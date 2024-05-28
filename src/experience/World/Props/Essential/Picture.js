@@ -11,7 +11,11 @@ export default class Picture {
         this.scene = this.experience.scene;
         this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
+        this.globalEvents = this.experience.globalEvents;
+        this.soundManager = this.experience.soundManager;
         this.materialLibrary = new MaterialLibrary()
+
+        this.isEnabled = false
 
         this.photoModel = mesh;
         this.displacedParticles = 0;
@@ -29,8 +33,16 @@ export default class Picture {
             this.init();
             this.setupParticles();
             this.setupGridCells();
-            this.setupMouseEvents();
+
+            this.pointer.on('movement-picture', this.onMouseMove.bind(this));
+
             this.experience.renderer.toggleBlurEffect(true);
+
+            this.globalEvents.on('experienceIsVisible', () => {
+                this.isEnabled = true
+                this.soundManager.play('pictureIntro')
+            });
+
         }
 
     }
@@ -129,10 +141,6 @@ export default class Picture {
         }
     }
 
-    setupMouseEvents() {
-        window.addEventListener('mousemove', this.onMouseMove.bind(this));
-    }
-
     detectCells() {
         const intersects = this.pointer.raycaster.intersectObjects(this.cellMeshes);
 
@@ -171,11 +179,13 @@ export default class Picture {
     }
 
     onMouseMove() {
-        const cellIndices = this.detectCells();
-        cellIndices.forEach((cellIndex) => {
-            this.removeCellParticles(cellIndex);
-        });
-        this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+        if (this.isEnabled) {
+            const cellIndices = this.detectCells();
+            cellIndices.forEach((cellIndex) => {
+                this.removeCellParticles(cellIndex);
+            });
+            this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+        }
     }
 
     removeCellParticles(cellIndex) {
@@ -240,8 +250,11 @@ export default class Picture {
         tl.to(this.group.rotation, {
             y: Math.PI,
             delay: 0.25,
-            duration: 3,
-            ease: 'power4.inOut'
+            duration: 3.5,
+            ease: 'power4.inOut',
+            onComplete: () => {
+                this.soundManager.play('pictureOutro')
+            }
         })
 
         tl.set(this.particlesMaterial.uniforms.uOpacity, {
@@ -251,7 +264,7 @@ export default class Picture {
 
         tl.to(this.photoModel.material, {
             opacity: 0,
-            delay: 5,
+            delay: 7,
             duration: 2.5,
             ease: 'power1.inOut',
             onStart: () => {
@@ -286,6 +299,6 @@ export default class Picture {
     }
 
     destroy() {
-        window.removeEventListener('mousemove', this.onMouseMove.bind(this));
+        this.pointer.off('movement-picture', this.onMouseMove.bind(this));
     }
 }
