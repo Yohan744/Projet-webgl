@@ -61,10 +61,10 @@ export default class Envelop {
             this.items = [dahlia, letter].filter(Boolean);
         }
 
-        this.items.forEach(item => {
+        this.items.forEach((item, index) => {
             if (item) {
                 item.position.copy(this.initialCarouselPosition);
-               // item.rotation.copy(this.carouselRotation);
+                item.rotation.set(Math.PI / 2, index * Math.PI / 2, 0);
                 this.itemGroup.add(item);
             }
         });
@@ -175,9 +175,9 @@ export default class Envelop {
                         duration: 2,
                         ease: "power1.inOut",
                         onComplete: () => {
-                            this.animateEnvelopeBackToDrawer()
+                            this.animateEnvelopeBackToDrawer();
                             this.createCarouselItems();
-                            this.separateItemsToTriangle();
+                            this.alignItemsToCamera();
                         }
                     });
                     this.morphTargets[0] = 1;
@@ -255,22 +255,25 @@ export default class Envelop {
         });
     }
 
-    separateItemsToTriangle() {
+    alignItemsToCamera() {
         this.carouselIsSet = true;
 
-        const finalEnvelopePosition = this.initialCarouselPosition.clone();
-
-        const triangleOffsets = [
-            new THREE.Vector3(0.2, 0, 0),
-            new THREE.Vector3(-0.2, 0, 0.2),
-            new THREE.Vector3(-0.2, 0, -0.2),
-        ];
+        const finalCarouselPosition = this.initialCarouselPosition.clone();
+        const itemOffsets = [-0.5, 0, 0.5];
 
         this.items.forEach((item, index) => {
             gsap.to(item.position, {
-                x: finalEnvelopePosition.x + triangleOffsets[index].x,
-                y: finalEnvelopePosition.y + triangleOffsets[index].y,
-                z: finalEnvelopePosition.z + triangleOffsets[index].z,
+                x: finalCarouselPosition.x + itemOffsets[index],
+                y: finalCarouselPosition.y,
+                z: finalCarouselPosition.z,
+                duration: 2,
+                ease: "power2.inOut"
+            });
+
+            gsap.to(item.rotation, {
+                x: Math.PI / 2,
+                y: this.carouselRotation.y,
+                z: this.carouselRotation.z,
                 duration: 2,
                 ease: "power2.inOut"
             });
@@ -280,78 +283,44 @@ export default class Envelop {
     }
 
     rotateItemsRight() {
-        if (!this.positions) this.positions = this.getFixedPositions();
+        if (!this.carouselIsSet) return;
 
-        if (this.items.length === 2) {
-            this.rotateTwoItems(true);
-        } else {
-            const temp = this.items.pop();
-            this.items.unshift(temp);
-            this.animateItems();
-        }
-
+        const temp = this.items.pop();
+        this.items.unshift(temp);
+        this.animateItems();
         this.updatePocketButtonVisibility();
     }
 
     rotateItemsLeft() {
-        if (!this.positions) this.positions = this.getFixedPositions();
+        if (!this.carouselIsSet) return;
 
-        if (this.items.length === 2) {
-            this.rotateTwoItems(false);
-        } else {
-            const temp = this.items.shift();
-            this.items.push(temp);
-            this.animateItems();
-        }
-
+        const temp = this.items.shift();
+        this.items.push(temp);
+        this.animateItems();
         this.updatePocketButtonVisibility();
     }
 
-    rotateTwoItems(clockwise) {
-        const [firstItem, secondItem] = this.items;
-        const center = new THREE.Vector3().addVectors(firstItem.position, secondItem.position).multiplyScalar(0.5);
-        const angle = clockwise ? Math.PI : -Math.PI;
-
-        gsap.to(firstItem.position, {
-            x: center.x + (firstItem.position.x - center.x) * Math.cos(angle) - (firstItem.position.z - center.z) * Math.sin(angle),
-            z: center.z + (firstItem.position.x - center.x) * Math.sin(angle) + (firstItem.position.z - center.z) * Math.cos(angle),
-            duration: 2,
-            ease: "power2.inOut"
-        });
-
-        gsap.to(secondItem.position, {
-            x: center.x + (secondItem.position.x - center.x) * Math.cos(angle) - (secondItem.position.z - center.z) * Math.sin(angle),
-            z: center.z + (secondItem.position.x - center.x) * Math.sin(angle) + (secondItem.position.z - center.z) * Math.cos(angle),
-            duration: 2,
-            ease: "power2.inOut"
-        });
-
-        this.items = [secondItem, firstItem];
-    }
-
     animateItems() {
-        this.items.forEach((item, index) => {
-            if (item && this.positions[index]) {
-                gsap.to(item.position, {
-                    x: this.positions[index].x,
-                    y: this.positions[index].y,
-                    z: this.positions[index].z,
-                    duration: 2,
-                    ease: "power2.inOut"
-                });
-            }
-        });
-    }
+        const finalCarouselPosition = this.initialCarouselPosition.clone();
+        const itemOffsets = [-0.5, 0, 0.5];
 
-    getFixedPositions() {
-        return this.gameManager.inventory.cassette ? [
-            { x: -2.5, y: 1.9, z: -3.5 },
-            { x: -3.0, y: 1.9, z: -3.5 }
-        ] : [
-            { x: -2.5, y: 1.9, z: -3.5 },
-            { x: -3.0, y: 1.9, z: -3.5 },
-            { x: -2.0, y: 1.9, z: -3.5 }
-        ];
+        this.items.forEach((item, index) => {
+            gsap.to(item.position, {
+                x: finalCarouselPosition.x + itemOffsets[index],
+                y: finalCarouselPosition.y,
+                z: finalCarouselPosition.z,
+                duration: 2,
+                ease: "power2.inOut"
+            });
+
+            gsap.to(item.rotation, {
+                x: Math.PI / 2,
+                y: this.carouselRotation.y,
+                z: this.carouselRotation.z,
+                duration: 2,
+                ease: "power2.inOut"
+            });
+        });
     }
 
     updatePocketButtonVisibility() {
@@ -376,7 +345,6 @@ export default class Envelop {
                 onComplete: () => {
                     this.scene.remove(frontItem);
                     this.items = this.items.filter(item => item !== frontItem);
-                    this.positions.pop();
                     this.animateItems();
                     this.gameManager.updatePocketButtonState(false);
                     this.gameManager.setCassetteInFrontOfCamera(false);
