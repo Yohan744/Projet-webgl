@@ -1,5 +1,9 @@
 import Experience from "../Experience";
 import {objectsData} from "../../data/Objects";
+import Projector from "./Props/Essential/Projector";
+import Walkman from "./Props/Essential/Walkman";
+import Cassette from "./Props/Essential/Cassette";
+import Picture from "./Props/Essential/Picture";
 
 const interactableObjects = {}
 const interactableMesh = []
@@ -12,6 +16,9 @@ export default class ObjectsInteractable {
         this.resources = this.experience.resources
         this.scene = this.experience.scene
         this.materialLibrary = materialLibrary
+
+        this.projectorModel = [];
+        this.cassetteModel = [];
 
         if (this.scene) {
             this.init()
@@ -33,9 +40,7 @@ export default class ObjectsInteractable {
 
                 if (name.includes("walkman")) {
                     child.material = this.materialLibrary.getWalkmanMaterial()
-                    this.walkman = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.walkman = this.walkman
-                    interactableMesh.push(child)
+                    this.walkman = new Walkman(child);
 
                 } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial()
@@ -47,16 +52,16 @@ export default class ObjectsInteractable {
                     if (name.includes('maison')) child.material = this.materialLibrary.getPostalCardHouseMaterial()
                     interactableMesh.push(child)
 
-                }  else if (name.includes("dahlia")) {
+                } else if (name.includes("dahlia")) {
                     child.material = this.materialLibrary.getDahliaMaterial()
                     interactableMesh.push(child)
 
-                }  else if (name.includes("magazine")) {
+                } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial()
                     if (name.includes('fermé')) child.material = this.materialLibrary.getClosedMagazineMaterial()
                     interactableMesh.push(child)
 
-                }  else if (name.includes("malle")) {
+                } else if (name.includes("malle")) {
                     if (name.includes('haut')) {
                         child.material = this.materialLibrary.getTopChestMaterial()
                         this.topChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
@@ -71,13 +76,15 @@ export default class ObjectsInteractable {
                         interactableMesh.push(child)
                     }
 
-                } else if (name.includes("cassette")) {
-                    child.material = this.materialLibrary.getCassetteMaterial()
-                    this.cassette = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
-                    interactableObjects.cassette = this.cassette
-                    interactableMesh.push(child)
+                } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {
+                    child.material = this.materialLibrary.getBlackMaterial()
+                    this.cassetteModel.push(child);
 
-                }  else if (name.includes("crayon")) {
+                } else if (name === 'corps') {
+                    child.material = this.materialLibrary.getCassetteMaterial()
+                    this.cassetteModel.push(child);
+
+                } else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilMaterial()
                     this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound)
                     interactableObjects.pencil = this.pencil
@@ -123,14 +130,26 @@ export default class ObjectsInteractable {
                     interactableObjects.recordPLayer = this.recordPlayer
                     interactableMesh.push(child)
 
-                } else if (name === 'photo') {
-                    child.material = this.materialLibrary.getPictureMaterial()
+                } else if (name.includes("rail_diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite001' || name === 'porte') {
+
+                    if (name.includes("oeil")) child.material = this.materialLibrary.getProjectorOeilMaterial()
+                    if (name.includes("boite001")) child.material = this.materialLibrary.getProjectorBoxMaterial()
+                    if (name.includes("tireuse")) child.material = this.materialLibrary.getProjectorTireuseMaterial()
+                    if (name.includes("boutonon")) child.material = this.materialLibrary.getProjectorButtonMaterial()
+                    if (name.includes("cube")) child.material = this.materialLibrary.getProjectorCubeMaterial()
+                    if (name === 'porte') child.material = this.materialLibrary.getProjectorDoorMaterial()
+                    // if (name.includes("sphere")) child.material = this.materialLibrary.getProjectorTireuseMaterial()
+                    if (name.includes("rail_diapo")) child.material = this.materialLibrary.getProjectorRailMaterial()
+
+                    this.projectorModel.push(child);
+                    interactableMesh.push(child)
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
                     child.material = this.materialLibrary.getVinylMaterial()
-
-                } else if (name.includes("diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite_1' || name.includes("porte")) {
-                    child.visible = false
+                } else if (name === 'photo') {
+                    child.material = this.materialLibrary.getPictureMaterial()
+                    this.picture = new Picture(child)
+                    interactableObjects.picture = this.picture
                 } else {
                     console.log(name)
                 }
@@ -139,6 +158,9 @@ export default class ObjectsInteractable {
 
             }
         })
+
+        this.projector = new Projector(this.projectorModel);
+        this.cassette = new Cassette(this.cassetteModel);
 
         this.scene.add(this.objectsInteractableModel)
 

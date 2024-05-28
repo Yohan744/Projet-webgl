@@ -3,11 +3,13 @@ import {
     BackSide, Color,
     DoubleSide,
     FrontSide, MeshBasicMaterial, MeshLambertMaterial,
-    MeshStandardMaterial, RepeatWrapping, ShaderMaterial,
+    MeshStandardMaterial, NormalBlending, RepeatWrapping, ShaderMaterial,
 } from "three";
 import Experience from "./Experience";
 import locationsVertexShader from './Shaders/Locations/vertex.glsl'
 import locationsFragmentShader from './Shaders/Locations/fragment.glsl'
+import pictureVertexShader from "./Shaders/Picture/vertex.glsl";
+import pictureFragmentShader from "./Shaders/Picture/fragment.glsl";
 
 let groundMaterial,
     windowWallMaterial,
@@ -80,13 +82,23 @@ let recordPlayerMaterial,
     topChestMaterial,
     pencilMaterial,
     pictureMaterial,
-    vinylMaterial
+    vinylMaterial,
+    projectorTireuseMaterial,
+    projectorRailMaterial,
+    projectorButtonMaterial,
+    projectorCubeMaterial,
+    projectorOeilMaterial,
+    projectorBoxMaterial,
+    projectorDoorMaterial;
 
 
 let outlineMaterial,
-    locationsMaterial;
+    locationsMaterial,
+    dustPictureMaterial;
 
 let backgroundTreeMaterial;
+
+let blackMaterial;
 
 export default class MaterialLibrary {
 
@@ -689,7 +701,7 @@ export default class MaterialLibrary {
     getMagazineMaterial() {
         if (!magazineMaterial) {
             magazineMaterial = new MeshBasicMaterial({
-                map: this.resources.items.magazine.diffuse,
+                map: this.resources.items.magazineClosed.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -702,7 +714,7 @@ export default class MaterialLibrary {
     getTableMagazineMaterial() {
         if (!tableMagazineMaterial) {
             tableMagazineMaterial = new MeshBasicMaterial({
-                map: this.resources.items.magazine.diffuse2,
+                map: this.resources.items.magazineClosed.diffuse2,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -1030,7 +1042,8 @@ export default class MaterialLibrary {
         if (!pictureMaterial) {
             pictureMaterial = new MeshBasicMaterial({
                 map: this.resources.items.picture.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                transparent: true,
+                side: FrontSide
             })
 
             this.materialsUsed.push(pictureMaterial)
@@ -1052,6 +1065,99 @@ export default class MaterialLibrary {
         return vinylMaterial
     }
 
+    /////////////////////////// PROJECTOR MATERIALS ///////////////////////////
+
+    getProjectorTireuseMaterial() {
+        if (!projectorTireuseMaterial) {
+            projectorTireuseMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.tireuse,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorTireuseMaterial)
+        }
+
+        return projectorTireuseMaterial
+    }
+
+    getProjectorRailMaterial() {
+        if (!projectorRailMaterial) {
+            projectorRailMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.rail,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorRailMaterial)
+        }
+
+        return projectorRailMaterial
+    }
+
+    getProjectorButtonMaterial() {
+        if (!projectorButtonMaterial) {
+            projectorButtonMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.button,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorButtonMaterial)
+        }
+
+        return projectorButtonMaterial
+    }
+
+    getProjectorCubeMaterial() {
+        if (!projectorCubeMaterial) {
+            projectorCubeMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.cube,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorCubeMaterial)
+        }
+
+        return projectorCubeMaterial
+    }
+
+    getProjectorOeilMaterial() {
+        if (!projectorOeilMaterial) {
+            projectorOeilMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.oeil,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorOeilMaterial)
+        }
+
+        return projectorOeilMaterial
+    }
+
+    getProjectorBoxMaterial() {
+        if (!projectorBoxMaterial) {
+            projectorBoxMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.box,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorBoxMaterial)
+        }
+
+        return projectorBoxMaterial
+    }
+
+    getProjectorDoorMaterial() {
+        if (!projectorDoorMaterial) {
+            projectorDoorMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.door,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorDoorMaterial)
+        }
+
+        return projectorDoorMaterial
+    }
+
     ///////////////////////// TEXTURE MATERIALS /////////////////////////////
 
     getBackgroundTreeMaterial() {
@@ -1067,6 +1173,20 @@ export default class MaterialLibrary {
         return backgroundTreeMaterial
     }
 
+    /////////////////////// CLASSIC MATERIALS /////////////////////////
+
+    getBlackMaterial() {
+        if (!blackMaterial) {
+            blackMaterial = new MeshBasicMaterial({
+                color: 0x000000,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(blackMaterial)
+        }
+
+        return blackMaterial
+    }
 
     //////////////////////// EFFECTS MATERIALS ////////////////////////
 
@@ -1105,6 +1225,27 @@ export default class MaterialLibrary {
         }
 
         return locationsMaterial
+    }
+
+    getDustPictureMaterial() {
+        if (!dustPictureMaterial) {
+            dustPictureMaterial = new ShaderMaterial({
+                vertexShader: pictureVertexShader,
+                fragmentShader: pictureFragmentShader,
+                uniforms: {
+                    uTime: {value: 0},
+                    uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
+                    uSize: {value: 3},
+                    uOpacity: {value: 1}
+                },
+                transparent: true,
+                depthWrite: false,
+            });
+
+            this.materialsUsed.push(dustPictureMaterial)
+        }
+
+        return dustPictureMaterial
     }
 
     destroy() {

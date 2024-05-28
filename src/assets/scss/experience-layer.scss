@@ -18,7 +18,7 @@
     }
   }
 
-  .go-back-icon, .settings-icon, {
+  .go-back-icon, .settings-icon {
     position: absolute;
     top: 35px;
     left: 35px;
@@ -123,6 +123,20 @@
         position: relative;
         height: 100%;
         width: auto;
+        filter: grayscale(100%);
+        opacity: 0.5;
+        transform: scale(0.95);
+        transition: filter 1.25s $ease-power3-out, opacity 1.25s $ease-power3-out, transform 1.25s $ease-power3-out;
+      }
+
+      &.visible {
+
+        img {
+          filter: grayscale(0%);
+          opacity: 1;
+          transform: scale(1);
+        }
+
       }
 
     }
@@ -209,6 +223,12 @@
         margin-top: 20px;
         cursor: none;
       }
+    }
+  }
+
+  .carousel {
+    button {
+      background-color: blue;
     }
   }
 

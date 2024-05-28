@@ -1,6 +1,7 @@
 import {reactive} from 'vue';
 
 const state = reactive({
+    gameStepId: 0,
     lastVisitedRoute: null,
     isExperienceVisible: false,
     isCameraOnSpot: false,
@@ -9,6 +10,9 @@ const state = reactive({
     isSettingsOpen: false,
     isPocketButtonVisible: false,
     objectToPocket: false,
+    isPencilInFrontOfCamera: false,
+    isCassetteInFrontOfCamera: false,
+    isWalkmanInFrontOfCamera: false,
     showingInventoryObjectInFrontOfCamera: null,
 });
 
@@ -18,6 +22,16 @@ const inventory = reactive({
 });
 
 export function useGameManager() {
+
+    function incrementGameStepId() {
+        state.gameStepId++;
+        console.log("new gameStepId: " + state.gameStepId)
+    }
+
+    function setGameStepId(id) {
+        state.gameStepId = id;
+        console.log("new gameStepId: " + state.gameStepId)
+    }
 
     function setLastVisitedRoute(route) {
         state.lastVisitedRoute = route;
@@ -51,6 +65,17 @@ export function useGameManager() {
         state.objectToPocket = stateValue;
     }
 
+    function setPencilInFrontOfCamera(stateValue) {
+        state.isPencilInFrontOfCamera = stateValue;
+    }
+
+    function setCassetteInFrontOfCamera(stateValue) {
+        state.isCassetteInFrontOfCamera = stateValue;
+    }
+    function setWalkmanInFrontOfCamera(stateValue) {
+        state.isWalkmanInFrontOfCamera = stateValue;
+    }
+
     function addObjectToInventory(objectName) {
         if (inventory[objectName] !== undefined) {
             inventory[objectName] = true;
@@ -65,6 +90,7 @@ export function useGameManager() {
     }
 
     function resetAll() {
+        state.gameStepId = 0;
         state.lastVisitedRoute = null;
         state.isExperienceVisible = false;
         state.isCameraOnSpot = false;
@@ -84,6 +110,8 @@ export function useGameManager() {
     return {
         state,
         inventory,
+        incrementGameStepId,
+        setGameStepId,
         setLastVisitedRoute,
         setExperienceVisible,
         updateCameraOnSpot,
@@ -93,6 +121,9 @@ export function useGameManager() {
         updatePocketButtonState,
         addObjectToInventory,
         updateObjectToPocket,
+        setPencilInFrontOfCamera,
+        setCassetteInFrontOfCamera,
+        setWalkmanInFrontOfCamera,
         setInventoryObjectInFrontOfCamera,
         resetAll,
     };

@@ -20,8 +20,9 @@ export default class Pointer extends EventEmitter {
         this.globalEvents = this.experience.globalEvents
 
         this.raycaster = new Raycaster()
-        this.intersects = []
         this.triggerMovementTreshold = 0.035
+
+        this.projectorMesh = []
 
         this.mouse = {
             x: 0,
@@ -67,7 +68,7 @@ export default class Pointer extends EventEmitter {
     onClick(_event) {
         this.updateMousePosition(_event)
         const intersects = this.raycaster.intersectObjects(this.locations, false);
-        if (intersects.length > 0 && !this.gameManager.state.isCameraOnSpot && !this.gameManager.state.isInteractingWithObject && !this.experience.camera.isMoving) {
+        if (intersects.length > 0 && !this.gameManager.state.isCameraOnSpot && !this.gameManager.state.isInteractingWithObject && !this.experience.camera.isMoving && intersects[0].object.visible) {
             const position = intersects[0].object.position.clone()
             const lookingPoint = intersects[0].object.data.lookingPoint
             this.trigger('spot-clicked', [position, lookingPoint])
@@ -102,28 +103,29 @@ export default class Pointer extends EventEmitter {
 
             if (this.gameManager.state.isCameraOnSpot) {
 
-                const interactableMesh = this.raycaster.intersectObjects(getInteractablesMesh(), false)
-
                 if (this.gameManager.state.isInteractingWithObject) {
 
-                    // logic here
+                    /////
 
                 } else {
+
+                    const interactableMesh = this.raycaster.intersectObjects(getInteractablesMesh(), false)
 
                     if (interactableMesh.length > 0 && getActualCursor() !== 'grab') {
                         this.globalEvents.trigger('change-cursor', {name: 'grab'})
                     }
-                }
 
-                if (interactableMesh.length === 0 && getActualCursor() !== 'default') {
-                    this.globalEvents.trigger('change-cursor', {name: 'default'})
+                    if (interactableMesh.length === 0 && getActualCursor() !== 'default') {
+                        this.globalEvents.trigger('change-cursor', {name: 'default'})
+                    }
+
                 }
 
             } else {
 
                 const locations = this.raycaster.intersectObjects(this.locations, false)
 
-                if (locations.length > 0 && getActualCursor() !== 'grab') {
+                if (locations.length > 0 && getActualCursor() !== 'grab' && locations[0]?.object?.visible) {
                     this.globalEvents.trigger('change-cursor', {name: 'grab'})
                 }
 

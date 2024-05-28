@@ -1,6 +1,5 @@
 <template>
   <section ref="experienceLayer" id="experience-layer">
-
     <div ref="goBack" @click="goBack" class="go-back-icon">
       <img :src="goBackIcon" alt="Go back"/>
     </div>
@@ -10,39 +9,28 @@
     </div>
 
     <div ref="settingsWrapper" class="settings-wrapper" @click="handleClickSettingsWrapper">
-
       <div class="settings-panel">
-
         <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
-
         <div class="volume-wrapper">
           <p>Global volume</p>
           <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
           <p>{{globalVolume}}</p>
         </div>
-
         <router-link to="/">Go back to home</router-link>
         <router-link to="/" @click="resetExperience">Reset experience</router-link>
-
       </div>
-
     </div>
 
-    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible }" >
+    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible }">
       <p>Mettre dans la poche</p>
     </div>
 
-    <div class="inventory-wrapper" v-if="isAnyItemInInventory">
-
-      <div v-if="gameManager.inventory.cassette" @click="handleInventoryObjectClick('cassette')">
-        <img src="../assets/icons/objects/CASSETTE_VIGNETTE.png" alt="Cassette"/>
-      </div>
-
-      <div v-if="gameManager.inventory.pencil" @click="handleInventoryObjectClick('pencil')">
-        <img src="../assets/icons/objects/icn_crayon.svg" alt="Pencil"/>
-      </div>
-
+    <div class="carousel">
+      <button class="left-button">left</button>
+      <button class="right-button">right</button>
     </div>
+
+    <Inventory/>
 
   </section>
 </template>
@@ -51,10 +39,12 @@
 import { useAppStore } from "../stores/appStore";
 import homeIcon from '../assets/icons/home.svg';
 import arrowLeftIcon from '../assets/icons/arrow-left.svg';
-import {useGameManager} from "../assets/js/GameManager";
+import { useGameManager } from "../assets/js/GameManager";
+import Inventory from "./Inventory.vue";
 
 export default {
   name: 'ExperienceLayer',
+  components: {Inventory},
   props: {
     soundManager: Object,
   },
@@ -142,7 +132,11 @@ export default {
       }
     },
     handlePocketButtonClick() {
-      this.gameManager.updateObjectToPocket(true);
+      if (this.gameManager.state.isPencilInFrontOfCamera) {
+        this.gameManager.updateObjectToPocket('pencil');
+      } else if (this.gameManager.state.isCassetteInFrontOfCamera) {
+        this.gameManager.updateObjectToPocket('cassette');
+      }
     },
     handleInventoryObjectClick(name) {
       this.gameManager.setInventoryObjectInFrontOfCamera(name);

@@ -12,22 +12,6 @@ import BottomChest from "../experience/World/Props/Essential/BottomChest";
 import TopChest from "../experience/World/Props/Essential/TopChest";
 
 export const objectsData = {
-    walkman: {
-        file: Walkman,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
-        animateToCameraOnClick: true,
-        distanceToCamera: 0.5,
-        outlineScale: 1.05, // false to deactivate, type number to activate
-        propSound: 'walkman', // not set yet
-    },
-    cassette: {
-        file: Cassette,
-        rotationOnClick: new THREE.Vector3(1.33, 0.04, -0.44),
-        animateToCameraOnClick: true,
-        distanceToCamera: 0.2,
-        outlineScale: 1.05,
-        propSound: 'cassette',
-    },
     crayon: {
         file: Pencil,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
@@ -41,7 +25,7 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
-        outlineScale: 1.04,
+        outlineScale: 1.02,
         propSound: 'telephone',
     },
     rubicub: {
@@ -71,7 +55,7 @@ export const objectsData = {
     tourne_disque1: {
         file: RecordPlayer,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
-        animateToCameraOnClick: true,
+        animateToCameraOnClick: false,
         distanceToCamera: 1,
         outlineScale: 1.02,
         propSound: 'recordPlayer',

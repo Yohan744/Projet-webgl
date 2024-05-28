@@ -361,7 +361,7 @@ export default [
             },
 
             {
-                name: 'magazine',
+                name: 'magazineClosed',
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objects/magazine/diffuse.webp',
@@ -514,6 +514,21 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objectsInteractable/vinyl/diffuse.webp',
+                }
+            },
+
+            {
+                name: 'projector',
+                type: 'group',
+                textures: {
+                    oeil: 'assets/textures/objectsInteractable/projector/diffuse.webp',
+                    sphere: 'assets/textures/objectsInteractable/projector/diffuse2.webp',
+                    cube: 'assets/textures/objectsInteractable/projector/diffuse3.webp',
+                    tireuse: 'assets/textures/objectsInteractable/projector/diffuse4.webp',
+                    button: 'assets/textures/objectsInteractable/projector/diffuse5.webp',
+                    rail: 'assets/textures/objectsInteractable/projector/diffuse6.webp',
+                    box: 'assets/textures/objectsInteractable/projector/diffuse7.webp',
+                    door: 'assets/textures/objectsInteractable/projector/diffuse8.webp',
                 }
             },
 
