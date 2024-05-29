@@ -1,100 +1,95 @@
 import Experience from "../../../Experience";
 import * as THREE from "three";
 import gsap from "gsap";
+import {useInteractableObjects} from "../../ObjectsInteractable";
+import Outline from "../../Effects/Outline";
+import {watch} from "vue";
 
 export default class Drawer {
-    constructor() {
+    constructor(mesh) {
         this.experience = new Experience();
-        this.scene = this.experience.scene;
-        this.resources = this.experience.resources;
-        this.camera = this.experience.camera;
         this.pointer = this.experience.pointer;
+        this.gameManager = this.experience.gameManager;
+        this.globalEvents = this.experience.globalEvents;
+        this.interactableObjects = useInteractableObjects();
+        this.mesh = mesh;
 
         this.isOpen = false;
-        this.click = this.handleClick.bind(this)
-        this.originalCameraPosition = null;
+        this.drawerBasicPosition = this.mesh.position.clone();
 
-        this.init();
-        this.setEvents();
+        this.drawerOutline = new Outline(this.mesh, 1.02);
+        this.pointer.on('click', this.handleClick.bind(this));
+
+        this.setWatchers()
+
     }
 
-    init() {
-        this.drawerModel = this.resources.items.drawerModel.scene;
-        this.drawerModel.position.set(-3.5, 0, -4);
-        this.scene.add(this.drawerModel);
-
-        this.topDrawer = this.drawerModel.getObjectByName("tirroir-haut");
-
-        this.envelopModel = this.resources.items.envelopModel.scene;
-        this.envelopModel.visible = true;
-        this.scene.add(this.envelopModel);
-    }
-
-    setEvents() {
-        this.pointer.on("click", this.click);
+    setWatchers() {
+        watch(() => this.gameManager.state.isInteractingWithObject, (state) => {
+            if (!state && this.gameManager.state.actualObjectInteractingName === "drawer") {
+                this.drawerOutline.showOutline()
+                this.animateDrawer()
+                this.gameManager.setActualObjectInteractingName(null)
+            }
+        })
     }
 
     handleClick() {
-        const intersects = this.pointer.raycaster.intersectObject(this.topDrawer, true);
-        if (intersects.length > 0 && !this.isOpen) {
-            this.animateDrawer(this.topDrawer);
+        const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
+        if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot && this.gameManager.state.isInteractingWithObject === false) {
+            this.drawerOutline.removeOutline()
+            this.animateDrawer();
+            this.gameManager.updateInteractingState(true);
+            this.gameManager.setActualObjectInteractingName("drawer");
+            this.globalEvents.trigger('change-cursor', {name: 'default'})
         }
     }
 
-    animateDrawer(drawer) {
-        if (!this.isOpen) {
-            gsap.to(drawer.position, {
-                x: drawer.position.x + 0.5,
-                duration: 1,
-                onUpdate: () => {
-                },
-                onComplete: () => {
-                    this.isOpen = true;
-                    this.positionEnvelopeInDrawer(this.topDrawer);
-                    this.experience.camera.moveCameraToDrawer(this.topDrawer);
+    animateDrawer() {
+        gsap.to(this.mesh.position, {
+            x: this.isOpen ? this.drawerBasicPosition.x : '+=' + 0.3,
+            z: this.isOpen ? this.drawerBasicPosition.z : '+=' + 0.3,
+            duration: 1.5,
+            ease: 'power2.inOut',
+            onUpdate: () => {
+                this.drawerOutline.updateOutlineMeshPosition(this.mesh.position)
+            },
+            onComplete: () => {
+                if (!this.isOpen) {
+                    // this.positionEnvelopeInDrawer();
                 }
-            });
-        } else {
-            gsap.to(drawer.position, {
-                x: drawer.position.x - 0.5,
-                duration: 1,
-                onComplete: () => {
-                    this.isOpen = false;
-                }
-            });
-        }
-    }
-    restoreCameraPosition() {
-        if (this.originalCameraPosition) {
-            this.camera.instance.position.copy(this.originalCameraPosition);
-            this.camera.instance.lookAt(this.scene.position);
-        }
+                this.isOpen = !this.isOpen;
+            }
+        });
     }
 
-    positionEnvelopeInDrawer(drawer) {
+    positionEnvelopeInDrawer() {
+        const enveloppeMesh = this.interactableObjects.envelopModel?.mesh
+        if (!enveloppeMesh) {
+            console.error("Envelop model not found")
+            return
+        }
+
         const drawerPosition = new THREE.Vector3();
-        drawer.getWorldPosition(drawerPosition);
+        this.mesh.getWorldPosition(drawerPosition);
+
         const envelopPositionX = drawerPosition.x;
         const envelopPositionY = drawerPosition.y + 0.1;
-        const envelopPositionZ = drawerPosition.z - 0.3;
+        const envelopPositionZ = drawerPosition.z;
 
-        this.envelopModel.rotation.x = -Math.PI * 2;
-        this.envelopModel.rotation.y += 0.6;
-        this.envelopModel.rotation.z = 0;
-
-        this.envelopModel.position.set(envelopPositionX, envelopPositionY, envelopPositionZ);
-        this.envelopModel.visible = true;
+        enveloppeMesh.rotation.set(-Math.PI * 2, 0.6, 0);
+        enveloppeMesh.position.set(envelopPositionX, envelopPositionY, envelopPositionZ);
     }
 
-
     destroy() {
-        this.pointer.off("click");
-        this.scene.remove(this.drawerModel);
-        this.drawerModel.traverse((child) => {
+        this.pointer.off("click", this.handleClick);
+        this.mesh.traverse((child) => {
             if (child.isMesh) {
                 child.geometry.dispose();
                 child.material.dispose();
             }
         });
+        this.experience.scene.remove(this.mesh);
     }
+
 }

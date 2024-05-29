@@ -18,14 +18,12 @@ export default class Pencil extends Prop {
         this.gameManager = this.experience.gameManager;
         this.init();
     }
-
     init() {
         watch(() => this.gameManager.state.showingInventoryObjectInFrontOfCamera, (newVal) => {
             if (newVal === 'pencil') {
                 this.showInFrontOfCamera();
             }
         });
-
         watch(() => this.gameManager.state.objectToPocket, (newVal) => {
             if (newVal === 'pencil') {
                 this.moveToPocket();

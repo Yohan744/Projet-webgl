@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible }">
+    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible && gameManager.state.isCassetteInFrontOfCamera }">
       <p>Mettre dans la poche</p>
     </div>
 

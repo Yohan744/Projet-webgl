@@ -1,4 +1,4 @@
-import {reactive} from 'vue';
+import { reactive } from 'vue';
 
 const state = reactive({
     gameStepId: 0,
@@ -81,7 +81,6 @@ export function useGameManager() {
             inventory[objectName] = true;
         } else {
             console.error('Object not found in inventory, wrong naming');
-
         }
     }
 
