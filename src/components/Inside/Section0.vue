@@ -1,31 +1,66 @@
 <template>
-    <h2 class="title">Là où poussent</h2>
-    <h1 class="title">les fleurs</h1>
-    <h3 class="title">La vie de Mona</h3>
-    <img src="/src/assets/img/fleur.png" alt="">
-    <div class="image-container"></div>
-      <div class="buttons">
-        <button @click="handleButtonClick">En apprendre plus <img src="/src/assets/img/arrow_bottom.png" alt=""></button>
-        
-      </div>
+  <h2 class="title" id="title1">Là où poussent</h2>
+  <h1 class="title" id="title2">les fleurs</h1>
+  <h3 class="title" id="title3">La vie de Mona</h3>
+  <img src="/src/assets/img/fleur.png" alt="">
+  <div class="image-container"></div>
+    <div class="buttons">
+      <button @click="handleButtonClick">En apprendre plus <img src="/src/assets/img/arrow_bottom.png" alt=""></button>
+    </div>
 </template>
 
 <script>
 export default {
   name: 'Section0',
+  mounted() {
+    this.triggerHandwritingAnimation();
+  },
   methods: {
     handleButtonClick() {
       document.getElementById('section-1').scrollIntoView({ behavior: 'smooth' });
+    },
+    triggerHandwritingAnimation() {
+      const titles = document.querySelectorAll('.title');
+      titles.forEach((title, index) => {
+        setTimeout(() => {
+          title.style.visibility = 'visible';
+          title.classList.add('handwriting');
+        }, index * 2000); 
+      });
     }
   }
 }
 </script>
 
 <style scoped>
+@keyframes handwriting {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.handwriting {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  animation: handwriting 4s steps(30, end) 1;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+  position: relative;
+  color: white;
+  transition: width 0.5s ease-in-out;
+  visibility: hidden; 
 
 img {
   z-index: 1;
-
 }
 
 .image-container {
@@ -37,14 +72,6 @@ img {
   background: url('/src/assets/img/section1_background.png') no-repeat center center;
   background-size: cover; 
   z-index: 0; 
-}
-
-.title {
-  margin: 0;
-  padding: 0;
-  z-index: 1;
-  position: relative;
-  color: white;
 }
 
 .buttons {
