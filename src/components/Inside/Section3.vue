@@ -1,8 +1,8 @@
 <template>
   <div ref="parallaxSection" class="parallax-container">
     <div :class="{'fixed-center': isFixed, 'absolute-center': !isFixed}">
-      <h1>Les années 80 selon Mona</h1>
-      <div class="date">{{ currentYear }}</div>
+      <h3>Les années 80 selon Mona</h3>
+      <h2 class="date">{{ currentYear }}</h2>
     </div>
     <div class="content">
       <div v-for="(year, index) in years" :key="year" class="year-section" :class="'year-section-' + index">
@@ -128,8 +128,9 @@ export default {
 }
 
 .date {
-  font-size: 2rem;
+  font-size: 5rem;
   margin-top: 1rem;
+  color: rgb(165, 165, 165);
 }
 
 .content {

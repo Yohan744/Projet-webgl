@@ -9,7 +9,7 @@
         {{ tab }}
       </span>
     </div>
-    <button class="header-button">Lancer l'expérience</button>
+    <button class="header-button">LANCER L'EXPERIENCE</button>
   </div>
 </template>
 
@@ -52,15 +52,14 @@ export default {
 }
 
 .header-button {
-  background: var(--button-background-color, #444);
+  background-color: #A7CF90;
   border: none;
-  color: var(--button-text-color, #fff);
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 8px;
 }
 
 button:hover {
-  background: var(--button-hover-background-color, #555);
+  background-color:  #68a146;
 }
 </style>

@@ -2,9 +2,11 @@
     <h2 class="title">Là où poussent</h2>
     <h1 class="title">les fleurs</h1>
     <h3 class="title">La vie de Mona</h3>
+    <img src="/src/assets/img/fleur.png" alt="">
     <div class="image-container"></div>
       <div class="buttons">
-        <button @click="handleButtonClick">Click Me</button>
+        <button @click="handleButtonClick">En apprendre plus <img src="/src/assets/img/arrow_bottom.png" alt=""></button>
+        
       </div>
 </template>
 
@@ -20,6 +22,12 @@ export default {
 </script>
 
 <style scoped>
+
+img {
+  z-index: 1;
+
+}
+
 .image-container {
   position: absolute;
   top: 0;
@@ -40,6 +48,7 @@ export default {
 }
 
 .buttons {
+  display: block;
   position: absolute;
   bottom: 20px;
 }
@@ -47,7 +56,7 @@ export default {
 button {
   padding: 10px 20px;
   font-size: 1em;
-  background: #444;
+  background: none;
   color: #fff;
   border: none;
   cursor: pointer;

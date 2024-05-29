@@ -1,60 +1,25 @@
 <template>
-  <div class="new-section">
-    <div class="left">
-      <iframe src="https://open.spotify.com/embed/playlist/19tq2QerDNgEqwNLcSuwL3" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-    </div>
-    <div class="right">
-      <div class="image-container">
-        <img src="/src/assets/img/section1_photo.jpg" alt="Image description">
-      </div>
-      <div class="text-container">
-        <p>
-          heritage
-        </p>
-      </div>
-    </div>
+  <div>
+    <ThreeColumns :images="imagesSection4" />
   </div>
 </template>
 
 <script>
+import ThreeColumns from './ThreeColumns.vue';
+
 export default {
-  name: 'NewSection',
+  name: 'Section4',
+  components: {
+    ThreeColumns
+  },
+  data() {
+    return {
+      imagesSection4: {
+        left: '/src/assets/img/section-2/Biarritz.png',
+        center: '/src/assets/img/section-2/CartePostale2.png',
+        right: '/src/assets/img/section-2/Gouville.png'
+      }
+    }
+  }
 }
 </script>
-
-<style scoped>
-.new-section {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-}
-
-.left {
-  flex: 1;
-  padding: 10px;
-}
-
-.right {
-  flex: 1;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.image-container {
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.image-container img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.text-container {
-  width: 100%;
-  text-align: center;
-}
-</style>

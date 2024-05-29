@@ -30,8 +30,8 @@
       ],
       "right": [
         {
-          "type": "image",
-          "src": "/src/assets/img/years/1980-1.png",
+          "type": "video",
+          "src": "https://www.youtube.com/embed/JVHvh0dyShI?si=YqeF7H1WxTuZLw_G",
           "text": ""
         },
         {
@@ -43,14 +43,16 @@
     },
     "1982": {
       "left": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/QcC4G9Ia7Xc?si=UU3qk5BTW7JLPzs9s",
           "text": "This is the text for the left image of 1982."
         }
       ],
       "right": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/BDWAc1xluoc?si=OaQLlywrfkpnsCGu",
           "text": "This is the text for the right image of 1982."
         }
       ]
@@ -92,8 +94,9 @@
           }
       ],
       "right": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/IUi-VDnehpY?si=qnOLAuVHZLd4bYqd",
           "text": "This is the text for the second right video of 1984."
         }
       ]
@@ -120,8 +123,10 @@
     },
     "1986": {
       "left": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png"
+        {
+          "type": "video",
+          "src": "https://enseignants.lumni.fr/export/player/00000000668",
+          "text": "This is the text for the left image of 1986."
         }
       ],
       "right": [
@@ -129,18 +134,20 @@
     },
     "1987": {
       "left": [
-        { 
-          "type": "image",
-        "src": "/src/assets/img/years/1980-1.png"
+        {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/NightOxaRrA?si=LJQ3HHPI5qFNmIrG"
         },
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
+        {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Xl2MFGI2i40?si=irGYzPK-f1Wf9yap",
             "text": "This is the text for the right image of 1987."
           }
       ],
       "right": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png"
+        {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/H2M_vHvvAc0?si=JEERAf7vQJeyyM7O"
           },
           {
               "type": "image",

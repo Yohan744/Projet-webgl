@@ -1,4 +1,5 @@
 <template>
+
   <div class="main-content">
     <section id="section-0">
       <Section0 />
@@ -18,6 +19,9 @@
     <section id="section-5">
       <Section5 />
     </section>
+    <section id="section-6">
+      <Section6 />
+    </section>
   </div>
 </template>
 
@@ -28,6 +32,7 @@ import Section2 from './Section2.vue';
 import Section3 from './Section3.vue';
 import Section4 from './Section4.vue';
 import Section5 from './Section5.vue';
+import Section6 from './Section6.vue';
 
 export default {
   name: 'MainContent',
@@ -37,7 +42,8 @@ export default {
     Section2,
     Section3,
     Section4,
-    Section5
+    Section5,
+    Section6
   },
   methods: {
     scrollToSection(index) {
@@ -52,15 +58,4 @@ export default {
 
 <style scoped>
 
-section {
-  min-height: 100vh; 
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  color: black;
-  background: white;
-}
 </style>

@@ -1,5 +1,6 @@
 <template>
-    <button class="scroll-button" @click="scrollToTop">Scroll to Top</button>
+    
+    <button class="scroll-button" @click="scrollToTop"><img src="/src/assets/img/arrow_bottom.png" alt=""></button>
   </template>
   
   <script>
@@ -14,11 +15,15 @@
   </script>
   
   <style scoped>
+  img {
+    display: block;
+    transform: rotate(180deg);
+  }
   .scroll-button {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: #444;
+    background: none;
     border: none;
     color: #fff;
     padding: 10px 20px;
