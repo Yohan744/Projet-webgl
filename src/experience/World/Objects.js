@@ -133,8 +133,9 @@ export default class Objects {
                     child.material = this.materialLibrary.getPaperMaterial()
 
                 } else {
-                    // console.log(name)
+                    console.log(name)
                 }
+
 
                 child.material.needsUpdate = true
 

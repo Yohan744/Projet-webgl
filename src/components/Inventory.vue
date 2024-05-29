@@ -11,6 +11,7 @@
 <script>
 
 import {useGameManager} from "../assets/js/GameManager";
+import cassetteIcon from '../assets/icons/objects/cassette.png';
 
 export default {
   name: 'Inventory',
@@ -23,11 +24,11 @@ export default {
   data() {
     return {
       inventoryItems: [
-        { name: 'picture', imageSrc: './src/assets/icons/objects/cassette.png' },
-        { name: 'projector', imageSrc: './src/assets/icons/objects/cassette.png' },
-        { name: 'drawer', imageSrc: './src/assets/icons/objects/cassette.png' },
-        { name: 'pencil', imageSrc: './src/assets/icons/objects/cassette.png' },
-        { name: 'walkman', imageSrc: './src/assets/icons/objects/cassette.png' },
+        { name: 'picture', imageSrc: cassetteIcon },
+        { name: 'projector', imageSrc: cassetteIcon },
+        { name: 'drawer', imageSrc: cassetteIcon },
+        { name: 'pencil', imageSrc: cassetteIcon },
+        { name: 'walkman', imageSrc: cassetteIcon },
       ],
     }
   },
