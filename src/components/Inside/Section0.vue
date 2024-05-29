@@ -58,6 +58,7 @@ export default {
   color: white;
   transition: width 0.5s ease-in-out;
   visibility: hidden; 
+}
 
 img {
   z-index: 1;
