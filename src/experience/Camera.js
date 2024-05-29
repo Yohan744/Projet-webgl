@@ -233,7 +233,7 @@ export default class Camera {
             x: lookingPoint.x,
             y: lookingPoint.y,
             z: lookingPoint.z - 2,
-            duration: 1,
+            duration: 2,
             ease: 'power1.out',
         })
 
@@ -417,7 +417,6 @@ export default class Camera {
 
         this.instance.position.copy(this.modes[this.mode].instance.position);
         this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
-        this.instance.updateMatrixWorld();
     }
 
     destroy() {

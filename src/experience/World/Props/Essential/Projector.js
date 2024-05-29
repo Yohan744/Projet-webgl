@@ -18,9 +18,11 @@ export default class Projector {
         this.animations = [];
 
         this.textures = [
-            this.experience.resources.items.monasurf,
-            this.experience.resources.items.monabouquet,
-            this.experience.resources.items.backgroundTreeTexture
+            this.experience.resources.items.diapositive1,
+            this.experience.resources.items.diapositive2,
+            this.experience.resources.items.diapositive3,
+            this.experience.resources.items.diapositive4,
+            this.experience.resources.items.diapositive5
         ];
 
         this.isDragging = false;
@@ -305,7 +307,7 @@ export default class Projector {
 
         if (this.isLightsAnimating) return;
 
-        const randomDuration = Math.random() * 4;
+        const randomDuration = Math.random() * 2;
         const randomDelay = Math.random() * 2;
 
         gsap.to(this.spotlight, {
@@ -316,7 +318,7 @@ export default class Projector {
                 this.isLightsAnimating = true;
             },
             onUpdate: () => {
-                this.toggleRandomIntensityOnLights((Math.random() - 0.5) * 10);
+                this.toggleRandomIntensityOnLights((Math.random() - 0.5) * 5);
             },
             onComplete: () => {
                 this.isLightsAnimating = false;

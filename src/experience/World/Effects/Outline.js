@@ -52,7 +52,7 @@ export default class Outline {
 
     showOutline() {
         gsap.to(this.material, {
-            opacity: 1,
+            opacity: 0.55,
             delay: 0.5,
             duration: 0.75,
         })

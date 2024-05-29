@@ -64,6 +64,20 @@ export const data = {
         loop: false,
     },
 
+    pictureIntro: {
+        src: p + 'pictureIntro.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    pictureOutro: {
+        src: p + 'pictureOutro.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
 
     //////// GENERAL SOUNDS ////////
 

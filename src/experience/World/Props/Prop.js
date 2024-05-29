@@ -52,31 +52,13 @@ export default class Prop extends EventEmitter {
                 this.outline?.showOutline()
                 this.renderer.toggleBlurEffect(false)
 
-                if (this.gameManager.state.actualObjectInteractingName !== 'projector') {
+                if (this.gameManager.state.actualObjectInteractingName !== 'projector' && this.gameManager.state.actualObjectInteractingName !== 'drawer') {
                     this.gameManager.setActualObjectInteractingName(null)
                 }
 
             }
             if (state) this.outline?.removeOutline()
         })
-        watch(() => this.gameManager.state.isPencilInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isCassetteInFrontOfCamera) {
-                const pencil = this.experience.objectGroup.children.find(obj => obj.userData.type === 'pencil');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (pencil) pencil.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
-        watch(() => this.gameManager.state.isCassetteInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isWalkmanInFrontOfCamera) {
-                const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (walkman) walkman.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
     }
 
     handleClick() {
