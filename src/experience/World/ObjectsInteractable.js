@@ -3,6 +3,7 @@ import {objectsData} from "../../data/Objects";
 import Projector from "./Props/Essential/Projector";
 import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
+import Picture from "./Props/Essential/Picture";
 import Drawer from "./Props/Essential/Drawer";
 import Envelop from "./Props/Essential/Envelop";
 import Letter from "./Props/Essential/Letter";
@@ -176,7 +177,9 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getVinylMaterial();
 
                 } else if (name === 'photo') {
-                    child.material = this.materialLibrary.getPictureMaterial();
+                    child.material = this.materialLibrary.getPictureMaterial()
+                    this.picture = new Picture(child)
+                    interactableObjects.picture = this.picture
 
                 } else {
                     console.log(name);
@@ -212,6 +215,7 @@ export default class ObjectsInteractable {
             interactableObjects[key].destroy();
         });
     }
+
 }
 
 export const useInteractableObjects = () => interactableObjects;

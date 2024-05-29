@@ -28,6 +28,7 @@ import {useGameManager} from "../assets/js/GameManager";
 import gsap from "gsap";
 import {useCursor} from "../assets/js/Cursor";
 import {isMobile} from "../assets/js/utils";
+import {useGlobalEvents} from "../assets/js/GlobalEvents";
 
 export default {
   name: 'ExperiencePage',
@@ -35,10 +36,12 @@ export default {
   data() {
     const appStore = useAppStore();
     const gameManager = useGameManager();
+    const globalEvents = useGlobalEvents()
     const router = useRouter()
     return {
       appStore,
       gameManager,
+      globalEvents,
       router,
       routeCheck: false,
       isLoaded: false,
@@ -127,6 +130,9 @@ export default {
         this.$refs.experienceContainer.style.opacity = 1;
         this.showStartButton = false;
         this.soundManager?.play('background')
+        gsap.delayedCall(2, () => {
+          this.globalEvents?.trigger('experienceIsVisible')
+        })
       }
     },
     handleClickStartButton() {

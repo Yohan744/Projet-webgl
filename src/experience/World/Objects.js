@@ -129,9 +129,13 @@ export default class Objects {
                 } else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilsMaterial()
 
+                } else if (name.includes("feuilles1")) {
+                    child.material = this.materialLibrary.getPaperMaterial()
+
                 } else {
-                    // console.log(name)
+                    console.log(name)
                 }
+
 
                 child.material.needsUpdate = true
 

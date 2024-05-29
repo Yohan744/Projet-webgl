@@ -25,14 +25,13 @@
       <p>Mettre dans la poche</p>
     </div>
 
-    <div class="inventory-wrapper" v-if="isAnyItemInInventory">
-      <div v-if="gameManager.inventory.cassette" @click="handleInventoryObjectClick('cassette')">
-        <img src="../assets/icons/objects/CASSETTE_VIGNETTE.png" alt="Cassette"/>
-      </div>
-      <div v-if="gameManager.inventory.pencil" @click="handleInventoryObjectClick('pencil')">
-        <img src="../assets/icons/objects/icn_crayon.svg" alt="Pencil"/>
-      </div>
+    <div class="carousel">
+      <button class="left-button">left</button>
+      <button class="right-button">right</button>
     </div>
+
+    <Inventory/>
+
   </section>
 </template>
 
@@ -41,9 +40,11 @@ import { useAppStore } from "../stores/appStore";
 import homeIcon from '../assets/icons/home.svg';
 import arrowLeftIcon from '../assets/icons/arrow-left.svg';
 import { useGameManager } from "../assets/js/GameManager";
+import Inventory from "./Inventory.vue";
 
 export default {
   name: 'ExperienceLayer',
+  components: {Inventory},
   props: {
     soundManager: Object,
   },
@@ -131,7 +132,9 @@ export default {
       }
     },
     handlePocketButtonClick() {
-      if (this.gameManager.state.isCassetteInFrontOfCamera) {
+      if (this.gameManager.state.isPencilInFrontOfCamera) {
+        this.gameManager.updateObjectToPocket('pencil');
+      } else if (this.gameManager.state.isCassetteInFrontOfCamera) {
         this.gameManager.updateObjectToPocket('cassette');
       }
     },

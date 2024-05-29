@@ -20,8 +20,9 @@ export default class Renderer {
         this.stats = this.experience.stats
         this.scene = this.experience.scene
         this.camera = this.experience.camera
+        this.gameManager = this.experience.gameManager
 
-        this.isBlurEffectEnabled = false;
+        this.isBlurEffectEnabled = false
 
         this.setInstance()
         this.initPostProcessing();
@@ -68,9 +69,10 @@ export default class Renderer {
     }
 
     initPostProcessing() {
-        this.composer = new EffectComposer(this.instance);
 
+        this.composer = new EffectComposer(this.instance);
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
+        const gameStepId = this.gameManager.state.gameStepId
 
         this.toneMappingEffect = new ToneMappingEffect({
             blendFunction: BlendFunction.DARKEN,
@@ -87,7 +89,7 @@ export default class Renderer {
             blendFunction: BlendFunction.SCREEN,
             luminanceThreshold: 0.6,
             luminanceSmoothing: 0.025,
-            intensity: 1.5,
+            intensity: gameStepId === 0 ? 0.25 : 1.5,
             radius: 0.6,
             levels: 6,
             mipmapBlur: true,
@@ -101,8 +103,9 @@ export default class Renderer {
         })
 
         this.dofEffect = new BokehEffect({
-            focus: 0.010,
+            focus: gameStepId === 0 ? 0.89 : 0.010,
             aperture: 0, // 0.184
+            dof: gameStepId === 0 ? 0.716 : 0.02,
             maxBlur: 0.004,
             width: this.config.width,
             height: this.config.height
@@ -141,6 +144,23 @@ export default class Renderer {
                     this.composer.addPass(this.onlyTonePass);
                 }
             }
+        })
+
+    }
+
+    setNormalPostProcessValues() {
+        gsap.set(this.dofEffect.uniforms.get('focus'), {
+            value: 0.010,
+        })
+
+        gsap.set(this.dofEffect.uniforms.get('dof'), {
+            value: 0.02,
+        })
+
+        gsap.to(this.bloom.uniforms.get('intensity'), {
+            value: 1.5,
+            duration: 2,
+            ease: 'power1.out',
         })
 
     }

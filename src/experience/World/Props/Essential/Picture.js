@@ -1,20 +1,23 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
-import pictureVertexShader from "./../../../Shaders/Picture/vertex.glsl";
-import pictureFragmentShader from "./../../../Shaders/Picture/fragment.glsl";
+import MaterialLibrary from "../../../MaterialLibrary";
 import gsap from "gsap";
 
 export default class Picture {
 
-    constructor() {
+    constructor(mesh) {
 
         this.experience = new Experience();
         this.scene = this.experience.scene;
-        this.resources = this.experience.resources;
         this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
+        this.globalEvents = this.experience.globalEvents;
+        this.soundManager = this.experience.soundManager;
+        this.materialLibrary = new MaterialLibrary()
 
+        this.isEnabled = false
 
+        this.photoModel = mesh;
         this.displacedParticles = 0;
         this.initialPositions = [];
         this.activeParticles = [];
@@ -27,42 +30,35 @@ export default class Picture {
         this.rotationInitiated = false;
 
         if (this.gameManager.state.gameStepId === 0) {
-            this.setupPhotoModel();
-            this.setupGroup();
+            this.init();
             this.setupParticles();
             this.setupGridCells();
-            this.setupMouseEvents();
+
+            this.pointer.on('movement-picture', this.onMouseMove.bind(this));
+
+            this.experience.renderer.toggleBlurEffect(true);
+
+            this.globalEvents.on('experienceIsVisible', () => {
+                this.isEnabled = true
+                this.soundManager.play('pictureIntro')
+            });
+
         }
 
     }
 
-    setupPhotoModel() {
-        this.photoModel = this.resources.items.photoModel.scene;
-        this.photoModel.position.set(0, 2.25, 9.25);
-        this.photoModel.rotation.x = Math.PI / 2;
-    }
+    init() {
+        this.photoModel.position.set(0, 2.22, 9.28);
+        this.photoModel.rotation.set(-Math.PI * 0.5, 0, -Math.PI);
+        this.photoModel.material.depthWrite = false;
+        this.experience.renderer.toggleBlurEffect(true);
 
-    setupGroup() {
         this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        this.scene.add(this.group);
-
-        const texture = this.resources.items.monabouquet;
-        texture.repeat.set(1, -1);
-        texture.offset.set(0, 1);
-
-        this.photoModel.traverse((child) => {
-            if (child.isMesh) {
-                child.material = new THREE.MeshBasicMaterial({
-                    map: texture,
-                    side: THREE.DoubleSide,
-                    transparent: true,
-                });
-            }
-        });
-
+        this.group.rotation.set(-0.23, 0, 0)
         this.group.add(this.photoModel);
+        this.scene.add(this.group);
     }
 
     setupParticles() {
@@ -86,18 +82,7 @@ export default class Picture {
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         particlesGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1));
 
-        this.particlesMaterial = new THREE.ShaderMaterial({
-            vertexShader: pictureVertexShader,
-            fragmentShader: pictureFragmentShader,
-            uniforms: {
-                uTime: {value: 0},
-                uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
-                uSize: {value: 3},
-                uOpacity: {value: 1}
-            },
-            transparent: true,
-            depthTest: false,
-        });
+        this.particlesMaterial = this.materialLibrary.getDustPictureMaterial()
 
         this.particlesMesh = new THREE.Points(particlesGeometry, this.particlesMaterial);
         this.group.add(this.particlesMesh);
@@ -156,10 +141,6 @@ export default class Picture {
         }
     }
 
-    setupMouseEvents() {
-        window.addEventListener('mousemove', this.onMouseMove.bind(this));
-    }
-
     detectCells() {
         const intersects = this.pointer.raycaster.intersectObjects(this.cellMeshes);
 
@@ -198,11 +179,13 @@ export default class Picture {
     }
 
     onMouseMove() {
-        const cellIndices = this.detectCells();
-        cellIndices.forEach((cellIndex) => {
-            this.removeCellParticles(cellIndex);
-        });
-        this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+        if (this.isEnabled) {
+            const cellIndices = this.detectCells();
+            cellIndices.forEach((cellIndex) => {
+                this.removeCellParticles(cellIndex);
+            });
+            this.particlesMesh.geometry.attributes.position.needsUpdate = true;
+        }
     }
 
     removeCellParticles(cellIndex) {
@@ -266,26 +249,30 @@ export default class Picture {
 
         tl.to(this.group.rotation, {
             y: Math.PI,
-            duration: 3,
-            ease: 'power2.inOut'
-        });
-
-        this.group.traverse((child) => {
-            if (child.isMesh) {
-                tl.to(child.material, {
-                    opacity: 0,
-                    delay: 3,
-                    duration: 2,
-                    ease: 'power2.inOut',
-                }, 0);
+            delay: 0.25,
+            duration: 3.5,
+            ease: 'power4.inOut',
+            onComplete: () => {
+                this.soundManager.play('pictureOutro')
             }
         })
 
-        tl.to(this.particlesMaterial.uniforms.uOpacity, {
+        tl.set(this.particlesMaterial.uniforms.uOpacity, {
             value: 0,
             delay: 3,
-            duration: 2,
-            ease: 'power2.inOut',
+        }, 0);
+
+        tl.to(this.photoModel.material, {
+            opacity: 0,
+            delay: 7,
+            duration: 2.5,
+            ease: 'power1.inOut',
+            onStart: () => {
+                this.experience.renderer.toggleBlurEffect(false);
+                gsap.delayedCall(1, () => {
+                    this.experience.renderer.setNormalPostProcessValues();
+                })
+            },
         }, 0);
 
     }
@@ -312,6 +299,6 @@ export default class Picture {
     }
 
     destroy() {
-        window.removeEventListener('mousemove', this.onMouseMove.bind(this));
+        this.pointer.off('movement-picture', this.onMouseMove.bind(this));
     }
 }

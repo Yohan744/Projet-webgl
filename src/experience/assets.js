@@ -23,50 +23,6 @@ export default [
                 type: 'model',
             },
 
-            {
-                name: 'drawerModel',
-                source: '/assets/models/commode.glb',
-                type: 'model',
-            },
-
-            {
-                name: 'envelopModel',
-                source: '/assets/models/enveloppe.glb',
-                type: 'model',
-            },
-
-            {
-                name: 'cassetteModel',
-                source: '/assets/models/cassette.glb',
-                type: 'model',
-            },
-
-            {
-                name: 'dahliaModel',
-                source: '/assets/models/dahlia.glb',
-                type: 'model',
-            },
-
-            {
-                name: 'letterModel',
-                source: '/assets/models/lettre.glb',
-                type: 'model',
-            },
-
-            {
-                name: 'photoModel',
-                source: '/assets/models/photo.glb',
-                type: 'model',
-            },
-            {
-                name: 'projectorModel',
-                source: '/assets/models/visionneuse.glb',
-                type: 'model',
-                textures: {
-                    diffuse: 'assets/textures/cassette/Cassette.webp',
-                }
-            },
-
         ]
     },
 
@@ -369,6 +325,14 @@ export default [
                 }
             },
 
+            {
+                name: 'paper',
+                type: 'group',
+                textures: {
+                    diffuse: 'assets/textures/objects/paper/diffuse.webp',
+                }
+            },
+
         ]
     },
 
@@ -541,14 +505,32 @@ export default [
         items: [
 
             {
-                name: 'monabouquet',
-                source: '/assets/textures/objects/projections/monabouquet.webp',
+                name: 'diapositive1',
+                source: '/assets/images/diapositives/diapositive1.webp',
                 type: 'texture',
             },
 
             {
-                name: 'monasurf',
-                source: '/assets/textures/objects/projections/monasurf.webp',
+                name: 'diapositive2',
+                source: '/assets/images/diapositives/diapositive2.webp',
+                type: 'texture',
+            },
+
+            {
+                name: 'diapositive3',
+                source: '/assets/images/diapositives/diapositive3.webp',
+                type: 'texture',
+            },
+
+            {
+                name: 'diapositive4',
+                source: '/assets/images/diapositives/diapositive4.webp',
+                type: 'texture',
+            },
+
+            {
+                name: 'diapositive5',
+                source: '/assets/images/diapositives/diapositive5.webp',
                 type: 'texture',
             },
 
@@ -557,11 +539,7 @@ export default [
                 source: '/assets/textures/attic/background/backgroundTree.webp',
                 type: 'texture',
             },
-            {
-                name: 'photoTexture',
-                source: '/assets/textures/objects/photo/photo.webp',
-                type: 'texture',
-            },
+
         ]
     }
 

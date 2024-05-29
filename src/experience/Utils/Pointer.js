@@ -61,6 +61,10 @@ export default class Pointer extends EventEmitter {
             this.trigger('movement-orbit', [this.mouse]);
         }
 
+        if (this.gameManager.state.gameStepId === 0) {
+            this.trigger('movement-picture');
+        }
+
         this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
         this.checkIntersections()
     }
