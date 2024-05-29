@@ -1192,7 +1192,7 @@ export default class MaterialLibrary {
                 color: 0xffffff,
                 side: BackSide,
                 transparent: true,
-                opacity: 0.5
+                opacity: 0.4
             })
 
             this.materialsUsed.push(outlineMaterial)

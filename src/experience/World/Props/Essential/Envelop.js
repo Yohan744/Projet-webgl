@@ -104,24 +104,24 @@ export default class Envelop {
     }
 
     handleClick() {
-        const mousePosition = this.pointer.getMousePosition();
-        const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
-        if (intersects.length > 0) {
-            this.setupMorphTargets();
-            this.hidePocketButton();
-            if (!this.hasAnimatedToCamera) {
-                this.camera.moveCameraToInitialPosition(() => {
-                    this.animateEnvelope(() => {
-                        CameraUtils.animateToCamera(this.mesh, this.camera.instance, 0.6);
-                        this.initializeCarouselPosition();
-                        this.startMorphTargetAnimation();
-                    });
-                });
-                this.hasAnimatedToCamera = true;
-            }
-            this.isDragging = true;
-            this.mouseStartClickPosition = { x: mousePosition.x, y: mousePosition.y };
-        }
+        // const mousePosition = this.pointer.getMousePosition();
+        // const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
+        // if (intersects.length > 0) {
+        //     this.setupMorphTargets();
+        //     this.hidePocketButton();
+        //     if (!this.hasAnimatedToCamera) {
+        //         this.camera.moveCameraToInitialPosition(() => {
+        //             this.animateEnvelope(() => {
+        //                 CameraUtils.animateToCamera(this.mesh, this.camera.instance, 0.6);
+        //                 this.initializeCarouselPosition();
+        //                 this.startMorphTargetAnimation();
+        //             });
+        //         });
+        //         this.hasAnimatedToCamera = true;
+        //     }
+        //     this.isDragging = true;
+        //     this.mouseStartClickPosition = { x: mousePosition.x, y: mousePosition.y };
+        // }
     }
 
     handleScreenClick(event) {

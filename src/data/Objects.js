@@ -55,7 +55,7 @@ export const objectsData = {
     tourne_disque1: {
         file: RecordPlayer,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
-        animateToCameraOnClick: false,
+        animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.02,
         propSound: 'recordPlayer',

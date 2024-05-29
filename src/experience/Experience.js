@@ -73,7 +73,7 @@ export default class Experience extends EventEmitter {
         // Debug
         this.config.debug = window.location.hash === '#debug'
 
-        this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
+        this.config.isMobile = window.matchMedia('(max-width: 576px)').matches
 
         // Pixel ratio
         this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
@@ -159,7 +159,7 @@ export default class Experience extends EventEmitter {
 
         this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
 
-        this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
+        this.config.isMobile = window.matchMedia('(max-width: 576px)').matches
 
         this.camera?.resize()
 

@@ -417,7 +417,6 @@ export default class Camera {
 
         this.instance.position.copy(this.modes[this.mode].instance.position);
         this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
-        this.instance.updateMatrixWorld();
     }
 
     destroy() {

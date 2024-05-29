@@ -68,6 +68,7 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getDrawerMaterial();
                     this.drawer = new Drawer(child);
                     interactableObjects.drawer = this.drawer;
+                    interactableMesh.push(child);
 
                 } else if (name.includes("cartepostale") || name.includes('cartespostales')) {
                     if (name.includes('biarritz')) child.material = this.materialLibrary.getPostalCardBiarritzMaterial();
@@ -138,7 +139,6 @@ export default class ObjectsInteractable {
                 } else if (name.includes("enveloppe")) {
                     child.material = this.materialLibrary.getEnveloppeMaterial();
                     interactableObjects.envelopModel = new Envelop(child);
-                    console.log(interactableObjects);
 
                 } else if (name.includes("lettre")) {
                     child.material = this.materialLibrary.getLetterMaterial();
@@ -174,8 +174,10 @@ export default class ObjectsInteractable {
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
                     child.material = this.materialLibrary.getVinylMaterial();
+
                 } else if (name === 'photo') {
                     child.material = this.materialLibrary.getPictureMaterial();
+
                 } else {
                     console.log(name);
                 }
