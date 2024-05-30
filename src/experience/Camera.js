@@ -254,9 +254,6 @@ export default class Camera {
 
     moveCameraBackToSpotAfterProjector() {
 
-        if (this.isMoving) return
-        this.isMoving = true
-
         const spot = this.experience.world.locations.spots[0];
         const spotPosition = spot.position.clone();
         const lookingPoint = spot.data.lookingPoint.clone();

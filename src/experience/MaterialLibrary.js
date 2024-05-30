@@ -900,7 +900,9 @@ export default class MaterialLibrary {
         if (!enveloppeMaterial) {
             enveloppeMaterial = new MeshBasicMaterial({
                 map: this.resources.items.enveloppe.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                // color: '#ff0000',
+                transparent: true,
+                side: DoubleSide
             })
 
             this.materialsUsed.push(enveloppeMaterial)

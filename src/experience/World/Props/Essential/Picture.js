@@ -40,7 +40,7 @@ export default class Picture {
 
             this.globalEvents.on('experienceIsVisible', () => {
                 this.isEnabled = true
-                this.soundManager.play('pictureIntro')
+                this.soundManager.playSoundWithBackgroundFade('pictureIntro', 1.25)
             });
 
         }
@@ -253,7 +253,7 @@ export default class Picture {
             duration: 3.5,
             ease: 'power4.inOut',
             onComplete: () => {
-                this.soundManager.play('pictureOutro')
+                this.soundManager.playSoundWithBackgroundFade('pictureOutro', 1.25)
             }
         })
 

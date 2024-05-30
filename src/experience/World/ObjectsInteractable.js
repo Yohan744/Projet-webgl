@@ -10,6 +10,7 @@ import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
 import { watch } from "vue";
 import * as THREE from "three";
+import Envelop2 from "./Props/Essential/Envelop2";
 
 
 const interactableObjects = {};
@@ -139,7 +140,8 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("enveloppe")) {
                     child.material = this.materialLibrary.getEnveloppeMaterial();
-                    interactableObjects.envelopModel = new Envelop(child);
+                    // interactableObjects.envelopModel = new Envelop(child);
+                    interactableObjects.envelopModel = new Envelop2(child);
 
                 } else if (name.includes("lettre")) {
                     child.material = this.materialLibrary.getLetterMaterial();
