@@ -19,18 +19,22 @@ export default class Envelop2 extends EventEmitter{
 
         this.debug = this.experience.debug
 
-        this.debugFolder = this.debug.addFolder({
-            title: 'Envelop2',
-            expanded: false
-        })
+        if (this.debug) {
 
-        const params = {
-            morph: 0
+            this.debugFolder = this.debug.addFolder({
+                title: 'Envelop2',
+                expanded: false
+            })
+
+            const params = {
+                morph: 0
+            }
+
+            this.debugFolder.addBinding(params, 'morph', {min: 0, max: 1, step: 0.01}).on('change', (value) => {
+                this.animateMorphTargetToValue(value.value, 0)
+            })
+
         }
-
-        this.debugFolder.addBinding(params, 'morph', {min: 0, max: 1, step: 0.01}).on('change', (value) => {
-            this.animateMorphTargetToValue(value.value, 0)
-        })
 
         this.mesh = mesh;
         this.mesh.rotation.order = 'YXZ';
