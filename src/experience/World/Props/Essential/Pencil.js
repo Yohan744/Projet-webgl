@@ -12,6 +12,7 @@ export default class Pencil {
         this.camera = this.experience.camera.instance;
         this.offsetFromCamera = 0.6;
         this.pointer = this.experience.pointer;
+        this.soundManager = this.experience.soundManager;
         this.mesh = mesh;
         this.interactableObjects = useInteractableObjects();
         this.isInFrontOfCamera = false;
@@ -81,6 +82,7 @@ export default class Pencil {
             duration: 2,
             ease: 'power2.inOut',
             onComplete: () => {
+                this.soundManager.play('crayonFound');
                 this.positionCassetteNextToPencil();
                 this.isInFrontOfCamera = true;
             }

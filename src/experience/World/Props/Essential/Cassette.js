@@ -9,6 +9,7 @@ export default class Cassette {
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.pointer = this.experience.pointer;
+        this.soundManager = this.experience.soundManager;
 
         this.cassetteGroup = new THREE.Group();
         this.scene.add(this.cassetteGroup);
@@ -64,7 +65,7 @@ export default class Cassette {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
-            duration: 1,
+            duration: 3,
             ease: 'power2.inOut'
         });
 
@@ -72,7 +73,7 @@ export default class Cassette {
             x: 0,
             y: 0,
             z: 0,
-            duration: 1,
+            duration: 3,
             ease: 'power2.inOut'
         });
 
@@ -96,6 +97,7 @@ export default class Cassette {
         });
 
         if (allMorphTargetsZero) {
+            this.soundManager.play('cassetteRewind');
             this.isFullyRewound = true;
             this.stopRewinding();
         } else {
