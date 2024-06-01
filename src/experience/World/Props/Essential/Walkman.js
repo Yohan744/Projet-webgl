@@ -25,6 +25,7 @@ export default class Walkman {
 
         this.morphTargetName = 'clapet';
         this.isClapetOpen = false;
+        this.canComeOut = false;
         this.boutonejectTargetName = 'boutoneject';
         this.setupMorphTargets();
         this.init();
@@ -55,16 +56,18 @@ export default class Walkman {
     }
 
     onPointerDown() {
-        const mousePosition = this.pointer.getMousePosition();
-        this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
-        const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
-        if (intersects.length > 0) {
-            if (!this.isInFrontOfCamera) {
-                this.animateToCamera();
-            } else if (!this.isClapetOpen) {
-                this.activateEjectButton();
-            } else if (this.isClapetOpen) {
-                this.startDragging(mousePosition);
+        if (this.canComeOut) {
+            const mousePosition = this.pointer.getMousePosition();
+            this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
+            const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
+            if (intersects.length > 0) {
+                if (!this.isInFrontOfCamera) {
+                    this.animateToCamera();
+                } else if (!this.isClapetOpen) {
+                    this.activateEjectButton();
+                } else if (this.isClapetOpen) {
+                    this.startDragging(mousePosition);
+                }
             }
         }
     }
@@ -137,7 +140,11 @@ export default class Walkman {
 
         const targetPosition = new THREE.Vector3();
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
-
+        gsap.to(this.mesh.position, {
+            y: this.mesh.position.y + 0.4,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
         gsap.to(this.mesh.position, {
             x: targetPosition.x,
             y: targetPosition.y,
@@ -147,6 +154,8 @@ export default class Walkman {
             onComplete: () => {
                 this.positionCassetteNextToWalkman();
                 this.isInFrontOfCamera = true;
+            }
+        });
             }
         });
 
