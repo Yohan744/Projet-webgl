@@ -29,6 +29,20 @@ export const data = {
         loop: false,
     },
 
+    cassetteRewind: {
+        src: p + 'cassette-rembobiner.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    crayonFound: {
+        src: p + 'crayon-trouver.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
     telephone: {
         src: p + 'telephone.m4a',
         volume: 0.75,
