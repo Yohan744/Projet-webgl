@@ -120,7 +120,7 @@ export default class Renderer {
         this.composer.addPass(this.isBlurEffectEnabled ? this.toneAndBlurPass : this.onlyTonePass);
     }
 
-    toggleBlurEffect(value) {
+    toggleBlurEffect(value, delay = 0.35) {
         this.isBlurEffectEnabled = value;
 
         gsap.set(this.dofEffect.uniforms.get('aperture'), {
@@ -129,7 +129,7 @@ export default class Renderer {
 
         gsap.to(this.dofEffect.uniforms.get('aperture'), {
             value: value ? 1 : 0,
-            delay: value ? 0.35 : 0,
+            delay: value ? delay : 0,
             duration: 2.5,
             ease: 'power1.out',
             onStart: () => {

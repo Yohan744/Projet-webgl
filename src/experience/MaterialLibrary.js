@@ -887,6 +887,7 @@ export default class MaterialLibrary {
         if (!cassetteMaterial) {
             cassetteMaterial = new MeshBasicMaterial({
                 map: this.resources.items.cassette.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -915,6 +916,7 @@ export default class MaterialLibrary {
         if (!dahliaMaterial) {
             dahliaMaterial = new MeshBasicMaterial({
                 map: this.resources.items.dahlia.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -928,6 +930,7 @@ export default class MaterialLibrary {
         if (!postalCardBiarritzMaterial) {
             postalCardBiarritzMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -941,6 +944,7 @@ export default class MaterialLibrary {
         if (!postalCardBeachMaterial) {
             postalCardBeachMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse2,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -954,6 +958,7 @@ export default class MaterialLibrary {
         if (!postalCardHouseMaterial) {
             postalCardHouseMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse3,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -993,6 +998,7 @@ export default class MaterialLibrary {
         if (!letterMaterial) {
             letterMaterial = new MeshBasicMaterial({
                 map: this.resources.items.letter.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -1194,7 +1200,8 @@ export default class MaterialLibrary {
     getBlackMaterial() {
         if (!blackMaterial) {
             blackMaterial = new MeshBasicMaterial({
-                color: 0x000000,
+                color: '#000000',
+                transparent: true,
                 side: FrontSide
             })
 

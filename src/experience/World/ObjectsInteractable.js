@@ -5,12 +5,11 @@ import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
 import Picture from "./Props/Essential/Picture";
 import Drawer from "./Props/Essential/Drawer";
-import Envelop from "./Props/Essential/Envelop";
 import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
+import Envelop from "./Props/Essential/Envelop";
 import { watch } from "vue";
 import * as THREE from "three";
-import Envelop2 from "./Props/Essential/Envelop2";
 
 
 const interactableObjects = {};
@@ -140,8 +139,7 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("enveloppe")) {
                     child.material = this.materialLibrary.getEnveloppeMaterial();
-                    // interactableObjects.envelopModel = new Envelop(child);
-                    interactableObjects.envelopModel = new Envelop2(child);
+                    interactableObjects.envelopModel = new Envelop(child);
 
                 } else if (name.includes("lettre")) {
                     child.material = this.materialLibrary.getLetterMaterial();

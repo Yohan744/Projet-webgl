@@ -25,7 +25,7 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
-        outlineScale: 1.02,
+        outlineScale: 1.01,
         propSound: 'telephone',
     },
     rubicub: {
@@ -41,7 +41,7 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 1.2,
-        outlineScale: 1.03,
+        outlineScale: 1.01,
         propSound: 'tv',
     },
     tableau_magique1: {
@@ -49,7 +49,7 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, 0, -Math.PI * 0.35),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
-        outlineScale: 1.05,
+        outlineScale: 1.02,
         propSound: 'telecran',
     },
     tourne_disque1: {
@@ -57,23 +57,23 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
-        outlineScale: 1.02,
+        outlineScale: 1.01,
         propSound: 'recordPlayer',
     },
-    malle_bas: {
+    malle_bas1: {
         file: BottomChest,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: false,
         distanceToCamera: 0,
-        outlineScale: 1.02,
+        outlineScale: 1.01,
         propSound: '',
     },
-    malle_haut: {
+    malle_haut1: {
         file: TopChest,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: false,
         distanceToCamera: 0,
-        outlineScale: 1.02,
+        outlineScale: 1.01,
         propSound: '',
     },
 }

@@ -20,7 +20,7 @@ export default class Drawer extends EventEmitter{
         this.isOpen = false;
         this.drawerBasicPosition = this.mesh.position.clone();
 
-        this.drawerOutline = new Outline(this.mesh, 1.02);
+        this.drawerOutline = new Outline(this.mesh, 1.005);
         this.pointer.on('click', this.handleClick.bind(this));
 
         this.experience.on('ready', () => {
