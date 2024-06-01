@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import Experience from "../../../Experience";
-import Outline from "../../Effects/Outline";
-import { watch } from "vue";
+import {useInteractableObjects} from "../../ObjectsInteractable";
 
 export default class Cassette {
     constructor(objects) {
@@ -10,35 +9,15 @@ export default class Cassette {
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.pointer = this.experience.pointer;
-        this.gameManager = this.experience.gameManager;
 
-        this.animations = [];
-
-        this.isDragging = false;
-        this.isAnimating = false;
-        this.isFirstAnimationIsDone = false;
-        this.mouseStartClickPosition = {
-            x: 0,
-            y: 0,
-        };
-
-        this.dragDistance = 0.07;
-        this.hasBeenCalled = false;
-        this.pointerDown = this.onPointerDown.bind(this);
-        this.pointerMove = this.onPointerMove.bind(this);
-        this.pointerUp = this.onPointerUp.bind(this);
-
-        this.setEvents();
-        this.init(objects);
-    }
-
-    init(objects) {
-        if (!objects || !Array.isArray(objects)) {
-            console.error('Invalid objects array passed to Cassette');
-            return;
-        }
+        this.cassetteGroup = new THREE.Group();
+        this.scene.add(this.cassetteGroup);
 
         this.cassetteObjects = objects;
+
+       const pencil = useInteractableObjects();
+
+       this.pencil = pencil.pencil;
 
         this.bobine1 = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'bobine1');
         this.bobine2 = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'bobine2');
@@ -47,126 +26,143 @@ export default class Cassette {
 
         this.objectsToAnimate = [this.bobine1, this.bobine2, this.bobine3, this.corps].filter(Boolean);
 
+        this.isRewinding = false;
+        this.isFullyRewound = false;
+        this.inactivityTimeout = null;
+
+        this.init();
+    }
+
+    init() {
         this.objectsToAnimate.forEach(object => {
+            this.cassetteGroup.add(object);
+
             if (object.morphTargetInfluences) {
-                console.log('Morph targets found in:', object.name);
-                object.morphTargetDictionary = object.morphTargetDictionary || {};
+                console.log(`Setting morph targets for: ${object.name}`);
+                for (let i = 0; i < object.morphTargetInfluences.length; i++) {
+                    object.morphTargetInfluences[i] = 1;
+                }
+            } else {
+                console.log(`No morph targets found for: ${object.name}`);
             }
         });
+
+        this.initialPosition = this.cassetteGroup.position.clone();
+        this.initialRotation = this.cassetteGroup.rotation.clone();
     }
 
-    setEvents() {
-        this.pointer.on('click', this.pointerDown);
-        this.pointer.on('movement-orbit', this.pointerMove);
-        this.pointer.on('click-release', this.pointerUp);
-    }
-
-    onPointerDown() {
-        if (this.gameManager.state.isCameraOnSpot) {
-            if(!this.isFirstAnimationIsDone) {
-                 //   this.showInFrontOfCamera();
-                 //   this.gameManager.updateInteractingState(true);
-            }
-
-        }
-    }
-
-    showInFrontOfCamera() {
+    animateToCamera(targetPosition = null) {
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
 
-        const targetPosition = new THREE.Vector3();
-        targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
-
-        if (!this.experience.objectGroup) {
-            this.experience.objectGroup = new THREE.Group();
-            this.scene.add(this.experience.objectGroup);
+        if (!targetPosition) {
+            targetPosition = new THREE.Vector3();
+            targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
         }
 
-        this.objectsToAnimate.forEach(object => {
-            if (!this.experience.objectGroup.children.includes(object)) {
-                this.experience.objectGroup.add(object);
-            }
-
-            gsap.to(object.position, {
-                x: targetPosition.x,
-                y: targetPosition.y,
-                z: targetPosition.z,
-                duration: 2,
-                ease: 'power2.inOut'
-            });
-
-            gsap.to(object.rotation, {
-                x: 0,
-                y: 0,
-                z: 0,
-                duration: 2,
-                ease: 'power2.inOut'
-            });
+        gsap.to(this.cassetteGroup.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 1,
+            ease: 'power2.inOut'
         });
 
-        this.animateMorphTargets(true);
-        this.isFirstAnimationIsDone = true;
+        gsap.to(this.cassetteGroup.rotation, {
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 1,
+            ease: 'power2.inOut'
+        });
 
-        this.gameManager.setCassetteInFrontOfCamera(true);
-        this.gameManager.state.isObjectOut = true;
+        this.animateMorphTargets();
     }
 
-    animateMorphTargets(isForward) {
+    animateMorphTargets() {
+        if (!this.isRewinding) return;
+
+        let allMorphTargetsZero = true;
+
         this.objectsToAnimate.forEach(object => {
             if (object.morphTargetInfluences) {
-                const targetValue = isForward ? 1 : 0;
-                const morphIndex = object.morphTargetDictionary['morphTargetName'] || 0; // Remplacez 'morphTargetName' par le nom correct de la morph target
-                gsap.to(object.morphTargetInfluences, {
-                    [morphIndex]: targetValue,
-                    duration: 1,
-                    ease: 'power2.inOut'
-                });
+                for (let i = 0; i < object.morphTargetInfluences.length; i++) {
+                    let newInfluence = object.morphTargetInfluences[i] - 0.015;
+                    if (newInfluence < 0) newInfluence = 0;
+                    if (newInfluence > 0) allMorphTargetsZero = false;
+                    object.morphTargetInfluences[i] = newInfluence;
+                }
             }
         });
-    }
 
-    onPointerMove(mouse) {
-        if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
-
-        const newZPosition = this.draggableModel.position.z + (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) * this.dragDistance;
-
-        if (newZPosition) {
-            this.handleDrag(newZPosition);
+        if (allMorphTargetsZero) {
+            this.isFullyRewound = true;
+            this.stopRewinding();
         } else {
-            console.log("Not far enough");
+            gsap.to({}, {
+                duration: 0.1,
+                onComplete: () => {
+                    this.animateMorphTargets();
+                }
+            });
         }
     }
 
-    handleDrag(newZPosition) {
-        console.log("Dragging");
-        this.isAnimating = true;
-        gsap.to(this.draggableModel.position, {
-            z: newZPosition,
-            duration: 1,
-            onComplete: () => {
-                this.isAnimating = false;
+    startRewinding() {
+        this.isRewinding = true;
+        this.isFullyRewound = false;
+        this.animateMorphTargets();
+    }
+
+    stopRewinding() {
+        this.isRewinding = false;
+
+        if (this.isFullyRewound && !this.pencil.isDragging) {
+            this.startInactivityTimer();
+        }
+    }
+
+    startInactivityTimer() {
+        if (this.inactivityTimeout) {
+            clearTimeout(this.inactivityTimeout);
+        }
+
+        this.inactivityTimeout = setTimeout(() => {
+            this.returnToInitialPosition();
+            if (this.pencil) {
+                this.pencil.returnToInitialPosition();
             }
-        });
+        }, 3000);
     }
 
-    onPointerUp() {
-        if (this.isDragging) {
-            this.isDragging = false;
-            this.draggableModel = null;
-            this.gameManager.updateInteractingState(false);
-        }
+    returnToInitialPosition() {
+        gsap.to(this.cassetteGroup.position, {
+            x: this.initialPosition.x,
+            y: this.initialPosition.y,
+            z: this.initialPosition.z,
+            duration: 2,
+            ease: 'power2.inOut'
+        });
+
+        gsap.to(this.cassetteGroup.rotation, {
+            x: this.initialRotation.x,
+            y: this.initialRotation.y,
+            z: this.initialRotation.z,
+            duration: 2,
+            ease: 'power2.inOut'
+        });
     }
 
     destroy() {
-        this.pointer.off('click', this.pointerDown);
-        this.pointer.off('movement-orbit', this.pointerMove);
-        this.pointer.off('click-release', this.pointerUp);
-
         this.objectsToAnimate.forEach(object => {
             if (object && object.parent) {
                 object.parent.remove(object);
             }
         });
+        this.scene.remove(this.cassetteGroup);
+
+        if (this.inactivityTimeout) {
+            clearTimeout(this.inactivityTimeout);
+        }
     }
 }

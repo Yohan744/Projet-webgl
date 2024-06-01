@@ -11,6 +11,7 @@ import Dahlia from "./Props/Essential/Dahlia";
 import { watch } from "vue";
 import * as THREE from "three";
 import Envelop2 from "./Props/Essential/Envelop2";
+import Pencil from "./Props/Essential/Pencil";
 
 
 const interactableObjects = {};
@@ -116,7 +117,7 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilMaterial();
-                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
+                    this.pencil = new Pencil(child);
                     interactableObjects.pencil = this.pencil;
                     interactableMesh.push(child);
 
@@ -194,6 +195,7 @@ export default class ObjectsInteractable {
 
         this.projector = new Projector(this.projectorModel);
         this.cassette = new Cassette(this.cassetteModel);
+        interactableObjects.cassette = this.cassette;
 
         this.scene.add(this.objectsInteractableModel)
 
