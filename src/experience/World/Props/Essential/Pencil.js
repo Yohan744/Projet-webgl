@@ -50,7 +50,7 @@ export default class Pencil {
             ring.rotation.y = THREE.MathUtils.clamp(Math.sin(time) * 0.5, -Math.PI * 85 / 180, Math.PI * 85 / 180);
             ring.position.set(0, 0.05, 0);
 
-            ring.visible = false; // Initially hide the rings
+            ring.visible = false;
             this.trailRings.push(ring);
             this.mesh.add(ring);
         }
