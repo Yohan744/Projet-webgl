@@ -183,7 +183,8 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child)
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
-                    child.material = this.materialLibrary.getVinylMaterial();
+                    if (name === 'vynyle') child.material = this.materialLibrary.getVinylMaterial();
+                    if (name === 'vynyle1') child.material = this.materialLibrary.getVinylUpMaterial();
 
                 } else if (name === 'photo') {
                     child.material = this.materialLibrary.getPictureMaterial()

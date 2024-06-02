@@ -267,7 +267,7 @@ export default class Picture {
 
         tl.to(this.photoModel.material, {
             opacity: 0,
-            delay: 7,
+            delay: 9,
             duration: 2.5,
             ease: 'power1.inOut',
             onStart: () => {

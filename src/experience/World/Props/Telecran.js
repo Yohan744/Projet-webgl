@@ -11,6 +11,9 @@ export default class Telecran extends Prop {
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
 
+        this.mesh.rotation.y = 0.12;
+        this.propsBasicRotation = this.mesh.rotation.clone();
+        this.outline.updateOutlineMeshRotation(this.mesh.rotation)
     }
 
     init() {

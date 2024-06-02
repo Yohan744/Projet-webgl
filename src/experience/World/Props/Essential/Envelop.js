@@ -52,14 +52,6 @@ export default class Envelop extends EventEmitter {
             this.initCarousel()
             this.setupMorphTargetsToInitialPosition()
             this.setWatchers()
-
-            // this.debug = this.experience.debug
-            //
-            // this.debugFolder = this.debug.addFolder({title: 'Envelop'})
-            // this.debugFolder.addBinding(this.cartePostaleBiarritz.rotation, 'x', {label: 'Carousel Rotation x', min: -Math.PI, max: Math.PI, step: 0.01})
-            // this.debugFolder.addBinding(this.cartePostaleBiarritz.rotation, 'y', {label: 'Carousel Rotation y', min: -Math.PI, max: Math.PI, step: 0.01})
-            // this.debugFolder.addBinding(this.cartePostaleBiarritz.rotation, 'z', {label: 'Carousel Rotation z', min: -Math.PI, max: Math.PI, step: 0.01})
-
         })
 
     }

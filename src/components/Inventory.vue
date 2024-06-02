@@ -11,10 +11,10 @@
 <script>
 
 import {useGameManager} from "../assets/js/GameManager";
-import projectorIcon from '../assets/icons/objects/projector.webp';
-import pencilIcon from '../assets/icons/objects/pencil.webp';
-import walkmanIcon from '../assets/icons/objects/walkman.webp';
-import envelopeIcon from '../assets/icons/objects/envelope.webp';
+import projectorIcon from '../assets/icons/objects/projector.png';
+import pencilIcon from '../assets/icons/objects/pencil.png';
+import walkmanIcon from '../assets/icons/objects/walkman.png';
+import envelopeIcon from '../assets/icons/objects/enveloppe.png';
 
 
 export default {

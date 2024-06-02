@@ -84,6 +84,7 @@ let recordPlayerMaterial,
     pencilMaterial,
     pictureMaterial,
     vinylMaterial,
+    vinylUpMaterial,
     projectorTireuseMaterial,
     projectorRailMaterial,
     projectorButtonMaterial,
@@ -1085,6 +1086,19 @@ export default class MaterialLibrary {
         }
 
         return vinylMaterial
+    }
+
+    getVinylUpMaterial() {
+        if (!vinylUpMaterial) {
+            vinylUpMaterial = new MeshBasicMaterial({
+                map: this.resources.items.vinyl.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(vinylUpMaterial)
+        }
+
+        return vinylUpMaterial
     }
 
     /////////////////////////// PROJECTOR MATERIALS ///////////////////////////

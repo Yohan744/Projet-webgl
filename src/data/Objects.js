@@ -38,9 +38,9 @@ export const objectsData = {
     },
     tv: {
         file: Television,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
+        rotationOnClick: new THREE.Vector3(0, 0.16, -0.55),
         animateToCameraOnClick: true,
-        distanceToCamera: 1.2,
+        distanceToCamera: 1.5,
         outlineScale: 1.01,
         propSound: 'tv',
     },
