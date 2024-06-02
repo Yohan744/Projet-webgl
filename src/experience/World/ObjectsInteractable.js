@@ -5,23 +5,17 @@ import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
 import Picture from "./Props/Essential/Picture";
 import Drawer from "./Props/Essential/Drawer";
-import Envelop from "./Props/Essential/Envelop";
 import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
-import Pencil from "./Props/Essential/Pencil";
-import { watch } from "vue";
 import * as THREE from "three";
-import Envelop2 from "./Props/Essential/Envelop2";
 import Pencil from "./Props/Essential/Pencil";
 import TopChest from "./Props/Essential/TopChest";
 import BottomChest from "./Props/Essential/BottomChest";
-import Malle from "./Props/Essential/Malle";
 
 
 const interactableObjects = {};
 const interactableMesh = [];
-const itemGroup = new THREE.Group();
 
 export default class ObjectsInteractable {
 
@@ -33,7 +27,7 @@ export default class ObjectsInteractable {
         this.gameManager = this.experience.gameManager;
 
         this.projectorModel = [];
-        this.cassetteModel = [];
+        this.cassetteModels = [];
 
         if (this.scene) {
             this.init();
