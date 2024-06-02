@@ -190,7 +190,7 @@ export default class Envelop extends EventEmitter {
 
             if (this.isRotating && this.objectRotating) {
                 if (this.objectRotating.name === 'corps' || this.objectRotating.name.includes('bobine')) {
-                    this.cassette.rotation.z = this.lerp(this.cassette.rotation.z, this.cassette.rotation.z + d * 0.1, 0.99)
+                    this.cassette.rotation.z = this.lerp(this.cassette.rotation.z, this.cassette.rotation.z - d * 0.1, 0.99)
                 } else {
                     this.objectRotating.rotation.y = this.lerp(this.objectRotating.rotation.y, this.objectRotating.rotation.y + d * 0.1, 0.99)
                 }
@@ -207,7 +207,7 @@ export default class Envelop extends EventEmitter {
 
         this.dahlia = this.interactableObjects.dahlia.mesh
         this.letter = this.interactableObjects.lettre.mesh
-        const cassetteMeshes = this.interactableObjects.cassette
+        const cassetteMeshes = this.interactableObjects.cassette.cassetteObjects
         this.cassette = this.mergeMeshes(cassetteMeshes)
         this.cartePostaleBiarritz = this.interactableObjects.cartePostaleBiarritz
         this.cartePostalePlage = this.interactableObjects.cartePostalePlage
@@ -447,7 +447,8 @@ export default class Envelop extends EventEmitter {
 
     mergeMeshes(meshes) {
         const group = new THREE.Group();
-        meshes.forEach(mesh => {
+        console.log(meshes)
+        meshes.forEach((mesh) => {
             mesh.material.opacity = 0;
             group.add(mesh);
         });

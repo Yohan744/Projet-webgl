@@ -8,13 +8,13 @@ import Drawer from "./Props/Essential/Drawer";
 import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
+import Pencil from "./Props/Essential/Pencil";
 import { watch } from "vue";
 import * as THREE from "three";
 
 
 const interactableObjects = {};
 const interactableMesh = [];
-const itemGroup = new THREE.Group();
 
 export default class ObjectsInteractable {
 
@@ -26,7 +26,7 @@ export default class ObjectsInteractable {
         this.gameManager = this.experience.gameManager;
 
         this.projectorModel = [];
-        this.cassetteModel = [];
+        this.cassetteModels = [];
 
         if (this.scene) {
             this.init();
@@ -90,7 +90,6 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getDahliaMaterial();
                     this.dahlia = new Dahlia(child);
                     interactableObjects.dahlia = this.dahlia;
-                    itemGroup.dalhia = child;
 
                 } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial();
@@ -114,13 +113,11 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {
                     child.material = this.materialLibrary.getBlackMaterial();
-                    this.cassetteModel.push(child);
+                    this.cassetteModels.push(child);
 
                 } else if (name === 'corps') {
                     child.material = this.materialLibrary.getCassetteMaterial();
-                    this.cassetteModel.push(child);
-                    interactableObjects.cassette = this.cassetteModel;
-                    itemGroup.cassette = this.cassetteModel;
+                    this.cassetteModels.push(child);
 
                 } else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilMaterial();
@@ -154,7 +151,6 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getLetterMaterial();
                     this.lettre = new Letter(child);
                     interactableObjects.lettre = this.lettre;
-                    itemGroup.lettre = child;
 
                 } else if (name.includes("tableau_magique1")) {
                     child.material = this.materialLibrary.getTelecranMaterial();
@@ -201,7 +197,7 @@ export default class ObjectsInteractable {
         });
 
         this.projector = new Projector(this.projectorModel);
-        this.cassette = new Cassette(this.cassetteModel);
+        this.cassette = new Cassette(this.cassetteModels);
         interactableObjects.cassette = this.cassette;
 
         this.scene.add(this.objectsInteractableModel)
