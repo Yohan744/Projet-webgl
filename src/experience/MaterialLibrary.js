@@ -902,7 +902,6 @@ export default class MaterialLibrary {
         if (!enveloppeMaterial) {
             enveloppeMaterial = new MeshBasicMaterial({
                 map: this.resources.items.enveloppe.diffuse,
-                // color: '#ff0000',
                 transparent: true,
                 side: DoubleSide
             })

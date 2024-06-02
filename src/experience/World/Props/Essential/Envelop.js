@@ -447,7 +447,6 @@ export default class Envelop extends EventEmitter {
 
     mergeMeshes(meshes) {
         const group = new THREE.Group();
-        console.log(meshes)
         meshes.forEach((mesh) => {
             mesh.material.opacity = 0;
             group.add(mesh);
