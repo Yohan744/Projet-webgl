@@ -1,7 +1,7 @@
 <template>
   <div>
-    <HeaderBanner @scroll-to-section="scrollToSection"/>
-    <MainContent ref="mainContent"/>
+    <HeaderBanner :active-section="activeTab" @scroll-to-section="scrollToSection"/>
+    <MainContent ref="mainContent" @update-active-section="updateActiveSection"/>
     <ScrollButton/>
   </div>
 </template>
@@ -18,14 +18,19 @@ export default {
     MainContent,
     ScrollButton
   },
+  data() {
+    return {
+      activeTab: 0
+    };
+  },
   methods: {
     scrollToSection(index) {
       this.$refs.mainContent.scrollToSection(index);
+    },
+    updateActiveSection(tabIndex) {
+      this.activeTab = tabIndex;
     }
   }
 }
 </script>
 
-<style scoped>
-
-</style>

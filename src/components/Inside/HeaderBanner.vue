@@ -1,10 +1,11 @@
 <template>
-  <div class="header-banner">
+  <div :class="['header-banner', { 'dark-theme': activeSection !== 0 }]">
     <div class="tabs">
       <span 
         v-for="(tab, index) in tabs" 
         :key="tab" 
         class="tab" 
+        :class="{ active: activeSection === index }"
         @click="scrollToSection(index)">
         {{ tab }}
       </span>
@@ -16,6 +17,12 @@
 <script>
 export default {
   name: 'HeaderBanner',
+  props: {
+    activeSection: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       tabs: ['Home', 'Parler d amour', '...dans les années 80 ', '...et aujourd hui?', 'L equipe']
@@ -39,16 +46,28 @@ export default {
   padding: 10px 20px;
   z-index: 3;
   color: white;
+}
+&:hover {
   mix-blend-mode: difference;
+}
+
+.header-banner.dark-theme {
+  color: black;
 }
 
 .tabs {
   display: flex;
+
 }
 
 .tab {
   margin-right: 20px;
   cursor: pointer;
+}
+
+.tab.active {
+  font-weight: bold;
+  color: #A7CF90;
 }
 
 .header-button {

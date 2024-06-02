@@ -1,6 +1,6 @@
 <template>
   <div ref="parallaxSection" class="parallax-container">
-    <div :class="{'fixed-center': isFixed, 'absolute-center': !isFixed}">
+    <div :class="{'fixed-center': isVisible, 'absolute-center': !isVisible}">
       <h3>Les années 80 selon Mona</h3>
       <h2 class="date">{{ currentYear }}</h2>
     </div>
@@ -31,12 +31,17 @@ import mediaData from '/src/assets/img/years/videoLinks.json';
 gsap.registerPlugin(ScrollTrigger);
 
 export default {
-  name: "ParallaxComponent",
+  name: "Section3",
+  props: {
+    isVisible: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
       years: Object.keys(mediaData),
       currentYear: 1980,
-      isFixed: false,
       mediaData
     };
   },
@@ -52,22 +57,12 @@ export default {
     setupAnimations() {
       const years = this.years;
 
-      ScrollTrigger.create({
-        trigger: this.$refs.parallaxSection,
-        start: "top 80%",
-        end: "bottom 20%",
-        onEnter: () => this.isFixed = true,
-        onLeave: () => this.isFixed = false,
-        onEnterBack: () => this.isFixed = true,
-        onLeaveBack: () => this.isFixed = false,
-      });
-
       years.forEach((year, index) => {
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: `.year-section-${index}`,
-            start: "top center",
-            end: "bottom center",
+            start: "top 80%", // Section starts to come into view
+            end: "bottom 20%",   // Section is still in view
             scrub: true,
             onEnter: () => this.currentYear = year,
             onEnterBack: () => this.currentYear = year,
@@ -152,11 +147,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* overflow-y: auto; */
 }
 
 .media-item {
-  margin-bottom: -40px
+  margin-bottom: 20px;
 }
 
 .media-item iframe, .media-item img {

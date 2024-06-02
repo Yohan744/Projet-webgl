@@ -13,6 +13,28 @@
         </div>
       </div>
     </div>
+    <div class="thanks-section">
+      <h2>Remerciements</h2>
+      <p>
+        Aux professeurs : Eric Gaudet-Traffy, Yann Qilquin et les KIDS : Guillaume Imbert & Vincent Larsonneur ainsi qu’à L’école by CCi Digital Campus & les Gobelins Paris
+      </p>
+      <p>
+        Compositeurs : Emmanuel (Nom ?) et Damien Lacore
+      </p>
+      <p>
+        Voix off : 
+        <br>Marguerite : mamie de Léa
+        <br>Dahlia : Léa Simonet
+        <br>Sam : 
+        <br>Mona : 
+      </p>
+      <p>
+        Projet scolaire réalisé dans le cadre du Master 1 ECNI aux Gobelins l’école de l’image
+      </p>
+      <p>
+        Tous droits réservés - 2024
+      </p>
+    </div>
   </div>
 </template>
 
@@ -83,5 +105,20 @@ export default {
 .item-title {
   font-size: 1em;
   color: #666;
+}
+
+.thanks-section {
+  margin-top: 50px;
+  text-align: left;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.thanks-section h2 {
+  margin-bottom: 20px;
+}
+
+.thanks-section p {
+  margin-bottom: 10px;
 }
 </style>
