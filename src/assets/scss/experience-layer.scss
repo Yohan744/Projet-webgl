@@ -118,6 +118,7 @@
       height: 35px;
       width: 35px;
       margin-left: 20px;
+      overflow: hidden;
 
       img {
         position: relative;
@@ -125,7 +126,7 @@
         width: auto;
         filter: grayscale(100%);
         opacity: 0.5;
-        transform: scale(0.95);
+        transform: scale(1.1);
         transition: filter 1.25s $ease-power3-out, opacity 1.25s $ease-power3-out, transform 1.25s $ease-power3-out;
       }
 

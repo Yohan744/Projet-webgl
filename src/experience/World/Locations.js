@@ -38,11 +38,13 @@ export default class Locations {
         ]
 
         this.locationsOffset = [
-            new THREE.Vector3(0, 0.05, 0),
-            new THREE.Vector3(0, 0.05, 0),
-            new THREE.Vector3(0, 0.1, 0),
-            new THREE.Vector3(0, 0.1, 0),
+            new THREE.Vector3(0, -0.05, 0),
+            new THREE.Vector3(0, -0.05, 0),
+            new THREE.Vector3(0, -0.05, 0),
+            new THREE.Vector3(0, -0.05, 0),
         ]
+
+        this.sizeLocations = [0.8, 0.9, 0.8, 0.8]
 
         this.locationsGameIdApparition = [1, 2, 4, 3]
 
@@ -56,7 +58,7 @@ export default class Locations {
 
         for (let i = 0; i < this.locationsPositions.length; i++) {
 
-            const geometry = new THREE.PlaneGeometry(0.8, 0.8)
+            const geometry = new THREE.PlaneGeometry(this.sizeLocations[i], this.sizeLocations[i], 1, 1)
             geometry.rotateX(-Math.PI * 0.5)
 
             const location = new THREE.Mesh(

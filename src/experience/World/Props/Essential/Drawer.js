@@ -4,59 +4,68 @@ import gsap from "gsap";
 import {useInteractableObjects} from "../../ObjectsInteractable";
 import Outline from "../../Effects/Outline";
 import {watch} from "vue";
+import EventEmitter from "../../../Utils/EventEmitter";
 
-export default class Drawer {
+export default class Drawer extends EventEmitter{
     constructor(mesh) {
+
+        super()
+
         this.experience = new Experience();
         this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
         this.globalEvents = this.experience.globalEvents;
-        this.interactableObjects = useInteractableObjects();
         this.mesh = mesh;
 
         this.isOpen = false;
         this.drawerBasicPosition = this.mesh.position.clone();
 
-        this.drawerOutline = new Outline(this.mesh, 1.02);
+        this.drawerOutline = new Outline(this.mesh, 1.005);
         this.pointer.on('click', this.handleClick.bind(this));
 
-        this.setWatchers()
+        this.experience.on('ready', () => {
+            this.interactableObjects = useInteractableObjects();
+            this.setWatchers()
+        })
 
     }
 
     setWatchers() {
-        watch(() => this.gameManager.state.isInteractingWithObject, (state) => {
-            if (!state && this.gameManager.state.actualObjectInteractingName === "drawer") {
-                this.drawerOutline.showOutline()
-                this.animateDrawer()
-                this.gameManager.setActualObjectInteractingName(null)
-            }
+
+        this.interactableObjects.envelopModel.on('envelopIsNoLongerIsSky', () => {
+            this.drawerOutline.showOutline()
+            this.animateDrawer(false)
+            this.gameManager.setActualObjectInteractingName(null)
         })
+
     }
 
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
-        if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot && this.gameManager.state.isInteractingWithObject === false) {
+        if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot && this.gameManager.state.isInteractingWithObject === false && !this.isOpen) {
             this.drawerOutline.removeOutline()
-            this.animateDrawer();
+            this.animateDrawer(true);
             this.gameManager.updateInteractingState(true);
             this.gameManager.setActualObjectInteractingName("drawer");
             this.globalEvents.trigger('change-cursor', {name: 'default'})
         }
     }
 
-    animateDrawer() {
+    animateDrawer(state) {
         gsap.to(this.mesh.position, {
-            x: this.isOpen ? this.drawerBasicPosition.x : '+=' + 0.3,
-            z: this.isOpen ? this.drawerBasicPosition.z : '+=' + 0.3,
+            x: state ? '+=' + 0.3 : this.drawerBasicPosition.x,
+            z: state ? '+=' + 0.3 : this.drawerBasicPosition.z,
             duration: 1.5,
             ease: 'power2.inOut',
+            onStart: () => {
+                this.trigger('drawer-animation', [state])
+            },
             onUpdate: () => {
                 this.drawerOutline.updateOutlineMeshPosition(this.mesh.position)
             },
             onComplete: () => {
-                if (!this.isOpen) {
-                    // this.positionEnvelopeInDrawer();
+                if (state) {
+                    this.trigger('envelop-animation')
                 }
                 this.isOpen = !this.isOpen;
             }

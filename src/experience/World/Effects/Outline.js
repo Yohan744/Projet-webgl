@@ -65,6 +65,11 @@ export default class Outline {
         })
     }
 
+    resetOutline() {
+        this.destroy()
+        this.init()
+    }
+
     destroy() {
         this.scene.remove(this.clonedModel)
         this.clonedModel.traverse(child => {

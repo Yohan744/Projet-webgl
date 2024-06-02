@@ -5,16 +5,17 @@ import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
 import Picture from "./Props/Essential/Picture";
 import Drawer from "./Props/Essential/Drawer";
-import Envelop from "./Props/Essential/Envelop";
 import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
-import { watch } from "vue";
+import Envelop from "./Props/Essential/Envelop";
 import * as THREE from "three";
+import Pencil from "./Props/Essential/Pencil";
+import TopChest from "./Props/Essential/TopChest";
+import BottomChest from "./Props/Essential/BottomChest";
 
 
 const interactableObjects = {};
 const interactableMesh = [];
-const itemGroup = new THREE.Group();
 
 export default class ObjectsInteractable {
 
@@ -26,7 +27,7 @@ export default class ObjectsInteractable {
         this.gameManager = this.experience.gameManager;
 
         this.projectorModel = [];
-        this.cassetteModel = [];
+        this.cassetteModels = [];
 
         if (this.scene) {
             this.init();
@@ -34,24 +35,6 @@ export default class ObjectsInteractable {
     }
 
     init() {
-        watch(() => this.gameManager.state.isPencilInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isCassetteInFrontOfCamera) {
-                const pencil = this.experience.objectGroup.children.find(obj => obj.userData.type === 'pencil');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (pencil) pencil.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
-        watch(() => this.gameManager.state.isCassetteInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isWalkmanInFrontOfCamera) {
-                const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (walkman) walkman.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
 
         this.objectsInteractableModel = this.resources.items.objectsInteractableModel.scene;
 
@@ -64,6 +47,7 @@ export default class ObjectsInteractable {
                 if (name.includes("walkman")) {
                     child.material = this.materialLibrary.getWalkmanMaterial();
                     this.walkman = new Walkman(child);
+                    interactableObjects.walkmanInstance = this.walkman;
 
                 } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial();
@@ -72,16 +56,24 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child);
 
                 } else if (name.includes("cartepostale") || name.includes('cartespostales')) {
-                    if (name.includes('biarritz')) child.material = this.materialLibrary.getPostalCardBiarritzMaterial();
-                    if (name.includes('plage')) child.material = this.materialLibrary.getPostalCardBeachMaterial();
-                    if (name.includes('maison')) child.material = this.materialLibrary.getPostalCardHouseMaterial();
+                    if (name.includes('biarritz')) {
+                        child.material = this.materialLibrary.getPostalCardBiarritzMaterial();
+                        interactableObjects.cartePostaleBiarritz = child;
+                    }
+                    if (name.includes('plage')) {
+                        child.material = this.materialLibrary.getPostalCardBeachMaterial();
+                        interactableObjects.cartePostalePlage = child;
+                    }
+                    if (name.includes('maison')) {
+                        child.material = this.materialLibrary.getPostalCardHouseMaterial();
+                        interactableObjects.cartePostaleMaison = child;
+                    }
                     interactableMesh.push(child);
 
                 } else if (name.includes("dahlia")) {
                     child.material = this.materialLibrary.getDahliaMaterial();
                     this.dahlia = new Dahlia(child);
                     interactableObjects.dahlia = this.dahlia;
-                    itemGroup.dalhia = child;
 
                 } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial();
@@ -89,33 +81,31 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child);
 
                 } else if (name.includes("malle")) {
-                    if (name.includes('haut')) {
-                        child.material = this.materialLibrary.getTopChestMaterial();
-                        this.topChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
-                        interactableObjects.topChest = this.topChest;
-                        interactableMesh.push(child);
-                    }
+                        if (name.includes('haut')) {
+                            child.material = this.materialLibrary.getTopChestMaterial();
+                            this.topChest = new TopChest(child);
+                            interactableObjects.topChest = this.topChest;
+                            interactableMesh.push(child);
+                        }
 
-                    if (name.includes('bas')) {
-                        child.material = this.materialLibrary.getBottomChestMaterial();
-                        this.bottomChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
-                        interactableObjects.bottomChest = this.bottomChest;
-                        interactableMesh.push(child);
-                    }
+                        if (name.includes('bas')) {
+                            child.material = this.materialLibrary.getBottomChestMaterial();
+                            this.bottomChest = new BottomChest(child);
+                            interactableObjects.bottomChest = this.bottomChest;
+                            interactableMesh.push(child);
+                        }
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {
                     child.material = this.materialLibrary.getBlackMaterial();
-                    this.cassetteModel.push(child);
+                    this.cassetteModels.push(child);
 
                 } else if (name === 'corps') {
                     child.material = this.materialLibrary.getCassetteMaterial();
-                    this.cassetteModel.push(child);
-                    interactableObjects.cassette = this.cassetteModel;
-                    itemGroup.cassette = this.cassetteModel;
+                    this.cassetteModels.push(child);
 
                 } else if (name.includes("crayon")) {
                     child.material = this.materialLibrary.getPencilMaterial();
-                    this.pencil = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
+                    this.pencil = new Pencil(child);
                     interactableObjects.pencil = this.pencil;
                     interactableMesh.push(child);
 
@@ -145,7 +135,6 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getLetterMaterial();
                     this.lettre = new Letter(child);
                     interactableObjects.lettre = this.lettre;
-                    itemGroup.lettre = child;
 
                 } else if (name.includes("tableau_magique1")) {
                     child.material = this.materialLibrary.getTelecranMaterial();
@@ -174,7 +163,8 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child)
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
-                    child.material = this.materialLibrary.getVinylMaterial();
+                    if (name === 'vynyle') child.material = this.materialLibrary.getVinylMaterial();
+                    if (name === 'vynyle1') child.material = this.materialLibrary.getVinylUpMaterial();
 
                 } else if (name === 'photo') {
                     child.material = this.materialLibrary.getPictureMaterial()
@@ -191,14 +181,15 @@ export default class ObjectsInteractable {
         });
 
         this.projector = new Projector(this.projectorModel);
-        this.cassette = new Cassette(this.cassetteModel);
+        this.cassette = new Cassette(this.cassetteModels);
+        interactableObjects.cassette = this.cassette;
 
         this.scene.add(this.objectsInteractableModel)
 
     }
 
     update() {
-
+        if (this.topChest) this.topChest.update();
     }
 
     destroy() {

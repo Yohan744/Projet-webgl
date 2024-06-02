@@ -478,6 +478,7 @@ export default [
                 type: 'group',
                 textures: {
                     diffuse: 'assets/textures/objectsInteractable/vinyl/diffuse.webp',
+                    diffuse2: 'assets/textures/objectsInteractable/vinyl/diffuse2.webp',
                 }
             },
 

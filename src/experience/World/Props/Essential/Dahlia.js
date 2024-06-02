@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
 import Prop from "../Prop";
+import {useInteractableObjects} from "../../ObjectsInteractable";
 
 export default class Dahlia {
     constructor(mesh) {
@@ -9,6 +10,12 @@ export default class Dahlia {
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
         this.mesh = mesh;
+
+        this.experience.on('ready', () => {
+
+            this.interactableObjects = useInteractableObjects();
+
+        })
 
     }
 

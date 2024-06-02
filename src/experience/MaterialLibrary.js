@@ -84,6 +84,7 @@ let recordPlayerMaterial,
     pencilMaterial,
     pictureMaterial,
     vinylMaterial,
+    vinylUpMaterial,
     projectorTireuseMaterial,
     projectorRailMaterial,
     projectorButtonMaterial,
@@ -887,6 +888,7 @@ export default class MaterialLibrary {
         if (!cassetteMaterial) {
             cassetteMaterial = new MeshBasicMaterial({
                 map: this.resources.items.cassette.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -900,7 +902,8 @@ export default class MaterialLibrary {
         if (!enveloppeMaterial) {
             enveloppeMaterial = new MeshBasicMaterial({
                 map: this.resources.items.enveloppe.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                transparent: true,
+                side: DoubleSide
             })
 
             this.materialsUsed.push(enveloppeMaterial)
@@ -913,6 +916,7 @@ export default class MaterialLibrary {
         if (!dahliaMaterial) {
             dahliaMaterial = new MeshBasicMaterial({
                 map: this.resources.items.dahlia.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -926,6 +930,7 @@ export default class MaterialLibrary {
         if (!postalCardBiarritzMaterial) {
             postalCardBiarritzMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -939,6 +944,7 @@ export default class MaterialLibrary {
         if (!postalCardBeachMaterial) {
             postalCardBeachMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse2,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -952,6 +958,7 @@ export default class MaterialLibrary {
         if (!postalCardHouseMaterial) {
             postalCardHouseMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse3,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -991,6 +998,7 @@ export default class MaterialLibrary {
         if (!letterMaterial) {
             letterMaterial = new MeshBasicMaterial({
                 map: this.resources.items.letter.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -1077,6 +1085,19 @@ export default class MaterialLibrary {
         }
 
         return vinylMaterial
+    }
+
+    getVinylUpMaterial() {
+        if (!vinylUpMaterial) {
+            vinylUpMaterial = new MeshBasicMaterial({
+                map: this.resources.items.vinyl.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(vinylUpMaterial)
+        }
+
+        return vinylUpMaterial
     }
 
     /////////////////////////// PROJECTOR MATERIALS ///////////////////////////
@@ -1192,7 +1213,8 @@ export default class MaterialLibrary {
     getBlackMaterial() {
         if (!blackMaterial) {
             blackMaterial = new MeshBasicMaterial({
-                color: 0x000000,
+                color: '#000000',
+                transparent: true,
                 side: FrontSide
             })
 

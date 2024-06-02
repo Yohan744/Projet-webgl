@@ -254,9 +254,6 @@ export default class Camera {
 
     moveCameraBackToSpotAfterProjector() {
 
-        if (this.isMoving) return
-        this.isMoving = true
-
         const spot = this.experience.world.locations.spots[0];
         const spotPosition = spot.position.clone();
         const lookingPoint = spot.data.lookingPoint.clone();
@@ -304,45 +301,6 @@ export default class Camera {
             }
         });
 
-    }
-
-    moveCameraToDrawer(targetObject) {
-        this.originalPosition = this.modes.default.instance.position.clone();
-        this.originalLookAt = this.lookingPoint.clone();
-
-        this.isMoving = true;
-        targetObject.updateMatrixWorld(true);
-        const objectPosition = new THREE.Vector3();
-        targetObject.getWorldPosition(objectPosition);
-
-        const cameraPosition = objectPosition.clone().add(new THREE.Vector3(0, 0, 0));
-        const tmp = this.basicLookingPoint.clone().add(new THREE.Vector3(0, -2, 0));
-        const tmpLookingPoint = this.getNormalizedLookingPoint(this.instance.position, tmp);
-
-        const tl = gsap.timeline();
-
-        gsap.to(this.modes.default.instance.position, {
-            x: cameraPosition.x + 0.2,
-            y: this.modes.default.instance.position.y,
-            z: cameraPosition.z + 0.4,
-            duration: 1,
-            ease: "power1.inOut",
-            onUpdate: () => {
-                this.instance.lookAt(objectPosition);
-            },
-            onComplete: () => {
-                this.gameManager.updateCameraOnSpot(true);
-                this.isMoving = false;
-                console.log("peut-être que ça pourra marcher")
-            }
-        });
-        tl.to(this.lookingPoint, {
-            x: tmpLookingPoint.x,
-            y: tmpLookingPoint.y,
-            z: tmpLookingPoint.z,
-            duration: 1,
-            ease: 'power1.in'
-        });
     }
 
     moveCameraToInitialPosition(onComplete) {
