@@ -38,10 +38,10 @@ export default class Locations {
         ]
 
         this.locationsOffset = [
-            new THREE.Vector3(0, 0.05, 0),
-            new THREE.Vector3(0, 0.05, 0),
-            new THREE.Vector3(0, 0.1, 0),
-            new THREE.Vector3(0, 0.1, 0),
+            new THREE.Vector3(0, -0.05, 0),
+            new THREE.Vector3(0, -0.05, 0),
+            new THREE.Vector3(0, -0.05, 0),
+            new THREE.Vector3(0, -0.05, 0),
         ]
 
         this.sizeLocations = [0.8, 0.9, 0.8, 0.8]
