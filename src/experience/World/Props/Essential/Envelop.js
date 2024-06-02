@@ -31,6 +31,8 @@ export default class Envelop extends EventEmitter {
         this.carouselReady = false
         this.carouselIsMoving = false
         this.isDragging = false
+        this.isRotating = false
+        this.objectRotating = null
 
         this.carousel = new THREE.Group();
         this.carouselIndex = 1
@@ -93,7 +95,7 @@ export default class Envelop extends EventEmitter {
         })
 
         this.pointer.on('click', this.handleClick.bind(this));
-        this.pointer.on('click-release', () => this.isDragging = false);
+        this.pointer.on('click-release', this.handleClickRelease.bind(this));
         this.pointer.on('movement-orbit', this.handleMouseMove.bind(this));
 
     }
@@ -165,18 +167,43 @@ export default class Envelop extends EventEmitter {
             this.isEnvelopOpen = true
         }
 
+        const intersectsCarousel = this.pointer.raycaster.intersectObjects(this.items, true);
         if (this.isEnvelopOpen && this.carouselReady) {
             this.initialMousePositionOnClick = {x: this.pointer.mouse.x, y: this.pointer.mouse.y}
-            this.isDragging = true
+            if (intersectsCarousel.length > 0) {
+                this.isRotating = true
+                this.objectRotating = intersectsCarousel[0].object
+            } else {
+                this.isDragging = true
+            }
         }
     }
 
+    handleClickRelease() {
+        this.isDragging = false
+        this.isRotating = false
+        this.objectRotating = null
+    }
+
     handleMouseMove() {
-        if (this.isDragging && this.isEnvelopOpen && this.carouselReady) {
+        if (this.isEnvelopOpen && this.carouselReady) {
+
             const x = this.pointer.getMousePosition().x
             const d = x - this.initialMousePositionOnClick.x
-            this.animateCarouselItemsOnSide(d > 0 ? 1 : -1)
-            this.isDragging = false
+
+            if (this.isDragging) {
+                this.animateCarouselItemsOnSide(d > 0 ? 1 : -1)
+                this.isDragging = false
+            }
+
+            if (this.isRotating && this.objectRotating) {
+                if (this.objectRotating.name === 'corps' || this.objectRotating.name.includes('bobine')) {
+                    this.cassette.rotation.z = this.lerp(this.cassette.rotation.z, this.cassette.rotation.z + d * 0.1, 0.99)
+                } else {
+                    this.objectRotating.rotation.y = this.lerp(this.objectRotating.rotation.y, this.objectRotating.rotation.y + d * 0.1, 0.99)
+                }
+            }
+
         }
     }
 
@@ -416,7 +443,7 @@ export default class Envelop extends EventEmitter {
                 } else if (value === 0) {
                     this.globalEvents.trigger('change-cursor', {name: 'default'})
                     this.envelopOutline.removeOutline()
-                    this.animateCarouselItems(true, 0.65)
+                    this.animateCarouselItems(true, 0.75)
                 }
             },
             onComplete: () => {
@@ -433,6 +460,19 @@ export default class Envelop extends EventEmitter {
             group.add(mesh);
         });
         return group;
+    }
+
+    lerp (a, b, t) {
+        return (1 - t) * a + t * b;
+    }
+
+    destroy() {
+        this.scene.remove(this.mesh);
+        this.scene.remove(this.carousel);
+        this.mesh.geometry.dispose();
+        this.pointer.off('click', this.handleClick.bind(this));
+        this.pointer.off('click-release', this.handleClickRelease.bind(this));
+        this.pointer.off('movement-orbit', this.handleMouseMove.bind(this));
     }
 
 }

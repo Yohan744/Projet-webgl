@@ -11,7 +11,11 @@
 <script>
 
 import {useGameManager} from "../assets/js/GameManager";
-import cassetteIcon from '../assets/icons/objects/cassette.png';
+import projectorIcon from '../assets/icons/objects/projector.webp';
+import pencilIcon from '../assets/icons/objects/pencil.webp';
+import walkmanIcon from '../assets/icons/objects/walkman.webp';
+import envelopeIcon from '../assets/icons/objects/envelope.webp';
+
 
 export default {
   name: 'Inventory',
@@ -24,11 +28,11 @@ export default {
   data() {
     return {
       inventoryItems: [
-        { name: 'picture', imageSrc: cassetteIcon },
-        { name: 'projector', imageSrc: cassetteIcon },
-        { name: 'drawer', imageSrc: cassetteIcon },
-        { name: 'pencil', imageSrc: cassetteIcon },
-        { name: 'walkman', imageSrc: cassetteIcon },
+        { name: 'picture', imageSrc: envelopeIcon },
+        { name: 'projector', imageSrc: projectorIcon },
+        { name: 'envelope', imageSrc: envelopeIcon },
+        { name: 'pencil', imageSrc: pencilIcon },
+        { name: 'walkman', imageSrc: walkmanIcon },
       ],
     }
   },

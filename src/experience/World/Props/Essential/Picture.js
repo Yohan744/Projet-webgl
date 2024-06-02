@@ -16,6 +16,7 @@ export default class Picture {
         this.materialLibrary = new MaterialLibrary()
 
         this.isEnabled = false
+        this.group = new THREE.Group();
 
         this.photoModel = mesh;
         this.displacedParticles = 0;
@@ -30,9 +31,12 @@ export default class Picture {
         this.rotationInitiated = false;
 
         if (this.gameManager.state.gameStepId === 0) {
-            this.init();
-            this.setupParticles();
-            this.setupGridCells();
+
+            this.experience.on('ready', () => {
+                this.init();
+                this.setupParticles();
+                this.setupGridCells();
+            })
 
             this.pointer.on('movement-picture', this.onMouseMove.bind(this));
 
@@ -53,15 +57,14 @@ export default class Picture {
         this.photoModel.material.depthWrite = false;
         this.experience.renderer.toggleBlurEffect(true);
 
-        this.group = new THREE.Group();
         this.group.position.copy(this.photoModel.position);
         this.photoModel.position.set(0, 0, 0);
-        this.group.rotation.set(-0.23, 0, 0)
+        this.group.rotation.set(-0.23, 0, 0);
         this.group.add(this.photoModel);
         this.scene.add(this.group);
     }
 
-    setupParticles() {
+    setupParticles () {
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = this.rows * this.columns * this.particlesPerCell;
         const posArray = new Float32Array(particlesCount * 3);
