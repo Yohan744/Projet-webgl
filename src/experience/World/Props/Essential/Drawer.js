@@ -42,7 +42,7 @@ export default class Drawer extends EventEmitter{
 
     handleClick() {
         const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
-        if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot && this.gameManager.state.isInteractingWithObject === false) {
+        if (intersects.length > 0 && this.gameManager.state.isCameraOnSpot && this.gameManager.state.isInteractingWithObject === false && !this.isOpen) {
             this.drawerOutline.removeOutline()
             this.animateDrawer(true);
             this.gameManager.updateInteractingState(true);

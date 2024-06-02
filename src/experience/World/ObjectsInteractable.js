@@ -72,9 +72,18 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child);
 
                 } else if (name.includes("cartepostale") || name.includes('cartespostales')) {
-                    if (name.includes('biarritz')) child.material = this.materialLibrary.getPostalCardBiarritzMaterial();
-                    if (name.includes('plage')) child.material = this.materialLibrary.getPostalCardBeachMaterial();
-                    if (name.includes('maison')) child.material = this.materialLibrary.getPostalCardHouseMaterial();
+                    if (name.includes('biarritz')) {
+                        child.material = this.materialLibrary.getPostalCardBiarritzMaterial();
+                        interactableObjects.cartePostaleBiarritz = child;
+                    }
+                    if (name.includes('plage')) {
+                        child.material = this.materialLibrary.getPostalCardBeachMaterial();
+                        interactableObjects.cartePostalePlage = child;
+                    }
+                    if (name.includes('maison')) {
+                        child.material = this.materialLibrary.getPostalCardHouseMaterial();
+                        interactableObjects.cartePostaleMaison = child;
+                    }
                     interactableMesh.push(child);
 
                 } else if (name.includes("dahlia")) {

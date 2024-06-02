@@ -28,32 +28,35 @@ export default class Envelop extends EventEmitter {
         this.isEnvelopInSky = false
         this.isEnvelopReadyToBeOpened = false
         this.isEnvelopOpen = false;
+        this.carouselReady = false
+        this.carouselIsMoving = false
+        this.isDragging = false
 
         this.carousel = new THREE.Group();
         this.carouselIndex = 1
         this.carouselItemsOffset = 0.5;
-        this.dahliaBasicRotation = new THREE.Vector3(1.57, -0.25, 0);
-        this.letterBasicRotation = new THREE.Vector3(-1.57, 0, Math.PI);
-        this.cassetteBasicRotation = new THREE.Vector3(1.57, 0, 0);
+        this.dahliaBasicRotation = new THREE.Vector3(Math.PI * 0.5, -0.25, 0);
+        this.letterBasicRotation = new THREE.Vector3(-Math.PI * 0.5, 0, Math.PI);
+        this.cassetteBasicRotation = new THREE.Vector3(Math.PI * 0.5, 0, 0);
+        this.cartePostaleBasicRotation = new THREE.Vector3(-Math.PI, Math.PI * 0.5, -Math.PI * 0.5);
+        this.itemScaleArray = [1.3, 1, 1.2, 1.5, 1.5, 1.5]
+
+        this.initialMousePositionOnClick = {x: 0, y: 0}
 
         this.experience.on('ready', () => {
             this.interactableObjects = useInteractableObjects();
-            this.envelopOutline = new Outline(this.mesh, 1.005);
+            this.envelopOutline = new Outline(this.mesh, 1.01);
 
             this.initCarousel()
             this.setupMorphTargetsToInitialPosition()
             this.setWatchers()
 
-            this.debug = this.experience.debug
-
-            this.debugFolder = this.debug.addFolder({title: 'Envelop'})
-            this.debugFolder.addBinding(this.carousel.rotation, 'x', {label: 'Carousel Rotation x', min: -Math.PI, max: Math.PI, step: 0.01})
-            this.debugFolder.addBinding(this.carousel.rotation, 'y', {label: 'Carousel Rotation y', min: -Math.PI, max: Math.PI, step: 0.01})
-            this.debugFolder.addBinding(this.carousel.rotation, 'z', {label: 'Carousel Rotation z', min: -Math.PI, max: Math.PI, step: 0.01})
-
-            this.debugFolder.addBinding(this.carousel.position, 'x', {label: 'Carousel Position x', min: -10, max: 10, step: 0.01})
-            this.debugFolder.addBinding(this.carousel.position, 'z', {label: 'Carousel Position z', min: -10, max: 10, step: 0.01})
-
+            // this.debug = this.experience.debug
+            //
+            // this.debugFolder = this.debug.addFolder({title: 'Envelop'})
+            // this.debugFolder.addBinding(this.cartePostaleBiarritz.rotation, 'x', {label: 'Carousel Rotation x', min: -Math.PI, max: Math.PI, step: 0.01})
+            // this.debugFolder.addBinding(this.cartePostaleBiarritz.rotation, 'y', {label: 'Carousel Rotation y', min: -Math.PI, max: Math.PI, step: 0.01})
+            // this.debugFolder.addBinding(this.cartePostaleBiarritz.rotation, 'z', {label: 'Carousel Rotation z', min: -Math.PI, max: Math.PI, step: 0.01})
 
         })
 
@@ -71,14 +74,16 @@ export default class Envelop extends EventEmitter {
         watch(() => this.gameManager.state.isInteractingWithObject, (state) => {
             if (!state && this.gameManager.state.actualObjectInteractingName === "drawer") {
 
-                this.animateCarouselItems(false, 0)
-
-                if (this.isEnvelopOpen) this.animateMorphTargets(false)
-
                 if (!this.isEnvelopInSky) {
                     this.trigger('envelopIsNoLongerIsSky')
                 } else {
-                    this.animateEnvelopToSky(false)
+                    if (this.isEnvelopOpen) {
+                        gsap.delayedCall(1.5, () => {
+                            this.animateMorphTargets(false)
+                        })
+                    }
+                    this.animateCarouselItems(false, 0)
+                    this.animateEnvelopToSky(false, 1.5)
                 }
 
                 this.globalEvents.trigger('change-cursor', {name: 'default'})
@@ -88,6 +93,8 @@ export default class Envelop extends EventEmitter {
         })
 
         this.pointer.on('click', this.handleClick.bind(this));
+        this.pointer.on('click-release', () => this.isDragging = false);
+        this.pointer.on('movement-orbit', this.handleMouseMove.bind(this));
 
     }
 
@@ -103,11 +110,12 @@ export default class Envelop extends EventEmitter {
         });
     }
 
-    animateEnvelopToSky(state) {
+    animateEnvelopToSky(state, delay = 0) {
         gsap.to(this.mesh.position, {
             x: state ? '+=' + 0.7 : this.envelopBasicPosition.x + 0.1,
             y: state ? '+=' + 0.9 : this.envelopBasicPosition.y,
             z: state ? '+=' + 0.75 : this.envelopBasicPosition.z + 0.1,
+            delay: delay,
             duration: state ? 1.5 : 2,
             ease: 'power2.inOut',
             onStart: () => {
@@ -125,6 +133,7 @@ export default class Envelop extends EventEmitter {
                 if (!state) {
                     this.isEnvelopInSky = false
                     this.trigger('envelopIsNoLongerIsSky')
+                    this.carouselIndex = 1
                 } else {
                     this.globalEvents.trigger('change-cursor', {name: 'click'})
                     this.isEnvelopReadyToBeOpened = true
@@ -152,13 +161,28 @@ export default class Envelop extends EventEmitter {
             this.setupMorphTargetsToInitialPosition()
             this.animateMorphTargets(true)
             this.updateMeshOpacity(0, 1.5)
+            this.animateCarouselItemsScale()
             this.isEnvelopOpen = true
+        }
+
+        if (this.isEnvelopOpen && this.carouselReady) {
+            this.initialMousePositionOnClick = {x: this.pointer.mouse.x, y: this.pointer.mouse.y}
+            this.isDragging = true
+        }
+    }
+
+    handleMouseMove() {
+        if (this.isDragging && this.isEnvelopOpen && this.carouselReady) {
+            const x = this.pointer.getMousePosition().x
+            const d = x - this.initialMousePositionOnClick.x
+            this.animateCarouselItemsOnSide(d > 0 ? 1 : -1)
+            this.isDragging = false
         }
     }
 
     initCarousel() {
 
-        this.carousel.position.set(-2.5, 2.15, -3.26);
+        this.carousel.position.set(-2.44, 2.15, -3.19);
         this.carousel.rotation.y = 0.625;
         this.carousel.visible = false;
 
@@ -166,24 +190,40 @@ export default class Envelop extends EventEmitter {
         this.letter = this.interactableObjects.lettre.mesh
         const cassetteMeshes = this.interactableObjects.cassette
         this.cassette = this.mergeMeshes(cassetteMeshes)
+        this.cartePostaleBiarritz = this.interactableObjects.cartePostaleBiarritz
+        this.cartePostalePlage = this.interactableObjects.cartePostalePlage
+        this.cartePostaleMaison = this.interactableObjects.cartePostaleMaison
 
         this.dahlia.rotation.order = 'YXZ';
         this.letter.rotation.order = 'YXZ';
         this.cassette.rotation.order = 'YXZ';
+        this.cartePostaleBiarritz.rotation.order = 'YXZ';
+        this.cartePostalePlage.rotation.order = 'YXZ';
+        this.cartePostaleMaison.rotation.order = 'YXZ';
 
         this.dahlia.material.opacity = 0;
         this.letter.material.opacity = 0;
         this.cassette.opacity = 0;
+        this.cartePostaleBiarritz.opacity = 0;
+        this.cartePostalePlage.opacity = 0;
+        this.cartePostaleMaison.opacity = 0;
 
-        this.carousel.add(this.dahlia, this.letter, this.cassette);
+        this.carousel.add(this.dahlia, this.letter, this.cassette, this.cartePostaleBiarritz, this.cartePostalePlage, this.cartePostaleMaison);
+        this.items = [this.dahlia, this.letter, this.cassette, this.cartePostaleBiarritz, this.cartePostalePlage, this.cartePostaleMaison];
 
         this.dahlia.position.set(0, 0, 0);
         this.letter.position.set(0, 0, 0);
         this.cassette.position.set(0, 0, 0);
+        this.cartePostaleBiarritz.position.set(0, 0, 0);
+        this.cartePostalePlage.position.set(0, 0, 0);
+        this.cartePostaleMaison.position.set(0, 0, 0);
 
         this.dahlia.rotation.setFromVector3(this.dahliaBasicRotation, 'YXZ');
         this.letter.rotation.setFromVector3(this.letterBasicRotation, 'YXZ');
         this.cassette.rotation.setFromVector3(this.cassetteBasicRotation, 'YXZ');
+        this.cartePostaleBiarritz.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
+        this.cartePostalePlage.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
+        this.cartePostaleMaison.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
 
         this.scene.add(this.carousel);
 
@@ -191,23 +231,24 @@ export default class Envelop extends EventEmitter {
 
     animateCarouselItems(state, delay) {
 
-        this.experience.renderer.toggleBlurEffect(state, 0)
+        this.experience.renderer.toggleBlurEffect(state, state ? 0.35 : 0)
 
-        const items = [this.dahlia, this.letter, this.cassette];
-        items.forEach((item, index) => {
+        this.items.forEach((item, index) => {
 
             gsap.to(item.position, {
                 x: state ? this.carouselItemsOffset * (index - 1) : 0,
-                z: state ? this.carouselItemsOffset * 0.5 : 0,
-                delay: 0.05 * index + delay,
+                z: state ? this.carouselItemsOffset * 0.75 : 0,
+                delay: 0.1 * index + delay,
                 duration: 1.5,
                 ease: 'power2.inOut',
                 onStart: () => {
                     if (state) this.carousel.visible = true
-                    if (!state) this.updateMeshOpacity(1, 0)
+                    if (!state) this.updateMeshOpacity(1, 1.2)
+                    if (!state) this.carouselReady = false
                 },
                 onComplete: () => {
                     if (!state) this.carousel.visible = false
+                    if (state) this.carouselReady = true
                 }
             })
 
@@ -216,7 +257,7 @@ export default class Envelop extends EventEmitter {
                     if (child.material) {
                         gsap.to(child.material, {
                             opacity: state ? 1 : 0,
-                            delay: 0.15 * index + delay,
+                            delay: 0.1 * index + delay,
                             duration: 1.5,
                             ease: 'power2.inOut',
                         })
@@ -225,11 +266,59 @@ export default class Envelop extends EventEmitter {
             } else {
                 gsap.to(item.material, {
                     opacity: state ? 1 : 0,
-                    delay: 0.05 * index + delay,
+                    delay: 0.1 * index + delay,
                     duration: 1.5,
                     ease: 'power2.inOut',
                 })
             }
+        })
+
+    }
+
+    animateCarouselItemsOnSide(side) {
+
+        if (this.carouselIsMoving || side === 1 && this.carouselIndex === 0 || side === -1 && this.carouselIndex === 5) return
+        this.carouselIsMoving = true
+
+        this.carouselIndex = side === 1 ? this.carouselIndex - 1 : this.carouselIndex + 1
+
+        this.items.forEach((item, index) => {
+            gsap.to(item.position, {
+                x: '+=' + this.carouselItemsOffset * side,
+                duration: 1,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    this.carouselIsMoving = false
+                }
+            })
+        })
+
+        this.animateCarouselItemsScale()
+
+    }
+
+    animateCarouselItemsScale() {
+
+        this.items.forEach((item, index) => {
+
+            if (index === this.carouselIndex) {
+                gsap.to(item.scale, {
+                    x: this.itemScaleArray[index],
+                    y: this.itemScaleArray[index],
+                    z: this.itemScaleArray[index],
+                    duration: 1,
+                    ease: 'power2.inOut',
+                })
+            } else {
+                gsap.to(item.scale, {
+                    x: 0.6,
+                    y: 0.6,
+                    z: 0.6,
+                    duration: 1,
+                    ease: 'power2.inOut'
+                })
+            }
+
         })
 
     }
@@ -310,6 +399,8 @@ export default class Envelop extends EventEmitter {
         for (let i = 0; i < this.mesh.morphTargetInfluences.length; i++) {
             this.mesh.morphTargetInfluences[i] = 0;
         }
+        this.mesh.morphTargetInfluences[40] = 1;
+        this.mesh.morphTargetInfluences[41] = 1;
         this.envelopOutline.resetOutline()
         this.envelopOutline.removeOutline()
     }
@@ -325,7 +416,7 @@ export default class Envelop extends EventEmitter {
                 } else if (value === 0) {
                     this.globalEvents.trigger('change-cursor', {name: 'default'})
                     this.envelopOutline.removeOutline()
-                    this.animateCarouselItems(true, 0.2)
+                    this.animateCarouselItems(true, 0.65)
                 }
             },
             onComplete: () => {
