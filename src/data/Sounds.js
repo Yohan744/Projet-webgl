@@ -27,6 +27,58 @@ export const data = {
         preload: true,
         loop: false,
     },
+    chest: {
+        src: fx + 'malle.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    bouton: {
+        src: fx + 'BoutonOn.wav',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    fermetureWalkman: {
+        src: fx + 'fermetureWalkman.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    ouvertureWalkman: {
+        src: fx + 'OuvertureWalkman.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    cassetteSet: {
+        src: fx + 'cassetteSet.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    inPocket: {
+        src: fx + 'pocketIn.mp3',
+        volume: 0.85,
+        preload: true,
+        loop: false,
+    },
+
+    outPocket: {
+        src: fx + 'pocketOut.mp3',
+        volume: 0.85,
+        preload: true,
+        loop: false,
+    },
+
+    headphoneOn: {
+        src: fx + 'headphoneOn.mp3',
+        volume: 0.85,
+        preload: true,
+        loop: false,
+    },
 
     cassette: {
         src: p + 'cassette.m4a',
@@ -42,13 +94,31 @@ export const data = {
         loop: false,
     },
 
+    rewind: {
+        src: fx + 'rattle.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: true,
+    },
+
     crayonFound: {
         src: p + 'crayon-trouver.m4a',
         volume: 0.75,
         preload: true,
         loop: false,
     },
-
+    grab: {
+        src: fx + 'crayonGrab.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    crayonDrop: {
+        src: fx + 'crayonDrop.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
     telephone: {
         src: p + 'telephone.m4a',
         volume: 0.75,

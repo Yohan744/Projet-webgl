@@ -27,6 +27,7 @@ export default class Cassette {
         this.corps = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'corps');
 
         this.objectsToAnimate = [this.bobine1, this.bobine2, this.bobine3, this.corps].filter(Boolean);
+        this.soundHasBeenPlayed = false;
 
         this.isRewinding = false;
         this.isFullyRewound = false;
@@ -71,13 +72,17 @@ export default class Cassette {
             targetPosition = new THREE.Vector3();
             targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
         }
-
+        this.soundManager.play("outPocket");
         gsap.to(this.cassetteGroup.position, {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
             duration: 2,
             ease: 'power2.inOut',
+            onComplete: () => {
+                this.walkman.soundHasBeenPlayed = true;
+                if (this.soundHasBeenPlayed) { this.soundManager.stop("walkman2"); }
+            }
         });
 
         gsap.to(this.cassetteGroup.rotation, {
@@ -120,6 +125,7 @@ export default class Cassette {
     }
 
     animateMorphTargets() {
+        this.soundManager.stop("outPocket");
         if (!this.isRewinding) return;
 
         let allMorphTargetsZero = true;
@@ -167,6 +173,7 @@ export default class Cassette {
                     duration: 1,
                     ease: 'power2.inOut',
                     onComplete: () => {
+                        this.soundManager.play("cassetteSet")
                         this.isPlacedInWalkman = true;
                         this.convertToLocalCoordinatesAndAddToWalkman();
                         this.walkman.prepareForClapetClose();
@@ -196,6 +203,7 @@ export default class Cassette {
     }
 
     startRewinding() {
+        this.soundManager.play("rewind");
         this.isRewinding = true;
         this.isFullyRewound = false;
         this.animateMorphTargets();
@@ -203,6 +211,7 @@ export default class Cassette {
 
     stopRewinding() {
         this.isRewinding = false;
+        this.soundManager.stop("rewind");
 
         if (this.isFullyRewound && !this.pencil.isDragging) {
             this.startInactivityTimer();
@@ -228,7 +237,11 @@ export default class Cassette {
             y: this.initialPosition.y,
             z: this.initialPosition.z,
             duration: 2,
-            ease: 'power2.inOut'
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.soundManager.stop("inPocket");
+                this.resetMovementStates();
+            }
         });
 
         gsap.to(this.cassetteGroup.rotation, {
@@ -238,6 +251,17 @@ export default class Cassette {
             duration: 2,
             ease: 'power2.inOut'
         });
+    }
+
+    resetMovementStates() {
+        this.isRewinding = false;
+        this.isFullyRewound = false;
+        this.isPlacedInWalkman = false;
+        this.soundHasBeenPlayed = false;
+
+
+        this.cassetteGroup.position.copy(this.initialPosition);
+        this.cassetteGroup.rotation.copy(this.initialRotation);
     }
 
     destroy() {

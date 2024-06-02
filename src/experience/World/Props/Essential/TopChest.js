@@ -9,7 +9,8 @@ export default class TopChest {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.pointer = this.experience.pointer;
-        this.camera = this.experience.camera
+        this.camera = this.experience.camera;
+        this.soundManager = this.experience.soundManager;
 
         this.mixer = null;
         this.actions = {};
@@ -39,9 +40,9 @@ export default class TopChest {
 
                 const newClip = new THREE.AnimationClip('animation_0_filtered', originalClip.duration, [positionTrack, quaternionTrack]);
                 const action = this.mixer.clipAction(newClip);
-                action.setLoop(THREE.LoopOnce); // Play the animation only once
-                action.clampWhenFinished = true; // Keep the last frame when finished
-                action.loop = THREE.LoopOnce; // Ensure it loops only once
+                action.setLoop(THREE.LoopOnce);
+                action.clampWhenFinished = true;
+                action.loop = THREE.LoopOnce;
                 this.actions['animation_0_filtered'] = action;
             } else {
                 console.warn('Animation "animation_0" not found.');
@@ -71,14 +72,15 @@ export default class TopChest {
         this.walkman = this.interactableObjects.walkmanInstance;
         console.log(this.walkman);
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
-        if (intersects.length > 0) {
+        if (intersects.length > 0 && !this.walkman.canComeOut) {
             console.log("click top chest");
+            this.soundManager.play("chest");
             this.animateMorphTarget(0, 1, 2).then(() => {
                 this.playAnimation("animation_0_filtered").then(() => {
                     this.walkman.canComeOut = true;
                     console.log(this.interactableObjects.bottomChest);
                     if(!this.walkman.isInFrontOfCamera) {
-                        this.walkman.animateToCamera();
+                        this.walkman.animateToCamera(!this.walkman.isInFrontOfCamera);
                     }
                 });
             });
@@ -89,14 +91,14 @@ export default class TopChest {
         return new Promise((resolve) => {
             if (this.animationPlayed) {
                 console.log(`Animation ${animationName} has already been played.`);
-                resolve(); // Resolve immediately if the animation has already been played
+                resolve();
                 return;
             }
 
             if (this.actions[animationName]) {
                 console.log("Playing animation");
-                this.actions[animationName].play(); // Play the animation
-                this.animationPlayed = true; // Set the flag to true after playing the animation
+                this.actions[animationName].play();
+                this.animationPlayed = true;
                 this.actions[animationName].getMixer().addEventListener('finished', resolve);
             } else {
                 console.warn(`Animation ${animationName} not found.`);

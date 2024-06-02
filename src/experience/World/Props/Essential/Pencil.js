@@ -11,7 +11,7 @@ export default class Pencil {
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.offsetFromCamera = 0.6;
-        this.pointer = this.experience.pointer;
+        this.pointer = this.experience.pointer;this.soundManager = this.experience.soundManager;
         this.soundManager = this.experience.soundManager;
         this.mesh = mesh;
         this.interactableObjects = useInteractableObjects();
@@ -82,6 +82,7 @@ export default class Pencil {
             duration: 2,
             ease: 'power2.inOut',
             onComplete: () => {
+                this.soundManager.stop("grab");
                 this.soundManager.play('crayonFound');
                 this.positionCassetteNextToPencil();
                 this.isInFrontOfCamera = true;
@@ -151,6 +152,7 @@ export default class Pencil {
     onClick() {
         console.log('Pencil clicked');
         if (!this.isInFrontOfCamera) {
+            this.soundManager.play("grab");
             this.pencil.removeOutline();
             this.animateToCamera();
         } else {
@@ -199,14 +201,29 @@ export default class Pencil {
     }
 
     returnToInitialPosition() {
-        this.pencil.showOutline();
-        gsap.to(this.mesh.position, {
-            x: this.initialPosition.x,
-            y: this.initialPosition.y,
-            z: this.initialPosition.z,
-            duration: 2,
-            ease: 'power2.inOut',
-        });
+        if (!this.crayonDropPlayed) {
+            this.crayonDropPlayed = true;
+            gsap.to(this.mesh.position, {
+                x: this.initialPosition.x,
+                y: this.initialPosition.y,
+                z: this.initialPosition.z,
+                duration: 2,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    this.soundManager.play("crayonDrop");
+                }
+            });
+        } else {
+            gsap.to(this.mesh.position, {
+                x: this.initialPosition.x,
+                y: this.initialPosition.y,
+                z: this.initialPosition.z,
+                duration: 2,
+                ease: 'power2.inOut'
+            });
+            this.soundManager.stop("crayonDrop")
+
+        }
 
         gsap.to(this.mesh.rotation, {
             x: this.initialRotation.x,
@@ -216,7 +233,6 @@ export default class Pencil {
             ease: 'power2.inOut'
         });
     }
-
     destroy() {
         this.pointer.off("click", this.handleClick.bind(this));
         this.pointer.off("movement", this.onPointerMove.bind(this));

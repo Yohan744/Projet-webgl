@@ -21,6 +21,7 @@ export default class Walkman {
         this.hasMovedInFront = false;
         this.isInFrontOfCamera = false;
         this.isClapetClosedPermanently = false;
+        this.soundHasBeenPlayed = false;
 
         this.morphTargetName = 'clapet';
         this.headphoneMorphTargetName = 'casque';
@@ -62,9 +63,7 @@ export default class Walkman {
             this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
             const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
             if (intersects.length > 0) {
-                if (!this.isInFrontOfCamera) {
-                    this.animateToCamera();
-                } else if (!this.isClapetOpen) {
+                if (!this.isClapetOpen) {
                     this.activateEjectButton();
                 } else if (this.isClapetOpen) {
                     this.startDragging(mousePosition);
@@ -76,23 +75,27 @@ export default class Walkman {
     }
 
     activateEjectButton() {
+        this.soundManager.play("bouton")
         gsap.to(this.morphMesh.morphTargetInfluences, {
             [this.morphMesh.morphTargetDictionary[this.boutonejectTargetName]]: 1,
-            duration: 0.5,
+            duration: 1,
             ease: 'power2.inOut',
             onComplete: () => {
+                this.soundManager.stop("bouton")
                 this.openClapet();
             }
         });
     }
 
     openClapet() {
+        this.soundManager.play("ouvertureWalkman")
         gsap.to(this.morphMesh.morphTargetInfluences, {
             [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: 1,
             [this.morphMesh.morphTargetDictionary[this.boutonejectTargetName]]: 0,
             duration: 1,
             ease: 'power2.inOut',
             onComplete: () => {
+                this.soundManager.stop("ouvertureWalkman")
                 this.isClapetOpen = true;
             }
         });
@@ -104,6 +107,8 @@ export default class Walkman {
     }
 
     closeClapet() {
+        this.soundManager.stop("cassetteSet");
+        this.soundManager.play("fermetureWalkman")
         gsap.to(this.morphMesh.morphTargetInfluences, {
             [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: 0,
             duration: 1,
@@ -111,6 +116,7 @@ export default class Walkman {
             onComplete: () => {
                 this.isClapetOpen = false;
                 this.isClapetClosedPermanently = true;
+                this.soundManager.stop("fermetureWalkman")
                 this.animateWalkmanAndCassette();
             }
         });
@@ -141,7 +147,7 @@ export default class Walkman {
         }
     }
 
-    animateToCamera() {
+    animateToCamera(state) {
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
 
@@ -152,6 +158,8 @@ export default class Walkman {
             duration: 1,
             ease: 'power2.inOut',
             onComplete: () => {
+                this.soundManager.stop("chest")
+                state ? this.soundManager.play("walkman"): this.soundManager.stop("walkman");
                 gsap.to(this.mesh.position, {
                     x: targetPosition.x,
                     y: targetPosition.y,
@@ -159,8 +167,9 @@ export default class Walkman {
                     duration: 2,
                     ease: 'power2.inOut',
                     onComplete: () => {
-                        this.positionCassetteNextToWalkman();
                         this.isInFrontOfCamera = true;
+                        this.positionCassetteNextToWalkman();
+
                     }
                 });
             }
@@ -183,7 +192,13 @@ export default class Walkman {
             const walkmanPosition = this.mesh.position.clone();
             const cassetteOffset = new THREE.Vector3(0, 0, 0.4);
             const targetPosition = walkmanPosition.add(cassetteOffset);
-            cassette.animateToCamera(targetPosition, true);
+            if(this.isInFrontOfCamera) {
+                setTimeout(() => {
+                        this.soundManager.play("walkman2");
+                        this.soundHasBeenPlayed = true;
+                    cassette.animateToCamera(targetPosition, true);
+                }, 2000);
+            }
         } else {
             console.error('Cassette instance not found in interactableObjects');
         }
@@ -218,15 +233,15 @@ export default class Walkman {
             duration: 2,
             ease: 'power2.inOut',
             onComplete: () => {
+                this.soundManager.play("headphoneOn");
                 gsap.to(this.mesh.rotation, {
                     y: this.mesh.rotation.y - 1,
                     duration: 1,
                     ease: 'power2.inOut',
-                     onComplete: () => {
-                         this.setEventsForPlayButton();
-                     }
+                    onComplete: () => {
+                        this.setEventsForPlayButton();
+                    }
                 });
-
             }
         });
     }
@@ -237,6 +252,8 @@ export default class Walkman {
     }
 
     animatePlayButton() {
+        this.soundManager.stop("headphoneOn");
+        this.soundManager.play("bouton")
         gsap.to(this.morphMesh.morphTargetInfluences, {
             [this.morphMesh.morphTargetDictionary[this.playButtonMorphTargetName]]: 1,
             duration: 2,
@@ -245,6 +262,9 @@ export default class Walkman {
                 gsap.to(this.morphMesh.morphTargetInfluences, {
                     [this.morphMesh.morphTargetDictionary[this.playButtonMorphTargetName]]: 0,
                     duration: 2,
+                    onComplete:()=> {
+                        this.soundManager.stop("bouton");
+                    }
                 });
             }
         });
