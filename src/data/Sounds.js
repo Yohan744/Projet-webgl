@@ -180,6 +180,41 @@ export const data = {
         loop: false,
     },
 
+    diapo1: {
+        src: p + 'diapo1.mp3',
+        volume: 1,
+        preload: true,
+        loop: false,
+    },
+
+    diapo2: {
+        src: p + 'diapo2.mp3',
+        volume: 1,
+        preload: true,
+        loop: false,
+    },
+
+    diapo3: {
+        src: p + 'diapo3.mp3',
+        volume: 1,
+        preload: true,
+        loop: false,
+    },
+
+    diapo4: {
+        src: p + 'diapo4.mp3',
+        volume: 1,
+        preload: true,
+        loop: false,
+    },
+
+    diapo5: {
+        src: p + 'diapo5.mp3',
+        volume: 1,
+        preload: true,
+        loop: false,
+    },
+
 
     //////// GENERAL SOUNDS ////////
 
@@ -208,7 +243,7 @@ export const data = {
 
     projectorSound: {
         src: fx + 'projectorSound.mp3',
-        volume: 0.125,
+        volume: 0.1,
         preload: true,
         loop: true,
     },
@@ -216,6 +251,13 @@ export const data = {
     projectorDiapoChanged: {
         src: fx + 'projectorDiapoChanged.mp3',
         volume: 0.4,
+        preload: true,
+        loop: false,
+    },
+
+    projectorButtonPressed: {
+        src: fx + 'projectorButtonPressed.mp3',
+        volume: 0.5,
         preload: true,
         loop: false,
     },
