@@ -149,7 +149,6 @@ export default class Walkman {
     }
 
     animateToCamera(state) {
-        this.soundManager.stop("chest");
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
 
@@ -168,6 +167,7 @@ export default class Walkman {
                     duration: 2,
                     ease: 'power2.inOut',
                     onComplete: () => {
+                        this.soundManager.stop("chest");
                         this.isInFrontOfCamera = true;
                         this.positionCassetteNextToWalkman();
 
