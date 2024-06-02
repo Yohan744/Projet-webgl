@@ -72,7 +72,6 @@ export default class Cassette {
             targetPosition = new THREE.Vector3();
             targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
         }
-        this.soundManager.play("outPocket");
         gsap.to(this.cassetteGroup.position, {
             x: targetPosition.x,
             y: targetPosition.y,
@@ -125,7 +124,6 @@ export default class Cassette {
     }
 
     animateMorphTargets() {
-        this.soundManager.stop("outPocket");
         if (!this.isRewinding) return;
 
         let allMorphTargetsZero = true;
@@ -232,6 +230,7 @@ export default class Cassette {
     }
 
     returnToInitialPosition() {
+
         gsap.to(this.cassetteGroup.position, {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
@@ -239,7 +238,6 @@ export default class Cassette {
             duration: 2,
             ease: 'power2.inOut',
             onComplete: () => {
-                this.soundManager.stop("inPocket");
                 this.resetMovementStates();
             }
         });

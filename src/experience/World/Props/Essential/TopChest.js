@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Experience from "../../../Experience";
 import { useInteractableObjects } from "../../ObjectsInteractable";
 import { gsap } from 'gsap';
+import SoundManager from "../../../../assets/js/SoundManager";
 
 export default class TopChest {
     constructor(mesh) {
@@ -15,6 +16,8 @@ export default class TopChest {
         this.mixer = null;
         this.actions = {};
         this.clock = new THREE.Clock();
+
+
         this.animationPlayed = false;
 
         this.interactableObjects = useInteractableObjects();
@@ -40,32 +43,35 @@ export default class TopChest {
 
                 const newClip = new THREE.AnimationClip('animation_0_filtered', originalClip.duration, [positionTrack, quaternionTrack]);
                 const action = this.mixer.clipAction(newClip);
-                action.setLoop(THREE.LoopOnce);
                 action.clampWhenFinished = true;
                 action.loop = THREE.LoopOnce;
+                action.timeScale = 0.28;
                 this.actions['animation_0_filtered'] = action;
-            } else {
-                console.warn('Animation "animation_0" not found.');
             }
-
-            console.log('Available animations:', animations.map(clip => clip.name));
-        } else {
-            console.warn("No animations found in the scene.");
         }
     }
 
     animateMorphTarget(initialValue, finalValue, duration) {
-        return new Promise((resolve) => {
-            if (this.mesh.morphTargetInfluences) {
-                gsap.to(this.mesh.morphTargetInfluences, {
-                    duration: duration,
-                    endArray: [finalValue],
-                    onComplete: resolve
-                });
-            } else {
-                resolve();
-            }
-        });
+        this.soundManager.play("lock");
+        if (this.mesh.morphTargetInfluences) {
+            gsap.to(this.mesh.morphTargetInfluences, {
+                duration: duration,
+                endArray: [finalValue],
+                onUpdate: () => {
+                    this.mesh.morphTargetInfluences[0] = this.mesh.morphTargetInfluences[0];
+                },
+                onComplete:()=> {
+                    this.soundManager.play("chest");
+                    this.playAnimation("animation_0_filtered")
+                        this.walkman.canComeOut = true;
+                        if (!this.walkman.isInFrontOfCamera) {
+                            setTimeout(() => {
+                                this.walkman.animateToCamera(!this.walkman.isInFrontOfCamera);
+                            }, 1000)
+                        }
+                }
+            });
+        }
     }
 
     onClick() {
@@ -74,24 +80,13 @@ export default class TopChest {
         const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
         if (intersects.length > 0 && !this.walkman.canComeOut) {
             console.log("click top chest");
-            this.soundManager.play("chest");
-            this.animateMorphTarget(0, 1, 2).then(() => {
-                this.playAnimation("animation_0_filtered").then(() => {
-                    this.walkman.canComeOut = true;
-                    console.log(this.interactableObjects.bottomChest);
-                    if(!this.walkman.isInFrontOfCamera) {
-                        this.walkman.animateToCamera(!this.walkman.isInFrontOfCamera);
-                    }
-                });
-            });
+            this.animateMorphTarget(0, 1, 2);
         }
     }
 
     playAnimation(animationName) {
-        return new Promise((resolve) => {
             if (this.animationPlayed) {
                 console.log(`Animation ${animationName} has already been played.`);
-                resolve();
                 return;
             }
 
@@ -99,12 +94,9 @@ export default class TopChest {
                 console.log("Playing animation");
                 this.actions[animationName].play();
                 this.animationPlayed = true;
-                this.actions[animationName].getMixer().addEventListener('finished', resolve);
             } else {
                 console.warn(`Animation ${animationName} not found.`);
-                resolve();
             }
-        });
     }
 
     update() {

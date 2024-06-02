@@ -75,6 +75,8 @@ export default class Pencil {
         const targetPosition = new THREE.Vector3();
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
 
+        this.soundManager.play('crayonFound');
+
         gsap.to(this.mesh.position, {
             x: targetPosition.x,
             y: targetPosition.y,
@@ -83,7 +85,6 @@ export default class Pencil {
             ease: 'power2.inOut',
             onComplete: () => {
                 this.soundManager.stop("grab");
-                this.soundManager.play('crayonFound');
                 this.positionCassetteNextToPencil();
                 this.isInFrontOfCamera = true;
             }
@@ -101,8 +102,10 @@ export default class Pencil {
     }
 
     positionCassetteNextToPencil() {
+      //   this.soundManager.stop("crayonFound");
         const cassette = this.interactableObjects.cassette;
         if (cassette) {
+            this.soundManager.play("cassetteOut");
             const pencilPosition = this.mesh.position.clone();
             const cassetteOffset = new THREE.Vector3(0, 0, -0.1);
             const targetPosition = pencilPosition.add(cassetteOffset);
@@ -210,6 +213,7 @@ export default class Pencil {
                 duration: 2,
                 ease: 'power2.inOut',
                 onComplete: () => {
+                    this.soundManager.play("cassetteIn");
                     this.soundManager.play("crayonDrop");
                 }
             });
@@ -221,6 +225,7 @@ export default class Pencil {
                 duration: 2,
                 ease: 'power2.inOut'
             });
+            this.soundManager.stop("cassetteIn");
             this.soundManager.stop("crayonDrop")
 
         }

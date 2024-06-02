@@ -5,6 +5,7 @@ import { useInteractableObjects } from "../../ObjectsInteractable";
 
 export default class Walkman {
     constructor(mesh) {
+        this.mesh = mesh;
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
@@ -148,6 +149,7 @@ export default class Walkman {
     }
 
     animateToCamera(state) {
+        this.soundManager.stop("chest");
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
 
@@ -158,7 +160,6 @@ export default class Walkman {
             duration: 1,
             ease: 'power2.inOut',
             onComplete: () => {
-                this.soundManager.stop("chest")
                 state ? this.soundManager.play("walkman"): this.soundManager.stop("walkman");
                 gsap.to(this.mesh.position, {
                     x: targetPosition.x,
@@ -194,10 +195,11 @@ export default class Walkman {
             const targetPosition = walkmanPosition.add(cassetteOffset);
             if(this.isInFrontOfCamera) {
                 setTimeout(() => {
-                        this.soundManager.play("walkman2");
-                        this.soundHasBeenPlayed = true;
+                    this.soundManager.play("walkman2");
+                    this.soundHasBeenPlayed = true;
                     cassette.animateToCamera(targetPosition, true);
-                }, 2000);
+                    this.soundManager.play("cassetteOut");
+                }, 3000);
             }
         } else {
             console.error('Cassette instance not found in interactableObjects');
@@ -211,9 +213,9 @@ export default class Walkman {
             ease: 'power2.inOut'
         });
         gsap.to(this.mesh.position, {
-            x: this.mesh.position.x - 0.3,
+            x: this.mesh.position.x - 0.2,
             z: this.mesh.position.z + 0.3,
-            y: this.mesh.position.y + 0.2,
+            y: this.mesh.position.y + 0.1,
             duration: 1,
             ease: 'power2.inOut',
             onComplete: () => {
@@ -264,6 +266,8 @@ export default class Walkman {
                     duration: 2,
                     onComplete:()=> {
                         this.soundManager.stop("bouton");
+                        this.soundManager.fadeOutAndStopBackground(2000);
+                        this.soundManager.play("final", 0.3);
                     }
                 });
             }

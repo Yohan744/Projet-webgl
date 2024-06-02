@@ -27,8 +27,20 @@ export const data = {
         preload: true,
         loop: false,
     },
+    final: {
+        src: p + 'finalMessage.m4a',
+        volume: 1,
+        preload: true,
+        loop: false,
+    },
     chest: {
         src: fx + 'malle.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    lock: {
+        src: fx + 'lock.mp3',
         volume: 0.75,
         preload: true,
         loop: false,
@@ -59,15 +71,15 @@ export const data = {
         preload: true,
         loop: false,
     },
-    inPocket: {
-        src: fx + 'pocketIn.mp3',
+    cassetteIn: {
+        src: fx + 'cassetteIn.mp3',
         volume: 0.85,
         preload: true,
         loop: false,
     },
 
-    outPocket: {
-        src: fx + 'pocketOut.mp3',
+    cassetteOut: {
+        src: fx + 'cassetteOut.mp3',
         volume: 0.85,
         preload: true,
         loop: false,
