@@ -21,6 +21,76 @@ export const data = {
         preload: true,
         loop: false,
     },
+    walkman2: {
+        src: p + 'walkman-p2.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    final: {
+        src: p + 'finalMessage.m4a',
+        volume: 1,
+        preload: true,
+        loop: false,
+    },
+    chest: {
+        src: fx + 'malle.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    lock: {
+        src: fx + 'lock.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    bouton: {
+        src: fx + 'BoutonOn.wav',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    fermetureWalkman: {
+        src: fx + 'fermetureWalkman.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    ouvertureWalkman: {
+        src: fx + 'OuvertureWalkman.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    cassetteSet: {
+        src: fx + 'cassetteSet.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    cassetteIn: {
+        src: fx + 'cassetteIn.mp3',
+        volume: 0.85,
+        preload: true,
+        loop: false,
+    },
+
+    cassetteOut: {
+        src: fx + 'cassetteOut.mp3',
+        volume: 0.85,
+        preload: true,
+        loop: false,
+    },
+
+    headphoneOn: {
+        src: fx + 'headphoneOn.mp3',
+        volume: 0.85,
+        preload: true,
+        loop: false,
+    },
 
     cassette: {
         src: p + 'cassette.m4a',
@@ -36,13 +106,31 @@ export const data = {
         loop: false,
     },
 
+    rewind: {
+        src: fx + 'rattle.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: true,
+    },
+
     crayonFound: {
         src: p + 'crayon-trouver.m4a',
         volume: 0.75,
         preload: true,
         loop: false,
     },
-
+    grab: {
+        src: fx + 'crayonGrab.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+    crayonDrop: {
+        src: fx + 'crayonDrop.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
     telephone: {
         src: p + 'telephone.m4a',
         volume: 0.75,

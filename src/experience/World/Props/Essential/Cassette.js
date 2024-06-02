@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import Experience from "../../../Experience";
-import {useInteractableObjects} from "../../ObjectsInteractable";
+import { useInteractableObjects } from "../../ObjectsInteractable";
 
 export default class Cassette {
     constructor(objects) {
@@ -16,9 +16,10 @@ export default class Cassette {
 
         this.cassetteObjects = objects;
 
-       const pencil = useInteractableObjects();
+        const interactableObjects = useInteractableObjects();
 
-       this.pencil = pencil.pencil;
+        this.pencil = interactableObjects.pencil;
+        this.walkman = interactableObjects.walkmanInstance;
 
         this.bobine1 = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'bobine1');
         this.bobine2 = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'bobine2');
@@ -26,33 +27,44 @@ export default class Cassette {
         this.corps = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'corps');
 
         this.objectsToAnimate = [this.bobine1, this.bobine2, this.bobine3, this.corps].filter(Boolean);
+        this.soundHasBeenPlayed = false;
 
         this.isRewinding = false;
         this.isFullyRewound = false;
         this.inactivityTimeout = null;
+        this.isPlacedInWalkman = false;
 
         this.init();
+        this.setEvents();
     }
 
     init() {
         this.objectsToAnimate.forEach(object => {
             this.cassetteGroup.add(object);
-
-            if (object.morphTargetInfluences) {
-                console.log(`Setting morph targets for: ${object.name}`);
-                for (let i = 0; i < object.morphTargetInfluences.length; i++) {
-                    object.morphTargetInfluences[i] = 1;
-                }
-            } else {
-                console.log(`No morph targets found for: ${object.name}`);
-            }
         });
 
         this.initialPosition = this.cassetteGroup.position.clone();
         this.initialRotation = this.cassetteGroup.rotation.clone();
     }
 
-    animateToCamera(targetPosition = null) {
+    setEvents() {
+        this.pointer.on('click', (event) => this.handleClick(event));
+    }
+
+    handleClick(event) {
+        if (this.isPlacedInWalkman) return;
+
+        const mousePosition = this.pointer.getMousePosition();
+        this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
+        const intersects = this.pointer.raycaster.intersectObjects([this.cassetteGroup], true);
+        if (intersects.length > 0) {
+            if (this.walkman && this.walkman.isClapetOpen) {
+                this.animateCassetteIntoWalkman();
+            }
+        }
+    }
+
+    animateToCamera(targetPosition = null, isInstantiatedByWalkman = false) {
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
 
@@ -60,13 +72,16 @@ export default class Cassette {
             targetPosition = new THREE.Vector3();
             targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
         }
-
         gsap.to(this.cassetteGroup.position, {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
-            duration: 3,
-            ease: 'power2.inOut'
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.walkman.soundHasBeenPlayed = true;
+                if (this.soundHasBeenPlayed) { this.soundManager.stop("walkman2"); }
+            }
         });
 
         gsap.to(this.cassetteGroup.rotation, {
@@ -77,7 +92,35 @@ export default class Cassette {
             ease: 'power2.inOut'
         });
 
+        if (isInstantiatedByWalkman) {
+            this.setMorphTargets(0);
+            this.scaleCassette(0.82);
+        } else {
+            this.setMorphTargets(1);
+            this.scaleCassette(1);
+        }
+
         this.animateMorphTargets();
+    }
+
+    setMorphTargets(value) {
+        this.objectsToAnimate.forEach(object => {
+            if (object.morphTargetInfluences) {
+                for (let i = 0; i < object.morphTargetInfluences.length; i++) {
+                    object.morphTargetInfluences[i] = value;
+                }
+            }
+        });
+    }
+
+    scaleCassette(scaleValue) {
+        gsap.to(this.cassetteGroup.scale, {
+            x: scaleValue,
+            y: scaleValue,
+            z: scaleValue,
+            duration: 1,
+            ease: 'power2.inOut'
+        });
     }
 
     animateMorphTargets() {
@@ -110,7 +153,55 @@ export default class Cassette {
         }
     }
 
+    animateCassetteIntoWalkman() {
+        const walkmanPosition = this.walkman.mesh.position.clone();
+        const targetPosition = walkmanPosition.add(new THREE.Vector3(0.01, 0.2, 0.21));
+
+        gsap.to(this.cassetteGroup.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                gsap.to(this.cassetteGroup.position, {
+                    x: targetPosition.x + 0.01,
+                    y: targetPosition.y - 0.197,
+                    z: targetPosition.z - 0.195,
+                    duration: 1,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        this.soundManager.play("cassetteSet")
+                        this.isPlacedInWalkman = true;
+                        this.convertToLocalCoordinatesAndAddToWalkman();
+                        this.walkman.prepareForClapetClose();
+                    }
+                });
+            }
+        });
+
+        gsap.to(this.cassetteGroup.rotation, {
+            y: this.cassetteGroup.rotation.y - 0.49,
+            duration: 2,
+            ease: 'power2.inOut'
+        });
+    }
+
+    convertToLocalCoordinatesAndAddToWalkman() {
+        const worldPosition = this.cassetteGroup.position.clone();
+        const worldQuaternion = this.cassetteGroup.quaternion.clone();
+
+        this.walkman.mesh.worldToLocal(worldPosition);
+        const localQuaternion = new THREE.Quaternion().copy(this.walkman.mesh.quaternion).invert().multiply(worldQuaternion);
+
+        this.cassetteGroup.position.copy(worldPosition);
+        this.cassetteGroup.quaternion.copy(localQuaternion);
+
+        this.walkman.mesh.add(this.cassetteGroup);
+    }
+
     startRewinding() {
+        this.soundManager.play("rewind");
         this.isRewinding = true;
         this.isFullyRewound = false;
         this.animateMorphTargets();
@@ -118,6 +209,7 @@ export default class Cassette {
 
     stopRewinding() {
         this.isRewinding = false;
+        this.soundManager.stop("rewind");
 
         if (this.isFullyRewound && !this.pencil.isDragging) {
             this.startInactivityTimer();
@@ -138,12 +230,16 @@ export default class Cassette {
     }
 
     returnToInitialPosition() {
+
         gsap.to(this.cassetteGroup.position, {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
             z: this.initialPosition.z,
             duration: 2,
-            ease: 'power2.inOut'
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.resetMovementStates();
+            }
         });
 
         gsap.to(this.cassetteGroup.rotation, {
@@ -153,6 +249,17 @@ export default class Cassette {
             duration: 2,
             ease: 'power2.inOut'
         });
+    }
+
+    resetMovementStates() {
+        this.isRewinding = false;
+        this.isFullyRewound = false;
+        this.isPlacedInWalkman = false;
+        this.soundHasBeenPlayed = false;
+
+
+        this.cassetteGroup.position.copy(this.initialPosition);
+        this.cassetteGroup.rotation.copy(this.initialRotation);
     }
 
     destroy() {

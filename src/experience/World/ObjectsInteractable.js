@@ -5,16 +5,23 @@ import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
 import Picture from "./Props/Essential/Picture";
 import Drawer from "./Props/Essential/Drawer";
+import Envelop from "./Props/Essential/Envelop";
 import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
 import Pencil from "./Props/Essential/Pencil";
 import { watch } from "vue";
 import * as THREE from "three";
+import Envelop2 from "./Props/Essential/Envelop2";
+import Pencil from "./Props/Essential/Pencil";
+import TopChest from "./Props/Essential/TopChest";
+import BottomChest from "./Props/Essential/BottomChest";
+import Malle from "./Props/Essential/Malle";
 
 
 const interactableObjects = {};
 const interactableMesh = [];
+const itemGroup = new THREE.Group();
 
 export default class ObjectsInteractable {
 
@@ -26,7 +33,7 @@ export default class ObjectsInteractable {
         this.gameManager = this.experience.gameManager;
 
         this.projectorModel = [];
-        this.cassetteModels = [];
+        this.cassetteModel = [];
 
         if (this.scene) {
             this.init();
@@ -34,24 +41,6 @@ export default class ObjectsInteractable {
     }
 
     init() {
-        watch(() => this.gameManager.state.isPencilInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isCassetteInFrontOfCamera) {
-                const pencil = this.experience.objectGroup.children.find(obj => obj.userData.type === 'pencil');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (pencil) pencil.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
-        watch(() => this.gameManager.state.isCassetteInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isWalkmanInFrontOfCamera) {
-                const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (walkman) walkman.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
 
         this.objectsInteractableModel = this.resources.items.objectsInteractableModel.scene;
 
@@ -64,6 +53,7 @@ export default class ObjectsInteractable {
                 if (name.includes("walkman")) {
                     child.material = this.materialLibrary.getWalkmanMaterial();
                     this.walkman = new Walkman(child);
+                    interactableObjects.walkmanInstance = this.walkman;
 
                 } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial();
@@ -97,19 +87,19 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child);
 
                 } else if (name.includes("malle")) {
-                    if (name.includes('haut')) {
-                        child.material = this.materialLibrary.getTopChestMaterial();
-                        this.topChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
-                        interactableObjects.topChest = this.topChest;
-                        interactableMesh.push(child);
-                    }
+                        if (name.includes('haut')) {
+                            child.material = this.materialLibrary.getTopChestMaterial();
+                            this.topChest = new TopChest(child);
+                            interactableObjects.topChest = this.topChest;
+                            interactableMesh.push(child);
+                        }
 
-                    if (name.includes('bas')) {
-                        child.material = this.materialLibrary.getBottomChestMaterial();
-                        this.bottomChest = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
-                        interactableObjects.bottomChest = this.bottomChest;
-                        interactableMesh.push(child);
-                    }
+                        if (name.includes('bas')) {
+                            child.material = this.materialLibrary.getBottomChestMaterial();
+                            this.bottomChest = new BottomChest(child);
+                            interactableObjects.bottomChest = this.bottomChest;
+                            interactableMesh.push(child);
+                        }
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {
                     child.material = this.materialLibrary.getBlackMaterial();
@@ -205,7 +195,7 @@ export default class ObjectsInteractable {
     }
 
     update() {
-
+        if (this.topChest) this.topChest.update();
     }
 
     destroy() {
