@@ -21,6 +21,12 @@ export const data = {
         preload: true,
         loop: false,
     },
+    walkman2: {
+        src: p + 'walkman-p2.m4a',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
 
     cassette: {
         src: p + 'cassette.m4a',

@@ -76,8 +76,8 @@ export default class Cassette {
             x: targetPosition.x,
             y: targetPosition.y,
             z: targetPosition.z,
-            duration: 3,
-            ease: 'power2.inOut'
+            duration: 2,
+            ease: 'power2.inOut',
         });
 
         gsap.to(this.cassetteGroup.rotation, {
@@ -161,13 +161,14 @@ export default class Cassette {
             ease: 'power2.inOut',
             onComplete: () => {
                 gsap.to(this.cassetteGroup.position, {
-                    x: targetPosition.x +0.01,
+                    x: targetPosition.x + 0.01,
                     y: targetPosition.y - 0.197,
                     z: targetPosition.z - 0.195,
                     duration: 1,
                     ease: 'power2.inOut',
                     onComplete: () => {
                         this.isPlacedInWalkman = true;
+                        this.convertToLocalCoordinatesAndAddToWalkman();
                         this.walkman.prepareForClapetClose();
                     }
                 });
@@ -179,6 +180,19 @@ export default class Cassette {
             duration: 2,
             ease: 'power2.inOut'
         });
+    }
+
+    convertToLocalCoordinatesAndAddToWalkman() {
+        const worldPosition = this.cassetteGroup.position.clone();
+        const worldQuaternion = this.cassetteGroup.quaternion.clone();
+
+        this.walkman.mesh.worldToLocal(worldPosition);
+        const localQuaternion = new THREE.Quaternion().copy(this.walkman.mesh.quaternion).invert().multiply(worldQuaternion);
+
+        this.cassetteGroup.position.copy(worldPosition);
+        this.cassetteGroup.quaternion.copy(localQuaternion);
+
+        this.walkman.mesh.add(this.cassetteGroup);
     }
 
     startRewinding() {

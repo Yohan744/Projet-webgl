@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import Experience from "../../../Experience";
 import { gsap } from 'gsap';
-import { watch } from 'vue';
-import Outline from "../../Effects/Outline";
 import { useInteractableObjects } from "../../ObjectsInteractable";
 
 export default class Walkman {
@@ -22,8 +20,11 @@ export default class Walkman {
         this.mouseStartClickPosition = { x: 0, y: 0 };
         this.hasMovedInFront = false;
         this.isInFrontOfCamera = false;
+        this.isClapetClosedPermanently = false;
 
         this.morphTargetName = 'clapet';
+        this.headphoneMorphTargetName = 'casque';
+        this.playButtonMorphTargetName = 'boutonplay';
         this.isClapetOpen = false;
         this.canComeOut = false;
         this.boutonejectTargetName = 'boutoneject';
@@ -56,7 +57,7 @@ export default class Walkman {
     }
 
     onPointerDown() {
-        if (this.canComeOut) {
+        if (this.canComeOut && !this.isClapetClosedPermanently) {
             const mousePosition = this.pointer.getMousePosition();
             this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
             const intersects = this.pointer.raycaster.intersectObjects([this.mesh], true);
@@ -69,6 +70,8 @@ export default class Walkman {
                     this.startDragging(mousePosition);
                 }
             }
+        } else if (this.isClapetClosedPermanently) {
+            this.animateHeadphone();
         }
     }
 
@@ -100,12 +103,25 @@ export default class Walkman {
         this.pointer.on('click-release', this.pointerUp);
     }
 
+    closeClapet() {
+        gsap.to(this.morphMesh.morphTargetInfluences, {
+            [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: 0,
+            duration: 1,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.isClapetOpen = false;
+                this.isClapetClosedPermanently = true;
+                this.animateWalkmanAndCassette();
+            }
+        });
+    }
+
     onPointerMove(mouse) {
         if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
 
         const deltaY = mouse.y - this.mouseStartClickPosition.y;
         if (-deltaY > this.dragDistance) {
-            this.handleBackwardDrag(deltaY);
+            this.closeClapet();
         }
     }
 
@@ -116,15 +132,6 @@ export default class Walkman {
             x: mousePosition.x,
             y: mousePosition.y,
         };
-    }
-
-    handleBackwardDrag(deltaY) {
-        const influence = Math.max(0, deltaY / this.dragDistance);
-        gsap.to(this.draggableModel.morphTargetInfluences, {
-            [this.morphMesh.morphTargetDictionary[this.morphTargetName]]: influence,
-            duration: 0.1,
-            ease: 'linear'
-        });
     }
 
     onPointerUp() {
@@ -142,20 +149,20 @@ export default class Walkman {
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
         gsap.to(this.mesh.position, {
             y: this.mesh.position.y + 0.4,
-            duration: 2,
+            duration: 1,
             ease: 'power2.inOut',
             onComplete: () => {
-        gsap.to(this.mesh.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z - 0.2,
-            duration: 2,
-            ease: 'power2.inOut',
-            onComplete: () => {
-                this.positionCassetteNextToWalkman();
-                this.isInFrontOfCamera = true;
-            }
-        });
+                gsap.to(this.mesh.position, {
+                    x: targetPosition.x,
+                    y: targetPosition.y,
+                    z: targetPosition.z - 0.2,
+                    duration: 2,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        this.positionCassetteNextToWalkman();
+                        this.isInFrontOfCamera = true;
+                    }
+                });
             }
         });
 
@@ -180,6 +187,67 @@ export default class Walkman {
         } else {
             console.error('Cassette instance not found in interactableObjects');
         }
+    }
+
+    animateWalkmanAndCassette() {
+        gsap.to(this.mesh.rotation, {
+            y: this.mesh.rotation.y + 0.5,
+            duration: 1,
+            ease: 'power2.inOut'
+        });
+        gsap.to(this.mesh.position, {
+            x: this.mesh.position.x - 0.3,
+            z: this.mesh.position.z + 0.3,
+            y: this.mesh.position.y + 0.2,
+            duration: 1,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.setEventsForHeadphone();
+            }
+        });
+    }
+
+    setEventsForHeadphone() {
+        this.pointer.off('click', this.pointerDown);
+        this.pointer.on('click', this.animateHeadphone.bind(this));
+    }
+
+    animateHeadphone() {
+        gsap.to(this.morphMesh.morphTargetInfluences, {
+            [this.morphMesh.morphTargetDictionary[this.headphoneMorphTargetName]]: 1,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                gsap.to(this.mesh.rotation, {
+                    y: this.mesh.rotation.y - 1,
+                    duration: 1,
+                    ease: 'power2.inOut',
+                     onComplete: () => {
+                         this.setEventsForPlayButton();
+                     }
+                });
+
+            }
+        });
+    }
+
+    setEventsForPlayButton() {
+        this.pointer.off('click', this.animateHeadphone.bind(this));
+        this.pointer.on('click', this.animatePlayButton.bind(this));
+    }
+
+    animatePlayButton() {
+        gsap.to(this.morphMesh.morphTargetInfluences, {
+            [this.morphMesh.morphTargetDictionary[this.playButtonMorphTargetName]]: 1,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete:() => {
+                gsap.to(this.morphMesh.morphTargetInfluences, {
+                    [this.morphMesh.morphTargetDictionary[this.playButtonMorphTargetName]]: 0,
+                    duration: 2,
+                });
+            }
+        });
     }
 
     applyBasicMaterial() {
