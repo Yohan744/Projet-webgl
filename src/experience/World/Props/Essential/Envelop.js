@@ -5,6 +5,7 @@ import EventEmitter from "../../../Utils/EventEmitter";
 import {watch} from "vue";
 import * as THREE from "three";
 import Outline from "../../Effects/Outline";
+import {getActualCursor} from "../../../../assets/js/Cursor";
 
 export default class Envelop extends EventEmitter {
 
@@ -16,6 +17,7 @@ export default class Envelop extends EventEmitter {
         this.scene = this.experience.scene;
         this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
+        this.soundManager = this.experience.soundManager;
         this.globalEvents = this.experience.globalEvents;
         this.timeline = gsap.timeline();
 
@@ -34,14 +36,18 @@ export default class Envelop extends EventEmitter {
         this.isRotating = false
         this.objectRotating = null
 
+        this.voicesPlayed = [false, false, false, false, false, false]
+        this.isSpeaking = false;
+
         this.carousel = new THREE.Group();
         this.carouselIndex = 1
-        this.carouselItemsOffset = 0.5;
+        this.carouselItemsOffset = 0.4;
         this.dahliaBasicRotation = new THREE.Vector3(Math.PI * 0.5, -0.25, 0);
         this.letterBasicRotation = new THREE.Vector3(-Math.PI * 0.5, 0, Math.PI);
         this.cassetteBasicRotation = new THREE.Vector3(Math.PI * 0.5, 0, 0);
         this.cartePostaleBasicRotation = new THREE.Vector3(-Math.PI, Math.PI * 0.5, -Math.PI * 0.5);
         this.itemScaleArray = [1.3, 1, 1.2, 1.5, 1.5, 1.5]
+        this.itemsName = ['dahlia', 'lettre', 'corps', 'cartepostalebiarritz', 'cartepostaleplage', 'cartespostalesmaison']
 
         this.initialMousePositionOnClick = {x: 0, y: 0}
 
@@ -67,6 +73,10 @@ export default class Envelop extends EventEmitter {
 
         watch(() => this.gameManager.state.isInteractingWithObject, (state) => {
             if (!state && this.gameManager.state.actualObjectInteractingName === "drawer") {
+
+                for (let i = 0; i < this.voicesPlayed.length; i++) {
+                    this.soundManager.stop('commode' + (i + 1))
+                }
 
                 if (!this.isEnvelopInSky) {
                     this.trigger('envelopIsNoLongerIsSky')
@@ -106,9 +116,9 @@ export default class Envelop extends EventEmitter {
 
     animateEnvelopToSky(state, delay = 0) {
         gsap.to(this.mesh.position, {
-            x: state ? '+=' + 0.7 : this.envelopBasicPosition.x + 0.1,
+            x: state ? '+=' + 0.7 : this.envelopBasicPosition.x + 0.23,
             y: state ? '+=' + 0.9 : this.envelopBasicPosition.y,
-            z: state ? '+=' + 0.75 : this.envelopBasicPosition.z + 0.1,
+            z: state ? '+=' + 0.75 : this.envelopBasicPosition.z + 0.23,
             delay: delay,
             duration: state ? 1.5 : 2,
             ease: 'power2.inOut',
@@ -140,6 +150,7 @@ export default class Envelop extends EventEmitter {
             x: state ? this.envelopRotationInSky.x : this.envelopBasicRotation.x,
             y: state ? this.envelopRotationInSky.y : this.envelopBasicRotation.y,
             z: state ? this.envelopRotationInSky.z : this.envelopBasicRotation.z,
+            delay: delay,
             duration: 1.5,
             ease: 'power2.inOut',
             onUpdate: () => {
@@ -163,10 +174,15 @@ export default class Envelop extends EventEmitter {
         if (this.isEnvelopOpen && this.carouselReady) {
             this.initialMousePositionOnClick = {x: this.pointer.mouse.x, y: this.pointer.mouse.y}
             if (intersectsCarousel.length > 0) {
-                this.isRotating = true
-                this.objectRotating = intersectsCarousel[0].object
+                const index = this.itemsName.indexOf(intersectsCarousel[0].object.name)
+                if (index === this.carouselIndex) {
+                    this.isRotating = true
+                    this.objectRotating = intersectsCarousel[0].object
+                } else if (!this.isSpeaking) {
+                    this.animateCarouselItemsOnSide(index > this.carouselIndex ? -1 : 1)
+                }
             } else {
-                this.isDragging = true
+                if (!this.isSpeaking) this.isDragging = true
             }
         }
     }
@@ -178,14 +194,16 @@ export default class Envelop extends EventEmitter {
     }
 
     handleMouseMove() {
-        if (this.isEnvelopOpen && this.carouselReady) {
+        if (this.isEnvelopOpen && this.carouselReady && !this.isSpeaking) {
 
             const x = this.pointer.getMousePosition().x
             const d = x - this.initialMousePositionOnClick.x
 
             if (this.isDragging) {
-                this.animateCarouselItemsOnSide(d > 0 ? 1 : -1)
-                this.isDragging = false
+                if (Math.abs(d) > 0.03) {
+                    this.animateCarouselItemsOnSide(d > 0 ? 1 : -1)
+                    this.isDragging = false
+                }
             }
 
             if (this.isRotating && this.objectRotating) {
@@ -196,6 +214,19 @@ export default class Envelop extends EventEmitter {
                 }
             }
 
+            const intersectsCarousel = this.pointer.raycaster.intersectObjects(this.items, true);
+            if (intersectsCarousel.length > 0) {
+                const index = this.itemsName.indexOf(intersectsCarousel[0].object.name)
+                if (index !== this.carouselIndex && getActualCursor() !== 'grab') {
+                    this.globalEvents.trigger('change-cursor', {name: 'grab'})
+                } else if (index === this.carouselIndex && getActualCursor() !== 'rotate') {
+                    this.globalEvents.trigger('change-cursor', {name: 'rotate'})
+                }
+            } else {
+                if (getActualCursor() !== 'default' && !this.isRotating) {
+                    this.globalEvents.trigger('change-cursor', {name: 'default'})
+                }
+            }
         }
     }
 
@@ -227,8 +258,8 @@ export default class Envelop extends EventEmitter {
         this.cartePostalePlage.opacity = 0;
         this.cartePostaleMaison.opacity = 0;
 
-        this.carousel.add(this.dahlia, this.letter, this.cassette, this.cartePostaleBiarritz, this.cartePostalePlage, this.cartePostaleMaison);
-        this.items = [this.dahlia, this.letter, this.cassette, this.cartePostaleBiarritz, this.cartePostalePlage, this.cartePostaleMaison];
+        this.carousel.add(this.dahlia, this.letter, this.cassette, this.cartePostalePlage , this.cartePostaleMaison, this.cartePostaleBiarritz);
+        this.items = [this.dahlia, this.letter, this.cassette, this.cartePostalePlage, this.cartePostaleMaison, this.cartePostaleBiarritz];
 
         this.dahlia.position.set(0, 0, 0);
         this.letter.position.set(0, 0, 0);
@@ -268,6 +299,7 @@ export default class Envelop extends EventEmitter {
                 onComplete: () => {
                     if (!state) this.carousel.visible = false
                     if (state) this.carouselReady = true
+                    if (state && index === 0) this.playVoice('commode' + (this.carouselIndex + 1), this.carouselIndex)
                 }
             })
 
@@ -301,6 +333,10 @@ export default class Envelop extends EventEmitter {
 
         this.carouselIndex = side === 1 ? this.carouselIndex - 1 : this.carouselIndex + 1
 
+        if (this.carouselIndex === 2 && this.gameManager.state.gameStepId === 2) {
+            this.gameManager.incrementGameStepId()
+        }
+
         this.items.forEach((item, index) => {
             gsap.to(item.position, {
                 x: '+=' + this.carouselItemsOffset * side,
@@ -308,6 +344,7 @@ export default class Envelop extends EventEmitter {
                 ease: 'power2.inOut',
                 onComplete: () => {
                     this.carouselIsMoving = false
+                    this.playVoice('commode' + (this.carouselIndex + 1), this.carouselIndex)
                 }
             })
         })
@@ -346,6 +383,8 @@ export default class Envelop extends EventEmitter {
         if (this.mesh.morphTargetInfluences.length === 0) return;
 
         this.timeline.clear();
+
+        this.soundManager.play('envelopeOpening')
 
         const value = open ? 1 : 0;
         const reverseValue = open ? 0 : 1;
@@ -454,8 +493,21 @@ export default class Envelop extends EventEmitter {
         return group;
     }
 
-    lerp (a, b, t) {
+    lerp(a, b, t) {
         return (1 - t) * a + t * b;
+    }
+
+    playVoice(voiceName, index) {
+        if (this.voicesPlayed[index]) return;
+
+        this.soundManager.playSoundWithBackgroundFade(voiceName, 1.25)
+        this.isSpeaking = true;
+
+        this.soundManager.sounds[voiceName].on('end', () => {
+            this.voicesPlayed[index] = true
+            this.isSpeaking = false;
+        })
+
     }
 
     destroy() {

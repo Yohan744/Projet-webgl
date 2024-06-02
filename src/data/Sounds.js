@@ -215,6 +215,47 @@ export const data = {
         loop: false,
     },
 
+    commode1: {
+        src: p + 'commode1.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    commode2: {
+        src: p + 'commode2.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    commode3: {
+        src: p + 'commode3.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    commode4: {
+        src: p + 'commode4.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    commode5: {
+        src: p + 'commode5.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
+
+    commode6: {
+        src: p + 'commode6.mp3',
+        volume: 0.75,
+        preload: true,
+        loop: false,
+    },
 
     //////// GENERAL SOUNDS ////////
 
@@ -258,6 +299,20 @@ export const data = {
     projectorButtonPressed: {
         src: fx + 'projectorButtonPressed.mp3',
         volume: 0.5,
+        preload: true,
+        loop: false,
+    },
+
+    drawerOpening: {
+        src: fx + 'drawerOpening.mp3',
+        volume: 0.2,
+        preload: true,
+        loop: false,
+    },
+
+    envelopeOpening: {
+        src: fx + 'envelopeOpening.mp3',
+        volume: 0.7,
         preload: true,
         loop: false,
     },

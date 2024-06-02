@@ -14,6 +14,7 @@ export default class Drawer extends EventEmitter{
         this.experience = new Experience();
         this.pointer = this.experience.pointer;
         this.gameManager = this.experience.gameManager;
+        this.soundManager = this.experience.soundManager;
         this.globalEvents = this.experience.globalEvents;
         this.mesh = mesh;
 
@@ -59,6 +60,7 @@ export default class Drawer extends EventEmitter{
             ease: 'power2.inOut',
             onStart: () => {
                 this.trigger('drawer-animation', [state])
+                this.soundManager.play('drawerOpening')
             },
             onUpdate: () => {
                 this.drawerOutline.updateOutlineMeshPosition(this.mesh.position)

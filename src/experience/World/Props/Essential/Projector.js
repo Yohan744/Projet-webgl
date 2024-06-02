@@ -67,12 +67,12 @@ export default class Projector {
         this.projectorObjects = objects;
 
         this.projectorModel = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'cube');
-        this.projectorOutline = new Outline(this.projectorModel, 1.03);
+        this.projectorOutline = new Outline(this.projectorModel, 1.04);
         this.projectorOutline.updateOutlineMeshPosition(this.projectorModel.getWorldPosition(new THREE.Vector3()));
 
         this.rail = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'rail_diapo');
         this.railOriginalPosition.copy(this.rail?.position);
-        this.railOutline = new Outline(this.rail, 1.03);
+        this.railOutline = new Outline(this.rail, 1.04);
         this.railOutline.updateOutlineMeshPosition(this.rail.getWorldPosition(new THREE.Vector3()));
 
         this.boutonOn = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'boutonon');
@@ -83,7 +83,7 @@ export default class Projector {
 
         this.tireuse = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'tireuse');
         this.tireuseBasicPosition.copy(this.tireuse?.position);
-        this.tireuseOutline = new Outline(this.tireuse, 1.02);
+        this.tireuseOutline = new Outline(this.tireuse, 1.0225);
         this.tireuseOutline.updateOutlineMeshPosition(this.tireuse.getWorldPosition(new THREE.Vector3()));
         this.tireuseOutline.removeOutline()
 
@@ -354,7 +354,6 @@ export default class Projector {
             this.voicesPlayed[index] = true
             this.isSpeaking = false;
         })
-
 
     }
 

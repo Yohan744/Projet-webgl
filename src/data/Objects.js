@@ -25,7 +25,7 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
-        outlineScale: 1.01,
+        outlineScale: 1.02,
         propSound: 'telephone',
     },
     rubicub: {
