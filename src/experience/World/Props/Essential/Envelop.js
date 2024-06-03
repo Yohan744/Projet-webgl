@@ -335,7 +335,7 @@ export default class Envelop extends EventEmitter {
 
         this.carouselIndex = side === 1 ? this.carouselIndex - 1 : this.carouselIndex + 1
 
-        if (this.carouselIndex === 2 && this.gameManager.state.gameStepId === 2) {
+        if (this.carouselIndex === 2 && this.gameManager.state.gameStepId === 3) {
             this.gameManager.incrementGameStepId()
         }
 
@@ -383,6 +383,10 @@ export default class Envelop extends EventEmitter {
 
     animateMorphTargets(open) {
         if (this.mesh.morphTargetInfluences.length === 0) return;
+
+        if (this.gameManager.state.gameStepId === 2) {
+            this.gameManager.incrementGameStepId()
+        }
 
         this.timeline.clear();
 

@@ -225,7 +225,7 @@ export default class Camera {
             x: tmpLookingPoint.x,
             y: tmpLookingPoint.y,
             z: tmpLookingPoint.z,
-            duration: 0.6,
+            duration: 1,
             ease: 'power1.in'
         })
 
@@ -233,7 +233,7 @@ export default class Camera {
             x: lookingPoint.x,
             y: lookingPoint.y,
             z: lookingPoint.z - 2,
-            duration: 1.5,
+            duration: 2,
             ease: 'power1.out',
         })
 

@@ -46,7 +46,7 @@ export default class Locations {
 
         this.sizeLocations = [0.8, 0.9, 0.8, 0.8]
 
-        this.locationsGameIdApparition = [1, 2, 4, 3]
+        this.locationsGameIdApparition = [1, 2, 5, 4]
 
         this.init()
         this.setWatcher()

@@ -38,7 +38,7 @@ export const objectsData = {
     },
     tableau_magique1: {
         file: Telecran,
-        rotationOnClick: new THREE.Vector3(0, 0, -Math.PI * 0.35),
+        rotationOnClick: new THREE.Vector3(0, Math.PI * 0.075, -Math.PI * 0.35),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.02,

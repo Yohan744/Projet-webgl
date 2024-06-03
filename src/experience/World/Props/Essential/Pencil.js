@@ -238,8 +238,8 @@ export default class Pencil {
                     this.gameManager.updateInteractingState(false)
                     this.gameManager.setActualObjectInteractingName(null)
                     const stepId = this.gameManager.state.gameStepId
-                    if (stepId === 3 || stepId === -1) {
-                        stepId === 3 ? this.gameManager.incrementGameStepId() : this.gameManager.setGameStepId(-1)
+                    if (stepId === 4 || stepId === -1) {
+                        stepId === 4 ? this.gameManager.incrementGameStepId() : this.gameManager.setGameStepId(-1)
                         this.isInteractionFinished = true;
                         this.isInFrontOfCamera = false;
                     }

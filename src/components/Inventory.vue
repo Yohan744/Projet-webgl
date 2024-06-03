@@ -12,9 +12,10 @@
 
 import {useGameManager} from "../assets/js/GameManager";
 import projectorIcon from '../assets/icons/objects/projector.png';
+import envelopeIcon from '../assets/icons/objects/enveloppe.png';
+import cassetteIcon from '../assets/icons/objects/cassette.png';
 import pencilIcon from '../assets/icons/objects/pencil.png';
 import walkmanIcon from '../assets/icons/objects/walkman.png';
-import envelopeIcon from '../assets/icons/objects/enveloppe.png';
 
 
 export default {
@@ -31,6 +32,7 @@ export default {
         { name: 'picture', imageSrc: envelopeIcon },
         { name: 'projector', imageSrc: projectorIcon },
         { name: 'envelope', imageSrc: envelopeIcon },
+        { name: 'cassette', imageSrc: cassetteIcon },
         { name: 'pencil', imageSrc: pencilIcon },
         { name: 'walkman', imageSrc: walkmanIcon },
       ],
