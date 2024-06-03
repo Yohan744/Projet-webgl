@@ -132,6 +132,7 @@ export default class Objects {
 
                 } else if (name.includes("feuilles1")) {
                     child.material = this.materialLibrary.getPaperMaterial()
+                    child.visible = false;
 
                 } else {
                     console.log(name)

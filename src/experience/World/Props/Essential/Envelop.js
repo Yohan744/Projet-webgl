@@ -43,11 +43,11 @@ export default class Envelop extends EventEmitter {
         this.carouselIndex = 1
         this.carouselItemsOffset = 0.4;
         this.dahliaBasicRotation = new THREE.Vector3(Math.PI * 0.5, -0.25, 0);
-        this.letterBasicRotation = new THREE.Vector3(-Math.PI * 0.5, 0, Math.PI);
+     //   this.letterBasicRotation = new THREE.Vector3(-Math.PI * 0.5, 0, Math.PI);
         this.cassetteBasicRotation = new THREE.Vector3(Math.PI * 0.5, 0, 0);
         this.cartePostaleBasicRotation = new THREE.Vector3(-Math.PI, Math.PI * 0.5, -Math.PI * 0.5);
         this.itemScaleArray = [1.3, 1, 1.2, 1.5, 1.5, 1.5]
-        this.itemsName = ['dahlia', 'lettre', 'corps', 'cartepostaleplage', 'cartespostalesmaison', 'cartepostalebiarritz']
+      //  this.itemsName = ['dahlia', 'lettre', 'corps', 'cartepostaleplage', 'cartespostalesmaison', 'cartepostalebiarritz']
 
         this.initialMousePositionOnClick = {x: 0, y: 0}
 
@@ -237,7 +237,7 @@ export default class Envelop extends EventEmitter {
         this.carousel.visible = false;
 
         this.dahlia = this.interactableObjects.dahlia.mesh
-        this.letter = this.interactableObjects.lettre.mesh
+        //this.letter = this.interactableObjects.lettre.mesh
         const cassetteMeshes = this.interactableObjects.cassette.cassetteObjects
         const clonedObjects = []
         cassetteMeshes.map((object) => clonedObjects.push(object.clone()))
@@ -247,31 +247,31 @@ export default class Envelop extends EventEmitter {
         this.cartePostaleBiarritz = this.interactableObjects.cartePostaleBiarritz
 
         this.dahlia.rotation.order = 'YXZ';
-        this.letter.rotation.order = 'YXZ';
+        //this.letter.rotation.order = 'YXZ';
         this.cassette.rotation.order = 'YXZ';
         this.cartePostaleBiarritz.rotation.order = 'YXZ';
         this.cartePostalePlage.rotation.order = 'YXZ';
         this.cartePostaleMaison.rotation.order = 'YXZ';
 
         this.dahlia.material.opacity = 0;
-        this.letter.material.opacity = 0;
+       // this.letter.material.opacity = 0;
         this.cassette.opacity = 0;
         this.cartePostalePlage.opacity = 0;
         this.cartePostaleMaison.opacity = 0;
         this.cartePostaleBiarritz.opacity = 0;
 
-        this.carousel.add(this.dahlia, this.letter, this.cassette, this.cartePostalePlage , this.cartePostaleMaison, this.cartePostaleBiarritz);
-        this.items = [this.dahlia, this.letter, this.cassette, this.cartePostalePlage, this.cartePostaleMaison, this.cartePostaleBiarritz];
+      //  this.carousel.add(this.dahlia, this.letter, this.cassette, this.cartePostalePlage , this.cartePostaleMaison, this.cartePostaleBiarritz);
+       // this.items = [this.dahlia, this.letter, this.cassette, this.cartePostalePlage, this.cartePostaleMaison, this.cartePostaleBiarritz];
 
         this.dahlia.position.set(0, 0, 0);
-        this.letter.position.set(0, 0, 0);
+        //this.letter.position.set(0, 0, 0);
         this.cassette.position.set(0, 0, 0);
         this.cartePostalePlage.position.set(0, 0, 0);
         this.cartePostaleMaison.position.set(0, 0, 0);
         this.cartePostaleBiarritz.position.set(0, 0, 0);
 
         this.dahlia.rotation.setFromVector3(this.dahliaBasicRotation, 'YXZ');
-        this.letter.rotation.setFromVector3(this.letterBasicRotation, 'YXZ');
+        //this.letter.rotation.setFromVector3(this.letterBasicRotation, 'YXZ');
         this.cassette.rotation.setFromVector3(this.cassetteBasicRotation, 'YXZ');
         this.cartePostalePlage.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
         this.cartePostaleMaison.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');

@@ -19,8 +19,8 @@ export default class Telephone extends Prop {
     }
 
     moveToInitialPosition() {
-        this.mesh.position.set(4.5, 0.8, -3);
-        this.mesh.rotation.set(0, 0, 0);
+        this.mesh.position.set(4.2, 1.1, -1.2);
+        this.mesh.rotation.set(0, 2.6, 0);
         this.mesh.scale.set(1, 1, 1);
     }
 

@@ -14,7 +14,9 @@ export default class Letter {
     }
 
     init() {
-
+        this.mesh.position.set(3.9, 1, -2.1);
+        this.mesh.rotation.set(0, 2, 0);
+        this.mesh.scale.set(1, 1, 1);
     }
 
     onClickGeneral() {

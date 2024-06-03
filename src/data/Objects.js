@@ -41,7 +41,7 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, Math.PI * 0.075, -Math.PI * 0.35),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
-        outlineScale: 1.02,
+        outlineScale: 0,
         propSound: 'telecran',
     },
     tourne_disque1: {

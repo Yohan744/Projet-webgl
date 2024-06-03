@@ -1,5 +1,5 @@
 import Experience from "../Experience";
-import {objectsData} from "../../data/Objects";
+import { objectsData } from "../../data/Objects";
 import Projector from "./Props/Essential/Projector";
 import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
@@ -11,7 +11,7 @@ import Envelop from "./Props/Essential/Envelop";
 import Pencil from "./Props/Essential/Pencil";
 import TopChest from "./Props/Essential/TopChest";
 import BottomChest from "./Props/Essential/BottomChest";
-
+import Telephone from "./Props/Telephone";  // Assurez-vous d'importer la classe Telephone
 
 const interactableObjects = {};
 const interactableMesh = [];
@@ -48,25 +48,26 @@ export default class ObjectsInteractable {
 
                 if (name.includes("walkman")) {
                     child.material = this.materialLibrary.getWalkmanMaterial();
-                    this.walkman = new Walkman(child);
+                    //this.walkman = new Walkman(child);
                     interactableObjects.walkmanInstance = this.walkman;
 
                 } else if (name.includes("tirroir")) {
                     child.material = this.materialLibrary.getDrawerMaterial();
-                    this.drawer = new Drawer(child);
-                    interactableObjects.drawer = this.drawer;
                     interactableMesh.push(child);
 
                 } else if (name.includes("cartepostale") || name.includes('cartespostales')) {
                     if (name.includes('biarritz')) {
+                        console.log(child.position);
                         child.material = this.materialLibrary.getPostalCardBiarritzMaterial();
                         interactableObjects.cartePostaleBiarritz = child;
                     }
                     if (name.includes('plage')) {
+                        console.log(child.position);
                         child.material = this.materialLibrary.getPostalCardBeachMaterial();
                         interactableObjects.cartePostalePlage = child;
                     }
                     if (name.includes('maison')) {
+                        console.log(child.position);
                         child.material = this.materialLibrary.getPostalCardHouseMaterial();
                         interactableObjects.cartePostaleMaison = child;
                     }
@@ -78,28 +79,16 @@ export default class ObjectsInteractable {
                     interactableObjects.dahlia = this.dahlia;
 
                 } else if (name.includes("magazine")) {
-                    if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial();
-                    if (name.includes('fermé')) child.material = this.materialLibrary.getClosedMagazineMaterial();
+                    child.material = this.getMagazineMaterial(name);
                     interactableMesh.push(child);
 
                 } else if (name.includes("malle")) {
-                    if (name.includes('haut')) {
-                        child.material = this.materialLibrary.getTopChestMaterial();
-                        this.topChest = new TopChest(child);
-                        interactableObjects.topChest = this.topChest;
-                        interactableMesh.push(child);
-                    }
-
-                    if (name.includes('bas')) {
-                        child.material = this.materialLibrary.getBottomChestMaterial();
-                        this.bottomChest = new BottomChest(child);
-                        interactableObjects.bottomChest = this.bottomChest;
-                        interactableMesh.push(child);
-                    }
+                    child.material = this.getChestMaterial(name);
+                    //this.addChest(child, name);
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {
                     child.material = this.materialLibrary.getBlackMaterial();
-                    this.cassetteModels.push(child);
+                   // this.cassetteModels.push(child);
 
                 } else if (name === 'corps') {
                     child.material = this.materialLibrary.getCassetteMaterial();
@@ -113,9 +102,8 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("telephone")) {
                     child.material = this.materialLibrary.getTelephoneMaterial();
-                    this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
+                    this.telephone = new Telephone(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
                     interactableObjects.telephone = this.telephone;
-                    console.log(child.position);
                     interactableMesh.push(child);
 
                 } else if (name.includes("rubicub")) {
@@ -132,12 +120,13 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("enveloppe")) {
                     child.material = this.materialLibrary.getEnveloppeMaterial();
-                    interactableObjects.envelopModel = new Envelop(child);
+                    // interactableObjects.envelopModel = new Envelop(child);
 
                 } else if (name.includes("lettre")) {
                     child.material = this.materialLibrary.getLetterMaterial();
-                    this.lettre = new Letter(child);
-                    interactableObjects.lettre = this.lettre;
+                    const letter = new Letter(child);
+                    interactableObjects.letter = letter;
+                    interactableMesh.push(child);
 
                 } else if (name.includes("tableau_magique1")) {
                     child.material = this.materialLibrary.getTelecranMaterial();
@@ -152,33 +141,23 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child);
 
                 } else if (name.includes("rail_diapo") || name.includes("tireuse") || name.includes("boutonon") || name.includes("cube") || name.includes("oeil") || name === 'boite001' || name === 'porte') {
-
-                    if (name.includes("oeil")) child.material = this.materialLibrary.getProjectorOeilMaterial()
-                    if (name.includes("boite001")) child.material = this.materialLibrary.getProjectorBoxMaterial()
-                    if (name.includes("tireuse")) child.material = this.materialLibrary.getProjectorTireuseMaterial()
-                    if (name.includes("boutonon")) child.material = this.materialLibrary.getProjectorButtonMaterial()
-                    if (name.includes("cube")) child.material = this.materialLibrary.getProjectorCubeMaterial()
-                    if (name === 'porte') child.material = this.materialLibrary.getProjectorDoorMaterial()
-                    // if (name.includes("sphere")) child.material = this.materialLibrary.getProjectorTireuseMaterial()
-                    if (name.includes("rail_diapo")) child.material = this.materialLibrary.getProjectorRailMaterial()
-
+                    this.setProjectorMaterial(child, name);
                     this.projectorModel.push(child);
-                    interactableMesh.push(child)
+                    interactableMesh.push(child);
 
                 } else if (name === 'vynyle' || name === 'vynyle1') {
-                    if (name === 'vynyle') child.material = this.materialLibrary.getVinylMaterial();
-                    if (name === 'vynyle1') child.material = this.materialLibrary.getVinylUpMaterial();
+                    this.setVinylMaterial(child, name);
 
                 } else if (name === 'photo') {
-                    child.material = this.materialLibrary.getPictureMaterial()
-                   // this.picture = new Picture(child)
-                   // interactableObjects.picture = this.picture
+                    child.material = this.materialLibrary.getPictureMaterial();
+                    // this.picture = new Picture(child)
+                    // interactableObjects.picture = this.picture
 
                 } else {
                     console.log(name);
                 }
 
-                child.material.needsUpdate = true
+                child.material.needsUpdate = true;
 
             }
         });
@@ -187,8 +166,76 @@ export default class ObjectsInteractable {
         this.cassette = new Cassette(this.cassetteModels);
         interactableObjects.cassette = this.cassette;
 
-        this.scene.add(this.objectsInteractableModel)
+        this.scene.add(this.objectsInteractableModel);
 
+        // Place additional objects relative to the telephone
+        this.placeObjectsNearTelephone();
+    }
+
+    placeObjectsNearTelephone() {
+        if (interactableObjects.telephone) {
+            const telephonePosition = interactableObjects.telephone.mesh.position;
+            if (interactableObjects.letter) {
+                interactableObjects.letter.mesh.position.set(telephonePosition.x - 0.3, telephonePosition.y - 0.2, telephonePosition.z - 0.9);
+                interactableObjects.letter.mesh.rotation.set(0, 2, 0);
+            }
+            if (interactableObjects.cartePostaleBiarritz) {
+                interactableObjects.cartePostaleBiarritz.position.set(telephonePosition.x - 0.25, telephonePosition.y - 0.2, telephonePosition.z - 0.5);
+                interactableObjects.cartePostaleBiarritz.rotation.set(0, 2.5, 0);
+            }
+            if (interactableObjects.cartePostalePlage) {
+                interactableObjects.cartePostalePlage.position.set(telephonePosition.x - 0.25, telephonePosition.y - 0.2, telephonePosition.z - 0.3);
+                interactableObjects.cartePostalePlage.rotation.set(3.2, 0, 0);
+            }
+            if (interactableObjects.cartePostaleMaison) {
+                interactableObjects.cartePostaleMaison.position.set(telephonePosition.x - 0.25, telephonePosition.y - 0.2, telephonePosition.z - 0.1);
+                interactableObjects.cartePostaleMaison.rotation.set(0, -2.5, 0);
+            }
+        }
+    }
+
+    getPostalCardMaterial(name) {
+        if (name.includes('biarritz')) return this.materialLibrary.getPostalCardBiarritzMaterial();
+        if (name.includes('plage')) return this.materialLibrary.getPostalCardBeachMaterial();
+        if (name.includes('maison')) return this.materialLibrary.getPostalCardHouseMaterial();
+    }
+
+    getMagazineMaterial(name) {
+        if (name.includes('ouvert')) return this.materialLibrary.getOpenMagazineMaterial();
+        if (name.includes('fermé')) return this.materialLibrary.getClosedMagazineMaterial();
+    }
+
+    getChestMaterial(name) {
+        if (name.includes('haut')) return this.materialLibrary.getTopChestMaterial();
+        if (name.includes('bas')) return this.materialLibrary.getBottomChestMaterial();
+    }
+
+    addChest(child, name) {
+        if (name.includes('haut')) {
+            this.topChest = new TopChest(child);
+            interactableObjects.topChest = this.topChest;
+            interactableMesh.push(child);
+        }
+        if (name.includes('bas')) {
+            this.bottomChest = new BottomChest(child);
+            interactableObjects.bottomChest = this.bottomChest;
+            interactableMesh.push(child);
+        }
+    }
+
+    setProjectorMaterial(child, name) {
+        if (name.includes("oeil")) child.material = this.materialLibrary.getProjectorOeilMaterial();
+        if (name.includes("boite001")) child.material = this.materialLibrary.getProjectorBoxMaterial();
+        if (name.includes("tireuse")) child.material = this.materialLibrary.getProjectorTireuseMaterial();
+        if (name.includes("boutonon")) child.material = this.materialLibrary.getProjectorButtonMaterial();
+        if (name.includes("cube")) child.material = this.materialLibrary.getProjectorCubeMaterial();
+        if (name === 'porte') child.material = this.materialLibrary.getProjectorDoorMaterial();
+        if (name.includes("rail_diapo")) child.material = this.materialLibrary.getProjectorRailMaterial();
+    }
+
+    setVinylMaterial(child, name) {
+        if (name === 'vynyle') child.material = this.materialLibrary.getVinylMaterial();
+        if (name === 'vynyle1') child.material = this.materialLibrary.getVinylUpMaterial();
     }
 
     update() {
@@ -199,8 +246,8 @@ export default class ObjectsInteractable {
         if (this.objectsInteractableModel) {
             this.objectsInteractableModel.traverse(child => {
                 if (child.isMesh) {
-                    child.geometry.dispose()
-                    child.material.dispose()
+                    child.geometry.dispose();
+                    child.material.dispose();
                 }
             });
             this.scene.remove(this.objectsInteractableModel);
