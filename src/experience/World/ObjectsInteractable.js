@@ -36,6 +36,7 @@ export default class ObjectsInteractable {
     init() {
 
         this.objectsInteractableModel = this.resources.items.objectsInteractableModel.scene;
+        console.log(this.objectsInteractableModel);
 
         this.objectsInteractableModel.traverse(child => {
             if (child.isMesh) {

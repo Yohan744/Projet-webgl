@@ -63,12 +63,12 @@ export default class TopChest {
                 onComplete:()=> {
                     this.soundManager.play("chest");
                     this.playAnimation("animation_0_filtered")
-                        this.walkman.canComeOut = true;
-                        if (!this.walkman.isInFrontOfCamera) {
-                            setTimeout(() => {
-                                this.walkman.animateToCamera(!this.walkman.isInFrontOfCamera);
-                            }, 1000)
-                        }
+                    this.walkman.canComeOut = true;
+                    if (!this.walkman.isInFrontOfCamera) {
+                        setTimeout(() => {
+                            this.walkman.animateToCamera(!this.walkman.isInFrontOfCamera);
+                        }, 1000)
+                    }
                 }
             });
         }
@@ -84,18 +84,18 @@ export default class TopChest {
     }
 
     playAnimation(animationName) {
-            if (this.animationPlayed) {
-                console.log(`Animation ${animationName} has already been played.`);
-                return;
-            }
+        if (this.animationPlayed) {
+            console.log(`Animation ${animationName} has already been played.`);
+            return;
+        }
 
-            if (this.actions[animationName]) {
-                console.log("Playing animation");
-                this.actions[animationName].play();
-                this.animationPlayed = true;
-            } else {
-                console.warn(`Animation ${animationName} not found.`);
-            }
+        if (this.actions[animationName]) {
+            console.log("Playing animation");
+            this.actions[animationName].play();
+            this.animationPlayed = true;
+        } else {
+            console.warn(`Animation ${animationName} not found.`);
+        }
     }
 
     update() {
