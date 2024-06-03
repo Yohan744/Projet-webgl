@@ -73,10 +73,23 @@ export default class SoundManager {
         }
     }
 
+    fadeOutAndStopBackground(fadeDuration, onComplete) {
+        const originalVolume = this.sounds['background'].volume();
+
+        this.sounds['background'].fade(originalVolume, 0, fadeDuration);
+
+        setTimeout(() => {
+            this.sounds['background'].stop();
+            if (onComplete) onComplete();
+        }, fadeDuration * 1000);
+    }
+
     playSoundWithBackgroundFade(key, fadeDuration) {
         const originalVolume = this.sounds['background'].volume();
 
         this.sounds['background'].fade(originalVolume, originalVolume / 3, fadeDuration);
+
+
 
         setTimeout(() => {
             this.sounds[key].play();
@@ -85,17 +98,8 @@ export default class SoundManager {
                 this.sounds['background'].fade(originalVolume / 3, originalVolume, fadeDuration);
                 this.sounds[key].off('end');
             });
-        }, fadeDuration * 1000);
-    }
+        }, fadeDuration * 1000)
 
-    fadeOutAndStopBackground(fadeDuration) {
-        const originalVolume = this.sounds['background'].volume();
-
-        this.sounds['background'].fade(originalVolume, 0, fadeDuration);
-
-        setTimeout(() => {
-            this.sounds['background'].stop();
-        }, fadeDuration * 6000);
     }
 
     setSoundVolume(key, volume) {
