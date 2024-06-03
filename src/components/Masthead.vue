@@ -26,7 +26,7 @@ export default {
     },
   },
   mounted() {
-    this.videoManager.preloadVideo();
+    this.videoManager.preloadIntroVideo();
 
     watch(() => this.videoManagerState.videoReady, (videoReady) => {
       this.videoReady = videoReady;
