@@ -25,13 +25,14 @@ export default class Pencil {
         this.isInFrontOfCamera = false;
         this.hasBeenPlaced = false;
         this.isReadyToBeRewinded = false
+        this.isInteractionFinished = false;
         this.offsetFromCamera = 0.35;
         this.cassetteOffset = new THREE.Vector3(0, 0, 0.2);
         this.basicRotation = this.mesh.rotation.clone()
 
         this.experience.on('ready', () => {
             this.interactableObjects = useInteractableObjects();
-            this.pencilOutline = new Outline(this.mesh, 1.05);
+            this.pencilOutline = new Outline(this.mesh, 1.03);
             this.cassette = this.interactableObjects.cassette
 
             this.init();
@@ -42,25 +43,36 @@ export default class Pencil {
     init() {
         this.pencilOutline.showOutline();
 
-        this.pencilRotation = gsap.to(this.mesh.rotation, {
-            x: '+=' + Math.PI,
+        this.mesh.material.wrapS = THREE.RepeatWrapping;
+        this.mesh.material.wrapT = THREE.RepeatWrapping;
+        this.mesh.material.map.repeat.set(1, 1);
+
+
+        this.pencilRotation = gsap.to(this.mesh.material.map.offset, {
+            x: 0.5,
+            y: 0,
             repeat: -1,
-            duration: 0.5,
-            ease: 'power2.inOut'
+            duration: 2,
+            ease: 'linear',
+            onUpdate: () => {
+                this.mesh.material.map.needsUpdate = true;
+            }
         });
         this.pencilRotation.pause()
 
     }
 
     setWatchers() {
-        this.pointer.on("click", () => this.handleClick());
-        this.pointer.on("click-release", () => this.onPointerUp());
+        this.pointer.on("click", this.handleClick.bind(this));
+        this.pointer.on("click-release", this.onPointerUp.bind(this));
 
         watch(() => this.gameManager.state.isInteractingWithObject, (newVal) => {
             if (!newVal && this.gameManager.state.actualObjectInteractingName === "pencil") {
                 this.pencilRotation.pause()
                 this.returnToInitialPosition()
                 this.gameManager.setActualObjectInteractingName(null)
+                this.soundManager.sounds['cassetteRewind'].stop()
+                this.soundManager.sounds['crayonFound'].stop()
                 this.cassette.returnToInitialPosition()
                 this.renderer.toggleBlurEffect(false, 0)
                 this.hasBeenPlaced = false;
@@ -87,7 +99,7 @@ export default class Pencil {
             this.pencilOutline.removeOutline();
             this.animateToCamera();
 
-        } else {
+        } else if (!this.isInteractionFinished) {
 
             if (!this.hasBeenPlaced) {
                 this.animatePencilAndCassette();
@@ -114,7 +126,7 @@ export default class Pencil {
         const targetPosition = new THREE.Vector3();
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
 
-        this.soundManager.playSoundWithBackgroundFade('crayonFound', 1.25);
+        if (!this.isInteractionFinished) this.soundManager.playSoundWithBackgroundFade('crayonFound', 1.25);
 
         gsap.to(this.mesh.position, {
             x: targetPosition.x,
@@ -126,10 +138,12 @@ export default class Pencil {
                 this.pencilOutline.updateOutlineMeshPosition(this.mesh.position)
             },
             onComplete: () => {
-                this.positionCassetteNextToPencil();
+                if (!this.isInteractionFinished) {
+                    this.positionCassetteNextToPencil();
+                    this.pencilOutline.showOutline()
+                    this.globalEvents.trigger('change-cursor', {name: 'click'})
+                }
                 this.isInFrontOfCamera = true;
-                this.pencilOutline.showOutline()
-                this.globalEvents.trigger('change-cursor', {name: 'click'})
             }
         });
 
@@ -169,6 +183,9 @@ export default class Pencil {
             z: Math.PI * 0.3,
             duration: duration,
             ease: 'power2.inOut',
+            onUpdate: () => {
+                this.pencilOutline.updateOutlineMeshRotation(this.mesh.rotation)
+            }
         })
 
         //////////////////////
@@ -180,6 +197,9 @@ export default class Pencil {
             delay: delay,
             duration: duration,
             ease: 'power2.inOut',
+            onUpdate: () => {
+                this.pencilOutline.updateOutlineMeshPosition(this.mesh.position)
+            }
         })
 
         gsap.to(this.cassette.cassetteGroup.position, {
@@ -196,6 +216,9 @@ export default class Pencil {
             delay: duration + delay,
             duration: duration,
             ease: 'power2.inOut',
+            onUpdate: () => {
+                this.pencilOutline.updateOutlineMeshPosition(this.mesh.position)
+            },
             onComplete: () => {
                 this.isReadyToBeRewinded = true;
             }
@@ -203,7 +226,7 @@ export default class Pencil {
 
     }
 
-    returnToInitialPosition() {
+    returnToInitialPosition(forced = false) {
         gsap.to(this.mesh.position, {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
@@ -211,15 +234,21 @@ export default class Pencil {
             duration: 2,
             ease: 'power2.inOut',
             onStart: () => {
-                if (this.crayonDropPlayed) {
-                    this.soundManager.stop("cassetteIn");
-                    this.soundManager.stop("crayonDrop")
-                } else {
-                    this.crayonDropPlayed = true;
+                if (forced) {
+                    this.gameManager.updateInteractingState(false)
+                    this.gameManager.setActualObjectInteractingName(null)
+                    const stepId = this.gameManager.state.gameStepId
+                    if (stepId === 3 || stepId === -1) {
+                        stepId === 3 ? this.gameManager.incrementGameStepId() : this.gameManager.setGameStepId(-1)
+                        this.isInteractionFinished = true;
+                        this.isInFrontOfCamera = false;
+                    }
                 }
             },
+            onUpdate: () => {
+                this.pencilOutline.updateOutlineMeshPosition(this.mesh.position)
+            },
             onComplete: () => {
-                this.soundManager.play("cassetteIn");
                 this.soundManager.play("crayonDrop");
             }
         });
@@ -229,7 +258,10 @@ export default class Pencil {
             y: this.initialRotation.y,
             z: this.initialRotation.z,
             duration: 2,
-            ease: 'power2.inOut'
+            ease: 'power2.inOut',
+            onUpdate: () => {
+                this.pencilOutline.updateOutlineMeshRotation(this.mesh.rotation)
+            }
         });
     }
 

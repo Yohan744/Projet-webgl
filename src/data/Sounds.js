@@ -114,7 +114,7 @@ export const data = {
     },
 
     crayonFound: {
-        src: p + 'crayon-trouver.m4a',
+        src: p + 'crayon-trouver.mp3',
         volume: 0.75,
         preload: true,
         loop: false,
@@ -129,7 +129,7 @@ export const data = {
 
     crayonDrop: {
         src: fx + 'crayonDrop.mp3',
-        volume: 0.3,
+        volume: 0.1,
         preload: true,
         loop: false,
     },
@@ -287,7 +287,7 @@ export const data = {
 
     projectorSound: {
         src: fx + 'projectorSound.mp3',
-        volume: 0.1,
+        volume: 0.07,
         preload: true,
         loop: true,
     },

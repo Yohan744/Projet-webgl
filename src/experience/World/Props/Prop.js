@@ -53,7 +53,7 @@ export default class Prop extends EventEmitter {
                 this.outline?.showOutline()
                 this.renderer.toggleBlurEffect(false)
 
-                if (this.gameManager.state.actualObjectInteractingName !== 'projector' && this.gameManager.state.actualObjectInteractingName !== 'drawer') {
+                if (this.gameManager.state.actualObjectInteractingName !== 'projector' && this.gameManager.state.actualObjectInteractingName !== 'drawer' && this.gameManager.state.actualObjectInteractingName !== 'pencil') {
                     this.gameManager.setActualObjectInteractingName(null)
                 }
 

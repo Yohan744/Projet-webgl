@@ -19,10 +19,8 @@ export default class Walkman {
         this.isAnimating = false;
         this.dragDistance = 0.07;
         this.mouseStartClickPosition = { x: 0, y: 0 };
-        this.hasMovedInFront = false;
         this.isInFrontOfCamera = false;
         this.isClapetClosedPermanently = false;
-        this.soundHasBeenPlayed = false;
 
         this.morphTargetName = 'clapet';
         this.headphoneMorphTargetName = 'casque';
@@ -196,7 +194,6 @@ export default class Walkman {
             if(this.isInFrontOfCamera) {
                 setTimeout(() => {
                     this.soundManager.play("walkman2");
-                    this.soundHasBeenPlayed = true;
                     cassette.animateToCamera(targetPosition, true);
                     this.soundManager.play("cassetteOut");
                 }, 3000);
