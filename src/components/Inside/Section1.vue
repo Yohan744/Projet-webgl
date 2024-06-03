@@ -32,7 +32,7 @@
     </div>
     <h3>La boite à outils de Mona</h3>
     <div class="bottom-band">
-      <div v-for="(item, index) in items" :key="index" class="square" @mouseover="showPopup(index)" @mouseleave="hidePopup">
+      <div v-for="(item, index) in items" :key="index" class="square" @mouseover="showPopup(index)" @mouseleave="hidePopup" :style="{ backgroundColor: item.color }">
         <img :src="item.src" :alt="item.name">
         <div v-if="popupVisible === index" class="popup">
           <p><strong>{{ item.name }}</strong></p>
@@ -55,42 +55,50 @@ export default {
         { 
           name: 'Tablette de sable', 
           anecdote: 'Populaire dans les années 80, la tablette de sable permettait aux enfants de dessiner et d\'effacer facilement avec un stylet, offrant une alternative économique et réutilisable aux blocs de papier.', 
-          src: '/src/assets/img/objects/object1.png' 
+          src: '/src/assets/img/objects/object1.png',
+          color: '#B6E5EB' // Jaune
         },
         { 
           name: 'Walkman', 
           anecdote: 'Incontournable dans les années 80, le Walkman, un lecteur de cassettes portable avec des écouteurs, révolutionnait la façon d\'écouter de la musique en permettant aux gens d\'emmener leurs chansons préférées partout.', 
-          src: '/src/assets/img/objects/object2.png' 
+          src: '/src/assets/img/objects/object2.png',
+          color: '#A7CF90'
         },
         { 
           name: 'Téléphone à cadran', 
           anecdote: 'Utilisé dans la plupart des foyers des années 80, le téléphone à cadran fixe nécessitait de composer les numéros en tournant un cadran rotatif, rendant l\'expérience téléphonique unique avec son "clic-clac" distinctif.', 
-          src: '/src/assets/img/objects/object3.png' 
+          src: '/src/assets/img/objects/object3.png',
+          color: '#F3C767' 
         },
         { 
           name: 'Cassette à rembobiner', 
           anecdote: 'Les cassettes audio étaient le format musical dominant dans les années 80. Elles nécessitaient parfois un crayon pour rembobiner manuellement la bande, prolongeant ainsi leur durée de vie.', 
-          src: '/src/assets/img/objects/object4.png' 
+          src: '/src/assets/img/objects/object4.png',
+          color: '#C8829F' 
         },
         { 
           name: 'Vinyl et tourne-disque', 
           anecdote: 'Les vinyles, écoutés sur un tourne-disque, offraient une qualité sonore chaleureuse. Écouter un album était une activité souvent partagée en famille ou entre amis.', 
-          src: '/src/assets/img/objects/object5.png' 
+          src: '/src/assets/img/objects/object5.png',
+          color: '#737DB9' 
         },
         { 
           name: 'Magazines des années 80', 
           anecdote: 'Les magazines des années 80 étaient une fenêtre sur le monde, regorgeant de modes, tendances et nouvelles de l\'époque, fournissant des mises à jour avant l\'ère d\'Internet.', 
-          src: '/src/assets/img/objects/object6.png' 
+          src: '/src/assets/img/objects/object6.png',
+          color: '#EC9781' 
         },
         { 
           name: 'Disque de Balavoine', 
           anecdote: 'Daniel Balavoine était une icône de la musique française dans les années 80. Ses albums, comme "Sauver l\'amour", étaient souvent joués en boucle sur les tourne-disques.', 
-          src: '/src/assets/img/objects/object7.png' 
+          src: '/src/assets/img/objects/object7.png',
+          color: '#B6E5EB' 
         },
         { 
           name: 'Rubik\'s Cube', 
           anecdote: 'Le Rubik\'s Cube, un puzzle en forme de cube avec des faces colorées à aligner, a connu une énorme popularité dans les années 80, devenant un symbole de l\'ingéniosité et un défi incontournable.', 
-          src: '/src/assets/img/objects/object8.png' 
+          src: '/src/assets/img/objects/object8.png',
+          color: '#F3C767'
         }
       ]
     };
@@ -105,7 +113,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 .content-container {
@@ -143,7 +150,7 @@ export default {
 }
 
 .boxed-text {
-  background-color: #ec968141;
+  background-color: white;
   padding: 20px;
   border-radius: 3px;
   margin-top: 20px;
@@ -160,6 +167,7 @@ export default {
 }
 
 .square {
+  opacity: 0.74;
   width: 160px;
   height: 160px;
   margin: 15px;
@@ -169,6 +177,7 @@ export default {
   position: relative;
   transition: transform 0.3s;
   perspective: 1000px;
+  /* border-radius: 50%; */
 }
 
 .square img {
@@ -176,28 +185,30 @@ export default {
   height: auto;
   border-radius: 8px;
   transition: transform 0.3s;
+  z-index: 1; 
 }
 
 .square:hover {
   transform: rotateY(15deg) rotateX(15deg); 
   z-index: 10;
+  opacity: 1;
 }
 
 .square:hover img {
-  transform: scale(2); 
-  background-color: white;
+  transform: scale(1.3); 
 }
 
 .popup {
   position: absolute;
   margin: 3em;
-  font-size: 20px;
+  padding: 30px;
+  font-size: 16px;
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) scale(0);
+  transform:scale(0);
   min-width: 300px;
-  padding: 10px;
   background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: #8b4492;
   border-radius: 8px;
   text-align: center;
@@ -207,10 +218,7 @@ export default {
   animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
-.square:hover {
-  transform: scale(0.75);
-}
- .popup {
+.square:hover .popup {
   visibility: visible;
   transform: translateX(-50%) scale(1);
   opacity: 1;
@@ -218,7 +226,7 @@ export default {
 
 .popup p {
   opacity: 0;
-  animation: handwriting 2s steps(30) forwards;
+  animation: handwriting 1s steps(30) forwards;
 }
 
 .popup::after {
@@ -273,22 +281,24 @@ button:hover {
 }
 
 @media (max-width: 768px) {
-  .bottom-band {
-    justify-content: flex-start; 
+  .content-1 {
+    flex-direction: column;
   }
 
-  .square {
-    width: 48%; 
+  .bottom-band {
+    justify-content: flex-start; 
   }
 }
 
 @media (max-width: 480px) {
   .square {
     width: 100px; 
+    height: 100px;
     margin-bottom: 10px;
   }
+
+  .content-1 {
+    flex-direction: column;
+  }
 }
-
 </style>
-
-<style scoped></style>

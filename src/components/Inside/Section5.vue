@@ -68,7 +68,7 @@
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title">LGBTiphobies</div>
+        <div class="info-title"  @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage" >LGBTiphobies</div>
       </div>
       <div class="info-content">
         <div class="text-content">
@@ -76,8 +76,8 @@
             Agressions physiques LGBT+ ont été rapportées par SOS homophobie en 2023
           </p>
           <div class="chart-toggle-buttons">
-            <button :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
-            <button :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires</button>
+            <button   @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
+            <button   @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires</button>
           </div>
           <highcharts :options="currentChartOptions"></highcharts>
           <div>
