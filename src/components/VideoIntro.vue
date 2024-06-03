@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     videoElement() {
-      return this.videoManagerState.videoElement;
+      return this.videoManagerState.introVideoElement;
     }
   },
   mounted() {

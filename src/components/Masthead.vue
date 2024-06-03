@@ -17,7 +17,7 @@ export default {
     return {
       videoManager: useVideoManager(),
       videoManagerState: useVideoManager().state,
-      videoReady: useVideoManager().state.videoReady,
+      videoReady: useVideoManager().state.introVideoReady,
     };
   },
   computed: {
@@ -28,7 +28,7 @@ export default {
   mounted() {
     this.videoManager.preloadIntroVideo();
 
-    watch(() => this.videoManagerState.videoReady, (videoReady) => {
+    watch(() => this.videoManagerState.introVideoReady, (videoReady) => {
       this.videoReady = videoReady;
     });
   },
