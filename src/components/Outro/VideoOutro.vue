@@ -1,25 +1,22 @@
 <template>
-  <div ref="videoWrapper" class="video-intro-wrapper">
+  <div ref="videoWrapper" class="video-outro-wrapper">
     <div v-if="videoElement">
       <video ref="videoElement" :src="videoUrl" autoplay playsinline @canplaythrough="playVideo" @ended="onVideoEnded"></video>
-      <div class="skip" @click="skipVideo">
-        <p>Skip</p>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import {useAppStore} from "../stores/appStore";
-import {useVideoManager} from "../assets/js/VideoManager";
+import {useAppStore} from "../../stores/appStore";
+import {useVideoManager} from "../../assets/js/VideoManager";
 
 export default {
-  name: 'VideoIntro',
+  name: 'VideoOutro',
   data() {
     const appStore = useAppStore();
     const videoManager = useVideoManager();
     const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
-    const videoName = import.meta.env.VITE_APP_VIDEO_NAME;
+    const videoName = import.meta.env.VITE_APP_VIDEOOUTRO_NAME;
 
     return {
       appStore,
@@ -29,7 +26,7 @@ export default {
   },
   computed: {
     videoElement() {
-      return this.videoManagerState.introVideoElement;
+      return this.videoManagerState.outroVideoElement;
     }
   },
   mounted() {
@@ -40,16 +37,18 @@ export default {
   methods: {
     playVideo() {
       this.updateOpacityTo(1, () => {
+        console.log("Playing outro video");
         this.$refs.videoElement?.play();
       });
     },
     onVideoEnded() {
+      console.log("Outro video ended");
       this.markVideoWatched();
     },
     markVideoWatched() {
       this.updateOpacityTo(0, () => {
         this.$refs.videoWrapper?.remove();
-        this.appStore.setVideoIntroWatched();
+        this.appStore.setVideoOutroWatched();
       });
     },
     updateOpacityTo(opacity, callback) {
@@ -61,16 +60,13 @@ export default {
           callback();
         }
       }, 3000);
-    },
-    skipVideo() {
-      this.markVideoWatched();
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.video-intro-wrapper {
+.video-outro-wrapper {
   position: fixed;
   top: 0;
   left: 0;
@@ -90,26 +86,5 @@ export default {
     opacity: 0;
     transition: opacity 2.5s ease-in-out;
   }
-
-  .skip {
-    position: fixed;
-    top: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 20px;
-    background: white;
-    z-index: 6;
-    cursor: pointer;
-    border-radius: 10px;
-
-    p {
-      position: relative;
-      font-size: 20px;
-    }
-
-  }
-
 }
 </style>

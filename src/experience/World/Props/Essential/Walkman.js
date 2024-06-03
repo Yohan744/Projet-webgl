@@ -266,7 +266,9 @@ export default class Walkman {
                     duration: 2,
                     onComplete:()=> {
                         this.soundManager.stop("bouton");
-                        this.soundManager.fadeOutAndStopBackground(2000);
+                        this.soundManager.fadeOutAndStopBackground(2000, () => {
+                            this.triggerOutroVideo();
+                        });
                         this.soundManager.play("final", 0.3);
                     }
                 });
