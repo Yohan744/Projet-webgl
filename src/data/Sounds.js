@@ -28,7 +28,7 @@ export const data = {
         loop: false,
     },
     final: {
-        src: p + 'finalMessage.m4a',
+        src: p + 'finalMessage.mp3',
         volume: 1,
         preload: true,
         loop: false,
