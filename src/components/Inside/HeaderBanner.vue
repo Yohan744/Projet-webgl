@@ -1,5 +1,5 @@
 <template>
-  <div :class="['header-banner', { 'dark-theme': activeSection !== 0 }]">
+  <div :class="['header-banner', { 'dark-theme': activeSection !== 0, 'white-background': activeSection !== 0 }]">
     <div class="tabs">
       <span 
         v-for="(tab, index) in tabs" 
@@ -39,25 +39,34 @@ export default {
 <style scoped>
 .header-banner {
   position: fixed;
-  top: 0;
-  width: 100%;
+  top: 30px;
+  left: 50px;
+  right: 50px;
+  margin: 0 auto;
+  width: calc(100% - 100px);
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
   z-index: 3;
   color: white;
-}
-&:hover {
-  mix-blend-mode: difference;
+  transition: background-color 0.3s;
+  align-items: center;
+  border-radius: 12px;
+  z-index: 100000000;
 }
 
 .header-banner.dark-theme {
   color: black;
 }
 
+.header-banner.white-background {
+  background-color: white;
+  color: black;
+}
+
 .tabs {
   display: flex;
-
+  width: 80%;
 }
 
 .tab {
@@ -68,6 +77,7 @@ export default {
 .tab.active {
   font-weight: bold;
   color: #A7CF90;
+  text-decoration: overline;
 }
 
 .header-button {
@@ -78,7 +88,7 @@ export default {
   border-radius: 8px;
 }
 
-button:hover {
+.header-button:hover {
   background-color:  #68a146;
 }
 </style>
