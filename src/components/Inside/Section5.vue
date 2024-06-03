@@ -5,7 +5,7 @@
         <div class="info-title">Société</div>
       </div>
       <div class="info-content">
-        <img src="/src/assets/img/Causette.png" alt="Image description" class="info-image">
+        <img src="/src/assets/img/Causette.png" alt="Image description" class="info-image-50">
         <div class="text-content">
           <p>
             En 2023, nous célébrons les 10 ans du mariage pour tous en France, une étape historique vers l'égalité des droits pour les couples de même sexe.
@@ -30,13 +30,13 @@
             En 2024, les smartphones et les réseaux sociaux ont révolutionné la communication, rendant les échanges quotidiens faciles même dans les relations à distance.
           </p>
           <p>
-            Grâce à ces technologies, il est possible de rester en contact avec ses proches en temps réel, peu importe la distance. 
+            Grâce à ces technologies, il est possible de rester en contact avec ses proches en temps réel, peu importe la distance.
           </p>
-          <p>           
+          <p>
             Par ailleurs, les réseaux sociaux sont devenus des plateformes puissantes pour soutenir le mouvement LGBT, offrant des espaces de dialogue, de visibilité et de mobilisation pour défendre les droits et promouvoir l'égalité.
           </p>
         </div>
-        <img src="/src/assets/img/TelMonaSam.png" alt="Image description" class="info-image">
+        <img src="/src/assets/img/TelMonaSam.png" alt="Image description" class="info-image-50">
       </div>
     </div>
 
@@ -53,32 +53,37 @@
           <p>
             Ces artistes, véritables icônes, utilisent leur plateforme pour sensibiliser le public, défendre les droits des personnes LGBT et promouvoir l'inclusivité à travers leur musique et leur présence médiatique.
           </p>
-          <p>           
+          <p>
             Leurs actions et leur influence jouent un rôle crucial dans l'évolution des mentalités et la lutte pour l'égalité.
           </p>
         </div>
       </div>
     </div>
 
-
-    <h2 class="main-title">L’évolution ... mais pas trop</h2>
-    <p>En somme, les chiffres de 2024 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
-    </p>
+    <div>
+      <h2 class="main-title">L’évolution ... mais pas trop</h2>
+      <p>En somme, les chiffres de 2024 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
+      </p>
+    </div>
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
         <div class="info-title">LGBTiphobies</div>
       </div>
-      <div class="info-content"> 
+      <div class="info-content">
         <div class="text-content">
           <p>
-            Agressions physiques LGBT+ ont éyé rapportes par SOS homophobie en 2023
+            Agressions physiques LGBT+ ont été rapportées par SOS homophobie en 2023
           </p>
-          <p>
-            72% de coups, 17% de crachats et jet d’objets, 8% de viols ou de tentatives de viol, 3ù d’agressions sexuelles, 1% de meurtres
-          </p>
+          <div class="chart-toggle-buttons">
+            <button :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
+            <button :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires</button>
+          </div>
+          <highcharts :options="currentChartOptions"></highcharts>
+          <div>
+            <a @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+          </div>
         </div>
-      <img src="/src/assets/img/RapportLGBT.png" alt="Image description" class="info-image">
       </div>
     </div>
 
@@ -87,13 +92,15 @@
         <div class="info-title">Agressions</div>
       </div>
       <div class="info-content">
-        <img src="/src/assets/img/HomophobieTue.png" alt="Image description" class="info-image">
         <div class="text-content">
           <p>
-            Agressions physiques LGBT+ ont éyé rapportes par SOS homophobie en 2023
+            266 Agressions physiques LGBT+ ont été rapportées par SOS homophobie en 2023
           </p>
           <div class="info-data">
-
+            <highcharts :options="chartOptions" ref="chart"></highcharts>
+          </div>
+          <div>
+            <a @mouseover="showImage('/src/assets/img/HomophobieTue.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -106,22 +113,247 @@
       <div class="info-content">
         <div class="text-content">
           <p>
-            Dans quel contexte ont lieu les principaux faits recencées en 2022 (SOS Homophobie)
+            Dans quel contexte ont lieu les principaux faits recensés en 2022 (SOS Homophobie)
           </p>
-          </div>
-          <img src="/src/assets/img/Resistance.png" alt="Image description" class="info-image">
-        
+        </div>
+        <img src="/src/assets/img/Resistance.png" alt="Image description" class="info-image-30">
       </div>
     </div>
 
-
+    <div v-if="hoverImage" class="hover-image">
+      <img :src="hoverImage" alt="Hovered Image">
+    </div>
   </div>
 </template>
 
 <script>
+import HighchartsVue from 'highcharts-vue';
+import Highcharts from 'highcharts';
+
 export default {
   name: 'NewSection',
-}
+  components: {
+    highcharts: HighchartsVue.component
+  },
+  data() {
+    return {
+      activeChart: 1,
+      hoverImage: null,
+      chartOptions: {
+        chart: {
+          type: 'spline',
+          backgroundColor: 'transparent',
+          width: null
+        },
+        title: {
+          text: 'Évolution des Agressions'
+        },
+        credits: {
+          enabled: false
+        },
+        xAxis: {
+          categories: ['2016', '2017', '2018', '2019', '2020','2021','2022','2023']
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: ''
+          }
+        },
+        series: [{
+          name: '',
+          data: [1810, 1929, 2450, 3330, 3260, 3920, 4040, 4558],
+          color: '#A7CF90'
+        }],
+        plotOptions: {
+          series: {
+            lineWidth: 1,
+            marker: {
+              enabledThreshold: 2,
+              symbol: 'circle',
+              radius: 3,
+              fillColor: '#FFFFFF',
+              lineWidth: 2,
+              lineColor: null 
+            },
+            dataLabels: {
+              enabled: true,
+              align: 'left',
+              crop: false,
+              useHTML: false,
+              formatter: function() {
+                if (this.point.x === this.series.data.length - 1) {
+                  return '<span style="color: '+ this.color + '">' + Highcharts.numberFormat(this.y, 0) + '</span>';
+                } else {
+                  return null;
+                }
+              }
+            }
+          }
+        },
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 560
+            },
+            chartOptions: {
+              xAxis: {
+                labels: {
+                  step: 4
+                }
+              }
+            }
+          }]
+        }
+      },
+      chartOptions1: {
+        chart: {
+          type: 'column',
+          backgroundColor: 'transparent'
+        },
+        credits: {
+          enabled: false
+        },
+        title: {
+          text: "Types d'agressions"
+        },
+        xAxis: {
+          categories: ['Coups', 'Crachats et jet d’objets', 'Viols ou tentatives de viol', 'Agressions sexuelles', 'Meurtres'],
+          title: {
+            text: null
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: ''
+          }
+        },
+        tooltip: {
+          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b><br/>',
+          shared: true
+        },
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true,
+              format: '{point.y}%',
+              style: {
+                fontSize: '8px'
+              }
+            }
+          }
+        },
+        series: [{
+          name: 'Types d\'agressions',
+          data: [72, 17, 8, 3, 1],
+          color: '#A7CF90'
+        }]
+      },
+      chartOptions2: {
+        chart: {
+          type: 'column',
+          backgroundColor: 'transparent'
+        },
+        credits: {
+          enabled: false
+        },
+        title: {
+          text: 'Manifestations supplémentaires'
+        },
+        xAxis: {
+          categories: [
+            'Insultes', 
+            'Rejet', 
+            'Menaces', 
+            'Harcèlement', 
+            'Dégradations / vols',
+            'Sexualisation', 
+            'Traquenard', 
+            'Inaction', 
+            'Diffamation',
+            'Discrimination', 
+            'Amalgame pédocrim.', 
+            'Agress. sex.',
+            'Outing', 
+            'Invisibilisation', 
+            'Contrôle déplacements'
+          ],
+          title: {
+            text: null
+          },
+          labels: {
+            rotation: -45,
+            style: {
+              fontSize: '8px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: ''
+          },
+          labels: {
+            rotation: -45,
+            style: {
+              fontSize: '8px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        },
+        tooltip: {
+          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b><br/>',
+          shared: true
+        },
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true,
+              format: '{point.y}%',
+              style: {
+                fontSize: '8px'
+              }
+            }
+          }
+        },
+        series: [{
+          name: 'Pourcentage',
+          data: [71, 40, 31, 25, 14, 9, 8, 8, 7, 5, 3, 3, 2, 1, 1],
+          color: '#A7CF90'
+        }]
+      },
+      currentChartOptions: {}
+    };
+  },
+  methods: {
+    switchChart(chartNumber) {
+      this.activeChart = chartNumber;
+      if (chartNumber === 1) {
+        this.currentChartOptions = this.chartOptions1;
+      } else {
+        this.currentChartOptions = this.chartOptions2;
+      }
+    },
+    showImage(imageSrc) {
+      this.hoverImage = imageSrc;
+    },
+    hideImage() {
+      this.hoverImage = null;
+    }
+  },
+  mounted() {
+    this.currentChartOptions = this.chartOptions1; // Default chart
+    this.$nextTick(() => {
+      this.$refs.chart.reflow();
+    });
+  }
+};
 </script>
 
 <style scoped>
@@ -132,7 +364,7 @@ export default {
 
 .info-panel {
   width: 80%;
-  margin-bottom: 20px;
+  margin: 50px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -152,9 +384,9 @@ export default {
 
 .info-title {
   padding-right: 10px;
-  padding-left: 10px ;
+  padding-left: 10px;
   margin-top: 20px;
-  font-size: 24px;
+  font-size: 20px;
   background-color: #EC9781;
   color: white;
 }
@@ -166,16 +398,54 @@ export default {
   align-items: center;
 }
 
-
-.info-image {
+.info-image-50 {
   width: 50%;
   max-width: 600px;
   margin-bottom: 15px;
   border-radius: 8px;
 }
-
+.info-image-30 {
+  width: 30%;
+  max-width: 600px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
 .info-data {
-  width: 50%;
+  padding: 20px;
+}
+
+.chart-toggle-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.chart-toggle-buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: white;
+  color: #A7CF90;
+  border: 1px solid #A7CF90;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.chart-toggle-buttons button.active {
+  background-color: #A7CF90;
+  color: white;
+}
+
+.hover-image {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.hover-image img {
+  width: 200px;
+  height: auto;
 }
 
 .text-content {
@@ -184,38 +454,10 @@ export default {
 }
 
 .text-content p {
-  padding: 10px;
-}
-
-.left, .right {
-  flex: 1;
-  padding: 10px;
-}
-
-.right {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.image-container {
-  
-  margin-bottom: 15px;
-}
-
-.image-container img {
-  width: 50%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.text-container {
-  width: 100%;
-  text-align: center;
+  padding: 30px;
 }
 
 @media (max-width: 768px) {
-
   .info-panel {
     width: 100%;
   }
@@ -228,8 +470,7 @@ export default {
     text-align: left;
   }
 
-
-  .info-image {
+  .info-image-50 {
     margin-right: 20px;
     margin-bottom: 0;
   }

@@ -98,12 +98,12 @@ export default {
 }
 
 .item-name {
-  font-size: 1.2em;
+  font-size: 16px;
   margin-bottom: 5px;
 }
 
 .item-title {
-  font-size: 1em;
+  font-size: 12px;
   color: #666;
 }
 

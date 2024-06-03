@@ -72,9 +72,9 @@ export default {
 
         timeline
           .fromTo(`.media-left-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5 })
-          .fromTo(`.media-right-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5, delay: 0.4 }, "<")
+          .fromTo(`.media-right-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5, delay: 0.7 }, "<")
           .to(`.media-left-${index}`, { y: -100, opacity: 0.05, duration: 0.5 })
-          .to(`.media-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.4 }, "<");
+          .to(`.media-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.7 }, "<");
       });
     },
     adjustMediaSizes() {

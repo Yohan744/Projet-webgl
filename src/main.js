@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import { createPersistedState } from 'pinia-plugin-persistedstate';
 import './assets/scss/main.css';
 import SoundManager from './assets/js/SoundManager';
+import HighchartsVue from 'highcharts-vue';
 
 const pinia = createPinia();
 pinia.use(createPersistedState({
@@ -18,6 +19,8 @@ pinia.use(createPersistedState({
 createApp(App)
     .use(router)
     .use(pinia)
+    .use(HighchartsVue)
     .mount('#app');
+    
 
 export const useSoundManager = new SoundManager()

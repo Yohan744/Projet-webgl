@@ -160,9 +160,9 @@ export default {
 }
 
 .square {
-  width: 100px;
-  height: 100px;
-  margin: 5px;
+  width: 160px;
+  height: 160px;
+  margin: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -172,7 +172,7 @@ export default {
 }
 
 .square img {
-  width: 100px;
+  width: 150px;
   height: auto;
   border-radius: 8px;
   transition: transform 0.3s;
@@ -190,10 +190,12 @@ export default {
 
 .popup {
   position: absolute;
+  margin: 3em;
+  font-size: 20px;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%) scale(0);
-  width: 300px;
+  min-width: 300px;
   padding: 10px;
   background-color: white;
   color: #8b4492;
@@ -258,7 +260,7 @@ export default {
 
 button {
   padding: 10px 20px;
-  font-size: 1em;
+  font-size: 16px;
   background: #444;
   color: #fff;
   border: none;
