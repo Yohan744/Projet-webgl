@@ -32,6 +32,7 @@ export default class Prop extends EventEmitter {
         this.offsetFromCamera = distanceToCamera;
         this.chanceOfPlayingASong = 0.4
         this.propsSongHasBeenPlayed = false
+        this.isSpeaking = false
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
 
@@ -55,6 +56,8 @@ export default class Prop extends EventEmitter {
                 if (this.gameManager.state.actualObjectInteractingName !== 'projector' && this.gameManager.state.actualObjectInteractingName !== 'drawer') {
                     this.gameManager.setActualObjectInteractingName(null)
                 }
+
+                if (this.isSpeaking) this.soundManager.sounds[this.propSound].stop()
 
             }
             if (state) this.outline?.removeOutline()
@@ -93,7 +96,11 @@ export default class Prop extends EventEmitter {
         if (this.propSound !== '') {
             if (!this.propsSongHasBeenPlayed) {
                 this.soundManager.playSoundWithBackgroundFade(this.propSound, 1.25)
-                this.propsSongHasBeenPlayed = true
+                this.isSpeaking = true
+                this.soundManager.sounds[this.propSound].on('end', () => {
+                    this.propsSongHasBeenPlayed = true
+                    this.isSpeaking = false
+                })
             } else {
                 if (Math.random() < this.chanceOfPlayingASong) {
                     const randomSound = this.experience.soundManager.getRandomSound()

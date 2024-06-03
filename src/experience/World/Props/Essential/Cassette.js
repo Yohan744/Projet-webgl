@@ -1,7 +1,8 @@
 import * as THREE from 'three';
-import { gsap } from 'gsap';
+import {gsap} from 'gsap';
 import Experience from "../../../Experience";
-import { useInteractableObjects } from "../../ObjectsInteractable";
+import {useInteractableObjects} from "../../ObjectsInteractable";
+import Outline from "../../Effects/Outline";
 
 export default class Cassette {
     constructor(objects) {
@@ -10,11 +11,12 @@ export default class Cassette {
         this.camera = this.experience.camera.instance;
         this.pointer = this.experience.pointer;
         this.soundManager = this.experience.soundManager;
+        this.gameManager = this.experience.gameManager;
 
         this.cassetteGroup = new THREE.Group();
-        this.scene.add(this.cassetteGroup);
 
         this.cassetteObjects = objects;
+        this.offsetFromCameraFoBottomRightCorner = new THREE.Vector3(0, -1, 1);
 
         const interactableObjects = useInteractableObjects();
 
@@ -34,8 +36,12 @@ export default class Cassette {
         this.inactivityTimeout = null;
         this.isPlacedInWalkman = false;
 
-        this.init();
-        this.setEvents();
+        this.experience.on('ready', () => {
+            this.scene.add(this.cassetteGroup);
+
+            this.init();
+            this.setEvents();
+        })
     }
 
     init() {
@@ -48,11 +54,11 @@ export default class Cassette {
     }
 
     setEvents() {
-        this.pointer.on('click', (event) => this.handleClick(event));
+        this.pointer.on('click', () => this.handleClick());
     }
 
-    handleClick(event) {
-        if (this.isPlacedInWalkman) return;
+    handleClick() {
+        if (this.isPlacedInWalkman || !this.gameManager.state.isCameraOnSpot) return;
 
         const mousePosition = this.pointer.getMousePosition();
         this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
@@ -64,14 +70,18 @@ export default class Cassette {
         }
     }
 
-    animateToCamera(targetPosition = null, isInstantiatedByWalkman = false) {
+    animateToCamera(targetPosition = null, isInstantiatedByWalkman = false, isInstantiatedByPencil = false) {
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
+
+        this.updateCassetteVisibility(true);
+        this.cassetteGroup.position.copy(this.getCassetteBottomRightCornerPosition())
 
         if (!targetPosition) {
             targetPosition = new THREE.Vector3();
             targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
         }
+
         gsap.to(this.cassetteGroup.position, {
             x: targetPosition.x,
             y: targetPosition.y,
@@ -80,15 +90,17 @@ export default class Cassette {
             ease: 'power2.inOut',
             onComplete: () => {
                 this.walkman.soundHasBeenPlayed = true;
-                if (this.soundHasBeenPlayed) { this.soundManager.stop("walkman2"); }
+                if (this.soundHasBeenPlayed) {
+                    this.soundManager.stop("walkman2");
+                }
             }
         });
 
         gsap.to(this.cassetteGroup.rotation, {
-            x: 0,
-            y: 0,
-            z: 0,
-            duration: 3,
+            x: isInstantiatedByPencil ? Math.PI * 0.5 : 0,
+            y: isInstantiatedByPencil ? -Math.PI * 0.2 : 0,
+            z: isInstantiatedByPencil ? Math.PI * 0.5 : 0,
+            duration: 2,
             ease: 'power2.inOut'
         });
 
@@ -187,6 +199,28 @@ export default class Cassette {
         });
     }
 
+    updateCassetteVisibility(state) {
+        this.cassetteGroup.traverse((child) => {
+            if (child.isMesh) {
+                child.visible = state
+                child.material.visible = state;
+                child.material.opacity = state ? 1 : 0;
+            }
+        })
+    }
+
+    getCassetteBottomRightCornerPosition() {
+        const cameraDirection = new THREE.Vector3();
+        this.camera.getWorldDirection(cameraDirection);
+
+        const targetPosition = new THREE.Vector3();
+        targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(1));
+
+        targetPosition.add(this.offsetFromCameraFoBottomRightCorner);
+
+        return targetPosition;
+    }
+
     convertToLocalCoordinatesAndAddToWalkman() {
         const worldPosition = this.cassetteGroup.position.clone();
         const worldQuaternion = this.cassetteGroup.quaternion.clone();
@@ -230,6 +264,8 @@ export default class Cassette {
     }
 
     returnToInitialPosition() {
+
+        this.initialPosition = this.getCassetteBottomRightCornerPosition()
 
         gsap.to(this.cassetteGroup.position, {
             x: this.initialPosition.x,

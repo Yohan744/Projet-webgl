@@ -80,7 +80,7 @@ export const data = {
 
     cassetteOut: {
         src: fx + 'cassetteOut.mp3',
-        volume: 0.85,
+        volume: 0.1,
         preload: true,
         loop: false,
     },
@@ -108,7 +108,7 @@ export const data = {
 
     rewind: {
         src: fx + 'rattle.mp3',
-        volume: 0.75,
+        volume: 0.2,
         preload: true,
         loop: true,
     },
@@ -119,18 +119,21 @@ export const data = {
         preload: true,
         loop: false,
     },
+
     grab: {
         src: fx + 'crayonGrab.mp3',
-        volume: 0.75,
+        volume: 0.3,
         preload: true,
         loop: false,
     },
+
     crayonDrop: {
         src: fx + 'crayonDrop.mp3',
-        volume: 0.75,
+        volume: 0.3,
         preload: true,
         loop: false,
     },
+
     telephone: {
         src: p + 'telephone.m4a',
         volume: 0.75,

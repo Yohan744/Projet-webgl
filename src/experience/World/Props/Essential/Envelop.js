@@ -47,7 +47,7 @@ export default class Envelop extends EventEmitter {
         this.cassetteBasicRotation = new THREE.Vector3(Math.PI * 0.5, 0, 0);
         this.cartePostaleBasicRotation = new THREE.Vector3(-Math.PI, Math.PI * 0.5, -Math.PI * 0.5);
         this.itemScaleArray = [1.3, 1, 1.2, 1.5, 1.5, 1.5]
-        this.itemsName = ['dahlia', 'lettre', 'corps', 'cartepostalebiarritz', 'cartepostaleplage', 'cartespostalesmaison']
+        this.itemsName = ['dahlia', 'lettre', 'corps', 'cartepostaleplage', 'cartespostalesmaison', 'cartepostalebiarritz']
 
         this.initialMousePositionOnClick = {x: 0, y: 0}
 
@@ -239,10 +239,12 @@ export default class Envelop extends EventEmitter {
         this.dahlia = this.interactableObjects.dahlia.mesh
         this.letter = this.interactableObjects.lettre.mesh
         const cassetteMeshes = this.interactableObjects.cassette.cassetteObjects
-        this.cassette = this.mergeMeshes(cassetteMeshes)
-        this.cartePostaleBiarritz = this.interactableObjects.cartePostaleBiarritz
+        const clonedObjects = []
+        cassetteMeshes.map((object) => clonedObjects.push(object.clone()))
+        this.cassette = this.mergeMeshes(clonedObjects)
         this.cartePostalePlage = this.interactableObjects.cartePostalePlage
         this.cartePostaleMaison = this.interactableObjects.cartePostaleMaison
+        this.cartePostaleBiarritz = this.interactableObjects.cartePostaleBiarritz
 
         this.dahlia.rotation.order = 'YXZ';
         this.letter.rotation.order = 'YXZ';
@@ -254,9 +256,9 @@ export default class Envelop extends EventEmitter {
         this.dahlia.material.opacity = 0;
         this.letter.material.opacity = 0;
         this.cassette.opacity = 0;
-        this.cartePostaleBiarritz.opacity = 0;
         this.cartePostalePlage.opacity = 0;
         this.cartePostaleMaison.opacity = 0;
+        this.cartePostaleBiarritz.opacity = 0;
 
         this.carousel.add(this.dahlia, this.letter, this.cassette, this.cartePostalePlage , this.cartePostaleMaison, this.cartePostaleBiarritz);
         this.items = [this.dahlia, this.letter, this.cassette, this.cartePostalePlage, this.cartePostaleMaison, this.cartePostaleBiarritz];
@@ -264,16 +266,16 @@ export default class Envelop extends EventEmitter {
         this.dahlia.position.set(0, 0, 0);
         this.letter.position.set(0, 0, 0);
         this.cassette.position.set(0, 0, 0);
-        this.cartePostaleBiarritz.position.set(0, 0, 0);
         this.cartePostalePlage.position.set(0, 0, 0);
         this.cartePostaleMaison.position.set(0, 0, 0);
+        this.cartePostaleBiarritz.position.set(0, 0, 0);
 
         this.dahlia.rotation.setFromVector3(this.dahliaBasicRotation, 'YXZ');
         this.letter.rotation.setFromVector3(this.letterBasicRotation, 'YXZ');
         this.cassette.rotation.setFromVector3(this.cassetteBasicRotation, 'YXZ');
-        this.cartePostaleBiarritz.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
         this.cartePostalePlage.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
         this.cartePostaleMaison.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
+        this.cartePostaleBiarritz.rotation.setFromVector3(this.cartePostaleBasicRotation, 'YXZ');
 
         this.scene.add(this.carousel);
 
@@ -487,8 +489,9 @@ export default class Envelop extends EventEmitter {
     mergeMeshes(meshes) {
         const group = new THREE.Group();
         meshes.forEach((mesh) => {
-            mesh.material.opacity = 0;
-            group.add(mesh);
+            const d = mesh.clone()
+            d.material.opacity = 0;
+            group.add(d);
         });
         return group;
     }

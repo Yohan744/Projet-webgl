@@ -191,6 +191,8 @@
   width: 35px;
   margin-left: 20px;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 #experience-layer .inventory-wrapper div img {
   position: relative;

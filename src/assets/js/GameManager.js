@@ -1,7 +1,7 @@
 import { reactive } from 'vue';
 
 const state = reactive({
-    gameStepId: -1,
+    gameStepId: 0,
     lastVisitedRoute: null,
     isExperienceVisible: false,
     isCameraOnSpot: false,

@@ -17,7 +17,12 @@ export default class Outline {
     init() {
         this.material = this.materialLibrary.getOutlineMaterial().clone()
         this.clonedModel = this.mesh.clone();
-        this.clonedModel.scale.setScalar(this.outlineScale)
+        if (typeof this.outlineScale === 'number') {
+            this.clonedModel.scale.setScalar(this.outlineScale)
+        } else if (typeof this.outlineScale === 'object') {
+            console.log(this.outlineScale)
+            this.clonedModel.scale.set(this.outlineScale.x, this.outlineScale.y, this.outlineScale.z)
+        }
         this.clonedModel.traverse(child => {
             if (child.isMesh) {
                 child.material.dispose()

@@ -12,20 +12,12 @@ import BottomChest from "../experience/World/Props/Essential/BottomChest";
 import TopChest from "../experience/World/Props/Essential/TopChest";
 
 export const objectsData = {
-    crayon: {
-        file: Pencil,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
-        animateToCameraOnClick: true,
-        distanceToCamera: 0.01,
-        outlineScale: 1.1,
-        propSound: '',
-    },
     telephone: {
         file: Telephone,
         rotationOnClick: new THREE.Vector3(0, 0, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
-        outlineScale: 1.02,
+        outlineScale: 1.03,
         propSound: 'telephone',
     },
     rubicub: {
@@ -33,7 +25,7 @@ export const objectsData = {
         rotationOnClick: new THREE.Vector3(0, -Math.PI * 0.2, 0),
         animateToCameraOnClick: true,
         distanceToCamera: 0.6,
-        outlineScale: 1.05,
+        outlineScale: 1.06,
         propSound: 'rubiksCube',
     },
     tv: {
@@ -59,21 +51,5 @@ export const objectsData = {
         distanceToCamera: 1,
         outlineScale: 1.01,
         propSound: 'recordPlayer',
-    },
-    malle_bas1: {
-        file: BottomChest,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
-        animateToCameraOnClick: false,
-        distanceToCamera: 0,
-        outlineScale: 1.01,
-        propSound: '',
-    },
-    malle_haut1: {
-        file: TopChest,
-        rotationOnClick: new THREE.Vector3(0, 0, 0),
-        animateToCameraOnClick: false,
-        distanceToCamera: 0,
-        outlineScale: 1.01,
-        propSound: '',
-    },
+    }
 }
