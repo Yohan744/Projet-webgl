@@ -42,8 +42,6 @@ export default class ObjectsInteractable {
 
         this.objectsInteractableModel.traverse(child => {
             if (child.isMesh) {
-                child.frustumCulled = true;
-                this.experience.camera.updateOcclusionCulling();
                 const name = child.name.toLowerCase();
                 const data = objectsData[name];
                 child.material.dispose();
@@ -117,6 +115,7 @@ export default class ObjectsInteractable {
                     child.material = this.materialLibrary.getTelephoneMaterial();
                     this.telephone = new data.file(child, data.rotationOnClick, data.animateToCameraOnClick, data.distanceToCamera, data.outlineScale, data.propSound);
                     interactableObjects.telephone = this.telephone;
+                    console.log(child.position);
                     interactableMesh.push(child);
 
                 } else if (name.includes("rubicub")) {

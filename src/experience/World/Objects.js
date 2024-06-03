@@ -98,6 +98,7 @@ export default class Objects {
                     child.material = this.materialLibrary.getTableMaterial()
 
                 } else if (name.includes("lampe")) {
+                    console.log(child.position);
                     child.material = this.materialLibrary.getLampMaterial()
 
                 } else if (name.includes("chaise")) {
