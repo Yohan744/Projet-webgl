@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import {Pane} from "tweakpane";
+import { Pane } from "tweakpane";
 
 import Time from './Utils/Time.js'
 import Sizes from './Utils/Sizes.js'
@@ -13,10 +13,10 @@ import World from './World.js'
 import assets from './assets.js'
 import Pointer from "./Utils/Pointer";
 import EventEmitter from "./Utils/EventEmitter";
-import {useAppStore} from "../stores/appStore";
-import {useSoundManager} from "../main";
-import {useGameManager} from "../assets/js/GameManager";
-import {useGlobalEvents} from "../assets/js/GlobalEvents";
+import { useAppStore } from "../stores/appStore";
+import { useSoundManager } from "../main";
+import { useGameManager } from "../assets/js/GameManager";
+import { useGlobalEvents } from "../assets/js/GlobalEvents";
 
 export default class Experience extends EventEmitter {
     static instance
@@ -48,6 +48,7 @@ export default class Experience extends EventEmitter {
         this.setSoundManager()
         this.setWatchers()
 
+        this.addLODObjects();
     }
 
     setWatchers() {
@@ -100,7 +101,7 @@ export default class Experience extends EventEmitter {
                 id: 0
             }
 
-            const gameIdDebug = this.debugFolder.addBinding(params, 'id', {min: 0, max: 5, step: 1, label: 'Game Step Id'})
+            const gameIdDebug = this.debugFolder.addBinding(params, 'id', { min: 0, max: 5, step: 1, label: 'Game Step Id' })
             gameIdDebug.on('change', value => {
                 this.gameManager.setGameStepId(value.value)
             })
@@ -151,8 +152,35 @@ export default class Experience extends EventEmitter {
         this.soundManager = useSoundManager
     }
 
-    resize() {
+    addLODObjects() {
+        // Create a LOD object
+        const lod = new THREE.LOD();
 
+        // High detail model
+        const geometryHigh = new THREE.BoxGeometry(1, 1, 1);
+        const materialHigh = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const meshHigh = new THREE.Mesh(geometryHigh, materialHigh);
+        lod.addLevel(meshHigh, 0); // Full detail
+
+        // Medium detail model
+        const geometryMedium = new THREE.BoxGeometry(0.7, 0.7, 0.7);
+        const materialMedium = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const meshMedium = new THREE.Mesh(geometryMedium, materialMedium);
+        lod.addLevel(meshMedium, 50); // Medium detail at distance 50
+
+        // Low detail model
+        const geometryLow = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+        const materialLow = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+        const meshLow = new THREE.Mesh(geometryLow, materialLow);
+        lod.addLevel(meshLow, 100); // Low detail at distance 100
+
+        // Position LOD object in the scene
+        lod.position.set(0, 0, -5);
+        lod.frustumCulled = true; // Enable frustum culling for this LOD object
+        this.scene.add(lod);
+    }
+
+    resize() {
         const boundings = this.targetElement.getBoundingClientRect()
         this.config.width = boundings.width
         this.config.height = boundings.height
@@ -162,19 +190,14 @@ export default class Experience extends EventEmitter {
         this.config.isMobile = window.matchMedia('(max-width: 576px)').matches
 
         this.camera?.resize()
-
         this.renderer?.resize()
-
         this.world?.resize()
     }
 
     update() {
         this.stats?.update()
-
         this.camera?.update()
-
         this.world?.update()
-
         this.renderer?.update()
 
         window.requestAnimationFrame(() => {
@@ -183,27 +206,18 @@ export default class Experience extends EventEmitter {
     }
 
     destroy() {
-
         Experience.instance = null
 
         this.pointer?.destroy()
-
         this.stats?.destroy()
-
         this.renderer?.instance.domElement.remove();
         this.renderer?.destroy()
-
         this.world?.destroy()
-
         this.resources?.destroy()
-
         this.debug?.dispose()
-
         this.time?.stop()
-
         this.soundManager?.destroy()
 
         window.cancelAnimationFrame(this.update)
-
     }
 }

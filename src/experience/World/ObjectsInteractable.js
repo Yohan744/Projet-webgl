@@ -38,8 +38,12 @@ export default class ObjectsInteractable {
         this.objectsInteractableModel = this.resources.items.objectsInteractableModel.scene;
         console.log(this.objectsInteractableModel);
 
+        this.objectsInteractableModel.frustumCulled = true;
+
         this.objectsInteractableModel.traverse(child => {
             if (child.isMesh) {
+                child.frustumCulled = true;
+                this.experience.camera.updateOcclusionCulling();
                 const name = child.name.toLowerCase();
                 const data = objectsData[name];
                 child.material.dispose();
@@ -168,8 +172,8 @@ export default class ObjectsInteractable {
 
                 } else if (name === 'photo') {
                     child.material = this.materialLibrary.getPictureMaterial()
-                    this.picture = new Picture(child)
-                    interactableObjects.picture = this.picture
+                   // this.picture = new Picture(child)
+                   // interactableObjects.picture = this.picture
 
                 } else {
                     console.log(name);

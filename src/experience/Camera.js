@@ -18,6 +18,7 @@ export default class Camera {
 
         this.isFocused = false;
         this.isMoving = false;
+        this.enableOcclusionCulling = false; // Flag to control occlusion culling
 
         this.mousePos = { x: 0, y: 0 };
 
@@ -139,7 +140,10 @@ export default class Camera {
     }
 
     setWatchers() {
-        this.pointer.on('spot-clicked', (position, lookingPoint) => this.moveCamera(position, lookingPoint));
+        this.pointer.on('spot-clicked', (position, lookingPoint) => {
+            this.moveCamera(position, lookingPoint);
+            this.enableOcclusionCulling = true; // Enable occlusion culling after the first click
+        });
 
         if (this.pointer && this.mode === 'default') {
             this.pointer.on('movement', (mouse) => {
@@ -177,18 +181,17 @@ export default class Camera {
                 this.isMoving = false;
             },
         });
-
     }
 
     resize() {
         this.instance.aspect = this.config.width / this.config.height;
-       // this.instance.updateProjectionMatrix();
+        // this.instance.updateProjectionMatrix();
 
         this.modes.default.instance.aspect = this.config.width / this.config.height;
-      //  this.modes.default.instance.updateProjectionMatrix();
+        //  this.modes.default.instance.updateProjectionMatrix();
 
         this.modes.debug.instance.aspect = this.config.width / this.config.height;
-       // this.modes.debug.instance.updateProjectionMatrix();
+        // this.modes.debug.instance.updateProjectionMatrix();
     }
 
     moveCamera(position = false, lookingPoint = false, mult = 1, isGoingOnASpot = true, duration = 3) {
@@ -318,7 +321,7 @@ export default class Camera {
             duration: 3,
             ease: 'linear',
             onUpdate: () => {
-               // this.instance.updateProjectionMatrix();
+                // this.instance.updateProjectionMatrix();
             },
         });
     }
@@ -403,5 +406,31 @@ export default class Camera {
         this.scene.remove(this.instance);
         this.pointer.off('spot-clicked', this.moveCamera);
         this.pointer.off('movement', this.onMovement);
+    }
+
+    isOccluded(object) {
+        const cameraPosition = new THREE.Vector3();
+        this.instance.getWorldPosition(cameraPosition);
+
+        const direction = new THREE.Vector3();
+        object.getWorldPosition(direction);
+        direction.sub(cameraPosition).normalize();
+
+        const intersects = this.experience.pointer.raycaster.intersectObjects(this.scene.children, true);
+
+        if (intersects.length > 0 && intersects[0].object === object) {
+            return false;
+        }
+        return true;
+    }
+
+    updateOcclusionCulling() {
+        if (!this.enableOcclusionCulling) return;
+
+        this.scene.traverse((object) => {
+            if (object.isMesh) {
+                object.visible = !this.isOccluded(object);
+            }
+        });
     }
 }
