@@ -38,12 +38,20 @@ export default {
         4: 3,
         5: 3,
         6: 4,
+      },
+      tabToSectionMapping: {
+        0: 0,
+        1: 1,
+        2: 2,
+        3: 4,
+        4: 6
       }
     };
   },
   methods: {
     scrollToSection(index) {
-      const section = document.getElementById(`section-${index}`);
+      const sectionIndex = this.tabToSectionMapping[index];
+      const section = document.getElementById(`section-${sectionIndex}`);
       if (section) {
         section.scrollIntoView({ behavior: 'smooth' });
       }
@@ -56,8 +64,7 @@ export default {
         const viewportHeight = window.innerHeight;
 
         if (
-          rect.top >= 0 && 
-          rect.bottom <= viewportHeight ||
+          (rect.top >= 0 && rect.bottom <= viewportHeight) ||
           (rect.top < 0 && rect.bottom > viewportHeight / 2)
         ) {
           activeSection = index;
@@ -76,7 +83,7 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
-    this.handleScroll(); 
+    this.handleScroll();
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -91,5 +98,6 @@ export default {
 }
 section {
   min-height: 100vh;
+  overflow: hidden;
 }
 </style>

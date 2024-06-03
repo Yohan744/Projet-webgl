@@ -1,7 +1,7 @@
 <template>
-  <div class="new-section" @mousemove="updateImagePosition">
+  <div class="new-section general-padding" @mousemove="updateImagePosition">
     <div class="info-panel info-panel-left">
-      <div class="info-title-container">
+      <div class="info-title-container-left">
         <div class="info-title">Société</div>
       </div>
       <div class="info-content">
@@ -41,7 +41,7 @@
     </div>
 
     <div class="info-panel info-panel-left">
-      <div class="info-title-container">
+      <div class="info-title-container-left">
         <div class="info-title">Musique</div>
       </div>
       <div class="info-content">
@@ -62,7 +62,7 @@
 
     <div>
       <h2 class="main-title">Vous avez dit "évolution" ?</h2>
-      <p>En somme, les chiffres de 2024 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
+      <p>Les chiffres de 2024 du rapport sur les LGBTiphobies de 2023 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
       </p>
     </div>
 
@@ -88,7 +88,7 @@
     </div>
 
     <div class="info-panel info-panel-left">
-      <div class="info-title-container">
+      <div class="info-title-container-left">
         <div class="info-title"  @mouseover="showImage('/src/assets/img/HomophobieTue.png')" @mouseleave="hideImage">Quelle évolution?</div>
       </div>
       <div class="info-content">
@@ -433,14 +433,42 @@ export default {
 </script>
 
 <style scoped>
+
+
+.general-padding {
+  padding: 200px
+}
+@media (max-width: 1200) {
+  .general-padding {
+  padding: 100px
+  }
+}
+@media (max-width: 1024px) {
+  .general-padding {
+  padding: 80px
+  }
+}
+@media (max-width: 768px) {
+  .general-padding {
+  padding: 20px
+  }
+}
+
+
 .new-section {
-  padding-left: 100px;
-  padding-right: 100px;
   position: relative;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .new-section {
+    display: contents;
+  }
 }
 
 .info-panel {
   width: 80%;
+  max-width: 1000px;
   margin: 50px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -457,6 +485,11 @@ export default {
 .info-title-container {
   display: flex;
   justify-content: flex-end;
+}
+
+.info-title-container-left {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .info-title {
@@ -497,7 +530,7 @@ export default {
   border-radius: 8px;
 }
 .info-data {
-  padding: 20px;
+  padding: 40px;
 }
 
 .chart-toggle-buttons {

@@ -1,5 +1,5 @@
 <template>
-  <div class="content-container">
+  <div class="content-container general-padding">
     <div class="content-1">
       <div class="left">
         <img src="/src/assets/img/Mona.png" alt="Description of the image">
@@ -115,6 +115,26 @@ export default {
 </script>
 
 <style scoped>
+
+.general-padding {
+  padding: 200px
+}
+@media (max-width: 1200) {
+  .general-padding {
+  padding: 100px
+  }
+}
+@media (max-width: 1024px) {
+  .general-padding {
+  padding: 80px
+  }
+}
+@media (max-width: 768px) {
+  .general-padding {
+  padding: 20px
+  }
+}
+
 .content-container {
   display: flex;
   flex-direction: column;
@@ -159,11 +179,10 @@ export default {
 .bottom-band {
   display: flex;
   flex-wrap: wrap; 
-  justify-content: space-between;
+  place-content: center;
   padding: 10px;
   width: 80%;
   align-self: center;
-  place-content: center;
 }
 
 .square {
@@ -286,7 +305,7 @@ button:hover {
   }
 
   .bottom-band {
-    justify-content: flex-start; 
+    justify-content: center; 
   }
 }
 
