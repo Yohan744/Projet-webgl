@@ -6,6 +6,7 @@ export const useAppStore = defineStore({
         muted: false,
         globalVolume: 0.5,
         isVideoIntroWatched: false,
+        isVideoOutroWatched: false,
     }),
     actions: {
         toggleMute(state) {
@@ -17,10 +18,14 @@ export const useAppStore = defineStore({
         setVideoIntroWatched() {
             this.isVideoIntroWatched = true
         },
+        setVideoOutroWatched() {
+        this.isVideoOutroWatched = true;
+        },
         resetAll() {
             this.muted = false
             this.globalVolume = 0.5
             this.isVideoIntroWatched = false
+            this.isVideoOutroWatched = false
         }
     },
     persist: true

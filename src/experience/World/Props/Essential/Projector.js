@@ -32,6 +32,9 @@ export default class Projector {
         this.isFirstAnimationIsDone = false;
         this.textureIndex = 0;
 
+        this.voicesPlayed = [false, false, false, false, false]
+        this.isSpeaking = false;
+
         this.maxDragDistance = 0.08;
         this.dragDistance = 0.002
 
@@ -64,12 +67,12 @@ export default class Projector {
         this.projectorObjects = objects;
 
         this.projectorModel = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'cube');
-        this.projectorOutline = new Outline(this.projectorModel, 1.03);
+        this.projectorOutline = new Outline(this.projectorModel, 1.04);
         this.projectorOutline.updateOutlineMeshPosition(this.projectorModel.getWorldPosition(new THREE.Vector3()));
 
         this.rail = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'rail_diapo');
         this.railOriginalPosition.copy(this.rail?.position);
-        this.railOutline = new Outline(this.rail, 1.03);
+        this.railOutline = new Outline(this.rail, 1.04);
         this.railOutline.updateOutlineMeshPosition(this.rail.getWorldPosition(new THREE.Vector3()));
 
         this.boutonOn = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'boutonon');
@@ -80,7 +83,7 @@ export default class Projector {
 
         this.tireuse = this.projectorObjects.find(obj => obj.name.toLowerCase() === 'tireuse');
         this.tireuseBasicPosition.copy(this.tireuse?.position);
-        this.tireuseOutline = new Outline(this.tireuse, 1.02);
+        this.tireuseOutline = new Outline(this.tireuse, 1.0225);
         this.tireuseOutline.updateOutlineMeshPosition(this.tireuse.getWorldPosition(new THREE.Vector3()));
         this.tireuseOutline.removeOutline()
 
@@ -154,7 +157,7 @@ export default class Projector {
                             y: mousePosition.y,
                         };
 
-                    }else if (intersects[0].object === this.boutonOn && !this.isButtonAnimating) {
+                    } else if (intersects[0].object === this.boutonOn && !this.isButtonAnimating && !this.isSpeaking) {
                         this.toggleSpotlightButton();
                     }
 
@@ -184,6 +187,10 @@ export default class Projector {
 
         const tl = gsap.timeline();
         this.isButtonAnimating = true;
+
+        this.soundManager.play('projectorButtonPressed')
+
+        this.playVoice('diapo' + (this.textureIndex + 1), this.textureIndex)
 
         tl.to(this.boutonOn.position, {
             y: "-=0.004",
@@ -223,7 +230,7 @@ export default class Projector {
     }
 
     onPointerMove(mouse) {
-        if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
+        if (!this.isDragging || !this.draggableModel || this.isAnimating || this.isSpeaking) return;
 
         const deltaX = (mouse.x + 1) - (this.mouseStartClickPosition.x + 1);
 
@@ -270,13 +277,14 @@ export default class Projector {
             this.staticSpotLight.intensity = 0;
             this.mouseStartClickPosition.x = mouse.x
             this.globalEvents.trigger('change-cursor', {name: 'arrowRight'})
+            this.playVoice('diapo' + (this.textureIndex + 1), this.textureIndex)
         }
     }
 
     moveRail() {
         if (this.rail) {
             this.railMoveCount++;
-            if (this.railMoveCount > 10) {
+            if (this.railMoveCount > 4) {
                 gsap.to(this.rail.position, {
                     x: this.railOriginalPosition.x,
                     y: this.railOriginalPosition.y,
@@ -291,7 +299,7 @@ export default class Projector {
                     x: "+=0.02",
                     duration: 1,
                     onComplete: () => {
-                        if (this.railMoveCount === 1 && this.gameManager.state.gameStepId === 1) this.gameManager.incrementGameStepId();
+                        if (this.railMoveCount === 4 && this.gameManager.state.gameStepId === 1) this.gameManager.incrementGameStepId();
                     }
                 });
             }
@@ -334,6 +342,19 @@ export default class Projector {
         this.staticSpotLight.intensity = Math.max(0, this.staticSpotLight.intensity);
         this.spotlight.needsUpdate = true;
         this.staticSpotLight.needsUpdate = true;
+    }
+
+    playVoice(voiceName, index) {
+        if (this.voicesPlayed[index]) return;
+
+        this.soundManager.playSoundWithBackgroundFade(voiceName, 1.25)
+        this.isSpeaking = true;
+
+        this.soundManager.sounds[voiceName].on('end', () => {
+            this.voicesPlayed[index] = true
+            this.isSpeaking = false;
+        })
+
     }
 
     resetAll() {

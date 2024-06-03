@@ -8,7 +8,6 @@ import Drawer from "./Props/Essential/Drawer";
 import Letter from "./Props/Essential/Letter";
 import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
-import * as THREE from "three";
 import Pencil from "./Props/Essential/Pencil";
 import TopChest from "./Props/Essential/TopChest";
 import BottomChest from "./Props/Essential/BottomChest";
@@ -81,19 +80,19 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child);
 
                 } else if (name.includes("malle")) {
-                        if (name.includes('haut')) {
-                            child.material = this.materialLibrary.getTopChestMaterial();
-                            this.topChest = new TopChest(child);
-                            interactableObjects.topChest = this.topChest;
-                            interactableMesh.push(child);
-                        }
+                    if (name.includes('haut')) {
+                        child.material = this.materialLibrary.getTopChestMaterial();
+                        this.topChest = new TopChest(child);
+                        interactableObjects.topChest = this.topChest;
+                        interactableMesh.push(child);
+                    }
 
-                        if (name.includes('bas')) {
-                            child.material = this.materialLibrary.getBottomChestMaterial();
-                            this.bottomChest = new BottomChest(child);
-                            interactableObjects.bottomChest = this.bottomChest;
-                            interactableMesh.push(child);
-                        }
+                    if (name.includes('bas')) {
+                        child.material = this.materialLibrary.getBottomChestMaterial();
+                        this.bottomChest = new BottomChest(child);
+                        interactableObjects.bottomChest = this.bottomChest;
+                        interactableMesh.push(child);
+                    }
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {
                     child.material = this.materialLibrary.getBlackMaterial();

@@ -1,71 +1,110 @@
 import * as THREE from 'three';
-import { gsap } from 'gsap';
+import {gsap} from 'gsap';
 import Experience from "../../../Experience";
-import { useInteractableObjects } from "../../ObjectsInteractable";
+import {useInteractableObjects} from "../../ObjectsInteractable";
 import Outline from "../../Effects/Outline";
+import {watch} from "vue";
 
 export default class Pencil {
     constructor(mesh) {
         this.experience = new Experience();
-        this.resources = this.experience.resources;
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
-        this.offsetFromCamera = 0.6;
-        this.pointer = this.experience.pointer;this.soundManager = this.experience.soundManager;
+        this.renderer = this.experience.renderer;
+        this.pointer = this.experience.pointer;
         this.soundManager = this.experience.soundManager;
-        this.mesh = mesh;
-        this.interactableObjects = useInteractableObjects();
-        this.isInFrontOfCamera = false;
-        this.hasBeenPlaced = false;
-        this.isDragging = false;
-        this.previousMousePosition = { x: 0, y: 0 };
+        this.gameManager = this.experience.gameManager;
+        this.globalEvents = this.experience.globalEvents;
 
-        this.trailRings = [];
-        this.pencil = new Outline(this.mesh, 1.2);
+        this.mesh = mesh;
+        this.mesh.rotation.order = 'YXZ';
+
         this.initialPosition = this.mesh.position.clone();
         this.initialRotation = this.mesh.rotation.clone();
 
-        this.init();
+        this.isInFrontOfCamera = false;
+        this.hasBeenPlaced = false;
+        this.isReadyToBeRewinded = false
+        this.offsetFromCamera = 0.35;
+        this.cassetteOffset = new THREE.Vector3(0, 0, 0.2);
+        this.basicRotation = this.mesh.rotation.clone()
+
+        this.experience.on('ready', () => {
+            this.interactableObjects = useInteractableObjects();
+            this.pencilOutline = new Outline(this.mesh, 1.05);
+            this.cassette = this.interactableObjects.cassette
+
+            this.init();
+            this.setWatchers()
+        })
     }
 
     init() {
-        this.createTrailRings();
-        this.pencil.showOutline();
+        this.pencilOutline.showOutline();
+
+        this.pencilRotation = gsap.to(this.mesh.rotation, {
+            x: '+=' + Math.PI,
+            repeat: -1,
+            duration: 0.5,
+            ease: 'power2.inOut'
+        });
+        this.pencilRotation.pause()
+
+    }
+
+    setWatchers() {
         this.pointer.on("click", () => this.handleClick());
-        this.pointer.on("movement", () => this.onPointerMove());
         this.pointer.on("click-release", () => this.onPointerUp());
+
+        watch(() => this.gameManager.state.isInteractingWithObject, (newVal) => {
+            if (!newVal && this.gameManager.state.actualObjectInteractingName === "pencil") {
+                this.pencilRotation.pause()
+                this.returnToInitialPosition()
+                this.gameManager.setActualObjectInteractingName(null)
+                this.cassette.returnToInitialPosition()
+                this.renderer.toggleBlurEffect(false, 0)
+                this.hasBeenPlaced = false;
+                this.isInFrontOfCamera = false;
+            }
+        })
     }
 
-    createTrailRings() {
-        const ringCount = 10;
-        const ringSpacing = 0.09;
-        const time = performance.now() * 0.01;
-
-        for (let i = 0; i < ringCount; i++) {
-            const ringGeometry = new THREE.TorusGeometry(0.015, 0.002, 5, 100);
-            const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
-            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-
-            ring.rotation.x = Math.PI / 2 - 0.08 * i;
-            ring.rotation.y = THREE.MathUtils.clamp(Math.sin(time) * 0.5, -Math.PI * 85 / 180, Math.PI * 85 / 180);
-            ring.position.set(0, 0.05, 0);
-
-            ring.visible = false;
-            this.trailRings.push(ring);
-            this.mesh.add(ring);
+    handleClick() {
+        if (!this.gameManager.state.isCameraOnSpot) return;
+        const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
+        if (intersects.length > 0) {
+            this.onClick();
+            this.gameManager.updateInteractingState(true);
+            this.gameManager.setActualObjectInteractingName("pencil")
+            this.renderer.toggleBlurEffect(true)
+            this.globalEvents.trigger('change-cursor', {name: 'default'})
         }
     }
 
-    updateTrailRings() {
-        const time = performance.now() * 0.01;
+    onClick() {
 
-        for (let i = 0; i < this.trailRings.length; i++) {
-            const ring = this.trailRings[i];
-            ring.position.set(0, 0.05, 0);
-            ring.rotation.y = THREE.MathUtils.clamp(Math.sin(time) * 0.5, -Math.PI * 85 / 180, Math.PI * 85 / 180);
-            ring.rotation.x = Math.PI / 2 - 0.08 * i;
-            ring.material.opacity = 0.5 + 0.5 * Math.sin(time + i * 0.5);
+        if (!this.isInFrontOfCamera) {
+            this.pencilOutline.removeOutline();
+            this.animateToCamera();
+
+        } else {
+
+            if (!this.hasBeenPlaced) {
+                this.animatePencilAndCassette();
+                this.pencilOutline.removeOutline()
+                this.globalEvents.trigger('change-cursor', {name: 'default'})
+
+            } else if (this.isReadyToBeRewinded) {
+                this.cassette?.startRewinding();
+                // this.pencilRotation.play()
+            }
         }
+    }
+
+    onPointerUp() {
+        if (!this.gameManager.state.isCameraOnSpot) return;
+        this.cassette?.stopRewinding();
+        this.pencilRotation.pause()
     }
 
     animateToCamera() {
@@ -75,160 +114,115 @@ export default class Pencil {
         const targetPosition = new THREE.Vector3();
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
 
-        this.soundManager.play('crayonFound');
+        this.soundManager.playSoundWithBackgroundFade('crayonFound', 1.25);
 
         gsap.to(this.mesh.position, {
             x: targetPosition.x,
             y: targetPosition.y,
-            z: targetPosition.z,
+            z: targetPosition.z - 0.1,
             duration: 2,
             ease: 'power2.inOut',
+            onUpdate: () => {
+                this.pencilOutline.updateOutlineMeshPosition(this.mesh.position)
+            },
             onComplete: () => {
-                this.soundManager.stop("grab");
                 this.positionCassetteNextToPencil();
                 this.isInFrontOfCamera = true;
+                this.pencilOutline.showOutline()
+                this.globalEvents.trigger('change-cursor', {name: 'click'})
             }
         });
 
         gsap.to(this.mesh.rotation, {
-            x: 0,
-            y: 0,
-            z: 0,
+            x: this.basicRotation.x * 0.5,
+            y: this.basicRotation.y * 0.5,
+            z: this.basicRotation.z * 0.5,
             duration: 2,
-            ease: 'power2.inOut'
+            ease: 'power2.inOut',
+            onUpdate: () => {
+                this.pencilOutline.updateOutlineMeshRotation(this.mesh.rotation)
+            },
         });
 
-        this.scene.add(this.mesh);
     }
 
     positionCassetteNextToPencil() {
-      //   this.soundManager.stop("crayonFound");
-        const cassette = this.interactableObjects.cassette;
-        if (cassette) {
+        if (this.cassette) {
             this.soundManager.play("cassetteOut");
-            const pencilPosition = this.mesh.position.clone();
-            const cassetteOffset = new THREE.Vector3(0, 0, -0.1);
-            const targetPosition = pencilPosition.add(cassetteOffset);
-            cassette.animateToCamera(targetPosition);
+            const targetPosition = this.mesh.position.clone().add(this.cassetteOffset);
+            this.cassette.animateToCamera(targetPosition, false, true);
         } else {
             console.error('Cassette instance not found in interactableObjects');
         }
     }
 
-    animatePencilAboveCassette() {
+    animatePencilAndCassette() {
+
+        this.hasBeenPlaced = true;
+
+        const delay = 0.5
+        const duration = 1.5
+
+        gsap.to(this.mesh.rotation, {
+            x: 0,
+            y: 0,
+            z: Math.PI * 0.3,
+            duration: duration,
+            ease: 'power2.inOut',
+        })
+
+        //////////////////////
+
         gsap.to(this.mesh.position, {
-            x: this.mesh.position.x - 0.04,
-            y: this.mesh.position.y + 0.1,
-            z: this.mesh.position.z - 0.110,
-            duration: 1,
+            x: '-=' + 0.1,
+            y: '+=' + 0.052,
+            z: '+=' + 0.063,
+            delay: delay,
+            duration: duration,
+            ease: 'power2.inOut',
+        })
+
+        gsap.to(this.cassette.cassetteGroup.position, {
+            z: '-=' + 0.1,
+            delay: delay,
+            duration: duration,
+            ease: 'power2.inOut',
+        })
+
+        ////////////////////
+
+        gsap.to(this.mesh.position, {
+            x: '+=' + 0.058,
+            delay: duration + delay,
+            duration: duration,
             ease: 'power2.inOut',
             onComplete: () => {
-                gsap.to(this.mesh.position, {
-                    y: this.mesh.position.y - 0.05,
-                });
-                this.hasBeenPlaced = true;
-
-                const cassette = this.interactableObjects.cassette;
-                if (cassette) {
-                    gsap.to([this.mesh.rotation, cassette.cassetteGroup.rotation], {
-                        z: 0.8,
-                        duration: 1,
-                        ease: 'power2.inOut',
-                    });
-                    gsap.to(this.mesh.position, {
-                        x: this.mesh.position.x - 0.05,
-                        y: this.mesh.position.y - 0.07,
-                        duration: 1
-                    });
-                }
+                this.isReadyToBeRewinded = true;
             }
-        });
-    }
+        })
 
-    handleClick() {
-        const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
-        if (intersects.length > 0) {
-            this.onClick();
-        }
-    }
-
-    onClick() {
-        console.log('Pencil clicked');
-        if (!this.isInFrontOfCamera) {
-            this.soundManager.play("grab");
-            this.pencil.removeOutline();
-            this.animateToCamera();
-        } else {
-            if (!this.hasBeenPlaced) {
-                this.animatePencilAboveCassette();
-            } else {
-                this.isDragging = true;
-                const mousePosition = this.pointer.getMousePosition();
-                this.previousMousePosition = {
-                    x: mousePosition.x,
-                    y: mousePosition.y
-                };
-                this.showTrailRings();
-
-                const cassette = this.interactableObjects.cassette;
-                if (cassette) {
-                    cassette.startRewinding();
-                }
-            }
-        }
-    }
-
-    onPointerMove() {
-        if (!this.isDragging) return;
-
-        const mousePosition = this.pointer.getMousePosition();
-        const deltaX = mousePosition.x - this.previousMousePosition.x;
-
-        this.mesh.rotation.x += deltaX * 0.01;
-        this.updateTrailRings();
-
-        this.previousMousePosition = {
-            x: mousePosition.x,
-            y: mousePosition.y
-        };
-    }
-
-    onPointerUp() {
-        this.isDragging = false;
-        this.hideTrailRings();
-
-        const cassette = this.interactableObjects.cassette;
-        if (cassette) {
-            cassette.stopRewinding();
-        }
     }
 
     returnToInitialPosition() {
-        if (!this.crayonDropPlayed) {
-            this.crayonDropPlayed = true;
-            gsap.to(this.mesh.position, {
-                x: this.initialPosition.x,
-                y: this.initialPosition.y,
-                z: this.initialPosition.z,
-                duration: 2,
-                ease: 'power2.inOut',
-                onComplete: () => {
-                    this.soundManager.play("cassetteIn");
-                    this.soundManager.play("crayonDrop");
+        gsap.to(this.mesh.position, {
+            x: this.initialPosition.x,
+            y: this.initialPosition.y,
+            z: this.initialPosition.z,
+            duration: 2,
+            ease: 'power2.inOut',
+            onStart: () => {
+                if (this.crayonDropPlayed) {
+                    this.soundManager.stop("cassetteIn");
+                    this.soundManager.stop("crayonDrop")
+                } else {
+                    this.crayonDropPlayed = true;
                 }
-            });
-        } else {
-            gsap.to(this.mesh.position, {
-                x: this.initialPosition.x,
-                y: this.initialPosition.y,
-                z: this.initialPosition.z,
-                duration: 2,
-                ease: 'power2.inOut'
-            });
-            this.soundManager.stop("cassetteIn");
-            this.soundManager.stop("crayonDrop")
-
-        }
+            },
+            onComplete: () => {
+                this.soundManager.play("cassetteIn");
+                this.soundManager.play("crayonDrop");
+            }
+        });
 
         gsap.to(this.mesh.rotation, {
             x: this.initialRotation.x,
@@ -238,23 +232,10 @@ export default class Pencil {
             ease: 'power2.inOut'
         });
     }
+
     destroy() {
         this.pointer.off("click", this.handleClick.bind(this));
-        this.pointer.off("movement", this.onPointerMove.bind(this));
         this.pointer.off("click-release", this.onPointerUp.bind(this));
-        this.destroyTrailRings();
     }
 
-    showTrailRings() {
-        this.trailRings.forEach(ring => ring.visible = true);
-    }
-
-    hideTrailRings() {
-        this.trailRings.forEach(ring => ring.visible = false);
-    }
-
-    destroyTrailRings() {
-        this.trailRings.forEach(ring => this.mesh.remove(ring));
-        this.trailRings = [];
-    }
 }

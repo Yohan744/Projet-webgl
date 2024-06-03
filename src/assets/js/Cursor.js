@@ -2,6 +2,7 @@ import {useGlobalEvents} from "./GlobalEvents";
 import defaultCursor from '../icons/cursor.svg'
 import blackCursor from '../icons/cursor-black.svg'
 import grabCursor from '../icons/grab.svg'
+import rotateCursor from '../icons/rotate.svg'
 import arrowLeftCursor from '../icons/arrowLeft.svg'
 import arrowRightCursor from '../icons/arrowRight.svg'
 import slideToRightCursor from '../icons/slideToRight.gif'
@@ -14,6 +15,7 @@ const cursors = {
     grab: grabCursor,
     arrowLeft: arrowLeftCursor,
     arrowRight: arrowRightCursor,
+    rotate: rotateCursor,
     slideToRight: slideToRightCursor,
     slideToLeft: slideToLeftCursor,
     click: clickCursor

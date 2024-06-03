@@ -119,6 +119,8 @@
       width: 35px;
       margin-left: 20px;
       overflow: hidden;
+      user-select: none;
+      -webkit-user-drag: none;
 
       img {
         position: relative;
