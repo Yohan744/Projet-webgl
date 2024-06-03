@@ -1,5 +1,5 @@
 <template>
-  <div class="new-section">
+  <div class="new-section" @mousemove="updateImagePosition">
     <div class="info-panel info-panel-left">
       <div class="info-title-container">
         <div class="info-title">Société</div>
@@ -81,7 +81,7 @@
           </div>
           <highcharts :options="currentChartOptions"></highcharts>
           <div>
-            <a @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@
             <highcharts :options="chartOptions" ref="chart"></highcharts>
           </div>
           <div>
-            <a @mouseover="showImage('/src/assets/img/HomophobieTue.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"  @mouseover="showImage('/src/assets/img/HomophobieTue.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -120,7 +120,7 @@
       </div>
     </div>
 
-    <div v-if="hoverImage" class="hover-image">
+    <div v-if="hoverImage" class="hover-image" :style="hoverImageStyle">
       <img :src="hoverImage" alt="Hovered Image">
     </div>
   </div>
@@ -139,6 +139,10 @@ export default {
     return {
       activeChart: 1,
       hoverImage: null,
+      hoverImageStyle: {
+        top: '0px',
+        left: '0px'
+      },
       chartOptions: {
         chart: {
           type: 'spline',
@@ -345,6 +349,10 @@ export default {
     },
     hideImage() {
       this.hoverImage = null;
+    },
+    updateImagePosition(event) {
+      this.hoverImageStyle.top = event.clientY + 10 + 'px';
+      this.hoverImageStyle.left = event.clientX + 10 + 'px';
     }
   },
   mounted() {
@@ -360,6 +368,7 @@ export default {
 .new-section {
   padding-left: 100px;
   padding-right: 100px;
+  position: relative;
 }
 
 .info-panel {
@@ -437,13 +446,25 @@ export default {
   color: white;
 }
 
+a  {
+   color: #EC9781;
+   z-index: 2;
+}
+
+a:hover {
+  color: #A7CF90;
+  font-weight: bold;
+}
+
 .hover-image {
-  position: absolute;
+  position: fixed;
   pointer-events: none;
-  z-index: 1000;
+  /* z-index: 1000; */
+  z-index: 1;
 }
 
 .hover-image img {
+  z-index: 1;
   width: 200px;
   height: auto;
 }
