@@ -45,7 +45,7 @@
         <div class="info-title">Musique</div>
       </div>
       <div class="info-content">
-        <iframe src="https://open.spotify.com/embed/playlist/19tq2QerDNgEqwNLcSuwL3" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <iframe src="https://open.spotify.com/embed/playlist/00vXCJ3TKAAHqktbLdJJ54?utm_source=generator&theme=0" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         <div class="text-content">
           <p>
             La scène musicale accueille de nombreux artistes qui soutiennent activement la cause LGBT et contribuent à sa visibilité.
@@ -61,14 +61,14 @@
     </div>
 
     <div>
-      <h2 class="main-title">L’évolution ... mais pas trop</h2>
+      <h2 class="main-title">Vous avez dit "évolution" ?</h2>
       <p>En somme, les chiffres de 2024 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
       </p>
     </div>
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title"  @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage" >LGBTiphobies</div>
+        <div class="info-title"  @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage" >LGBTiphobies, le rapport de 2024</div>
       </div>
       <div class="info-content">
         <div class="text-content">
@@ -89,18 +89,18 @@
 
     <div class="info-panel info-panel-left">
       <div class="info-title-container">
-        <div class="info-title">Agressions</div>
+        <div class="info-title"  @mouseover="showImage('/src/assets/img/HomophobieTue.png')" @mouseleave="hideImage">Quelle évolution?</div>
       </div>
       <div class="info-content">
         <div class="text-content">
           <p>
-            266 Agressions physiques LGBT+ ont été rapportées par SOS homophobie en 2023
+            <strong class="dataKey">266</strong> Agressions physiques LGBT+ ont été rapportées par SOS homophobie en 2023
           </p>
           <div class="info-data">
             <highcharts :options="chartOptions" ref="chart"></highcharts>
           </div>
           <div>
-            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"  @mouseover="showImage('/src/assets/img/HomophobieTue.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"  @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -108,15 +108,19 @@
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title">Espaces publics, espaces intimes</div>
+        <div class="info-title" @mouseover="showImage('/src/assets/img/Resistance.png')" @mouseleave="hideImage">Espaces publics, espaces intimes</div>
       </div>
       <div class="info-content">
         <div class="text-content">
           <p>
-            Dans quel contexte ont lieu les principaux faits recensés en 2022 (SOS Homophobie)
+            "Internet est aujourd’hui utilisé comme un relais de messages LGBTIphobes et une prolongation du harcèlement et des discriminations vécues dans le monde réel"
           </p>
+          <highcharts :options="chartOptions3" ref="chart"></highcharts>
+          <div>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+          </div>
         </div>
-        <img src="/src/assets/img/Resistance.png" alt="Image description" class="info-image-30">
+        
       </div>
     </div>
 
@@ -149,8 +153,9 @@ export default {
           backgroundColor: 'transparent',
           width: null
         },
+        legend:{ enabled:false },
         title: {
-          text: 'Évolution des Agressions'
+          text: 'Évolution des agressions'
         },
         credits: {
           enabled: false
@@ -218,6 +223,7 @@ export default {
         credits: {
           enabled: false
         },
+        legend:{ enabled:false },
         title: {
           text: "Types d'agressions"
         },
@@ -261,6 +267,7 @@ export default {
           type: 'column',
           backgroundColor: 'transparent'
         },
+        legend:{ enabled:false },
         credits: {
           enabled: false
         },
@@ -327,10 +334,71 @@ export default {
           }
         },
         series: [{
-          name: 'Pourcentage',
+          name: '',
           data: [71, 40, 31, 25, 14, 9, 8, 8, 7, 5, 3, 3, 2, 1, 1],
           color: '#A7CF90'
         }]
+      },
+      chartOptions3: {
+        chart: {
+          type: 'column',
+          backgroundColor: 'transparent'
+        },
+        legend:{ enabled:false },
+        credits: {
+          enabled: false
+        },
+        title: {
+          text: 'Evolution des contexte principaux de lgbtiphobies entre 2022 et 2023'
+        },
+        xAxis: {
+          categories : ['haine en ligne', 'famille', 'commerces, services', 'lieux publics', 'voisinage', 'mal de vivre'],
+          title: {
+            text: null
+          },
+          labels: {
+            rotation: -45,
+            style: {
+              fontSize: '10px',
+              fontFamily: 'Verdana, sans-serif'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: ''
+          }
+        },
+        tooltip: {
+          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}%</b><br/>',
+          shared: true
+        },
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true,
+              format: '{point.y}%',
+              style: {
+                fontSize: '8px'
+              }
+            }
+          }
+        },
+        series: [
+          {
+            name: '2022',
+            data: [17, 15, 13, 12, 9, 9],
+            color: '#A7CF90'
+          },
+          {
+            name: '2023',
+            data: [23, 13, 11, 10, 8, 7],
+            color: '#EC9781'
+          }
+        ]
       },
       currentChartOptions: {}
     };
@@ -400,11 +468,20 @@ export default {
   color: white;
 }
 
+.dataKey {
+  font-size: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
+  background-color: #A7CF90;
+  color: white;
+}
+
 .info-content {
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .info-image-50 {
