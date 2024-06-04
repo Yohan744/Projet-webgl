@@ -7,7 +7,7 @@ export const data = {
 
     background: {
         src: s + 'background.mp3',
-        volume: 0.5,
+        volume: 0.2,
         autoplay: false,
         preload: true,
         loop: true,
@@ -21,36 +21,42 @@ export const data = {
         preload: true,
         loop: false,
     },
+
     walkman2: {
         src: p + 'walkman-p2.m4a',
         volume: 0.75,
         preload: true,
         loop: false,
     },
+
     final: {
         src: p + 'finalMessage.mp3',
         volume: 1,
         preload: true,
         loop: false,
     },
+
     chest: {
         src: fx + 'malle.mp3',
-        volume: 0.75,
+        volume: 0.1,
         preload: true,
         loop: false,
     },
+
     lock: {
         src: fx + 'lock.mp3',
-        volume: 0.75,
+        volume: 0.5,
         preload: true,
         loop: false,
     },
+
     bouton: {
         src: fx + 'BoutonOn.wav',
-        volume: 0.75,
+        volume: 0.5,
         preload: true,
         loop: false,
     },
+
     fermetureWalkman: {
         src: fx + 'fermetureWalkman.mp3',
         volume: 0.75,
@@ -71,6 +77,7 @@ export const data = {
         preload: true,
         loop: false,
     },
+
     cassetteIn: {
         src: fx + 'cassetteIn.mp3',
         volume: 0.85,
@@ -108,13 +115,13 @@ export const data = {
 
     rewind: {
         src: fx + 'rattle.mp3',
-        volume: 0.2,
+        volume: 0.35,
         preload: true,
         loop: true,
     },
 
     crayonFound: {
-        src: p + 'crayon-trouver.m4a',
+        src: p + 'crayon-trouver.mp3',
         volume: 0.75,
         preload: true,
         loop: false,
@@ -129,7 +136,7 @@ export const data = {
 
     crayonDrop: {
         src: fx + 'crayonDrop.mp3',
-        volume: 0.3,
+        volume: 0.1,
         preload: true,
         loop: false,
     },
@@ -142,8 +149,8 @@ export const data = {
     },
 
     telecran: {
-        src: p + 'telecran.m4a',
-        volume: 0.75,
+        src: p + 'telecran.mp3',
+        volume: 0.85,
         preload: true,
         loop: false,
     },
@@ -213,7 +220,14 @@ export const data = {
 
     diapo5: {
         src: p + 'diapo5.mp3',
-        volume: 1,
+        volume: 2,
+        preload: true,
+        loop: false,
+    },
+
+    envelopeDiscover: {
+        src: p + 'envelopeDiscover.mp3',
+        volume: 0.75,
         preload: true,
         loop: false,
     },
@@ -234,7 +248,7 @@ export const data = {
 
     commode3: {
         src: p + 'commode3.mp3',
-        volume: 0.75,
+        volume: 0.675,
         preload: true,
         loop: false,
     },
@@ -260,24 +274,8 @@ export const data = {
         loop: false,
     },
 
-    //////// GENERAL SOUNDS ////////
-
-    general1: {
-        src: g + 'general1.mp3',
-        volume: 0.75,
-        preload: true,
-        loop: false,
-    },
-
-    general2: {
-        src: g + 'general2.mp3',
-        volume: 0.75,
-        preload: true,
-        loop: false,
-    },
-
-    general3: {
-        src: g + 'general3.mp3',
+    searchInvite: {
+        src: p + 'searchInvinte.mp3',
         volume: 0.75,
         preload: true,
         loop: false,
@@ -287,7 +285,7 @@ export const data = {
 
     projectorSound: {
         src: fx + 'projectorSound.mp3',
-        volume: 0.1,
+        volume: 0.02,
         preload: true,
         loop: true,
     },
@@ -316,6 +314,20 @@ export const data = {
     envelopeOpening: {
         src: fx + 'envelopeOpening.mp3',
         volume: 0.7,
+        preload: true,
+        loop: false,
+    },
+
+    dustEffect: {
+        src: fx + 'dust.mp3',
+        volume: 0.6,
+        preload: true,
+        loop: false,
+    },
+
+    unlockZone: {
+        src: fx + 'unlockZone.mp3',
+        volume: 0.6,
         preload: true,
         loop: false,
     },

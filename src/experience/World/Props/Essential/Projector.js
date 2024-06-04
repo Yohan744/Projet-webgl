@@ -42,7 +42,7 @@ export default class Projector {
         this.railOriginalPosition = new THREE.Vector3();
         this.tireuseBasicPosition = new THREE.Vector3();
         this.isSpotlightVisible = false;
-        this.basicCameraPosition = new THREE.Vector3(-4.9, 1.225, 5.5);
+        this.basicCameraPosition = new THREE.Vector3(-4.825, 1.21, 5.5);
 
         this.spotLightBasicPosition = new THREE.Vector3(-3.8, 1.15, 4.5);
         this.spotLightBasicTarget = new THREE.Vector3(-3.3, 1.17, 4.5);
@@ -298,9 +298,6 @@ export default class Projector {
                 gsap.to(this.rail.position, {
                     x: "+=0.02",
                     duration: 1,
-                    onComplete: () => {
-                        if (this.railMoveCount === 4 && this.gameManager.state.gameStepId === 1) this.gameManager.incrementGameStepId();
-                    }
                 });
             }
         }
@@ -353,6 +350,7 @@ export default class Projector {
         this.soundManager.sounds[voiceName].on('end', () => {
             this.voicesPlayed[index] = true
             this.isSpeaking = false;
+            if (index === 4 && this.gameManager.state.gameStepId === 1) this.gameManager.incrementGameStepId();
         })
 
     }

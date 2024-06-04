@@ -26,6 +26,8 @@ export default class SoundManager {
             });
         });
 
+        this.backgroundOriginalVolume = this.sounds['background'].volume();
+
         Howler.volume(this.appStore.$state.globalVolume);
     }
 
@@ -73,7 +75,7 @@ export default class SoundManager {
         }
     }
 
-    fadeOutAndStopBackground(fadeDuration, onComplete) {
+    fadeOutAndStopBackground(fadeDuration, onComplete = () => {}) {
         const originalVolume = this.sounds['background'].volume();
 
         this.sounds['background'].fade(originalVolume, 0, fadeDuration);
@@ -85,17 +87,14 @@ export default class SoundManager {
     }
 
     playSoundWithBackgroundFade(key, fadeDuration) {
-        const originalVolume = this.sounds['background'].volume();
 
-        this.sounds['background'].fade(originalVolume, originalVolume / 3, fadeDuration);
-
-
+        this.sounds['background'].fade(this.backgroundOriginalVolume, this.backgroundOriginalVolume / 3, fadeDuration);
 
         setTimeout(() => {
             this.sounds[key].play();
 
             this.sounds[key].on('end', () => {
-                this.sounds['background'].fade(originalVolume / 3, originalVolume, fadeDuration);
+                this.sounds['background'].fade(this.backgroundOriginalVolume / 3, this.backgroundOriginalVolume, fadeDuration);
                 this.sounds[key].off('end');
             });
         }, fadeDuration * 1000)

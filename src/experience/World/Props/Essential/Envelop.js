@@ -27,6 +27,8 @@ export default class Envelop extends EventEmitter {
         this.envelopBasicRotation = this.mesh.rotation.clone();
         this.envelopRotationInSky = new THREE.Vector3(0, 2.17, 1.63);
 
+        this.isEnvelopDiscovered = false
+
         this.isEnvelopInSky = false
         this.isEnvelopReadyToBeOpened = false
         this.isEnvelopOpen = false;
@@ -40,14 +42,14 @@ export default class Envelop extends EventEmitter {
         this.isSpeaking = false;
 
         this.carousel = new THREE.Group();
-        this.carouselIndex = 1
+        this.carouselIndex = 0
         this.carouselItemsOffset = 0.4;
         this.dahliaBasicRotation = new THREE.Vector3(Math.PI * 0.5, -0.25, 0);
         this.letterBasicRotation = new THREE.Vector3(-Math.PI * 0.5, 0, Math.PI);
         this.cassetteBasicRotation = new THREE.Vector3(Math.PI * 0.5, 0, 0);
         this.cartePostaleBasicRotation = new THREE.Vector3(-Math.PI, Math.PI * 0.5, -Math.PI * 0.5);
-        this.itemScaleArray = [1.3, 1, 1.2, 1.5, 1.5, 1.5]
-        this.itemsName = ['dahlia', 'lettre', 'corps', 'cartepostaleplage', 'cartespostalesmaison', 'cartepostalebiarritz']
+        this.itemScaleArray = [1, 1.3, 1.5, 1.5, 1.5, 1.2]
+        this.itemsName = ['lettre', 'dahlia', 'cartepostaleplage', 'cartespostalesmaison', 'cartepostalebiarritz', 'corps']
 
         this.initialMousePositionOnClick = {x: 0, y: 0}
 
@@ -115,6 +117,12 @@ export default class Envelop extends EventEmitter {
     }
 
     animateEnvelopToSky(state, delay = 0) {
+
+        if (!this.isEnvelopDiscovered) {
+            this.isEnvelopDiscovered = true
+            this.soundManager.playSoundWithBackgroundFade('envelopeDiscover', 1.25)
+        }
+
         gsap.to(this.mesh.position, {
             x: state ? '+=' + 0.7 : this.envelopBasicPosition.x + 0.23,
             y: state ? '+=' + 0.9 : this.envelopBasicPosition.y,
@@ -137,7 +145,7 @@ export default class Envelop extends EventEmitter {
                 if (!state) {
                     this.isEnvelopInSky = false
                     this.trigger('envelopIsNoLongerIsSky')
-                    this.carouselIndex = 1
+                    this.carouselIndex = 0
                 } else {
                     this.globalEvents.trigger('change-cursor', {name: 'click'})
                     this.isEnvelopReadyToBeOpened = true
@@ -208,9 +216,9 @@ export default class Envelop extends EventEmitter {
 
             if (this.isRotating && this.objectRotating) {
                 if (this.objectRotating.name === 'corps' || this.objectRotating.name.includes('bobine')) {
-                    this.cassette.rotation.z = this.lerp(this.cassette.rotation.z, this.cassette.rotation.z - d * 0.1, 0.99)
+                    this.cassette.rotation.z = this.lerp(this.cassette.rotation.z, this.cassette.rotation.z - d * 0.3, 0.99)
                 } else {
-                    this.objectRotating.rotation.y = this.lerp(this.objectRotating.rotation.y, this.objectRotating.rotation.y + d * 0.1, 0.99)
+                    this.objectRotating.rotation.y = this.lerp(this.objectRotating.rotation.y, this.objectRotating.rotation.y + d * 0.3, 0.99)
                 }
             }
 
@@ -260,8 +268,8 @@ export default class Envelop extends EventEmitter {
         this.cartePostaleMaison.opacity = 0;
         this.cartePostaleBiarritz.opacity = 0;
 
-        this.carousel.add(this.dahlia, this.letter, this.cassette, this.cartePostalePlage , this.cartePostaleMaison, this.cartePostaleBiarritz);
-        this.items = [this.dahlia, this.letter, this.cassette, this.cartePostalePlage, this.cartePostaleMaison, this.cartePostaleBiarritz];
+        this.carousel.add(this.letter, this.dahlia, this.cartePostalePlage , this.cartePostaleMaison, this.cartePostaleBiarritz, this.cassette);
+        this.items = [this.letter, this.dahlia, this.cartePostalePlage, this.cartePostaleMaison, this.cartePostaleBiarritz, this.cassette];
 
         this.dahlia.position.set(0, 0, 0);
         this.letter.position.set(0, 0, 0);
@@ -288,7 +296,7 @@ export default class Envelop extends EventEmitter {
         this.items.forEach((item, index) => {
 
             gsap.to(item.position, {
-                x: state ? this.carouselItemsOffset * (index - 1) : 0,
+                x: state ? this.carouselItemsOffset * index : 0,
                 z: state ? this.carouselItemsOffset * 0.75 : 0,
                 delay: 0.1 * index + delay,
                 duration: 1.5,
@@ -335,10 +343,6 @@ export default class Envelop extends EventEmitter {
 
         this.carouselIndex = side === 1 ? this.carouselIndex - 1 : this.carouselIndex + 1
 
-        if (this.carouselIndex === 2 && this.gameManager.state.gameStepId === 2) {
-            this.gameManager.incrementGameStepId()
-        }
-
         this.items.forEach((item, index) => {
             gsap.to(item.position, {
                 x: '+=' + this.carouselItemsOffset * side,
@@ -383,6 +387,10 @@ export default class Envelop extends EventEmitter {
 
     animateMorphTargets(open) {
         if (this.mesh.morphTargetInfluences.length === 0) return;
+
+        if (this.gameManager.state.gameStepId === 2) {
+            this.gameManager.incrementGameStepId()
+        }
 
         this.timeline.clear();
 
@@ -509,6 +517,11 @@ export default class Envelop extends EventEmitter {
         this.soundManager.sounds[voiceName].on('end', () => {
             this.voicesPlayed[index] = true
             this.isSpeaking = false;
+
+            if (index === 5 && this.gameManager.state.gameStepId === 3) {
+                this.gameManager.incrementGameStepId()
+            }
+
         })
 
     }

@@ -7,9 +7,6 @@ import RubiksCube from "../experience/World/Props/RubiksCube";
 import Television from "../experience/World/Props/Essential/Television";
 import RecordPlayer from "../experience/World/Props/RecordPlayer";
 import Telecran from "../experience/World/Props/Telecran";
-import Letter from "../experience/World/Props/Essential/Letter";
-import BottomChest from "../experience/World/Props/Essential/BottomChest";
-import TopChest from "../experience/World/Props/Essential/TopChest";
 
 export const objectsData = {
     telephone: {
@@ -38,7 +35,7 @@ export const objectsData = {
     },
     tableau_magique1: {
         file: Telecran,
-        rotationOnClick: new THREE.Vector3(0, 0, -Math.PI * 0.35),
+        rotationOnClick: new THREE.Vector3(0, Math.PI * 0.075, -Math.PI * 0.35),
         animateToCameraOnClick: true,
         distanceToCamera: 1,
         outlineScale: 1.02,

@@ -10,7 +10,6 @@ import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
 import Pencil from "./Props/Essential/Pencil";
 import TopChest from "./Props/Essential/TopChest";
-import BottomChest from "./Props/Essential/BottomChest";
 
 
 const interactableObjects = {};
@@ -77,7 +76,6 @@ export default class ObjectsInteractable {
                 } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial();
                     if (name.includes('fermé')) child.material = this.materialLibrary.getClosedMagazineMaterial();
-                    interactableMesh.push(child);
 
                 } else if (name.includes("malle")) {
                     if (name.includes('haut')) {
@@ -89,9 +87,7 @@ export default class ObjectsInteractable {
 
                     if (name.includes('bas')) {
                         child.material = this.materialLibrary.getBottomChestMaterial();
-                        this.bottomChest = new BottomChest(child);
-                        interactableObjects.bottomChest = this.bottomChest;
-                        interactableMesh.push(child);
+
                     }
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {

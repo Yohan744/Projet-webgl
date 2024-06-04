@@ -122,13 +122,14 @@ export default class Renderer {
 
     toggleBlurEffect(value, delay = 0.35) {
         this.isBlurEffectEnabled = value;
+        const gameStepId = this.gameManager.state.gameStepId
 
         gsap.set(this.dofEffect.uniforms.get('aperture'), {
-            value: value ? 0 : 1,
+            value: value ? 0 : gameStepId === 0 ? 0.075 : 1,
         })
 
         gsap.to(this.dofEffect.uniforms.get('aperture'), {
-            value: value ? 1 : 0,
+            value: value ? gameStepId === 0 ? 0.075 : 1 : 0,
             delay: value ? delay : 0,
             duration: 2.5,
             ease: 'power1.out',

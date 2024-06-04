@@ -1,10 +1,12 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{visible: showStartButton}">
+    <div ref="startButton" class="start-button" @click="handleClickStartButton"
+         v-bind:class="{visible: showStartButton}">
       <p>start experience</p>
     </div>
 
-    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}" :progress="progress"/>
+    <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"
+             :progress="progress"/>
     <VideoIntro v-if="!isVideoIntroWatched"/>
     <ExperienceLayer :soundManager="soundManager"/>
     <VideoOutro v-if="showVideoOutro"/>
@@ -17,22 +19,22 @@
 <script>
 import VideoIntro from "../components/VideoIntro.vue";
 import Experience from '../experience/Experience';
-import { useAppStore } from "../stores/appStore";
+import {useAppStore} from "../stores/appStore";
 import Loading from "../components/Loading.vue";
-import { useRouter } from "vue-router";
+import {useRouter} from "vue-router";
 import ExperienceLayer from "../components/ExperienceLayer.vue";
-import { useSoundManager } from "../main";
-import { useGameManager } from "../assets/js/GameManager";
+import {useSoundManager} from "../main";
+import {useGameManager} from "../assets/js/GameManager";
 import gsap from "gsap";
-import { useCursor } from "../assets/js/Cursor";
-import { isMobile } from "../assets/js/utils";
-import { useGlobalEvents } from "../assets/js/GlobalEvents";
-import { useVideoManager } from "../assets/js/VideoManager";
-import VideoOutro from "../components/Outro/VideoOutro.vue";
+import {useCursor} from "../assets/js/Cursor";
+import {isMobile} from "../assets/js/utils";
+import {useGlobalEvents} from "../assets/js/GlobalEvents";
+import {useVideoManager} from "../assets/js/VideoManager";
+import VideoOutro from "../components/VideoOutro.vue";
 
 export default {
   name: 'ExperiencePage',
-  components: { VideoOutro, ExperienceLayer, Loading, VideoIntro },
+  components: {VideoOutro, ExperienceLayer, Loading, VideoIntro},
   data() {
     const appStore = useAppStore();
     const gameManager = useGameManager();
@@ -111,6 +113,7 @@ export default {
         if (this.isVideoIntroWatched && !this.showStartButton) {
           this.setExperienceOpacity();
         }
+        this.videoManager.preloadOutroVideo();
       });
 
       this.experience.on('assetLoading', (value) => {
@@ -123,41 +126,6 @@ export default {
           });
         }
       });
-
-      this.setVideoOutro();
-    },
-    setVideoOutro() {
-      this.soundManager.sounds['final'].once('play', () => {
-            setTimeout(() => {
-              console.log("Starting final sound and fade out");
-              this.fadeOutExperience();
-            }, 38000);
-      });
-
-      this.soundManager.sounds['final'].once('end', () => {
-        setTimeout(() => {
-          this.playOutroVideo();
-        }, 500);
-      });
-    },
-    fadeOutExperience() {
-      gsap.to(this.$refs.experienceContainer, {
-        opacity: 0,
-        duration: 17,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          console.log("Experience container faded out");
-        }
-      });
-    },
-    playOutroVideo() {
-      this.videoManager.preloadOutroVideo();
-      const checkVideoLoaded = setInterval(() => {
-        if (this.videoManager.state.outroVideoReady) {
-          clearInterval(checkVideoLoaded);
-          this.showVideoOutro = true;
-        }
-      }, 500);
     },
     setExperienceOpacity() {
       if (this.$refs.experienceContainer) {

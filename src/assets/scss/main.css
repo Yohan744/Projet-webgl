@@ -312,6 +312,79 @@
   color: black;
 }
 
+@font-face {
+  font-family: "HomemadeApple";
+  src: url("/src/assets/fonts/HomemadeApple-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SometypeMono";
+  src: url("/src/assets/fonts/SometypeMono-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+h1, h2, h3 {
+  font-family: "HomemadeApple", sans-serif;
+}
+
+h1 {
+  font-size: 5em;
+  /* Adjusted size for medium screens */
+}
+
+h2 {
+  font-size: 3em;
+  /* Adjusted size for medium screens */
+}
+
+h3 {
+  font-size: 1.5em;
+  /* Adjusted size for medium screens */
+}
+
+html {
+  font-family: "SometypeMono", sans-serif;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-family: "SometypeMono", sans-serif;
+    font-size: 12px;
+  }
+
+  p {
+    font-size: 12px;
+    /* Default size for smaller screens */
+  }
+}
+@media (min-width: 992px) {
+  html {
+    font-family: "SometypeMono", sans-serif;
+    font-size: 14px;
+  }
+
+  p {
+    font-size: 14px;
+    /* Default size for smaller screens */
+  }
+}
+.main-content {
+  min-height: 100vh;
+  background: url("/src/assets/img/fond.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+section {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  color: black;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -327,8 +400,6 @@
   }
 }
 html, body {
-  overflow: hidden;
-  overscroll-behavior: none;
   background: black;
 }
 

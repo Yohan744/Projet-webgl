@@ -17,6 +17,8 @@ import {useAppStore} from "../stores/appStore";
 import {useSoundManager} from "../main";
 import {useGameManager} from "../assets/js/GameManager";
 import {useGlobalEvents} from "../assets/js/GlobalEvents";
+import {exp} from "three/examples/jsm/nodes/math/MathNode";
+import gsap from "gsap";
 
 export default class Experience extends EventEmitter {
     static instance
@@ -30,6 +32,7 @@ export default class Experience extends EventEmitter {
         Experience.instance = this
 
         this.targetElement = _options.targetElement
+        this.isExperienceEnded = false
 
         this.setAppStore()
         this.setGameManager()
@@ -166,6 +169,32 @@ export default class Experience extends EventEmitter {
         this.renderer?.resize()
 
         this.world?.resize()
+    }
+
+    endExperience() {
+        if (this.isExperienceEnded) return
+        this.isExperienceEnded = true
+
+        this.soundManager.fadeOutAndStopBackground(2000);
+        this.soundManager.play('final')
+
+        this.soundManager.sounds['final'].on('end', () => {
+            this.globalEvents.trigger('endExperience')
+        })
+
+        const experienceLayer = document.querySelector('#experience-layer')
+        experienceLayer?.classList.remove('visible')
+
+        gsap.to(this.targetElement, {
+            opacity: 0,
+            delay: 50,
+            duration: 6,
+            ease: 'linear',
+            onComplete: () => {
+                console.log("Experience container faded out");
+            }
+        });
+
     }
 
     update() {

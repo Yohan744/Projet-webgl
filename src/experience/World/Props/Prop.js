@@ -30,7 +30,6 @@ export default class Prop extends EventEmitter {
         this.propsBasicRotation = mesh.rotation.clone()
         this.desiredRotation = desiredRotationOnClick
         this.offsetFromCamera = distanceToCamera;
-        this.chanceOfPlayingASong = 0.4
         this.propsSongHasBeenPlayed = false
         this.isSpeaking = false
 
@@ -53,7 +52,7 @@ export default class Prop extends EventEmitter {
                 this.outline?.showOutline()
                 this.renderer.toggleBlurEffect(false)
 
-                if (this.gameManager.state.actualObjectInteractingName !== 'projector' && this.gameManager.state.actualObjectInteractingName !== 'drawer') {
+                if (this.gameManager.state.actualObjectInteractingName !== 'projector' && this.gameManager.state.actualObjectInteractingName !== 'drawer' && this.gameManager.state.actualObjectInteractingName !== 'pencil' && this.gameManager.state.actualObjectInteractingName !== 'walkman') {
                     this.gameManager.setActualObjectInteractingName(null)
                 }
 
@@ -101,11 +100,6 @@ export default class Prop extends EventEmitter {
                     this.propsSongHasBeenPlayed = true
                     this.isSpeaking = false
                 })
-            } else {
-                if (Math.random() < this.chanceOfPlayingASong) {
-                    const randomSound = this.experience.soundManager.getRandomSound()
-                    this.soundManager.playSoundWithBackgroundFade(randomSound, 1.25)
-                }
             }
         }
     }
