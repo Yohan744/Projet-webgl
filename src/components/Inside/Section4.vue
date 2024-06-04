@@ -9,6 +9,7 @@ import ThreeColumns from './ThreeColumns.vue';
 
 export default {
   name: 'Section4',
+  
   components: {
     ThreeColumns
   },

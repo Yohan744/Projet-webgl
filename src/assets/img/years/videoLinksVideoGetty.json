@@ -160,15 +160,15 @@
       "left": [
         {
             "type": "image",
-            "src": "/src/assets/img/years/1989-1.png",
-            "text": "This is the text for the second right image of 1989."
+            "src": "/src/assets/img/years/1988-1.png",
+            "text": "Le 11 octobre 1988, à l'occasion de la première Journée du coming out, des milliers de gays et de lesbiennes avaient publié leurs noms dans les journaux."
           }
       ],
       "right": [
         {
           "type": "image",
-          "src": "/src/assets/img/years/1989-2.png",
-          "text": "This is the text for the left image of 1989."
+          "src": "/src/assets/img/years/1988-2.png",
+          "text": "Apparu en 1988 dans sa version papier qui cessera d'exister en 2007, Illico est l'un des magazines gays français qui a connu la plus longue période de parution (Avec têtu· et la revue Arcadie)."
         }
       ]
     },

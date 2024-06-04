@@ -43,6 +43,7 @@
 <script>
 export default {
   name: 'GalleryPage',
+  
   data() {
     return {
       hoverItem: null,

@@ -60,10 +60,12 @@
       </div>
     </div>
 
-    <div>
+    <div class="info-question">
       <h2 class="main-title">Vous avez dit "évolution" ?</h2>
-      <p>Les chiffres de 2024 du rapport sur les LGBTiphobies de 2023 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
-      </p>
+        <div class="text-content">
+          <p>Les chiffres de 2024 du rapport sur les LGBTiphobies de 2023 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
+          </p>
+        </div>
     </div>
 
     <div class="info-panel info-panel-right">
@@ -136,6 +138,7 @@ import Highcharts from 'highcharts';
 
 export default {
   name: 'NewSection',
+  
   components: {
     highcharts: HighchartsVue.component
   },
@@ -470,6 +473,13 @@ export default {
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-question {
+  display: flex;
+  width: 80%;
+  max-width: 1000px;
+  margin: 50px;
 }
 
 .info-panel-right {

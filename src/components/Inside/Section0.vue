@@ -1,4 +1,5 @@
 <template>
+  
   <h2 class="title" id="title1">Là où poussent</h2>
   <h1 class="title" id="title2">les fleurs</h1>
   <h3 class="title" id="title3">La vie de Mona</h3>
@@ -7,6 +8,7 @@
     <div class="buttons">
       <button @click="handleButtonClick">En apprendre plus <img src="/src/assets/img/arrow_bottom.png" alt=""></button>
     </div>
+
 </template>
 
 <script>
