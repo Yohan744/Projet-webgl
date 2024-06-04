@@ -1,13 +1,12 @@
-#masthead {
+/* #masthead {
   position: relative;
   height: 100dvh;
   width: 100dvw;
-  background: #f8e7d9;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-#masthead a {
+} 
+ #masthead a {
   position: relative;
   font-size: 30px;
   text-decoration: underline;
@@ -21,7 +20,7 @@
 }
 #masthead a:not(.disabled):hover {
   text-underline-offset: 2px;
-}
+} */
 
 #experienceWrapper {
   position: fixed;
