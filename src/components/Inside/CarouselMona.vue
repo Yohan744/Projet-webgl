@@ -102,19 +102,20 @@ export default {
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);
-  z-index: 10; /* Ensure controls are above images */
+  z-index: 10; 
 }
 
 .carousel-controls button {
-  background: rgba(0, 0, 0, 0.5);
   border: none;
-  color: white;
-  font-size: 24px;
+  color: black;
+  font-size: 45px;
   padding: 10px;
   cursor: pointer;
+  background: none
 }
 
 .carousel-controls button:hover {
-  background: rgba(0, 0, 0, 0.7);
+  font-weight: bolder;
+  font-size: 50px;
 }
 </style>

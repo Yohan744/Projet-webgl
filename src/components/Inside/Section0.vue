@@ -1,15 +1,18 @@
 <template>
-  
-  <h2 class="title" id="title1">Là où poussent</h2>
-  <h1 class="title" id="title2">les fleurs</h1>
-  <h3 class="title" id="title3">La vie de Mona</h3>
-  <img src="/src/assets/img/fleur.png" alt="">
-  <div class="image-container"></div>
+  <div class="content-container">
+    <h2 class="title" id="title1">Là où poussent</h2>
+    <h1 class="title" id="title2">les fleurs</h1>
+    <!-- <img src="/src/assets/img/fleur.png" alt=""> -->
+    <div class="image-container"></div>
     <div class="buttons">
-      <button @click="handleButtonClick"><p class="seeMore">En apprendre plus </p><img src="/src/assets/img/arrow_bottom.png" alt=""></button>
+      <button @click="handleButtonClick">
+        <p class="seeMore">En apprendre plus </p>
+        <img src="/src/assets/img/arrow_bottom.png" alt="">
+      </button>
     </div>
-
+  </div>
 </template>
+
 
 <script>
 export default {
@@ -35,6 +38,27 @@ export default {
 </script>
 
 <style scoped>
+@keyframes glow-inside {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2),
+                 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 15px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                 0 0 15px rgba(255, 255, 255, 0.5),
+                 0 0 20px rgba(255, 255, 255, 0.5),
+                 0 0 25px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2),
+                 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 15px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
+
 @keyframes handwriting {
   from {
     width: 0;
@@ -44,22 +68,57 @@ export default {
   }
 }
 
+.content-container {
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+}
+
 .handwriting {
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
-  width: 100%;
-  animation: handwriting 4s steps(30, end) 1;
+  animation: handwriting 4s steps(30, end) forwards, glow-inside 2s infinite;
 }
 
 .title {
   margin: 0;
   padding: 0;
   z-index: 1;
+  font-weight: lighter;
   position: relative;
   color: white;
-  transition: width 0.5s ease-in-out;
-  visibility: hidden; 
+  visibility: hidden;
+}
+
+ 
+@media (max-width: 768px) {
+    .title {
+      font-size: 10px;
+    } 
+  }
+
+  @media (max-width: 992px) {
+    .title[data-v-71bb5894]:first-child  {
+      margin-top:20vh;
+    }
+    .title {
+      font-size: 30px;
+    }
+  }
+
+.title:first-child {
+  margin-top: 10vh; 
+}
+
+.title.handwriting {
+  visibility: visible;
 }
 
 img {
@@ -72,9 +131,9 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('/src/assets/img/section1_background.webp') no-repeat center center;
-  background-size: cover; 
-  z-index: 0; 
+  background: url('/src/assets/img/fond-intro.png') no-repeat center center;
+  background-size: cover;
+  z-index: 0;
 }
 
 .buttons {
@@ -105,3 +164,5 @@ button:hover {
   color: #A7CF90;
 }
 </style>
+
+
