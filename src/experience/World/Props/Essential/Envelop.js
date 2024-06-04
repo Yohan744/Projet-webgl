@@ -338,7 +338,9 @@ export default class Envelop extends EventEmitter {
 
     animateCarouselItemsOnSide(side) {
 
-        if (this.carouselIsMoving || side === 1 && this.carouselIndex === 0 || side === -1 && this.carouselIndex === 5) return
+        const carouselLength = this.items.length
+
+        if (this.carouselIsMoving || side === 1 && this.carouselIndex === 0 || side === -1 && this.carouselIndex === carouselLength - 1) return
         this.carouselIsMoving = true
 
         this.carouselIndex = side === 1 ? this.carouselIndex - 1 : this.carouselIndex + 1
@@ -388,13 +390,14 @@ export default class Envelop extends EventEmitter {
     animateMorphTargets(open) {
         if (this.mesh.morphTargetInfluences.length === 0) return;
 
-        if (this.gameManager.state.gameStepId === 2) {
-            this.gameManager.incrementGameStepId()
-        }
-
         this.timeline.clear();
 
         this.soundManager.play('envelopeOpening')
+        this.soundManager.sounds['envelopeOpening'].on('end', () => {
+            if (this.gameManager.state.gameStepId === 2) {
+                this.gameManager.incrementGameStepId()
+            }
+        })
 
         const value = open ? 1 : 0;
         const reverseValue = open ? 0 : 1;
@@ -518,12 +521,44 @@ export default class Envelop extends EventEmitter {
             this.voicesPlayed[index] = true
             this.isSpeaking = false;
 
+            console.log(this.interactableObjects.cassette.getCassetteBottomRightCornerPosition())
+
             if (index === 5 && this.gameManager.state.gameStepId === 3) {
                 this.gameManager.incrementGameStepId()
+                this.setCassetteToPocket()
             }
 
         })
 
+    }
+
+    setCassetteToPocket() {
+
+        this.animateCarouselItemsOnSide(1)
+
+        gsap.to(this.cassette.position, {
+            x: '+=' + 2.5,
+            y: '-=' + 2,
+            z: '+=' + 1,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.items.pop()
+                this.carousel.remove(this.cassette)
+                this.updateCassetteVisibility(false)
+            }
+        });
+
+    }
+
+    updateCassetteVisibility(state) {
+        this.cassette.traverse((child) => {
+            if (child.isMesh) {
+                child.visible = state
+                child.material.visible = state;
+                child.material.opacity = state ? 1 : 0;
+            }
+        })
     }
 
     destroy() {

@@ -240,7 +240,7 @@ export const data = {
 
     commode2: {
         src: p + 'commode2.mp3',
-        volume: 0.75,
+        volume: 0.675,
         preload: true,
         loop: false,
     },

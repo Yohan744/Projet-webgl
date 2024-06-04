@@ -153,6 +153,7 @@ export default class Cassette {
         if (allMorphTargetsZero && !this.pencil.isInteractionFinished) {
             this.soundManager.play('cassetteRewind');
             this.globalEvents.trigger('change-cursor', {name: 'click'})
+            this.pencil.pencilRotation.pause();
             this.soundManager.sounds['cassetteRewind'].on('end', () => {
                 this.pencil.returnToInitialPosition(true)
                 this.returnToInitialPosition();

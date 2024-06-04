@@ -228,6 +228,7 @@ export default class Pencil {
     }
 
     returnToInitialPosition(forced = false) {
+        this.pencilRotation.pause()
         gsap.to(this.mesh.position, {
             x: this.initialPosition.x,
             y: this.initialPosition.y,
