@@ -289,6 +289,9 @@ export default class Walkman {
         this.isHeadphoneOn = true;
         this.isAnimating = true;
         this.walkmanOutline.removeOutline()
+        gsap.delayedCall(1.5, () => {
+            this.soundManager.play("headphoneOn");
+        })
         gsap.to(this.morphMesh.morphTargetInfluences, {
             [this.morphMesh.morphTargetDictionary[this.headphoneMorphTargetName]]: 1,
             duration: 2,
@@ -297,7 +300,6 @@ export default class Walkman {
                 this.walkmanOutline.updateOutlineMeshPosition(this.mesh.position);
             },
             onComplete: () => {
-                this.soundManager.play("headphoneOn");
                 gsap.to([this.mesh.rotation, this.cassette.cassetteGroup.rotation], {
                     y: '-=' + 1,
                     duration: 1,

@@ -109,7 +109,7 @@ export default class Pencil {
 
             } else if (this.isReadyToBeRewinded) {
                 this.cassette?.startRewinding();
-                this.pencilRotation.play()
+                // this.pencilRotation.play()
             }
         }
     }

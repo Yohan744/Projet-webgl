@@ -190,7 +190,7 @@ export default class Experience extends EventEmitter {
 
         gsap.to(this.targetElement, {
             opacity: 0,
-            delay: 50,
+            delay: 44,
             duration: 6,
             ease: 'linear'
         });
