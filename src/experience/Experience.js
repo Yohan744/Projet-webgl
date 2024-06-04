@@ -179,7 +179,7 @@ export default class Experience extends EventEmitter {
         this.soundManager.play('final')
 
         this.soundManager.sounds['final'].on('end', () => {
-            this.globalEvents.trigger('endExperience')
+            this.trigger('endExperience')
         })
 
         const experienceLayer = document.querySelector('#experience-layer')
