@@ -2,30 +2,29 @@
   "1980": {
     "left": [
       {
-      "type": "image",
-          "src": "/src/assets/img/years/1980-1.png",
+        "type": "image",
+        "src": "/src/assets/img/years/1980-1.png",
         "text": ""
       },
       {
         "type": "image",
         "src": "/src/assets/img/years/1980-2.png",
-        "text": "La Boum sort au cinéma en 1980 et devient un succès nationale. Les fêtes d’anniversaires sont alors remplacées par des boum où les ados attendent les slows pour initier un contact avec leur bien aimé"
+        "text": "La Boum sort au cinéma en 1980 et devient un succès national. Les fêtes d’anniversaire sont alors remplacées par des boums où les ados attendent les slows pour initier un contact avec leur bien-aimé."
       }
     ],
-    "right": [
-    ]
+    "right": []
   },
   "1981": {
     "left": [
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1981-2.png",
-          "text": ""
+        "type": "image",
+        "src": "/src/assets/img/years/1981-2.png",
+        "text": ""
       },
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1981-1.png",
-          "text": ""
+        "type": "image",
+        "src": "/src/assets/img/years/1981-1.png",
+        "text": "1981 : François Mitterrand est le premier président socialiste élu en France. Il initie de nombreuses réformes sociales comme l’abolition de la peine de mort, l’augmentation des salaires et une 5ᵉ semaine de congés payés."
       }
     ],
     "right": [
@@ -35,10 +34,10 @@
         "text": ""
       },
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1981-3.png",
-          "text": "This is the text for the second right video of 1981."
-        }
+        "type": "image",
+        "src": "/src/assets/img/years/1981-3.png",
+        "text": "Popularisation du walkman en France, il est plébiscité par la jeunesse pour sa modernité."
+      }
     ]
   },
   "1982": {
@@ -46,58 +45,61 @@
       {
         "type": "video",
         "src": "https://www.youtube.com/embed/QcC4G9Ia7Xc?si=UU3qk5BTW7JLPzs9s",
-        "text": "This is the text for the left image of 1982."
+        "text": "1982 : La télévision française parle pour la première fois du sida."
       }
     ],
     "right": [
       {
         "type": "video",
         "src": "https://www.youtube.com/embed/BDWAc1xluoc?si=OaQLlywrfkpnsCGu",
-        "text": "This is the text for the right image of 1982."
+        "text": "1982 : La Gay Pride en France."
       }
     ]
   },
   "1983": {
     "left": [
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1983-3.png",
-          "text": "This is the text for the right image of 1983."
+        "type": "image",
+        "src": "/src/assets/img/years/1983-3.png",
+        "text": "1983 : le sida est appelé le « cancer gay » ou la « maladie des 4H » par certains médias pour désigner les homosexuels, héroïnomanes, hémophiles et Haïtiens."
       }
     ],
     "right": [
       {
         "type": "image",
-        "src": "/src/assets/img/years/1983-1.png"
+        "src": "/src/assets/img/years/1983-1.png",
+        "text": ""
       },
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1983-2.png",
-          "text": "This is the text for the right image of 1983."
-        }
+        "type": "image",
+        "src": "/src/assets/img/years/1983-2.png",
+        "text": "1983 : Sortie des albums “Let’s Dance” de David Bowie et “Colour by Numbers” de Culture Club."
+      }
     ]
   },
   "1984": {
     "left": [
       {
         "type": "image",
-        "src": "/src/assets/img/years/1984-1.png"
+        "src": "/src/assets/img/years/1984-1.png",
+        "text": ""
       },
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1984-2.png"
-        },
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1984-3.png",
-          "text": "This is the text for the left image of 1984."
-        }
+        "type": "image",
+        "src": "/src/assets/img/years/1984-2.png",
+        "text": ""
+      },
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1984-3.png",
+        "text": "Ok! Magazine est au pic de sa popularité pendant les années 80 auprès des adolescentes : looks de star, paroles de chansons, courriers du cœur, une page sexualité, etc."
+      }
     ],
     "right": [
       {
         "type": "video",
         "src": "https://www.youtube.com/embed/IUi-VDnehpY?si=qnOLAuVHZLd4bYqd",
-        "text": "This is the text for the second right video of 1984."
+        "text": "En 1984, les médias pensent que le sida est sur le point d’être guéri."
       }
     ]
   },
@@ -106,19 +108,20 @@
       {
         "type": "image",
         "src": "/src/assets/img/years/1985-1.png",
-        "text": "This is the text for the left image of 1985."
+        "text": "Desert Hearts est diffusé dans plusieurs salles françaises après son passage au Festival de Cannes. Il raconte l'histoire de Vivian, une professeure universitaire, et Cay, une jeune artiste, qui tombent amoureuses dans le Nevada des années 50."
       }
     ],
     "right": [
       {
         "type": "image",
-        "src": "/src/assets/img/years/1985-2.png"
+        "src": "/src/assets/img/years/1985-2.png",
+        "text": ""
       },
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1985-3.png",
-        "text": "This is the text for the left image of 1985."
-        }
+        "type": "image",
+        "src": "/src/assets/img/years/1985-3.png",
+        "text": "Jean-Paul Gaultier dans les années 80 : il prône l’androgynie, le gender fluide et met en avant des personnalités queer."
+      }
     ]
   },
   "1986": {
@@ -126,65 +129,66 @@
       {
         "type": "video",
         "src": "https://enseignants.lumni.fr/export/player/00000000668",
-        "text": "This is the text for the left image of 1986."
+        "text": "En 1986, aucun traitement n’a encore été découvert pour guérir les patients atteints du sida. On se rend compte que les femmes et les enfants sont également touchés par la maladie."
       }
     ],
-    "right": [
-    ]
+    "right": []
   },
   "1987": {
     "left": [
       {
         "type": "video",
-        "src": "https://www.youtube.com/embed/NightOxaRrA?si=LJQ3HHPI5qFNmIrG"
+        "src": "https://www.youtube.com/embed/NightOxaRrA?si=LJQ3HHPI5qFNmIrG",
+        "text": ""
       },
       {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/Xl2MFGI2i40?si=irGYzPK-f1Wf9yap",
-          "text": "This is the text for the right image of 1987."
-        }
+        "type": "video",
+        "src": "https://www.youtube.com/embed/Xl2MFGI2i40?si=irGYzPK-f1Wf9yap",
+        "text": "Popularisation du minitel : il est désormais possible de chercher des informations, de jouer ou commander en ligne."
+      }
     ],
     "right": [
       {
-          "type": "video",
-          "src": "https://www.youtube.com/embed/H2M_vHvvAc0?si=JEERAf7vQJeyyM7O"
-        },
-        {
-            "type": "image",
-            "src": "/src/assets/img/years/1987-3.png",
-            "text": "This is the text for the right image of 1987."
-          }
+        "type": "video",
+        "src": "https://www.youtube.com/embed/H2M_vHvvAc0?si=JEERAf7vQJeyyM7O",
+        "text": ""
+      },
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1987-3.png",
+        "text": "1987 : Mylène Farmer sort son deuxième album dont “Sans contrefaçon” qui est sorti en premier. Son style unique et provocateur vont faire d’elle une icône de la musique populaire française."
+      }
     ]
   },
   "1988": {
     "left": [
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1988-1.png",
-          "text": "Le 11 octobre 1988, à l'occasion de la première Journée du coming out, des milliers de gays et de lesbiennes avaient publié leurs noms dans les journaux."
-        }
+        "type": "image",
+        "src": "/src/assets/img/years/1988-1.png",
+        "text": "Le 11 octobre 1988, à l'occasion de la première Journée du coming out, des milliers de gays et de lesbiennes publient leurs noms dans les journaux américains."
+      }
     ],
     "right": [
       {
         "type": "image",
         "src": "/src/assets/img/years/1988-2.png",
-        "text": "Apparu en 1988 dans sa version papier qui cessera d'exister en 2007, Illico est l'un des magazines gays français qui a connu la plus longue période de parution (Avec têtu· et la revue Arcadie)."
+        "text": "Apparu en 1988 dans sa version papier qui cessera d'exister en 2007, Illico est l'un des magazines gays français qui a connu la plus longue période de parution (avec Têtu et la revue Arcadie)."
       }
     ]
   },
   "1989": {
     "left": [
       {
-          "type": "image",
-          "src": "/src/assets/img/years/1989-1.png",
-          "text": "This is the text for the second right image of 1989."
-        }
+        "type": "image",
+        "src": "/src/assets/img/years/1989-1.png",
+        "text": ""
+      }
     ],
     "right": [
       {
         "type": "image",
         "src": "/src/assets/img/years/1989-2.png",
-        "text": "This is the text for the left image of 1989."
+        "text": "1989 : Création de Act Up-Paris qui organise une manifestation sur le sida le 24 juin à Paris, France."
       }
     ]
   }

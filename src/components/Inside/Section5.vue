@@ -8,13 +8,13 @@
         <img src="/src/assets/img/info-lgbt/Causette.png" alt="Image description" class="info-image-50">
         <div class="text-content">
           <p>
-            En 2023, nous célébrons les 10 ans du mariage pour tous en France, une étape historique vers l'égalité des droits pour les couples de même sexe.
+            En 2023, nous célébrons <strong>les 10 ans du mariage pour tous en France</strong>, une étape historique vers l'égalité des droits pour les couples de même sexe.
           </p>
           <p>
-            Depuis 2021, la Procréation Médicalement Assistée (PMA) est également ouverte à toutes les femmes, indépendamment de leur situation matrimoniale ou de leur orientation sexuelle.
+            <strong>Depuis 2021, la Procréation Médicalement Assistée (PMA)</strong> est également ouverte à toutes les femmes, indépendamment de leur situation matrimoniale ou de leur orientation sexuelle.
           </p>
           <p>
-            Chaque année en juin, mois de la fierté, nous honorons ces avancées et continuons à lutter pour une société plus inclusive et respectueuse des diversités.
+            Chaque année en juin, <strong>mois de la fierté</strong>, nous honorons ces avancées et continuons à lutter pour une société plus inclusive et respectueuse des diversités.
           </p>
         </div>
       </div>
@@ -51,7 +51,7 @@
             La scène musicale accueille de nombreux artistes qui soutiennent activement la cause LGBT et contribuent à sa visibilité.
           </p>
           <p>
-            Ces artistes, véritables icônes, utilisent leur plateforme pour sensibiliser le public, défendre les droits des personnes LGBT et promouvoir l'inclusivité à travers leur musique et leur présence médiatique.
+            Ces artistes utilisent leurs plateformes pour sensibiliser le public, défendre les droits des personnes LGBT et promouvoir l'inclusivité à travers leur musique et leur présence médiatique.
           </p>
           <p>
             Leurs actions et leur influence jouent un rôle crucial dans l'évolution des mentalités et la lutte pour l'égalité.
@@ -63,7 +63,7 @@
     <div class="info-question">
       <h2 class="main-title">Vous avez dit "évolution" ?</h2>
         <div class="text-content">
-          <p>Les chiffres de 2024 du rapport sur les LGBTiphobies de 2023 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France, nécessitant des actions renforcées pour lutter contre ces actes et soutenir les victimes.
+          <p>Les chiffres de 2024 du rapport sur les LGBTiphobies de 2023 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France.
           </p>
         </div>
     </div>
@@ -74,9 +74,6 @@
       </div>
       <div class="info-content">
         <div class="text-content">
-          <p>
-            Agressions physiques et autres manifestations lgbtiphobes qui ont été rapportées par SOS homophobie en 2023
-          </p>
           <div class="chart-toggle-buttons">
             <button   @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
             <button   @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires</button>
@@ -96,7 +93,7 @@
       <div class="info-content">
         <div class="text-content">
           <p>
-            <strong class="dataKey">266</strong> Agressions physiques LGBT+ ont été rapportées par SOS homophobie en 2023
+            <strong class="dataKey">266</strong> Agressions physiques LGBT+  ont été rapportées par SOS homophobie en 2023
           </p>
           <div class="info-data">
             <highcharts :options="chartOptions" ref="chart"></highcharts>
@@ -110,7 +107,7 @@
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title" @mouseover="showImage('/src/assets/img/info-lgbt/Resistance.png')" @mouseleave="hideImage">Espaces publics, espaces intimes</div>
+        <div class="info-title" @mouseover="showImage('/src/assets/img/info-lgbt/Resistance.png')" @mouseleave="hideImage">Espaces publics, espaces intimes, espaces virtuels</div>
       </div>
       <div class="info-content">
         <div class="text-content">
@@ -352,7 +349,7 @@ export default {
           enabled: false
         },
         title: {
-          text: 'Evolution des contexte principaux de lgbtiphobies entre 2022 et 2023'
+          text: 'Evolution des contextes principaux de lgbtiphobies entre 2022 et 2023'
         },
         xAxis: {
           categories : ['haine en ligne', 'famille', 'commerces, services', 'lieux publics', 'voisinage', 'mal de vivre'],
