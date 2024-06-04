@@ -41,5 +41,17 @@ export default defineConfig({
             filename: 'dist/stats.html',
             open: true
         }),
-    ]
+    ],
+    css: {
+        preprocessorOptions: {
+          scss: {
+            additionalData: `@import "src/assets/scss/main.scss";`
+          }
+        }
+      },
+      resolve: {
+        alias: {
+          '@': '/src'
+        }
+      }
 });
