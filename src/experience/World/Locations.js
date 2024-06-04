@@ -93,7 +93,10 @@ export default class Locations {
             this.checkVisibility(newVal)
             if (newVal !== 3) this.soundManager.play('unlockZone')
         })
+
+
     }
+
 
     checkVisibility(newVal) {
         this.spots.forEach((spot, index) => {

@@ -39,7 +39,7 @@ import Inventory from "./Inventory.vue";
 
 export default {
   name: 'ExperienceLayer',
-  components: {Inventory},
+  components: { Inventory },
   props: {
     soundManager: Object,
   },
@@ -57,11 +57,11 @@ export default {
       goBackIcon: homeIcon,
       globalVolume: this.appStore.$state.globalVolume,
       smoothGlobalVolume: this.appStore.$state.globalVolume,
-    }
+    };
   },
   computed: {
     isMuted() {
-      return this.appStore.$state.muted ? 'Unmute' : 'Mute'
+      return this.appStore.$state.muted ? 'Unmute' : 'Mute';
     },
     isAnyItemInInventory() {
       return Object.values(this.gameManager.inventory).some(value => value);
@@ -72,13 +72,13 @@ export default {
       this.globalVolume = (Math.round(newVal * 10) / 10).toFixed(1);
       this.appStore.setGlobalVolume(parseFloat(this.globalVolume));
     },
-    'gameManager.state.isExperienceVisible': function(state) {
+    'gameManager.state.isExperienceVisible': function (state) {
       state ? this.setExperienceLayerOpacity() : null;
     },
-    'gameManager.state.isCameraOnSpot': function() {
+    'gameManager.state.isCameraOnSpot': function () {
       this.animateGoBackIcon();
     },
-    'gameManager.state.isInteractingWithObject': function(state) {
+    'gameManager.state.isInteractingWithObject': function (state) {
       this.animateGoBackIcon();
       setTimeout(() => {
         if (state) {
@@ -89,6 +89,11 @@ export default {
         this.animateGoBackIcon();
       }, 800);
     },
+    'gameManager.state.gameStepId': function (newVal) {
+      if (this.$refs.goBack.classList.contains('visible')) {
+        this.animateArrow();
+      }
+    }
   },
   mounted() {
     if (this.gameManager.state.isExperienceVisible) {
@@ -98,19 +103,25 @@ export default {
   methods: {
     goBack() {
       if (this.gameManager.state.isInteractingWithObject) {
-        this.gameManager.updateInteractingState(false)
+        this.gameManager.updateInteractingState(false);
       } else {
-        this.gameManager.updateCameraOnSpot(false)
+        this.gameManager.updateCameraOnSpot(false);
       }
+      this.$refs.goBack.classList.remove('animate');
     },
     animateGoBackIcon() {
       this.$refs.goBack.classList.toggle('visible');
+    },
+    animateArrow() {
+      if (this.$refs.goBack.classList.contains('visible')) {
+        this.$refs.goBack.classList.add('animate');
+      }
     },
     handleSettingsIconClick() {
       this.isSettingsVisible = !this.isSettingsVisible;
       if (this.$refs.settingsWrapper) {
         this.$refs.settingsWrapper.classList.toggle('visible');
-        this.gameManager.toggleSettings()
+        this.gameManager.toggleSettings();
       }
     },
     setExperienceLayerOpacity() {
@@ -141,5 +152,8 @@ export default {
       this.gameManager.resetAll();
     }
   }
-}
+};
 </script>
+
+<style>
+
