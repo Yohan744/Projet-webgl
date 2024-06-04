@@ -28,7 +28,7 @@ import { useCursor } from "../assets/js/Cursor";
 import { isMobile } from "../assets/js/utils";
 import { useGlobalEvents } from "../assets/js/GlobalEvents";
 import { useVideoManager } from "../assets/js/VideoManager";
-import VideoOutro from "../components/Outro/VideoOutro.vue";
+import VideoOutro from "../components/VideoOutro.vue";
 
 export default {
   name: 'ExperiencePage',

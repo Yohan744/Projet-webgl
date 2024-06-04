@@ -38,7 +38,7 @@ export const data = {
 
     chest: {
         src: fx + 'malle.mp3',
-        volume: 0.2,
+        volume: 0.1,
         preload: true,
         loop: false,
     },
@@ -52,7 +52,7 @@ export const data = {
 
     bouton: {
         src: fx + 'BoutonOn.wav',
-        volume: 0.75,
+        volume: 0.5,
         preload: true,
         loop: false,
     },

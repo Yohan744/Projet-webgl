@@ -77,7 +77,6 @@ export default class ObjectsInteractable {
                 } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial();
                     if (name.includes('fermé')) child.material = this.materialLibrary.getClosedMagazineMaterial();
-                    interactableMesh.push(child);
 
                 } else if (name.includes("malle")) {
                     if (name.includes('haut')) {
@@ -91,7 +90,6 @@ export default class ObjectsInteractable {
                         child.material = this.materialLibrary.getBottomChestMaterial();
                         this.bottomChest = new BottomChest(child);
                         interactableObjects.bottomChest = this.bottomChest;
-                        interactableMesh.push(child);
                     }
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {

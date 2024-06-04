@@ -31,7 +31,7 @@ export default class TopChest {
 
         this.experience.on('ready', () => {
             this.interactableObjects = useInteractableObjects();
-            this.chestOutline = new Outline(this.mesh, 1.0075);
+            this.chestOutline = new Outline(this.mesh, 1.01);
 
             this.setupAnimations();
             this.setWatchers()

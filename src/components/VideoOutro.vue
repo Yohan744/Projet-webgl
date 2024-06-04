@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import {useAppStore} from "../../stores/appStore";
-import {useVideoManager} from "../../assets/js/VideoManager";
+import {useAppStore} from "../stores/appStore";
+import {useVideoManager} from "../assets/js/VideoManager";
 
 export default {
   name: 'VideoOutro',

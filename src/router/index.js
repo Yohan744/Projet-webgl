@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Index from '../pages/Index.vue';
 import Experience from '../pages/Experience.vue';
-import Outro from '../pages/Outro.vue';
 import ErrorPage from '../pages/Error.vue';
 
 const routes = [
@@ -16,12 +15,6 @@ const routes = [
         name: 'Experience',
         component: Experience,
         alias: '/experience/'
-    },
-    {
-        path: '/outro',
-        name: 'Outro',
-        component: Outro,
-        alias: '/outro/'
     },
     {
         path: '/:pathMatch(.*)*',
