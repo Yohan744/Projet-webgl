@@ -75,7 +75,7 @@
       <div class="info-content">
         <div class="text-content">
           <p>
-            Agressions physiques LGBT+ ont été rapportées par SOS homophobie en 2023
+            Agressions physiques et autres manifestations lgbtiphobes qui ont été rapportées par SOS homophobie en 2023
           </p>
           <div class="chart-toggle-buttons">
             <button   @mouseover="showImage('/src/assets/img/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
@@ -476,7 +476,7 @@ export default {
 }
 
 .info-question {
-  display: flex;
+  display: inline-block;
   width: 80%;
   max-width: 1000px;
   margin: 50px;

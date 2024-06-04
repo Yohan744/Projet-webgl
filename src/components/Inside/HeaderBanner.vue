@@ -127,7 +127,7 @@ export default {
   border: none;
   padding: 10px 20px;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 20px;
 }
 
 .header-button:hover {

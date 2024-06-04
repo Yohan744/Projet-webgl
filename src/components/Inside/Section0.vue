@@ -6,7 +6,7 @@
   <img src="/src/assets/img/fleur.png" alt="">
   <div class="image-container"></div>
     <div class="buttons">
-      <button @click="handleButtonClick">En apprendre plus <img src="/src/assets/img/arrow_bottom.png" alt=""></button>
+      <button @click="handleButtonClick"><p class="seeMore">En apprendre plus </p><img src="/src/assets/img/arrow_bottom.png" alt=""></button>
     </div>
 
 </template>
@@ -83,6 +83,15 @@ img {
   bottom: 20px;
 }
 
+.buttons:hover {
+  color: #A7CF90;
+}
+
+.seeMore {
+  display: block;
+  margin-bottom: 10px;
+}
+
 button {
   padding: 10px 20px;
   font-size: 16px;
@@ -93,6 +102,6 @@ button {
 }
 
 button:hover {
-  background: #555;
+  color: #A7CF90;
 }
 </style>

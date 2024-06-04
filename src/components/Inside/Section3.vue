@@ -6,13 +6,13 @@
     </div>
     <div class="content">
       <div v-for="(year, index) in years" :key="year" class="year-section" :class="'year-section-' + index">
-        <div class="media-container media-left" :class="'media-left-' + index">
+        <div :class="['media-container', 'media-left', `media-left-${index}`, mediaData[year].left.length === 2 ? 'two-items' : '', mediaData[year].left.length === 3 ? 'three-items' : '']">
           <div v-for="(media, i) in mediaData[year].left" :key="`left-${i}`" class="media-item" @mouseover="handleMouseOver" @mouseleave="handleMouseOut" @mousemove="handleMouseMove">
             <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-left-' + i" class="media-element"></component>
             <p>{{ media.text }}</p>
           </div>
         </div>
-        <div class="media-container media-right" :class="'media-right-' + index">
+        <div :class="['media-container', 'media-right', `media-right-${index}`, mediaData[year].right.length === 2 ? 'two-items' : '', mediaData[year].right.length === 3 ? 'three-items' : '']">
           <div v-for="(media, i) in mediaData[year].right" :key="`right-${i}`" class="media-item" @mouseover="handleMouseOver" @mouseleave="handleMouseOut" @mousemove="handleMouseMove">
             <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-right-' + i" class="media-element"></component>
             <p>{{ media.text }}</p>
@@ -22,6 +22,7 @@
     </div>
   </div>
 </template>
+
 
 
 <script>
@@ -72,10 +73,10 @@ export default {
         });
 
         timeline
-          .fromTo(`.media-left-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5 })
-          .fromTo(`.media-right-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5, delay: 0.7 }, "<")
-          .to(`.media-left-${index}`, { y: -100, opacity: 0.05, duration: 0.5 })
-          .to(`.media-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.4 }, "<");
+        .fromTo(`.media-left-${index}`, { y: 100, opacity: 0.05 }, { y: -50, opacity: 1, duration: 0.25 })
+        .fromTo(`.media-right-${index}`, { y: 100, opacity: 0.05 }, { y: -150, opacity: 1, duration: 0.25, delay: 0.7 }, "<")
+        .to(`.media-left-${index}`, { y: -200, opacity: 0.05, duration: 0.25 })
+        .to(`.media-right-${index}`, { y: -250, opacity: 0.05, duration: 0.25, delay: 0.7 }, "<");
       });
     },
     adjustMediaSizes() {
@@ -182,9 +183,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  min-height: 70vh;
+  min-height: 100vh;
   padding: 0 5%;
   margin: 5vh 0;
+  align-items: center
 }
 
 .media-container {
@@ -209,6 +211,33 @@ export default {
   object-fit: contain; 
 }
 
+iframe {
+    min-height: 400px;
+    min-width: 400px;
+  }
+
+@media (max-width: 1200px) {
+  .media-container {
+    width: 60%;
+    margin: 20px 0;
+  }
+  
+  iframe {
+    min-height: 300px;
+    min-width: 300px;
+  }
+}
+@media (max-width: 1024px) {
+  .media-container {
+    width: 40%;
+    margin: 20px 0;
+  }
+  iframe {
+    min-height: 200px;
+    min-width: 200px;
+  }
+}
+
 @media (max-width: 768px) {
   .year-section {
     flex-direction: column;
@@ -222,5 +251,30 @@ export default {
   .media-item {
     pointer-events: none; 
   }
+  iframe {
+    min-height: 100px;
+    min-width: 100px;
+  }
+
+
 }
+
+
+.two-items .media-item:nth-child(1) {
+  transform: translateX(50px);
+  transform: translateY(40px);
+  left: 15px;
+}
+
+.two-items .media-item:nth-child(2) {
+  transform: translateX(-50px);
+  left: -15px;
+
+}
+
+.three-items{
+  display: ruby;
+}
+
+
 </style>

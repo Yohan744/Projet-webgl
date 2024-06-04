@@ -2,7 +2,7 @@
   <div class="content-container general-padding">
     <div class="content-1">
       <div class="left">
-        <img src="/src/assets/img/Mona.png" alt="Description of the image">
+        <CarouselMona></CarouselMona>
       </div>
       <div class="right">
         <h2>Mona Duprat</h2>
@@ -13,8 +13,8 @@
         </div>
         <br>
         <p>
-            Durant son adolescence, elle se passionne pour le surf et prend des cours chaque été. 
-            Elle y rencontre Sam, une jeune fille à laquelle elle s'attache.
+          Durant son adolescence, elle se passionne pour le surf et prend des cours chaque été. 
+          Elle y rencontre Sam, une jeune fille à laquelle elle s'attache.
         </p>
         <br>
         <p>
@@ -24,7 +24,7 @@
         <br>
         <div class="boxed-text">
           <p>
-            Ce sont des icones queer issus de la culture pop' auxquelles elle s’identifie à travers leurs oeuvres. 
+            Ce sont des icones queer issus de la culture pop auxquelles elle s’identifie à travers leurs œuvres. 
             Elles lui offrent un autre regard sur le monde et l’aideront à <strong>se construire</strong> durant l’adolescence.
           </p>
         </div>
@@ -46,8 +46,13 @@
 </template>
 
 <script>
+import CarouselMona from './CarouselMona.vue';
+
 export default {
   name: 'Section1',
+  components: {
+    CarouselMona
+  },
   data() {
     return {
       popupVisible: null,
@@ -56,7 +61,7 @@ export default {
           name: 'Tablette de sable', 
           anecdote: 'Populaire dans les années 80, la tablette de sable permettait aux enfants de dessiner et d\'effacer facilement avec un stylet, offrant une alternative économique et réutilisable aux blocs de papier.', 
           src: '/src/assets/img/objects/object1.png',
-          color: '#B6E5EB' // Jaune
+          color: '#B6E5EB'
         },
         { 
           name: 'Walkman', 
@@ -115,11 +120,10 @@ export default {
 </script>
 
 <style scoped>
-
 .general-padding {
   padding: 200px
 }
-@media (max-width: 1200) {
+@media (max-width: 1200px) {
   .general-padding {
   padding: 100px
   }
@@ -148,11 +152,13 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  margin-bottom: 20px;
 }
 
 .left, .right {
   flex: 1;
   padding: 20px;
+  width: 100%;
 }
 
 .left img {
@@ -196,7 +202,6 @@ export default {
   position: relative;
   transition: transform 0.3s;
   perspective: 1000px;
-  /* border-radius: 50%; */
 }
 
 .square img {

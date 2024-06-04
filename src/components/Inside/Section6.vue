@@ -18,23 +18,27 @@
     <div class="thanks-section">
       <h2>Remerciements</h2>
       <p>
-        Aux professeurs : Eric Gaudet-Traffy, Yann Qilquin et les KIDS : Guillaume Imbert & Vincent Larsonneur ainsi qu’à L’école by CCi Digital Campus & les Gobelins Paris
+        Nos professeurs : Eric Gaudet-Traffy, Yann Qilquin et les KIDS : Guillaume Imbert & Vincent Larsonneur
       </p>
+      <p>Ainsi qu’à L’école by CCi Digital Campus & les Gobelins Paris</p>
       <p>
-        Compositeurs : Emmanuel (Nom ?) et Damien Lacore
+        Compositeurs : Emmanuel et Damien Lacore
       </p>
       <p>
         Voix off : 
         <br>Marguerite : mamie de Léa
         <br>Dahlia : Léa Simonet
-        <br>Sam : 
-        <br>Mona : 
+        <br>Sam : Lucie Lesnier
+        <br>Mona : maman de Léa
       </p>
       <p>
         Projet scolaire réalisé dans le cadre du Master 1 ECNI aux Gobelins l’école de l’image
       </p>
       <p>
-        Tous droits réservés - 2024
+       Merci à toutes les personnes qui nous ont apportés leurs témoignages sur leur expérience des années 80
+      </p>
+      <p>
+        <strong>Tous droits réservés - 2024</strong>
       </p>
     </div>
   </div>
@@ -100,6 +104,7 @@ export default {
 }
 
 .gallery {
+  max-width: 1000px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -161,6 +166,8 @@ export default {
   text-align: left;
   padding-left: 100px;
   padding-right: 100px;
+  max-width: 1000px;
+  text-align: center
 }
 
 .thanks-section h2 {
