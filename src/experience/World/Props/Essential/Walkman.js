@@ -2,18 +2,18 @@ import * as THREE from "three";
 import Experience from "../../../Experience";
 import { gsap } from 'gsap';
 import { useInteractableObjects } from "../../ObjectsInteractable";
+import {watch} from "vue";
 
 export default class Walkman {
     constructor(mesh) {
-        this.mesh = mesh;
         this.experience = new Experience();
-        this.resources = this.experience.resources;
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.pointer = this.experience.pointer;
         this.soundManager = this.experience.soundManager;
+        this.gameManager = this.experience.gameManager;
         this.mesh = mesh;
-        this.interactableObjects = useInteractableObjects();
+
         this.offsetFromCamera = 0.6;
         this.isDragging = false;
         this.isAnimating = false;
@@ -22,15 +22,24 @@ export default class Walkman {
         this.isInFrontOfCamera = false;
         this.isClapetClosedPermanently = false;
 
+        this.basicPosition = this.mesh.position.clone();
+        this.basicRotation = this.mesh.rotation.clone();
+
         this.morphTargetName = 'clapet';
         this.headphoneMorphTargetName = 'casque';
         this.playButtonMorphTargetName = 'boutonplay';
         this.isClapetOpen = false;
         this.canComeOut = false;
         this.boutonejectTargetName = 'boutoneject';
-        this.setupMorphTargets();
-        this.init();
-        this.setEvents();
+
+        this.experience.on('ready', () => {
+            this.interactableObjects = useInteractableObjects();
+            this.init();
+            this.setupMorphTargets();
+            this.setWatchers();
+            this.cassette = this.interactableObjects.cassette;
+        })
+
     }
 
     init() {
@@ -46,14 +55,23 @@ export default class Walkman {
         }
     }
 
-    setEvents() {
-        this.pointerDown = this.onPointerDown.bind(this);
-        this.pointerMove = this.onPointerMove.bind(this);
-        this.pointerUp = this.onPointerUp.bind(this);
+    setWatchers() {
+        this.pointer.on('click', this.onPointerDown.bind(this));
+        this.pointer.on('movement', this.onPointerMove.bind(this));
+        this.pointer.on('click-release', this.onPointerUp.bind(this));
 
-        this.pointer.on('click', this.pointerDown);
-        this.pointer.on('movement', this.pointerMove);
-        this.pointer.on('click-release', this.pointerUp);
+        watch(() => this.gameManager.state.isInteractingWithObject, (value) => {
+            if (!value && this.gameManager.state.actualObjectInteractingName === 'walkman') {
+                this.returnToBasicPosition()
+                this.cassette.returnToInitialPosition();
+                this.canComeOut = false;
+                this.isInFrontOfCamera = false;
+                this.soundManager.sounds['walkman'].stop();
+                this.soundManager.sounds['walkman2'].stop();
+                this.soundManager.sounds['final'].stop();
+            }
+        })
+
     }
 
     onPointerDown() {
@@ -101,8 +119,8 @@ export default class Walkman {
     }
 
     prepareForClapetClose() {
-        this.pointer.on('movement', this.pointerMove);
-        this.pointer.on('click-release', this.pointerUp);
+        this.pointer.on('movement', this.onPointerMove);
+        this.pointer.on('click-release', this.onPointerUp);
     }
 
     closeClapet() {
@@ -153,11 +171,11 @@ export default class Walkman {
         const targetPosition = new THREE.Vector3();
         targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(this.offsetFromCamera));
         gsap.to(this.mesh.position, {
-            y: this.mesh.position.y + 0.4,
+            y: '+=' + 0.4,
             duration: 1,
             ease: 'power2.inOut',
             onComplete: () => {
-                state ? this.soundManager.play("walkman"): this.soundManager.stop("walkman");
+                state ? this.soundManager.playSoundWithBackgroundFade("walkman", 1.25) : this.soundManager.stop("walkman");
                 gsap.to(this.mesh.position, {
                     x: targetPosition.x,
                     y: targetPosition.y,
@@ -165,10 +183,8 @@ export default class Walkman {
                     duration: 2,
                     ease: 'power2.inOut',
                     onComplete: () => {
-                        this.soundManager.stop("chest");
                         this.isInFrontOfCamera = true;
                         this.positionCassetteNextToWalkman();
-
                     }
                 });
             }
@@ -185,16 +201,43 @@ export default class Walkman {
         this.scene.add(this.mesh);
     }
 
+    returnToBasicPosition() {
+        const tl = gsap.timeline();
+        this.canComeOut = false;
+
+        tl.to(this.mesh.position, {
+            x: this.basicPosition.x,
+            y: this.basicPosition.y + 0.4,
+            z: this.basicPosition.z,
+            duration: 2,
+            ease: 'power2.inOut'
+        });
+
+        tl.to(this.mesh.position, {
+            y: '-=' + 0.4,
+            duration: 1,
+            ease: 'power2.inOut'
+        });
+
+        gsap.to(this.mesh.rotation, {
+            x: this.basicRotation.x,
+            y: this.basicRotation.y,
+            z: this.basicRotation.z,
+            duration: 2,
+            ease: 'power2.inOut'
+        });
+
+    }
+
     positionCassetteNextToWalkman() {
-        const cassette = this.interactableObjects.cassette;
-        if (cassette) {
+        if (this.cassette) {
             const walkmanPosition = this.mesh.position.clone();
             const cassetteOffset = new THREE.Vector3(0, 0, 0.4);
             const targetPosition = walkmanPosition.add(cassetteOffset);
             if(this.isInFrontOfCamera) {
                 setTimeout(() => {
-                    this.soundManager.play("walkman2");
-                    cassette.animateToCamera(targetPosition, true);
+                    this.soundManager.playSoundWithBackgroundFade("walkman2", 1.25);
+                    this.cassette.animateToCamera(targetPosition, true);
                     this.soundManager.play("cassetteOut");
                 }, 3000);
             }
@@ -222,7 +265,7 @@ export default class Walkman {
     }
 
     setEventsForHeadphone() {
-        this.pointer.off('click', this.pointerDown);
+        this.pointer.off('click', this.onPointerDown);
         this.pointer.on('click', this.animateHeadphone.bind(this));
     }
 
@@ -264,9 +307,9 @@ export default class Walkman {
                     onComplete:()=> {
                         this.soundManager.stop("bouton");
                         this.soundManager.fadeOutAndStopBackground(2000, () => {
-                            this.triggerOutroVideo();
+                            // this.triggerOutroVideo();
                         });
-                        this.soundManager.play("final", 0.3);
+                        this.soundManager.play("final");
                     }
                 });
             }
@@ -280,9 +323,9 @@ export default class Walkman {
     }
 
     destroy() {
-        this.pointer.off('click', this.pointerDown);
-        this.pointer.off('movement-orbit', this.pointerMove);
-        this.pointer.off('click-release', this.pointerUp);
+        this.pointer.off('click', this.onPointerDown);
+        this.pointer.off('movement-orbit', this.onPointerMove);
+        this.pointer.off('click-release', this.onPointerUp);
         this.scene.remove(this.mesh);
     }
 }

@@ -21,36 +21,42 @@ export const data = {
         preload: true,
         loop: false,
     },
+
     walkman2: {
         src: p + 'walkman-p2.m4a',
         volume: 0.75,
         preload: true,
         loop: false,
     },
+
     final: {
         src: p + 'finalMessage.mp3',
         volume: 1,
         preload: true,
         loop: false,
     },
+
     chest: {
         src: fx + 'malle.mp3',
-        volume: 0.75,
+        volume: 0.2,
         preload: true,
         loop: false,
     },
+
     lock: {
         src: fx + 'lock.mp3',
         volume: 0.75,
         preload: true,
         loop: false,
     },
+
     bouton: {
         src: fx + 'BoutonOn.wav',
         volume: 0.75,
         preload: true,
         loop: false,
     },
+
     fermetureWalkman: {
         src: fx + 'fermetureWalkman.mp3',
         volume: 0.75,
@@ -71,6 +77,7 @@ export const data = {
         preload: true,
         loop: false,
     },
+
     cassetteIn: {
         src: fx + 'cassetteIn.mp3',
         volume: 0.85,
