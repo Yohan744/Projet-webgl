@@ -16,9 +16,9 @@ export default {
   data() {
     return {
       imagesSection4: {
-        left: '/src/assets/img/section-2/pb1.png',
-        center: '/src/assets/img/section-2/pb2.png',
-        right: '/src/assets/img/section-2/pb3.png'
+        left: '/src/assets/img/transition/pb1.png',
+        center: '/src/assets/img/transition/pb2.png',
+        right: '/src/assets/img/transition/pb3.png'
       }
     }
   }

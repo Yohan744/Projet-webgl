@@ -126,17 +126,17 @@ export default {
 }
 
 .image-container {
-  perspective: 1000px; /* Add perspective */
+  perspective: 1000px; 
 }
 
 .image-placeholder.hovered {
-  transform: scale(1.1) rotateY(10deg); /* Enlarge and add slight perspective */
+  transform: scale(1.1) rotateY(10deg); 
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .item-details {
   text-align: center;
-  min-height: 50px; /* Ensure minimum height to avoid layout shifts */
+  min-height: 50px; 
 }
 
 .item-name {
@@ -146,7 +146,7 @@ export default {
 }
 
 .item-name.hovered {
-  font-weight: bold; /* Make name bold on hover */
+  font-weight: bold; 
 }
 
 .item-title {
@@ -178,7 +178,6 @@ export default {
   margin-bottom: 10px;
 }
 
-/* Responsive Styles */
 @media (max-width: 1024px) {
   .sub-text, .thanks-section {
     padding-left: 50px;

@@ -1,175 +1,191 @@
 {
-    "1980": {
-      "left": [
-        {
-        "type": "image",
-            "src": "/src/assets/img/years/1980-1.png",
-          "text": ""
-        },
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1980-2.png",
-          "text": "La Boum sort au cinéma en 1980 et devient un succès nationale. Les fêtes d’anniversaires sont alors remplacées par des boum où les ados attendent les slows pour initier un contact avec leur bien aimé"
-        }
-      ],
-      "right": [
-      ]
-    },
-    "1981": {
-      "left": [
-        {
-            "type": "image",
-            "src": "/src/assets/img/years/1981-2.png",
-            "text": ""
-        },
-        {
-            "type": "image",
-            "src": "/src/assets/img/years/1981-1.png",
-            "text": ""
-        }
-      ],
-      "right": [
-        {
-          "type": "image",
+  "1980": {
+    "left": [
+      {
+      "type": "image",
           "src": "/src/assets/img/years/1980-1.png",
+        "text": ""
+      },
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1980-2.png",
+        "text": "La Boum sort au cinéma en 1980 et devient un succès nationale. Les fêtes d’anniversaires sont alors remplacées par des boum où les ados attendent les slows pour initier un contact avec leur bien aimé"
+      }
+    ],
+    "right": [
+    ]
+  },
+  "1981": {
+    "left": [
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1981-2.png",
           "text": ""
+      },
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1981-1.png",
+          "text": ""
+      }
+    ],
+    "right": [
+      {
+        "type": "video",
+        "src": "https://www.youtube.com/embed/JVHvh0dyShI?si=YqeF7H1WxTuZLw_G",
+        "text": ""
+      },
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1981-3.png",
+          "text": "This is the text for the second right video of 1981."
+        }
+    ]
+  },
+  "1982": {
+    "left": [
+      {
+        "type": "video",
+        "src": "https://www.youtube.com/embed/QcC4G9Ia7Xc?si=UU3qk5BTW7JLPzs9s",
+        "text": "This is the text for the left image of 1982."
+      }
+    ],
+    "right": [
+      {
+        "type": "video",
+        "src": "https://www.youtube.com/embed/BDWAc1xluoc?si=OaQLlywrfkpnsCGu",
+        "text": "This is the text for the right image of 1982."
+      }
+    ]
+  },
+  "1983": {
+    "left": [
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1983-3.png",
+          "text": "This is the text for the right image of 1983."
+      }
+    ],
+    "right": [
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1983-1.png"
+      },
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1983-2.png",
+          "text": "This is the text for the right image of 1983."
+        }
+    ]
+  },
+  "1984": {
+    "left": [
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1984-1.png"
+      },
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1984-2.png"
+        },
+        {
+          "type": "image",
+          "src": "/src/assets/img/years/1984-3.png",
+          "text": "This is the text for the left image of 1984."
+        }
+    ],
+    "right": [
+      {
+        "type": "video",
+        "src": "https://www.youtube.com/embed/IUi-VDnehpY?si=qnOLAuVHZLd4bYqd",
+        "text": "This is the text for the second right video of 1984."
+      }
+    ]
+  },
+  "1985": {
+    "left": [
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1985-1.png",
+        "text": "This is the text for the left image of 1985."
+      }
+    ],
+    "right": [
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1985-2.png"
+      },
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1985-3.png",
+        "text": "This is the text for the left image of 1985."
+        }
+    ]
+  },
+  "1986": {
+    "left": [
+      {
+        "type": "video",
+        "src": "https://enseignants.lumni.fr/export/player/00000000668",
+        "text": "This is the text for the left image of 1986."
+      }
+    ],
+    "right": [
+    ]
+  },
+  "1987": {
+    "left": [
+      {
+        "type": "video",
+        "src": "https://www.youtube.com/embed/NightOxaRrA?si=LJQ3HHPI5qFNmIrG"
+      },
+      {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/Xl2MFGI2i40?si=irGYzPK-f1Wf9yap",
+          "text": "This is the text for the right image of 1987."
+        }
+    ],
+    "right": [
+      {
+          "type": "video",
+          "src": "https://www.youtube.com/embed/H2M_vHvvAc0?si=JEERAf7vQJeyyM7O"
         },
         {
             "type": "image",
-            "src": "/src/assets/img/years/1981-3.png",
-            "text": "This is the text for the second right video of 1981."
-          }
-      ]
-    },
-    "1982": {
-      "left": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
-          "text": "This is the text for the left image of 1982."
-        }
-      ],
-      "right": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
-          "text": "This is the text for the right image of 1982."
-        }
-      ]
-    },
-    "1983": {
-      "left": [
-        {
-            "type": "image",
-            "src": "/src/assets/img/years/1983-3.png",
-            "text": "This is the text for the right image of 1983."
-        }
-      ],
-      "right": [
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1983-1.png"
-        },
-        {
-            "type": "image",
-            "src": "/src/assets/img/years/1983-2.png",
-            "text": "This is the text for the right image of 1983."
-          }
-      ]
-    },
-    "1984": {
-      "left": [
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1984-1.png"
-        },
-        {
-            "type": "image",
-            "src": "/src/assets/img/years/1984-2.png"
-          },
-          {
-            "type": "image",
-            "src": "/src/assets/img/years/1984-3.png",
-            "text": "This is the text for the left image of 1984."
-          }
-      ],
-      "right": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
-          "text": "This is the text for the second right video of 1984."
-        }
-      ]
-    },
-    "1985": {
-      "left": [
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1985-1.png",
-          "text": "This is the text for the left image of 1985."
-        }
-      ],
-      "right": [
-        {
-          "type": "image",
-          "src": "/src/assets/img/years/1985-2.png"
-        },
-        {
-            "type": "image",
-            "src": "/src/assets/img/years/1985-3.png",
-          "text": "This is the text for the left image of 1985."
-          }
-      ]
-    },
-    "1986": {
-      "left": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png"
-        }
-      ],
-      "right": [
-      ]
-    },
-    "1987": {
-      "left": [
-        { 
-          "type": "image",
-        "src": "/src/assets/img/years/1980-1.png"
-        },
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png",
+            "src": "/src/assets/img/years/1987-3.png",
             "text": "This is the text for the right image of 1987."
           }
-      ],
-      "right": [
-        { "type": "image",
-        "src": "/src/assets/img/years/1980-1.png"
-          },
-          {
-              "type": "image",
-              "src": "http://www.gettyimages.com/detail/1218921100",
-              "text": "This is the text for the right image of 1987."
-            }
-      ]
-    },
-    "1988": {
-      "left": [
-      ],
-      "right": [
-      ]
-    },
-    "1989": {
-      "left": [
-        {
-            "type": "image",
-            "src": "http://www.gettyimages.com/detail/967075816",
-            "text": "This is the text for the second right image of 1989."
-          }
-      ],
-      "right": [
-        {
+    ]
+  },
+  "1988": {
+    "left": [
+      {
           "type": "image",
-          "src": "http://www.gettyimages.com/detail/965979444",
-          "text": "This is the text for the left image of 1989."
+          "src": "/src/assets/img/years/1988-1.png",
+          "text": "Le 11 octobre 1988, à l'occasion de la première Journée du coming out, des milliers de gays et de lesbiennes avaient publié leurs noms dans les journaux."
         }
-      ]
-    }
+    ],
+    "right": [
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1988-2.png",
+        "text": "Apparu en 1988 dans sa version papier qui cessera d'exister en 2007, Illico est l'un des magazines gays français qui a connu la plus longue période de parution (Avec têtu· et la revue Arcadie)."
+      }
+    ]
+  },
+  "1989": {
+    "left": [
+      {
+          "type": "image",
+          "src": "/src/assets/img/years/1989-1.png",
+          "text": "This is the text for the second right image of 1989."
+        }
+    ],
+    "right": [
+      {
+        "type": "image",
+        "src": "/src/assets/img/years/1989-2.png",
+        "text": "This is the text for the left image of 1989."
+      }
+    ]
   }
-  
+}
