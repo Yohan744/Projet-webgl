@@ -424,10 +424,7 @@ export default {
     }
   },
   mounted() {
-    this.currentChartOptions = this.chartOptions1; // Default chart
-    this.$nextTick(() => {
-      this.$refs.chart.reflow();
-    });
+    this.currentChartOptions = this.chartOptions1;
   }
 };
 </script>

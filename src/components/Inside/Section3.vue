@@ -7,13 +7,13 @@
     <div class="content">
       <div v-for="(year, index) in years" :key="year" class="year-section" :class="'year-section-' + index">
         <div class="media-container media-left" :class="'media-left-' + index">
-          <div v-for="(media, i) in mediaData[year].left" :key="`left-${i}`" class="media-item">
+          <div v-for="(media, i) in mediaData[year].left" :key="`left-${i}`" class="media-item" @mouseover="handleMouseOver" @mouseleave="handleMouseOut" @mousemove="handleMouseMove">
             <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-left-' + i" class="media-element"></component>
             <p>{{ media.text }}</p>
           </div>
         </div>
         <div class="media-container media-right" :class="'media-right-' + index">
-          <div v-for="(media, i) in mediaData[year].right" :key="`right-${i}`" class="media-item">
+          <div v-for="(media, i) in mediaData[year].right" :key="`right-${i}`" class="media-item" @mouseover="handleMouseOver" @mouseleave="handleMouseOut" @mousemove="handleMouseMove">
             <component :is="media.type === 'video' ? 'iframe' : 'img'" :src="media.src" :alt="'Media ' + year + '-right-' + i" class="media-element"></component>
             <p>{{ media.text }}</p>
           </div>
@@ -23,10 +23,11 @@
   </div>
 </template>
 
+
 <script>
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import mediaData from '/src/assets/img/years/videoLinks.json';
+import mediaData from '/src/assets/img/years/videoLinksVideoGetty.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -61,8 +62,8 @@ export default {
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: `.year-section-${index}`,
-            start: "top 80%", // Section starts to come into view
-            end: "bottom 20%",   // Section is still in view
+            start: "top 80%", 
+            end: "bottom 20%",  
             scrub: true,
             onEnter: () => this.currentYear = year,
             onEnterBack: () => this.currentYear = year,
@@ -74,7 +75,7 @@ export default {
           .fromTo(`.media-left-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5 })
           .fromTo(`.media-right-${index}`, { y: 100, opacity: 0.05 }, { y: 0, opacity: 1, duration: 0.5, delay: 0.7 }, "<")
           .to(`.media-left-${index}`, { y: -100, opacity: 0.05, duration: 0.5 })
-          .to(`.media-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.7 }, "<");
+          .to(`.media-right-${index}`, { y: -100, opacity: 0.05, duration: 0.5, delay: 0.4 }, "<");
       });
     },
     adjustMediaSizes() {
@@ -93,16 +94,42 @@ export default {
           media.style.maxHeight = `${mediaHeight}px`;
         });
       });
+    },
+    handleMouseOver(event) {
+      if (window.innerWidth >= 768) {
+        const mediaItem = event.currentTarget;
+        mediaItem.style.transform = 'scale(1.5)';
+        mediaItem.style.opacity = 1;
+        mediaItem.style.zIndex = 10;
+      }
+    },
+    handleMouseOut(event) {
+      if (window.innerWidth >= 768) {
+        const mediaItem = event.currentTarget;
+        mediaItem.style.transform = 'scale(1)';
+        mediaItem.style.opacity = 0.8; 
+        mediaItem.style.zIndex = 1;
+      }
+    },
+    handleMouseMove(event) {
+      if (window.innerWidth >= 768) {
+        const mediaItem = event.currentTarget;
+        const rect = mediaItem.getBoundingClientRect();
+        const x = event.clientX - rect.left - rect.width / 2;
+        const y = event.clientY - rect.top - rect.height / 2;
+        mediaItem.style.transform = `scale(1.5) translate(${x}px, ${y}px)`;
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+
 .general-padding {
   padding: 200px
 }
-@media (max-width: 1200) {
+@media (max-width: 1200px) {
   .general-padding {
   padding: 100px
   }
@@ -155,7 +182,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  min-height: 30vh;
+  min-height: 70vh;
   padding: 0 5%;
   margin: 5vh 0;
 }
@@ -170,10 +197,13 @@ export default {
 
 .media-item {
   margin-bottom: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease, z-index 0.3s ease;
+  opacity: 0.8; 
 }
 
 .media-item iframe, .media-item img {
   width: 100%;
+  height: 100%;
   height: auto;
   border-radius: 8px;
   object-fit: contain; 
@@ -187,6 +217,10 @@ export default {
   .media-container {
     width: 80%;
     margin: 20px 0;
+  }
+
+  .media-item {
+    pointer-events: none; 
   }
 }
 </style>

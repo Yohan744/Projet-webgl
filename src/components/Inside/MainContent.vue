@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       sections: ['Section0', 'Section1', 'Section2', 'Section3', 'Section4', 'Section5', 'Section6'],
-      activeSection: null,
+      activeSection: 0,
       sectionToTabMapping: {
         0: 0,
         1: 1,
