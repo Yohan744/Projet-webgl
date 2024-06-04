@@ -106,7 +106,6 @@ export default class ObjectsInteractable {
                     interactableMesh.push(child);
                     const pencils = new PencilsGroup(child);
                     interactableMesh.push(pencils.getMesh());
-                    console.log("lololo")
 
 
                 } else if (name.includes("telephone")) {
