@@ -244,8 +244,8 @@ export default class Envelop extends EventEmitter {
         this.carousel.rotation.y = 0.625;
         this.carousel.visible = false;
 
-        this.dahlia = this.interactableObjects.dahlia.mesh
-        this.letter = this.interactableObjects.lettre.mesh
+        this.dahlia = this.interactableObjects.dahlia
+        this.letter = this.interactableObjects.lettre
         const cassetteMeshes = this.interactableObjects.cassette.cassetteObjects
         const clonedObjects = []
         cassetteMeshes.map((object) => clonedObjects.push(object.clone()))

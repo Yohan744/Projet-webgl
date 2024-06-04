@@ -1,7 +1,6 @@
 <template>
   <main ref="experienceWrapper" id="experienceWrapper">
-    <div ref="startButton" class="start-button" @click="handleClickStartButton"
-         v-bind:class="{visible: showStartButton}">
+    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{visible: showStartButton}">
       <p>start experience</p>
     </div>
 

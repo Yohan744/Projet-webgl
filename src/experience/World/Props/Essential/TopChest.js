@@ -89,10 +89,10 @@ export default class TopChest {
         if (animations && animations.length > 0) {
             this.mixer = new THREE.AnimationMixer(this.scene);
 
-            const originalClip = animations.find(clip => clip.name === 'Anim_0');
+            const originalClip = animations.find(clip => clip.name === 'animation_0');
             if (originalClip) {
-                const positionTrack = originalClip.tracks[3];
-                const quaternionTrack = originalClip.tracks[4];
+                const positionTrack = originalClip.tracks[0];
+                const quaternionTrack = originalClip.tracks[1];
 
                 const newClip = new THREE.AnimationClip('animation_0_filtered', originalClip.duration, [positionTrack, quaternionTrack]);
                 const action = this.mixer.clipAction(newClip);

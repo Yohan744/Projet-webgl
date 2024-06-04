@@ -5,8 +5,6 @@ import Walkman from "./Props/Essential/Walkman";
 import Cassette from "./Props/Essential/Cassette";
 import Picture from "./Props/Essential/Picture";
 import Drawer from "./Props/Essential/Drawer";
-import Letter from "./Props/Essential/Letter";
-import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
 import Pencil from "./Props/Essential/Pencil";
 import TopChest from "./Props/Essential/TopChest";
@@ -71,8 +69,7 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("dahlia")) {
                     child.material = this.materialLibrary.getDahliaMaterial();
-                    this.dahlia = new Dahlia(child);
-                    interactableObjects.dahlia = this.dahlia;
+                    interactableObjects.dahlia = child;
 
                 } else if (name.includes("magazine")) {
                     if (name.includes('ouvert')) child.material = this.materialLibrary.getOpenMagazineMaterial();
@@ -132,8 +129,7 @@ export default class ObjectsInteractable {
 
                 } else if (name.includes("lettre")) {
                     child.material = this.materialLibrary.getLetterMaterial();
-                    this.lettre = new Letter(child);
-                    interactableObjects.lettre = this.lettre;
+                    interactableObjects.lettre = child;
 
                 } else if (name.includes("tableau_magique1")) {
                     child.material = this.materialLibrary.getTelecranMaterial();
@@ -202,7 +198,9 @@ export default class ObjectsInteractable {
             this.scene.remove(this.objectsInteractableModel);
         }
         Object.keys(interactableObjects).forEach(key => {
-            interactableObjects[key].destroy();
+            if (interactableObjects[key].destroy) {
+                interactableObjects[key].destroy();
+            }
         });
     }
 

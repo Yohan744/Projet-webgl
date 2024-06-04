@@ -9,6 +9,7 @@
 <script>
 import {useAppStore} from "../stores/appStore";
 import {useVideoManager} from "../assets/js/VideoManager";
+import {useRouter} from "vue-router";
 
 export default {
   name: 'VideoOutro',
@@ -17,9 +18,11 @@ export default {
     const videoManager = useVideoManager();
     const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
     const videoName = import.meta.env.VITE_APP_VIDEO_OUTRO_NAME;
+    const router = useRouter();
 
     return {
       appStore,
+      router,
       videoManagerState: videoManager.state,
       videoUrl: `https://res.cloudinary.com/${cloudName}/video/upload/v1714375827/${videoName}`,
     };
@@ -37,13 +40,13 @@ export default {
   methods: {
     playVideo() {
       this.updateOpacityTo(1, () => {
-        console.log("Playing outro video");
         this.$refs.videoElement?.play();
       });
     },
     onVideoEnded() {
       console.log("Outro video ended");
       this.markVideoWatched();
+      this.router.push('/inside')
     },
     markVideoWatched() {
       this.updateOpacityTo(0, () => {
