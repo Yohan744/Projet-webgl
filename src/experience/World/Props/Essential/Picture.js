@@ -64,7 +64,7 @@ export default class Picture {
         this.scene.add(this.group);
     }
 
-    setupParticles () {
+    setupParticles() {
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = this.rows * this.columns * this.particlesPerCell;
         const posArray = new Float32Array(particlesCount * 3);
@@ -183,6 +183,10 @@ export default class Picture {
 
     onMouseMove() {
         if (this.isEnabled) {
+
+            if (this.pointer.getOldMousePosition().x === this.pointer.getMousePosition().x && !this.rotationInitiated) {
+                this.soundManager.play('dustEffect')
+            }
             const cellIndices = this.detectCells();
             cellIndices.forEach((cellIndex) => {
                 this.removeCellParticles(cellIndex);
@@ -243,6 +247,9 @@ export default class Picture {
     }
 
     rotateAndRemovePicture() {
+
+        this.isSoundEnabled = true
+
         const tl = gsap.timeline({
             onComplete: () => {
                 this.removeObject(this.group);
@@ -276,6 +283,11 @@ export default class Picture {
                     this.experience.renderer.setNormalPostProcessValues();
                 })
             },
+            onComplete: () => {
+                setTimeout(() => {
+                    this.soundManager.playSoundWithBackgroundFade("searchInvite", 1.25)
+                }, 500)
+            }
         }, 0);
 
     }

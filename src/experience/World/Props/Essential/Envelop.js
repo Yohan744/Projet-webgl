@@ -27,6 +27,8 @@ export default class Envelop extends EventEmitter {
         this.envelopBasicRotation = this.mesh.rotation.clone();
         this.envelopRotationInSky = new THREE.Vector3(0, 2.17, 1.63);
 
+        this.isEnvelopDiscovered = false
+
         this.isEnvelopInSky = false
         this.isEnvelopReadyToBeOpened = false
         this.isEnvelopOpen = false;
@@ -115,6 +117,12 @@ export default class Envelop extends EventEmitter {
     }
 
     animateEnvelopToSky(state, delay = 0) {
+
+        if (!this.isEnvelopDiscovered) {
+            this.isEnvelopDiscovered = true
+            this.soundManager.playSoundWithBackgroundFade('envelopeDiscover', 1.25)
+        }
+
         gsap.to(this.mesh.position, {
             x: state ? '+=' + 0.7 : this.envelopBasicPosition.x + 0.23,
             y: state ? '+=' + 0.9 : this.envelopBasicPosition.y,

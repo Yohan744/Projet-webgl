@@ -64,7 +64,7 @@ export default class Walkman {
         this.pointer.on('click', this.onPointerDown.bind(this));
 
         watch(() => this.gameManager.state.isInteractingWithObject, (value) => {
-            if (!value && this.gameManager.state.actualObjectInteractingName === 'walkman') {
+            if (!value && this.gameManager.state.actualObjectInteractingName === 'walkman' && !this.experience.isExperienceEnded) {
                 this.returnToBasicPosition()
                 this.cassette.returnToInitialPosition();
                 this.isAnimating = false;
@@ -77,7 +77,6 @@ export default class Walkman {
                 this.isClapetClosedPermanently = false;
                 this.soundManager.sounds['walkman'].stop();
                 this.soundManager.sounds['walkman2'].stop();
-                this.soundManager.sounds['final'].stop();
                 this.globalEvents.trigger('change-cursor', {name: 'default'})
                 this.resetMorphTarget()
             }
@@ -332,9 +331,7 @@ export default class Walkman {
                     [this.morphMesh.morphTargetDictionary[this.playButtonMorphTargetName]]: 0,
                     duration: 2,
                     onComplete:()=> {
-                        this.soundManager.stop("bouton");
-                        this.soundManager.fadeOutAndStopBackground(2000);
-                        this.soundManager.play("final");
+                        this.experience.endExperience();
                         this.isFinished = true;
                     }
                 });

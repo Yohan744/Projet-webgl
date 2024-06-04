@@ -129,7 +129,6 @@ export default class TopChest {
 
         const action = this.actions[animationName];
         if (action) {
-            console.log("Playing animation");
 
             if (reversed) {
                 action.time = action.getClip().duration;
