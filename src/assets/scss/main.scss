@@ -115,3 +115,43 @@ a {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
+@keyframes glow-rubikub {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
+                0 0 20px rgba(255, 255, 255, 0.8), 
+                0 0 30px rgba(255, 255, 255, 0.8), 
+                0 0 40px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1), 
+                0 0 30px rgba(255, 255, 255, 1), 
+                0 0 40px rgba(255, 255, 255, 1), 
+                0 0 50px rgba(255, 255, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
+                0 0 20px rgba(255, 255, 255, 0.8), 
+                0 0 30px rgba(255, 255, 255, 0.8), 
+                0 0 40px rgba(255, 255, 255, 0.8);
+  }
+}
+@keyframes glow-masthead {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2),
+                 0 0 30px rgba(255, 255, 255, 0.2),
+                 0 0 40px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
+                 0 0 30px rgba(255, 255, 255, 0.4),
+                 0 0 40px rgba(255, 255, 255, 0.4),
+                 0 0 50px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2),
+                 0 0 30px rgba(255, 255, 255, 0.2),
+                 0 0 40px rgba(255, 255, 255, 0.2);
+  }
+}

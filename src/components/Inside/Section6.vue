@@ -52,11 +52,11 @@ export default {
     return {
       hoverItem: null,
       items: [
-        { name: 'Maud FLEURIET', title: 'Designeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'Toujours partante pour danser sur des chansons de Queen!' },
-        { name: 'Lucie LESNIER', title: 'Développeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'J adore les histoires d amour...' },
-        { name: 'Anaïs MOREAU', title: 'Développeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'J ai un tourne disque mais spotify tient mieux dans ma poche.' },
-        { name: 'Yohan QUINQUIS', title: 'Développeur', src: '/src/assets/img/members/mathilde.png', sentence: 'Je préfère les styles vestimentaires d aujourd hui.' },
-        { name: 'Léa SIMONET', title: 'Designeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'Chez papi, il y a plein de vieux objets qu il adore me faire découvrir.' },
+        { name: 'Maud FLEURIET', title: 'Designeuse', src: '/src/assets/img/members/maud.png', sentence: 'Toujours partante pour danser sur des chansons de Queen!' },
+        { name: 'Lucie LESNIER', title: 'Développeuse', src: '/src/assets/img/members/lucie.png', sentence: 'J adore les histoires d amour...' },
+        { name: 'Anaïs MOREAU', title: 'Développeuse', src: '/src/assets/img/members/anais.png', sentence: 'J ai un tourne disque mais spotify tient mieux dans ma poche.' },
+        { name: 'Yohan QUINQUIS', title: 'Développeur', src: '/src/assets/img/members/yohan.png', sentence: 'Je préfère les styles vestimentaires d aujourd hui.' },
+        { name: 'Léa SIMONET', title: 'Designeuse', src: '/src/assets/img/members/lea.png', sentence: 'Chez papi, il y a plein de vieux objets qu il adore me faire découvrir.' },
         { name: 'Mathilde VAUQUIERES', title: 'Designeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'Balavoine il me rappelle des souvenirs d enfance avec ma mère.' }
       ]
     };
@@ -123,6 +123,7 @@ export default {
   margin-bottom: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0.75
 }
 
 .image-container {
@@ -132,6 +133,7 @@ export default {
 .image-placeholder.hovered {
   transform: scale(1.1) rotateY(10deg); 
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  opacity: 1;
 }
 
 .item-details {

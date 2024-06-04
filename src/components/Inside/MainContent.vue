@@ -58,27 +58,41 @@ export default {
     },
     handleScroll() {
       let activeSection = null;
-      this.$refs.sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const sectionMidpoint = rect.top + rect.height / 2;
-        const viewportHeight = window.innerHeight;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
 
-        if (
-          (rect.top >= 0 && rect.bottom <= viewportHeight) ||
-          (rect.top < 0 && rect.bottom > viewportHeight / 2)
-        ) {
-          activeSection = index;
-        }
-      });
+      if (scrollTop === 0) {
+        activeSection = 0;
+      } else {
+        this.$refs.sections.forEach((section, index) => {
+          const rect = section.getBoundingClientRect();
+          const sectionMidpoint = rect.top + rect.height / 2;
+          const viewportHeight = window.innerHeight;
+
+          if (
+            (rect.top >= 0 && rect.bottom <= viewportHeight) ||
+            (rect.top < 0 && rect.bottom > viewportHeight / 2)
+          ) {
+            activeSection = index;
+          }
+        });
+      }
 
       if (activeSection !== this.activeSection) {
         this.activeSection = activeSection;
         const activeTab = this.sectionToTabMapping[activeSection];
         this.$emit('update-active-section', activeTab);
       }
+
+      this.updateHeaderTheme();
     },
     isSectionVisible(index) {
       return this.activeSection === index;
+    },
+    updateHeaderTheme() {
+      const header = this.$root.$refs.headerBanner;
+      if (header) {
+        header.isDarkTheme = this.activeSection === 0 && (window.scrollY || document.documentElement.scrollTop) <= 50;
+      }
     }
   },
   mounted() {
@@ -91,6 +105,7 @@ export default {
 }
 </script>
 
+
 <style scoped>
 .main-content {
   display: flex;
@@ -101,3 +116,4 @@ section {
   overflow: hidden;
 }
 </style>
+

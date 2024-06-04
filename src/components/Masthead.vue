@@ -1,5 +1,6 @@
 <template>
   <section id="masthead">
+    <h1 class="masthead-title">Là où poussent <br> les fleurs</h1>
     <router-link
         :to="videoReady ? '/experience' : ''"
         :class="{ disabled: !videoReady }"
@@ -40,5 +41,11 @@ export default {
   pointer-events: none;
   color: grey;
   cursor: not-allowed;
+
+
 }
+
+
+
+
 </style>
