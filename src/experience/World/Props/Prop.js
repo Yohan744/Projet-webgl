@@ -14,10 +14,11 @@ export default class Prop extends EventEmitter {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.pointer = this.experience.pointer
-        this.gameManager = this.experience.gameManager;
         this.camera = this.experience.camera.modes.default.instance;
         this.renderer = this.experience.renderer;
         this.soundManager = this.experience.soundManager;
+        this.gameManager = this.experience.gameManager;
+        this.globalEvents = this.experience.globalEvents;
 
         this.mesh = mesh
         this.mesh.rotation.order = "YXZ"
@@ -31,6 +32,7 @@ export default class Prop extends EventEmitter {
         this.offsetFromCamera = distanceToCamera;
         this.chanceOfPlayingASong = 0.4
         this.propsSongHasBeenPlayed = false
+        this.isSpeaking = false
 
         if (typeof this.isOutlined === "number") this.outline = new Outline(this.mesh, this.isOutlined)
 
@@ -49,28 +51,17 @@ export default class Prop extends EventEmitter {
             if (!state) {
                 this.animatePropsToBasicPosition()
                 this.outline?.showOutline()
-                this.gameManager.setActualObjectInteractingName(null)
                 this.renderer.toggleBlurEffect(false)
+
+                if (this.gameManager.state.actualObjectInteractingName !== 'projector' && this.gameManager.state.actualObjectInteractingName !== 'drawer' && this.gameManager.state.actualObjectInteractingName !== 'pencil' && this.gameManager.state.actualObjectInteractingName !== 'walkman') {
+                    this.gameManager.setActualObjectInteractingName(null)
+                }
+
+                if (this.isSpeaking) this.soundManager.sounds[this.propSound].stop()
+
             }
+            if (state) this.outline?.removeOutline()
         })
-        watch(() => this.gameManager.state.isPencilInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isCassetteInFrontOfCamera) {
-                const pencil = this.experience.objectGroup.children.find(obj => obj.userData.type === 'pencil');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (pencil) pencil.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
-        watch(() => this.gameManager.state.isCassetteInFrontOfCamera, (newVal) => {
-            if (newVal && this.gameManager.state.isWalkmanInFrontOfCamera) {
-                const walkman = this.experience.objectGroup.children.find(obj => obj.userData.type === 'walkman');
-                const cassette = this.experience.objectGroup.children.find(obj => obj.userData.type === 'cassette');
-
-                if (walkman) walkman.position.set(-0.3, 0, 0);
-                if (cassette) cassette.position.set(0.3, 0, 0);
-            }
-        });
     }
 
     handleClick() {
@@ -81,6 +72,7 @@ export default class Prop extends EventEmitter {
 
                 this.animatePropsToCamera()
                 this.playSoundOnClick()
+                this.globalEvents.trigger('change-cursor', {name: 'default'})
                 this.onClick()
 
                 this.gameManager.updateInteractingState(true)
@@ -104,7 +96,11 @@ export default class Prop extends EventEmitter {
         if (this.propSound !== '') {
             if (!this.propsSongHasBeenPlayed) {
                 this.soundManager.playSoundWithBackgroundFade(this.propSound, 1.25)
-                this.propsSongHasBeenPlayed = true
+                this.isSpeaking = true
+                this.soundManager.sounds[this.propSound].on('end', () => {
+                    this.propsSongHasBeenPlayed = true
+                    this.isSpeaking = false
+                })
             } else {
                 if (Math.random() < this.chanceOfPlayingASong) {
                     const randomSound = this.experience.soundManager.getRandomSound()

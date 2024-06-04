@@ -5,13 +5,11 @@ import Background from "./World/Background";
 import Locations from "./World/Locations";
 import Objects from "./World/Objects";
 import MaterialLibrary from "./MaterialLibrary";
-import Props from "./World/Props";
 import ObjectsInteractable from "./World/ObjectsInteractable";
 
 export default class World {
     constructor(_options) {
         this.experience = new Experience()
-        this.config = this.experience.config
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.time = this.experience.time
@@ -31,7 +29,6 @@ export default class World {
         this.objectsInteractable = new ObjectsInteractable(this.materialLibrary)
         this.locations = new Locations(this.materialLibrary)
         this.background = new Background(this.materialLibrary)
-        // this.props = new Props()
     }
 
     resize() {

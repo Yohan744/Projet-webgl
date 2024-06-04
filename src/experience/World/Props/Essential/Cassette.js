@@ -1,44 +1,28 @@
 import * as THREE from 'three';
-import { gsap } from 'gsap';
+import {gsap} from 'gsap';
 import Experience from "../../../Experience";
+import {useInteractableObjects} from "../../ObjectsInteractable";
 import Outline from "../../Effects/Outline";
-import { watch } from "vue";
 
 export default class Cassette {
     constructor(objects) {
-        //console.log(objects);
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.camera = this.experience.camera.instance;
         this.pointer = this.experience.pointer;
+        this.soundManager = this.experience.soundManager;
         this.gameManager = this.experience.gameManager;
+        this.globalEvents = this.experience.globalEvents;
 
-        this.animations = [];
-
-        this.isDragging = false;
-        this.isAnimating = false;
-        this.isFirstAnimationIsDone = false;
-        this.mouseStartClickPosition = {
-            x: 0,
-            y: 0,
-        };
-
-        this.dragDistance = 0.07;
-        this.pointerDown = this.onPointerDown.bind(this);
-        this.pointerMove = this.onPointerMove.bind(this);
-        this.pointerUp = this.onPointerUp.bind(this);
-
-        this.setEvents();
-        this.init(objects);
-    }
-
-    init(objects) {
-        if (!objects || !Array.isArray(objects)) {
-            console.error('Invalid objects array passed to Cassette');
-            return;
-        }
+        this.cassetteGroup = new THREE.Group();
 
         this.cassetteObjects = objects;
+        this.offsetFromCameraToBottomRightCorner = new THREE.Vector3(0, -1, 1);
+
+        const interactableObjects = useInteractableObjects();
+
+        this.pencil = interactableObjects.pencil;
+        this.walkman = interactableObjects.walkmanInstance;
 
         this.bobine1 = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'bobine1');
         this.bobine2 = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'bobine2');
@@ -46,106 +30,253 @@ export default class Cassette {
         this.corps = this.cassetteObjects.find(obj => obj.name.toLowerCase() === 'corps');
 
         this.objectsToAnimate = [this.bobine1, this.bobine2, this.bobine3, this.corps].filter(Boolean);
+        this.soundHasBeenPlayed = false;
+
+        this.isReady = false
+        this.isRewinding = false;
+        this.isPlacedInWalkman = false;
+        this.isAnimating = false;
+
+        this.experience.on('ready', () => {
+            this.scene.add(this.cassetteGroup);
+
+            this.init();
+            this.setEvents();
+        })
+    }
+
+    init() {
+        this.objectsToAnimate.forEach(object => {
+            this.cassetteGroup.add(object);
+        });
+
+        this.initialPosition = this.cassetteGroup.position.clone();
+        this.initialRotation = this.cassetteGroup.rotation.clone();
     }
 
     setEvents() {
-        this.pointer.on('click', this.pointerDown);
-        this.pointer.on('movement-orbit', this.pointerMove);
-        this.pointer.on('click-release', this.pointerUp);
+        this.pointer.on('click', () => this.handleClick());
     }
 
-    onPointerDown() {
-        if (this.gameManager.state.isCameraOnSpot) {
-            const mousePosition = this.pointer.getMousePosition();
-            this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
-            const intersects = this.pointer.raycaster.intersectObjects(this.objectsToAnimate, true);
-            if (intersects.length > 0) {
-                //console.log(intersects[0].object.name);
-                this.showInFrontOfCamera();
-                this.gameManager.updateInteractingState(true);
+    handleClick() {
+        if (this.isPlacedInWalkman || !this.gameManager.state.isCameraOnSpot) return;
+
+        const mousePosition = this.pointer.getMousePosition();
+        this.pointer.raycaster.setFromCamera(mousePosition, this.camera);
+        const intersects = this.pointer.raycaster.intersectObjects([this.cassetteGroup], true);
+        if (intersects.length > 0) {
+            if (this.walkman && this.walkman.isClapetOpen && !this.isAnimating) {
+                this.animateCassetteIntoWalkman();
+                this.globalEvents.trigger('change-cursor', {name: 'default'})
             }
         }
     }
 
-    showInFrontOfCamera() {
+    animateToCamera(targetPosition = null, isInstantiatedByWalkman = false, isInstantiatedByPencil = false) {
+        const cameraDirection = new THREE.Vector3();
+        this.camera.getWorldDirection(cameraDirection);
+
+        this.updateCassetteVisibility(true);
+        this.cassetteGroup.position.copy(this.getCassetteBottomRightCornerPosition())
+
+        if (!targetPosition) {
+            targetPosition = new THREE.Vector3();
+            targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
+        }
+
+        gsap.to(this.cassetteGroup.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                this.walkman.soundHasBeenPlayed = true;
+                if (this.soundHasBeenPlayed) {
+                    this.soundManager.stop("walkman2");
+                }
+                if (isInstantiatedByWalkman) {
+                    this.isReady = true
+                }
+            }
+        });
+
+        gsap.to(this.cassetteGroup.rotation, {
+            x: isInstantiatedByPencil ? Math.PI * 0.5 : 0,
+            y: isInstantiatedByPencil ? -Math.PI * 0.2 : 0,
+            z: isInstantiatedByPencil ? Math.PI * 0.5 : 0,
+            duration: 2,
+            ease: 'power2.inOut'
+        });
+
+        if (isInstantiatedByWalkman) {
+            this.setMorphTargets(0);
+            this.scaleCassette(0.82);
+        } else {
+            this.setMorphTargets(1);
+            this.scaleCassette(1);
+        }
+
+        this.animateMorphTargets();
+    }
+
+    setMorphTargets(value) {
+        this.objectsToAnimate.forEach(object => {
+            if (object.morphTargetInfluences) {
+                for (let i = 0; i < object.morphTargetInfluences.length; i++) {
+                    object.morphTargetInfluences[i] = value;
+                }
+            }
+        });
+    }
+
+    scaleCassette(scaleValue) {
+        this.cassetteGroup.scale.setScalar(scaleValue)
+    }
+
+    animateMorphTargets() {
+        if (!this.isRewinding) return;
+
+        let allMorphTargetsZero = true;
+
+        this.objectsToAnimate.forEach(object => {
+            if (object.morphTargetInfluences) {
+                for (let i = 0; i < object.morphTargetInfluences.length; i++) {
+                    let newInfluence = object.morphTargetInfluences[i] - 0.015;
+                    if (newInfluence < 0) newInfluence = 0;
+                    if (newInfluence > 0) allMorphTargetsZero = false;
+                    object.morphTargetInfluences[i] = newInfluence;
+                }
+            }
+        });
+
+        if (allMorphTargetsZero && !this.pencil.isInteractionFinished) {
+            this.soundManager.play('cassetteRewind');
+            this.soundManager.sounds['cassetteRewind'].on('end', () => {
+                this.pencil.returnToInitialPosition(true)
+                this.returnToInitialPosition();
+            })
+            this.stopRewinding();
+        } else {
+            gsap.to({}, {
+                duration: 0.1,
+                onComplete: () => {
+                    this.animateMorphTargets();
+                }
+            });
+        }
+    }
+
+    animateCassetteIntoWalkman() {
+        const walkmanPosition = this.walkman.mesh.position.clone();
+        const targetPosition = walkmanPosition.add(new THREE.Vector3(0.01, 0.2, 0.21));
+        this.isAnimating = true;
+
+        gsap.to(this.cassetteGroup.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                gsap.to(this.cassetteGroup.position, {
+                    x: targetPosition.x + 0.01,
+                    y: targetPosition.y - 0.197,
+                    z: targetPosition.z - 0.195,
+                    duration: 1,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        this.soundManager.play("cassetteSet")
+                        this.isPlacedInWalkman = true;
+                        this.isAnimating = false;
+                        this.walkman.walkmanOutline.resetOutline();
+                        this.globalEvents.trigger('change-cursor', {name: 'click'})
+
+                    }
+                });
+            }
+        });
+
+        gsap.to(this.cassetteGroup.rotation, {
+            y: this.cassetteGroup.rotation.y - 0.49,
+            duration: 2,
+            ease: 'power2.inOut'
+        });
+    }
+
+    getCassetteBottomRightCornerPosition() {
         const cameraDirection = new THREE.Vector3();
         this.camera.getWorldDirection(cameraDirection);
 
         const targetPosition = new THREE.Vector3();
-        targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(0.6));
+        targetPosition.addVectors(this.camera.position, cameraDirection.multiplyScalar(1));
 
-        if (!this.experience.objectGroup) {
-            this.experience.objectGroup = new THREE.Group();
-            this.scene.add(this.experience.objectGroup);
-        }
+        targetPosition.add(this.offsetFromCameraToBottomRightCorner);
 
-        this.objectsToAnimate.forEach(object => {
-            if (!this.experience.objectGroup.children.includes(object)) {
-                this.experience.objectGroup.add(object);
-            }
-
-            gsap.to(object.position, {
-                x: targetPosition.x,
-                y: targetPosition.y,
-                z: targetPosition.z,
-                duration: 2,
-                ease: 'power2.inOut'
-            });
-
-            gsap.to(object.rotation, {
-                x: 0,
-                y: 0,
-                z: 0,
-                duration: 2,
-                ease: 'power2.inOut'
-            });
-        });
-
-        this.gameManager.setCassetteInFrontOfCamera(true);
-        this.gameManager.state.isObjectOut = true;
+        return targetPosition;
     }
 
-    onPointerMove(mouse) {
-        if (!this.isDragging || !this.draggableModel || this.isAnimating) return;
-
-        const newZPosition = this.draggableModel.position.z + (mouse.x + 1) - (this.mouseStartClickPosition.x + 1) * this.dragDistance;
-
-        if (newZPosition) {
-            this.handleDrag(newZPosition);
-        } else {
-            console.log("Not far enough");
-        }
+    startRewinding() {
+        this.soundManager.play("rewind");
+        this.isRewinding = true;
+        this.animateMorphTargets();
     }
 
-    handleDrag(newZPosition) {
-        console.log("Dragging");
-        this.isAnimating = true;
-        gsap.to(this.draggableModel.position, {
-            z: newZPosition,
-            duration: 1,
+    stopRewinding() {
+        this.isRewinding = false;
+        this.soundManager.stop("rewind");
+    }
+
+    returnToInitialPosition() {
+
+        this.initialPosition = this.getCassetteBottomRightCornerPosition()
+        this.updateCassetteVisibility(true)
+
+        gsap.to(this.cassetteGroup.position, {
+            x: this.initialPosition.x,
+            y: this.initialPosition.y,
+            z: this.initialPosition.z,
+            duration: 2,
+            ease: 'power2.inOut',
             onComplete: () => {
-                this.isAnimating = false;
+                this.resetMovementStates();
+                this.updateCassetteVisibility(false)
             }
+        });
+
+        gsap.to(this.cassetteGroup.rotation, {
+            x: this.initialRotation.x,
+            y: this.initialRotation.y,
+            z: this.initialRotation.z,
+            duration: 2,
+            ease: 'power2.inOut'
         });
     }
 
-    onPointerUp() {
-        if (this.isDragging) {
-            this.isDragging = false;
-            this.draggableModel = null;
-            this.gameManager.updateInteractingState(false);
-        }
+    resetMovementStates() {
+        this.isRewinding = false;
+        this.isPlacedInWalkman = false;
+        this.soundHasBeenPlayed = false;
+        this.cassetteGroup.position.copy(this.initialPosition);
+        this.cassetteGroup.rotation.copy(this.initialRotation);
+    }
+
+    updateCassetteVisibility(state) {
+        this.cassetteGroup.traverse((child) => {
+            if (child.isMesh) {
+                child.visible = state
+                child.material.visible = state;
+                child.material.opacity = state ? 1 : 0;
+            }
+        })
     }
 
     destroy() {
-        this.pointer.off('click', this.pointerDown);
-        this.pointer.off('movement-orbit', this.pointerMove);
-        this.pointer.off('click-release', this.pointerUp);
-
         this.objectsToAnimate.forEach(object => {
             if (object && object.parent) {
                 object.parent.remove(object);
             }
         });
+        this.scene.remove(this.cassetteGroup);
     }
 }

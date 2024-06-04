@@ -1,26 +1,21 @@
 import { Howl, Howler } from 'howler';
 import { data } from '../../data/Sounds.js';
 import { useAppStore } from '../../stores/appStore.js';
-import {watch} from "vue";
+import { watch } from "vue";
 
 export default class SoundManager {
 
     constructor() {
-
         this.appStore = useAppStore();
-
         this.sounds = {};
-
-        this.init()
+        this.init();
 
         watch(() => this.appStore.$state.globalVolume, (value) => {
             Howler.volume(this.appStore.$state.globalVolume);
         });
-
     }
 
     init() {
-
         Object.keys(data).forEach(key => {
             const sound = data[key];
             this.sounds[key] = new Howl({
@@ -31,12 +26,13 @@ export default class SoundManager {
             });
         });
 
-        Howler.volume(this.appStore.$state.globalVolume);
+        this.backgroundOriginalVolume = this.sounds['background'].volume();
 
+        Howler.volume(this.appStore.$state.globalVolume);
     }
 
     play(key) {
-        if (this.sounds[key].state() === 'unloaded') this.loadSongs()
+        if (this.sounds[key].state() === 'unloaded') this.loadSongs();
         if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
             this.sounds[key].play();
         }
@@ -44,7 +40,6 @@ export default class SoundManager {
 
     pause(key) {
         this.sounds[key].pause();
-        this.sounds[key].isPlaying = false;
     }
 
     stop(key) {
@@ -52,30 +47,58 @@ export default class SoundManager {
     }
 
     fadeIn(key, duration) {
-        if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
-            this.sounds[key].fade(0, this.sounds[key].volume(), duration);
+        const sound = this.sounds[key];
+        if (!this.appStore.$state.muted && !sound.playing()) {
+            if (sound.state() === 'loaded') {
+                console.log(`Fading in ${key} over ${duration}ms`);
+                const targetVolume = sound.volume();
+                sound.volume(0); // Set initial volume to 0
+                sound.play();
+                sound.fade(0, targetVolume, duration);
+            } else {
+                sound.once('load', () => {
+                    console.log(`Fading in ${key} over ${duration}ms after load`);
+                    const targetVolume = sound.volume();
+                    sound.volume(0); // Set initial volume to 0
+                    sound.play();
+                    sound.fade(0, targetVolume, duration);
+                });
+            }
         }
     }
 
     fadeOut(key, duration) {
-        if (!this.appStore.$state.muted && !this.sounds[key].playing()) {
-            this.sounds[key].fade(this.sounds[key].volume(), 0, duration);
+        const sound = this.sounds[key];
+        if (!this.appStore.$state.muted && sound.playing()) {
+            console.log(`Fading out ${key} over ${duration}ms`);
+            sound.fade(sound.volume(), 0, duration);
         }
     }
 
-    playSoundWithBackgroundFade(key, fadeDuration) {
+    fadeOutAndStopBackground(fadeDuration, onComplete = () => {}) {
         const originalVolume = this.sounds['background'].volume();
 
-        this.sounds['background'].fade(originalVolume, originalVolume / 3, fadeDuration);
+        this.sounds['background'].fade(originalVolume, 0, fadeDuration);
+
+        setTimeout(() => {
+            this.sounds['background'].stop();
+            if (onComplete) onComplete();
+        }, fadeDuration * 1000);
+    }
+
+    playSoundWithBackgroundFade(key, fadeDuration) {
+
+        this.sounds['background'].fade(this.backgroundOriginalVolume, this.backgroundOriginalVolume / 3, fadeDuration);
 
         setTimeout(() => {
             this.sounds[key].play();
 
             this.sounds[key].on('end', () => {
-                this.sounds['background'].fade(originalVolume / 3, originalVolume, fadeDuration);
+                this.sounds['background'].fade(this.backgroundOriginalVolume / 3, this.backgroundOriginalVolume, fadeDuration);
                 this.sounds[key].off('end');
             });
-        }, fadeDuration * 1000);
+        }, fadeDuration * 1000)
+
     }
 
     setSoundVolume(key, volume) {
@@ -91,13 +114,13 @@ export default class SoundManager {
     mute() {
         Howler.mute(true);
         this.appStore.toggleMute(true);
-        this.pause('background')
+        this.pause('background');
     }
 
     unmute() {
         Howler.mute(false);
         this.appStore.toggleMute(false);
-        this.play('background')
+        this.play('background');
     }
 
     loadSongs() {
@@ -112,5 +135,4 @@ export default class SoundManager {
             this.sounds[key].unload();
         });
     }
-
 }

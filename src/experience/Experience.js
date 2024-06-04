@@ -73,7 +73,7 @@ export default class Experience extends EventEmitter {
         // Debug
         this.config.debug = window.location.hash === '#debug'
 
-        this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
+        this.config.isMobile = window.matchMedia('(max-width: 576px)').matches
 
         // Pixel ratio
         this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
@@ -86,7 +86,25 @@ export default class Experience extends EventEmitter {
 
     setDebug() {
         if (this.config.debug) {
-            this.debug = new Pane()
+            this.debug = new Pane({
+                title: 'Debug',
+                expanded: true
+            })
+
+            this.debugFolder = this.debug.addFolder({
+                title: 'Game Debug',
+                expanded: true
+            })
+
+            const params = {
+                id: 0
+            }
+
+            const gameIdDebug = this.debugFolder.addBinding(params, 'id', {min: 0, max: 5, step: 1, label: 'Game Step Id'})
+            gameIdDebug.on('change', value => {
+                this.gameManager.setGameStepId(value.value)
+            })
+
         }
     }
 
@@ -141,7 +159,7 @@ export default class Experience extends EventEmitter {
 
         this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
 
-        this.config.isMobile = window.matchMedia('(max-width: 992px)').matches
+        this.config.isMobile = window.matchMedia('(max-width: 576px)').matches
 
         this.camera?.resize()
 

@@ -3,11 +3,13 @@ import {
     BackSide, Color,
     DoubleSide,
     FrontSide, MeshBasicMaterial, MeshLambertMaterial,
-    MeshStandardMaterial, RepeatWrapping, ShaderMaterial,
+    MeshStandardMaterial, NormalBlending, RepeatWrapping, ShaderMaterial,
 } from "three";
 import Experience from "./Experience";
 import locationsVertexShader from './Shaders/Locations/vertex.glsl'
 import locationsFragmentShader from './Shaders/Locations/fragment.glsl'
+import pictureVertexShader from "./Shaders/Picture/vertex.glsl";
+import pictureFragmentShader from "./Shaders/Picture/fragment.glsl";
 
 let groundMaterial,
     windowWallMaterial,
@@ -58,7 +60,8 @@ let mirrorMaterial,
     secondBoxMaterial,
     thirdBoxMaterial,
     chestDrawerMaterial,
-    pencilsMaterial;
+    pencilsMaterial,
+    paperMaterial;
 
 let recordPlayerMaterial,
     rubiksCubeMaterial,
@@ -80,11 +83,20 @@ let recordPlayerMaterial,
     topChestMaterial,
     pencilMaterial,
     pictureMaterial,
-    vinylMaterial;
+    vinylMaterial,
+    vinylUpMaterial,
+    projectorTireuseMaterial,
+    projectorRailMaterial,
+    projectorButtonMaterial,
+    projectorCubeMaterial,
+    projectorOeilMaterial,
+    projectorBoxMaterial,
+    projectorDoorMaterial;
 
 
 let outlineMaterial,
-    locationsMaterial;
+    locationsMaterial,
+    dustPictureMaterial;
 
 let backgroundTreeMaterial;
 
@@ -691,7 +703,7 @@ export default class MaterialLibrary {
     getMagazineMaterial() {
         if (!magazineMaterial) {
             magazineMaterial = new MeshBasicMaterial({
-                map: this.resources.items.magazine.diffuse,
+                map: this.resources.items.magazineClosed.diffuse,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -704,7 +716,7 @@ export default class MaterialLibrary {
     getTableMagazineMaterial() {
         if (!tableMagazineMaterial) {
             tableMagazineMaterial = new MeshBasicMaterial({
-                map: this.resources.items.magazine.diffuse2,
+                map: this.resources.items.magazineClosed.diffuse2,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -777,6 +789,19 @@ export default class MaterialLibrary {
         }
 
         return pencilsMaterial
+    }
+
+    getPaperMaterial() {
+        if (!paperMaterial) {
+            paperMaterial = new MeshBasicMaterial({
+                map: this.resources.items.paper.diffuse,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(paperMaterial)
+        }
+
+        return paperMaterial
     }
 
     //////////////////////// INTERACTIVE OBJECTS MATERIALS ////////////////////////
@@ -863,6 +888,7 @@ export default class MaterialLibrary {
         if (!cassetteMaterial) {
             cassetteMaterial = new MeshBasicMaterial({
                 map: this.resources.items.cassette.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -876,7 +902,8 @@ export default class MaterialLibrary {
         if (!enveloppeMaterial) {
             enveloppeMaterial = new MeshBasicMaterial({
                 map: this.resources.items.enveloppe.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                transparent: true,
+                side: DoubleSide
             })
 
             this.materialsUsed.push(enveloppeMaterial)
@@ -889,6 +916,7 @@ export default class MaterialLibrary {
         if (!dahliaMaterial) {
             dahliaMaterial = new MeshBasicMaterial({
                 map: this.resources.items.dahlia.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -902,6 +930,7 @@ export default class MaterialLibrary {
         if (!postalCardBiarritzMaterial) {
             postalCardBiarritzMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -915,6 +944,7 @@ export default class MaterialLibrary {
         if (!postalCardBeachMaterial) {
             postalCardBeachMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse2,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -928,6 +958,7 @@ export default class MaterialLibrary {
         if (!postalCardHouseMaterial) {
             postalCardHouseMaterial = new MeshBasicMaterial({
                 map: this.resources.items.postalCard.diffuse3,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -967,6 +998,7 @@ export default class MaterialLibrary {
         if (!letterMaterial) {
             letterMaterial = new MeshBasicMaterial({
                 map: this.resources.items.letter.diffuse,
+                transparent: true,
                 side: this.debug ? DoubleSide : FrontSide
             })
 
@@ -1032,7 +1064,8 @@ export default class MaterialLibrary {
         if (!pictureMaterial) {
             pictureMaterial = new MeshBasicMaterial({
                 map: this.resources.items.picture.diffuse,
-                side: this.debug ? DoubleSide : FrontSide
+                transparent: true,
+                side: FrontSide
             })
 
             this.materialsUsed.push(pictureMaterial)
@@ -1052,6 +1085,112 @@ export default class MaterialLibrary {
         }
 
         return vinylMaterial
+    }
+
+    getVinylUpMaterial() {
+        if (!vinylUpMaterial) {
+            vinylUpMaterial = new MeshBasicMaterial({
+                map: this.resources.items.vinyl.diffuse2,
+                side: this.debug ? DoubleSide : FrontSide
+            })
+
+            this.materialsUsed.push(vinylUpMaterial)
+        }
+
+        return vinylUpMaterial
+    }
+
+    /////////////////////////// PROJECTOR MATERIALS ///////////////////////////
+
+    getProjectorTireuseMaterial() {
+        if (!projectorTireuseMaterial) {
+            projectorTireuseMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.tireuse,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorTireuseMaterial)
+        }
+
+        return projectorTireuseMaterial
+    }
+
+    getProjectorRailMaterial() {
+        if (!projectorRailMaterial) {
+            projectorRailMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.rail,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorRailMaterial)
+        }
+
+        return projectorRailMaterial
+    }
+
+    getProjectorButtonMaterial() {
+        if (!projectorButtonMaterial) {
+            projectorButtonMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.button,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorButtonMaterial)
+        }
+
+        return projectorButtonMaterial
+    }
+
+    getProjectorCubeMaterial() {
+        if (!projectorCubeMaterial) {
+            projectorCubeMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.cube,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorCubeMaterial)
+        }
+
+        return projectorCubeMaterial
+    }
+
+    getProjectorOeilMaterial() {
+        if (!projectorOeilMaterial) {
+            projectorOeilMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.oeil,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorOeilMaterial)
+        }
+
+        return projectorOeilMaterial
+    }
+
+    getProjectorBoxMaterial() {
+        if (!projectorBoxMaterial) {
+            projectorBoxMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.box,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorBoxMaterial)
+        }
+
+        return projectorBoxMaterial
+    }
+
+    getProjectorDoorMaterial() {
+        if (!projectorDoorMaterial) {
+            projectorDoorMaterial = new MeshBasicMaterial({
+                map: this.resources.items.projector.door,
+                side: FrontSide
+            })
+
+            this.materialsUsed.push(projectorDoorMaterial)
+        }
+
+        return projectorDoorMaterial
     }
 
     ///////////////////////// TEXTURE MATERIALS /////////////////////////////
@@ -1074,7 +1213,8 @@ export default class MaterialLibrary {
     getBlackMaterial() {
         if (!blackMaterial) {
             blackMaterial = new MeshBasicMaterial({
-                color: 0x000000,
+                color: '#000000',
+                transparent: true,
                 side: FrontSide
             })
 
@@ -1092,7 +1232,7 @@ export default class MaterialLibrary {
                 color: 0xffffff,
                 side: BackSide,
                 transparent: true,
-                opacity: 0.5
+                opacity: 0.55
             })
 
             this.materialsUsed.push(outlineMaterial)
@@ -1121,6 +1261,27 @@ export default class MaterialLibrary {
         }
 
         return locationsMaterial
+    }
+
+    getDustPictureMaterial() {
+        if (!dustPictureMaterial) {
+            dustPictureMaterial = new ShaderMaterial({
+                vertexShader: pictureVertexShader,
+                fragmentShader: pictureFragmentShader,
+                uniforms: {
+                    uTime: {value: 0},
+                    uPixelRatio: {value: Math.min(window.devicePixelRatio, 2)},
+                    uSize: {value: 3},
+                    uOpacity: {value: 1}
+                },
+                transparent: true,
+                depthWrite: false,
+            });
+
+            this.materialsUsed.push(dustPictureMaterial)
+        }
+
+        return dustPictureMaterial
     }
 
     destroy() {

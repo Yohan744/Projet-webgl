@@ -34,6 +34,7 @@
 }
 #experienceWrapper .start-button {
   position: absolute;
+  padding: 20px 0;
   top: 50%;
   left: 50%;
   opacity: 0;
@@ -190,11 +191,23 @@
   height: 35px;
   width: 35px;
   margin-left: 20px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 #experience-layer .inventory-wrapper div img {
   position: relative;
   height: 100%;
   width: auto;
+  filter: grayscale(100%);
+  opacity: 0.5;
+  transform: scale(1.1);
+  transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), transform 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+#experience-layer .inventory-wrapper div.visible img {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1);
 }
 #experience-layer .settings-wrapper {
   position: fixed;
@@ -266,9 +279,6 @@
 #experience-layer .settings-wrapper .settings-panel a {
   margin-top: 20px;
   cursor: none;
-}
-#experience-layer .carousel button {
-  background-color: blue;
 }
 
 #masthead-outro {
