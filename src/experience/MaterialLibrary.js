@@ -917,7 +917,7 @@ export default class MaterialLibrary {
             dahliaMaterial = new MeshBasicMaterial({
                 map: this.resources.items.dahlia.diffuse,
                 transparent: true,
-                side: this.debug ? DoubleSide : FrontSide
+                side: DoubleSide
             })
 
             this.materialsUsed.push(dahliaMaterial)

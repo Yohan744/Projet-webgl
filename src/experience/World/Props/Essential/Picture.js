@@ -286,7 +286,7 @@ export default class Picture {
             onComplete: () => {
                 setTimeout(() => {
                     this.soundManager.playSoundWithBackgroundFade("searchInvite", 1.25)
-                }, 500)
+                }, 200)
             }
         }, 0);
 
