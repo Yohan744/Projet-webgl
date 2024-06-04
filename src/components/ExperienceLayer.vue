@@ -62,7 +62,7 @@ export default {
       globalVolume: this.appStore.$state.globalVolume,
       smoothGlobalVolume: this.appStore.$state.globalVolume,
       instructions: [
-          "",
+        "",
         "Explorer les <strong>diapositives</strong>",
         "Fouiller dans la <strong>commode</strong>",
         "Découvrer la <strong>cassette</strong> cachée dans <strong>l'enveloppe</strong>",
@@ -105,7 +105,7 @@ export default {
       }, 800);
     },
     'gameManager.state.gameStepId': function (newVal) {
-      if (newVal !== 3 && this.$refs.goBack.classList.contains('visible')) {
+      if (this.gameManager.state.gameStepId !== 3 && this.$refs.goBack.classList.contains('visible')) {
         this.animateArrow();
       }
       this.updateInstruction(newVal);
@@ -132,9 +132,6 @@ export default {
     animateArrow() {
       if (this.$refs.goBack.classList.contains('visible')) {
         this.$refs.goBack.classList.add('animate');
-        setTimeout(() => {
-          this.$refs.goBack.classList.remove('animate');
-        }, 1000);
       }
     },
     updateInstruction(stepId) {
