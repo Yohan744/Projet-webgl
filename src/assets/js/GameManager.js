@@ -13,6 +13,7 @@ const state = reactive({
     isPencilInFrontOfCamera: false,
     isCassetteInFrontOfCamera: false,
     isWalkmanInFrontOfCamera: false,
+    validateStep:false,
     showingInventoryObjectInFrontOfCamera: null,
 });
 
@@ -25,6 +26,7 @@ export function useGameManager() {
 
     function incrementGameStepId() {
         state.gameStepId++;
+        console.log("here");
         console.log("new gameStepId: " + state.gameStepId)
     }
 
@@ -96,6 +98,7 @@ export function useGameManager() {
         state.actualObjectInteractingName = null;
         state.isInteractingWithObject = false;
         state.isSettingsOpen = false;
+        state.validateStep = false;
         state.isPocketButtonVisible = false;
         state.objectToPocket = false;
         state.pencilIconClicked = false;

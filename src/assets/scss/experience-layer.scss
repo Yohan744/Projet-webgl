@@ -47,11 +47,19 @@
   }
 
   .go-back-icon {
+    &.animate {
+      animation: clignoter 1s infinite;
+    }
 
     &:hover {
       opacity: 0.6;
     }
+  }
 
+  @keyframes clignoter {
+    0% { opacity: 1; }
+    40% { opacity: 0; }
+    100% { opacity: 1; }
   }
 
   .settings-icon {

@@ -4,6 +4,10 @@
       <img :src="goBackIcon" alt="Go back"/>
     </div>
 
+    <div class="instruction-text">
+      <p v-html="displayedText"></p>
+    </div>
+
     <div ref="settings" @click="handleSettingsIconClick" class="settings-icon visible">
       <img src="../assets/icons/settings.svg" alt="Settings"/>
     </div>
@@ -39,7 +43,7 @@ import Inventory from "./Inventory.vue";
 
 export default {
   name: 'ExperienceLayer',
-  components: {Inventory},
+  components: { Inventory },
   props: {
     soundManager: Object,
   },
@@ -57,11 +61,22 @@ export default {
       goBackIcon: homeIcon,
       globalVolume: this.appStore.$state.globalVolume,
       smoothGlobalVolume: this.appStore.$state.globalVolume,
-    }
+      instructions: [
+        "",
+        "Explorer les <strong>diapositives</strong>",
+        "Fouiller dans la <strong>commode</strong>",
+        "Découvrer la <strong>cassette</strong> cachée dans <strong>l'enveloppe</strong>",
+        "Trouver le <strong>crayon</strong> pour rembobiner les souvenirs",
+        "Dénicher le <strong>walkman</strong>",
+      ],
+      currentInstruction: "Dépoussiérez les souvenirs sur la <strong>photo</strong>",
+      displayedText: "",
+      typingSpeed: 50
+    };
   },
   computed: {
     isMuted() {
-      return this.appStore.$state.muted ? 'Unmute' : 'Mute'
+      return this.appStore.$state.muted ? 'Unmute' : 'Mute';
     },
     isAnyItemInInventory() {
       return Object.values(this.gameManager.inventory).some(value => value);
@@ -72,13 +87,13 @@ export default {
       this.globalVolume = (Math.round(newVal * 10) / 10).toFixed(1);
       this.appStore.setGlobalVolume(parseFloat(this.globalVolume));
     },
-    'gameManager.state.isExperienceVisible': function(state) {
+    'gameManager.state.isExperienceVisible': function (state) {
       state ? this.setExperienceLayerOpacity() : null;
     },
-    'gameManager.state.isCameraOnSpot': function() {
+    'gameManager.state.isCameraOnSpot': function () {
       this.animateGoBackIcon();
     },
-    'gameManager.state.isInteractingWithObject': function(state) {
+    'gameManager.state.isInteractingWithObject': function (state) {
       this.animateGoBackIcon();
       setTimeout(() => {
         if (state) {
@@ -89,28 +104,60 @@ export default {
         this.animateGoBackIcon();
       }, 800);
     },
+    'gameManager.state.gameStepId': function (newVal) {
+      if (this.gameManager.state.gameStepId !== 3 && this.$refs.goBack.classList.contains('visible')) {
+        this.animateArrow();
+      }
+      this.updateInstruction(newVal);
+    }
   },
   mounted() {
     if (this.gameManager.state.isExperienceVisible) {
       this.setExperienceLayerOpacity();
     }
+    this.typeWriterEffect(this.currentInstruction);
   },
   methods: {
     goBack() {
       if (this.gameManager.state.isInteractingWithObject) {
-        this.gameManager.updateInteractingState(false)
+        this.gameManager.updateInteractingState(false);
       } else {
-        this.gameManager.updateCameraOnSpot(false)
+        this.gameManager.updateCameraOnSpot(false);
       }
+      this.$refs.goBack.classList.remove('animate');
     },
     animateGoBackIcon() {
       this.$refs.goBack.classList.toggle('visible');
+    },
+    animateArrow() {
+      if (this.$refs.goBack.classList.contains('visible')) {
+        this.$refs.goBack.classList.add('animate');
+      }
+    },
+    updateInstruction(stepId) {
+      if (stepId >= 0 && stepId < this.instructions.length) {
+        this.typeWriterEffect(this.instructions[stepId]);
+      } else {
+        this.typeWriterEffect("Aucune instruction disponible.");
+      }
+    },
+    typeWriterEffect(text) {
+      this.displayedText = "";
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < text.length) {
+          this.displayedText += text[index];
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, this.typingSpeed);
     },
     handleSettingsIconClick() {
       this.isSettingsVisible = !this.isSettingsVisible;
       if (this.$refs.settingsWrapper) {
         this.$refs.settingsWrapper.classList.toggle('visible');
-        this.gameManager.toggleSettings()
+        this.gameManager.toggleSettings();
       }
     },
     setExperienceLayerOpacity() {
@@ -141,5 +188,5 @@ export default {
       this.gameManager.resetAll();
     }
   }
-}
+};
 </script>
