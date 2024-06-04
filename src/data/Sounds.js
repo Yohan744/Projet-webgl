@@ -45,7 +45,7 @@ export const data = {
 
     lock: {
         src: fx + 'lock.mp3',
-        volume: 0.75,
+        volume: 0.5,
         preload: true,
         loop: false,
     },
@@ -115,7 +115,7 @@ export const data = {
 
     rewind: {
         src: fx + 'rattle.mp3',
-        volume: 0.2,
+        volume: 0.35,
         preload: true,
         loop: true,
     },
@@ -150,7 +150,7 @@ export const data = {
 
     telecran: {
         src: p + 'telecran.mp3',
-        volume: 0.75,
+        volume: 0.85,
         preload: true,
         loop: false,
     },
@@ -220,7 +220,7 @@ export const data = {
 
     diapo5: {
         src: p + 'diapo5.mp3',
-        volume: 1,
+        volume: 2,
         preload: true,
         loop: false,
     },
