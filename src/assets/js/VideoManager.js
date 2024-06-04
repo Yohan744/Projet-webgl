@@ -14,7 +14,7 @@ export const useVideoManager = () => {
         if (state.introVideoLoading || state.introVideoReady) return;
 
         const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
-        const videoName = import.meta.env.VITE_APP_VIDEO_NAME;
+        const videoName = import.meta.env.VITE_APP_VIDEO_INTRO_NAME;
 
         state.introVideoLoading = true;
         const video = document.createElement('video');
@@ -32,7 +32,7 @@ export const useVideoManager = () => {
         if (state.outroVideoLoading || state.outroVideoReady) return;
 
         const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
-        const videoName = import.meta.env.VITE_APP_VIDEOOUTRO_NAME;
+        const videoName = import.meta.env.VITE_APP_VIDEO_OUTRO_NAME;
 
         state.outroVideoLoading = true;
         const video = document.createElement('video');

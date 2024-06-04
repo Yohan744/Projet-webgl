@@ -48,15 +48,11 @@ export default class Pencil {
         this.mesh.material.map.repeat.set(1, 1);
 
 
-        this.pencilRotation = gsap.to(this.mesh.material.map.offset, {
-            x: 0.5,
-            y: 0,
+        this.pencilRotation = gsap.to(this.mesh.rotation, {
+            x: '+=' + 0.5,
             repeat: -1,
             duration: 2,
             ease: 'linear',
-            onUpdate: () => {
-                this.mesh.material.map.needsUpdate = true;
-            }
         });
         this.pencilRotation.pause()
 
@@ -81,15 +77,19 @@ export default class Pencil {
         })
     }
 
-    handleClick() {
+    handleClick(forced = false) {
         if (!this.gameManager.state.isCameraOnSpot) return;
         const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
-        if (intersects.length > 0) {
+        if (intersects.length > 0 || forced) {
+
+            if (!this.gameManager.state.isInteractingWithObject) {
+                this.gameManager.updateInteractingState(true);
+                this.gameManager.setActualObjectInteractingName("pencil")
+                this.renderer.toggleBlurEffect(true)
+            }
+
+            if (!this.isReadyToBeRewinded) this.globalEvents.trigger('change-cursor', {name: 'default'})
             this.onClick();
-            this.gameManager.updateInteractingState(true);
-            this.gameManager.setActualObjectInteractingName("pencil")
-            this.renderer.toggleBlurEffect(true)
-            this.globalEvents.trigger('change-cursor', {name: 'default'})
         }
     }
 
@@ -98,6 +98,7 @@ export default class Pencil {
         if (!this.isInFrontOfCamera) {
             this.pencilOutline.removeOutline();
             this.animateToCamera();
+            if (this.isInteractionFinished) this.globalEvents.trigger('change-cursor', {name: 'default'})
 
         } else if (!this.isInteractionFinished) {
 
@@ -108,7 +109,7 @@ export default class Pencil {
 
             } else if (this.isReadyToBeRewinded) {
                 this.cassette?.startRewinding();
-                // this.pencilRotation.play()
+                this.pencilRotation.play()
             }
         }
     }
@@ -221,6 +222,8 @@ export default class Pencil {
             },
             onComplete: () => {
                 this.isReadyToBeRewinded = true;
+                this.pencilOutline.showOutline()
+                this.globalEvents.trigger('change-cursor', {name: 'click'})
             }
         })
 

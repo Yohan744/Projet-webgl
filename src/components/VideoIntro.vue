@@ -19,7 +19,7 @@ export default {
     const appStore = useAppStore();
     const videoManager = useVideoManager();
     const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
-    const videoName = import.meta.env.VITE_APP_VIDEO_NAME;
+    const videoName = import.meta.env.VITE_APP_VIDEO_INTRO_NAME;
 
     return {
       appStore,

@@ -17,6 +17,7 @@ export default class Locations {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.gameManager = this.experience.gameManager
+        this.soundManager = this.experience.soundManager
         this.material = materialLibrary.getLocationsMaterial()
 
         this.spots = []
@@ -74,7 +75,10 @@ export default class Locations {
                 lookingPoint: this.locationsLookingPoint[i]
             };
 
-            if (this.gameManager.state.gameStepId !== -1) location.visible = false
+            if (this.gameManager.state.gameStepId !== -1) {
+                location.visible = false
+                this.checkVisibility(this.gameManager.state.gameStepId)
+            }
 
             location.updateMatrix()
 
@@ -86,11 +90,16 @@ export default class Locations {
 
     setWatcher() {
         watch(() => this.gameManager.state.gameStepId, (newVal) => {
-            this.spots.forEach((spot, index) => {
-                spot.visible = newVal >= this.locationsGameIdApparition[index]
-            })
-            if (newVal === 1) this.setLocationsVisibility(true)
+            this.checkVisibility(newVal)
+            if (newVal !== 3) this.soundManager.play('unlockZone')
         })
+    }
+
+    checkVisibility(newVal) {
+        this.spots.forEach((spot, index) => {
+            spot.visible = newVal >= this.locationsGameIdApparition[index]
+        })
+        if (newVal === 1) this.setLocationsVisibility(true)
     }
 
     getLocations() {

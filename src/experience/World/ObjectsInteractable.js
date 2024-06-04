@@ -10,7 +10,7 @@ import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
 import Pencil from "./Props/Essential/Pencil";
 import TopChest from "./Props/Essential/TopChest";
-import BottomChest from "./Props/Essential/BottomChest";
+import PencilsGroup from "./Props/Essential/PencilsGroup";
 
 
 const interactableObjects = {};
@@ -88,8 +88,7 @@ export default class ObjectsInteractable {
 
                     if (name.includes('bas')) {
                         child.material = this.materialLibrary.getBottomChestMaterial();
-                        this.bottomChest = new BottomChest(child);
-                        interactableObjects.bottomChest = this.bottomChest;
+
                     }
 
                 } else if (name.includes("bobine1") || name.includes("bobine2") || name.includes("bobine3")) {
@@ -105,6 +104,9 @@ export default class ObjectsInteractable {
                     this.pencil = new Pencil(child);
                     interactableObjects.pencil = this.pencil;
                     interactableMesh.push(child);
+                    const pencils = new PencilsGroup(child);
+                    interactableMesh.push(pencils.getMesh());
+
 
                 } else if (name.includes("telephone")) {
                     child.material = this.materialLibrary.getTelephoneMaterial();
