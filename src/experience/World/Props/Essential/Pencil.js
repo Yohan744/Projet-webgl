@@ -48,11 +48,14 @@ export default class Pencil {
         this.mesh.material.map.repeat.set(1, 1);
 
 
-        this.pencilRotation = gsap.to(this.mesh.rotation, {
-            x: '+=' + 0.5,
+        this.pencilRotation = gsap.to(this.mesh.material.map.offset, {
+            x: '+=' + 0.035,
             repeat: -1,
-            duration: 2,
+            duration: 0.5,
             ease: 'linear',
+            onUpdate: () => {
+                this.mesh.material.map.needsUpdate = true;
+            }
         });
         this.pencilRotation.pause()
 
@@ -60,7 +63,6 @@ export default class Pencil {
 
     setWatchers() {
         this.pointer.on("click", this.handleClick.bind(this));
-        this.pointer.on("click-release", this.onPointerUp.bind(this));
 
         watch(() => this.gameManager.state.isInteractingWithObject, (newVal) => {
             if (!newVal && this.gameManager.state.actualObjectInteractingName === "pencil") {
@@ -107,17 +109,13 @@ export default class Pencil {
                 this.pencilOutline.removeOutline()
                 this.globalEvents.trigger('change-cursor', {name: 'default'})
 
-            } else if (this.isReadyToBeRewinded) {
+            } else if (this.isReadyToBeRewinded && !this.cassette.isRewinding) {
                 this.cassette?.startRewinding();
-                // this.pencilRotation.play()
+                this.globalEvents.trigger('change-cursor', {name: 'default'})
+                this.pencilOutline.removeOutline()
+                this.pencilRotation.play()
             }
         }
-    }
-
-    onPointerUp() {
-        if (!this.gameManager.state.isCameraOnSpot) return;
-        this.cassette?.stopRewinding();
-        this.pencilRotation.pause()
     }
 
     animateToCamera() {
@@ -270,7 +268,6 @@ export default class Pencil {
 
     destroy() {
         this.pointer.off("click", this.handleClick.bind(this));
-        this.pointer.off("click-release", this.onPointerUp.bind(this));
     }
 
 }
