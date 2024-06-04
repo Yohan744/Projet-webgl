@@ -91,7 +91,7 @@ export default class Locations {
     setWatcher() {
         watch(() => this.gameManager.state.gameStepId, (newVal) => {
             this.checkVisibility(newVal)
-            this.soundManager.play('unlockZone')
+            if (newVal !== 3) this.soundManager.play('unlockZone')
         })
     }
 

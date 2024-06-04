@@ -81,15 +81,19 @@ export default class Pencil {
         })
     }
 
-    handleClick() {
+    handleClick(forced = false) {
         if (!this.gameManager.state.isCameraOnSpot) return;
         const intersects = this.pointer.raycaster.intersectObject(this.mesh, true);
-        if (intersects.length > 0) {
+        if (intersects.length > 0 || forced) {
+
+            if (!this.gameManager.state.isInteractingWithObject) {
+                this.gameManager.updateInteractingState(true);
+                this.gameManager.setActualObjectInteractingName("pencil")
+                this.renderer.toggleBlurEffect(true)
+            }
+
+            if (!this.isReadyToBeRewinded) this.globalEvents.trigger('change-cursor', {name: 'default'})
             this.onClick();
-            this.gameManager.updateInteractingState(true);
-            this.gameManager.setActualObjectInteractingName("pencil")
-            this.renderer.toggleBlurEffect(true)
-            this.globalEvents.trigger('change-cursor', {name: 'default'})
         }
     }
 
@@ -98,6 +102,7 @@ export default class Pencil {
         if (!this.isInFrontOfCamera) {
             this.pencilOutline.removeOutline();
             this.animateToCamera();
+            if (this.isInteractionFinished) this.globalEvents.trigger('change-cursor', {name: 'default'})
 
         } else if (!this.isInteractionFinished) {
 
@@ -221,6 +226,8 @@ export default class Pencil {
             },
             onComplete: () => {
                 this.isReadyToBeRewinded = true;
+                this.pencilOutline.showOutline()
+                this.globalEvents.trigger('change-cursor', {name: 'click'})
             }
         })
 

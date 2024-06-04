@@ -10,6 +10,7 @@ import Dahlia from "./Props/Essential/Dahlia";
 import Envelop from "./Props/Essential/Envelop";
 import Pencil from "./Props/Essential/Pencil";
 import TopChest from "./Props/Essential/TopChest";
+import PencilsGroup from "./Props/Essential/PencilsGroup";
 
 
 const interactableObjects = {};
@@ -103,6 +104,10 @@ export default class ObjectsInteractable {
                     this.pencil = new Pencil(child);
                     interactableObjects.pencil = this.pencil;
                     interactableMesh.push(child);
+                    const pencils = new PencilsGroup(child);
+                    interactableMesh.push(pencils.getMesh());
+                    console.log("lololo")
+
 
                 } else if (name.includes("telephone")) {
                     child.material = this.materialLibrary.getTelephoneMaterial();

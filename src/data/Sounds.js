@@ -115,7 +115,7 @@ export const data = {
 
     rewind: {
         src: fx + 'rattle.mp3',
-        volume: 0.35,
+        volume: 0.425,
         preload: true,
         loop: true,
     },
@@ -327,7 +327,7 @@ export const data = {
 
     unlockZone: {
         src: fx + 'unlockZone.mp3',
-        volume: 0.6,
+        volume: 0.3,
         preload: true,
         loop: false,
     },
