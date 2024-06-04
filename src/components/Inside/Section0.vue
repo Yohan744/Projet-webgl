@@ -72,7 +72,7 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('/src/assets/img/section1_background.png') no-repeat center center;
+  background: url('/src/assets/img/section1_background.webp') no-repeat center center;
   background-size: cover; 
   z-index: 0; 
 }
