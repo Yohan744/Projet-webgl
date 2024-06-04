@@ -325,4 +325,11 @@ export const data = {
         loop: false,
     },
 
+    unlockZone: {
+        src: fx + 'unlockZone.mp3',
+        volume: 0.6,
+        preload: true,
+        loop: false,
+    },
+
 }

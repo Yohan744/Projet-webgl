@@ -17,6 +17,7 @@ export default class Locations {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.gameManager = this.experience.gameManager
+        this.soundManager = this.experience.soundManager
         this.material = materialLibrary.getLocationsMaterial()
 
         this.spots = []
@@ -90,6 +91,7 @@ export default class Locations {
     setWatcher() {
         watch(() => this.gameManager.state.gameStepId, (newVal) => {
             this.checkVisibility(newVal)
+            this.soundManager.play('unlockZone')
         })
     }
 
