@@ -4,6 +4,10 @@
       <img :src="goBackIcon" alt="Go back"/>
     </div>
 
+    <div class="instruction-text">
+      <p v-html="displayedText"></p>
+    </div>
+
     <div ref="settings" @click="handleSettingsIconClick" class="settings-icon visible">
       <img src="../assets/icons/settings.svg" alt="Settings"/>
     </div>
@@ -57,6 +61,16 @@ export default {
       goBackIcon: homeIcon,
       globalVolume: this.appStore.$state.globalVolume,
       smoothGlobalVolume: this.appStore.$state.globalVolume,
+      instructions: [
+        "Explorez les <strong>diapositives</strong>",
+        "Fouiller dans la <strong>commode</strong>",
+        "Découvrez la <strong>cassette</strong> cachée dans <strong>l'enveloppe</strong>",
+        "Trouvez le <strong>crayon</strong> pour rembobiner les souvenirs",
+        "Dénichez le <strong>walkman</strong>",
+      ],
+      currentInstruction: "Dépoussiérez les souvenirs sur la <strong>photo</strong>",
+      displayedText: "",
+      typingSpeed: 50
     };
   },
   computed: {
@@ -90,15 +104,17 @@ export default {
       }, 800);
     },
     'gameManager.state.gameStepId': function (newVal) {
-      if (this.$refs.goBack.classList.contains('visible')) {
+      if (newVal !== 3 && this.$refs.goBack.classList.contains('visible')) {
         this.animateArrow();
       }
+      this.updateInstruction(newVal);
     }
   },
   mounted() {
     if (this.gameManager.state.isExperienceVisible) {
       this.setExperienceLayerOpacity();
     }
+    this.typeWriterEffect(this.currentInstruction);
   },
   methods: {
     goBack() {
@@ -115,7 +131,29 @@ export default {
     animateArrow() {
       if (this.$refs.goBack.classList.contains('visible')) {
         this.$refs.goBack.classList.add('animate');
+        setTimeout(() => {
+          this.$refs.goBack.classList.remove('animate');
+        }, 1000);
       }
+    },
+    updateInstruction(stepId) {
+      if (stepId >= 0 && stepId < this.instructions.length) {
+        this.typeWriterEffect(this.instructions[stepId]);
+      } else {
+        this.typeWriterEffect("Aucune instruction disponible.");
+      }
+    },
+    typeWriterEffect(text) {
+      this.displayedText = "";
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < text.length) {
+          this.displayedText += text[index];
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, this.typingSpeed);
     },
     handleSettingsIconClick() {
       this.isSettingsVisible = !this.isSettingsVisible;
@@ -154,6 +192,3 @@ export default {
   }
 };
 </script>
-
-<style>
-
