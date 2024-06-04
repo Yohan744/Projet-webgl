@@ -126,6 +126,11 @@ export default {
           });
         }
       });
+
+      this.experience.on('endExperience', () => {
+        this.showVideoOutro = true;
+      });
+
     },
     setExperienceOpacity() {
       if (this.$refs.experienceContainer) {

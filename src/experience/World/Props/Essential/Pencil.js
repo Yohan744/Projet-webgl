@@ -48,15 +48,11 @@ export default class Pencil {
         this.mesh.material.map.repeat.set(1, 1);
 
 
-        this.pencilRotation = gsap.to(this.mesh.material.map.offset, {
-            x: 0.5,
-            y: 0,
+        this.pencilRotation = gsap.to(this.mesh.rotation, {
+            x: '+=' + 0.5,
             repeat: -1,
             duration: 2,
             ease: 'linear',
-            onUpdate: () => {
-                this.mesh.material.map.needsUpdate = true;
-            }
         });
         this.pencilRotation.pause()
 
@@ -113,7 +109,7 @@ export default class Pencil {
 
             } else if (this.isReadyToBeRewinded) {
                 this.cassette?.startRewinding();
-                // this.pencilRotation.play()
+                this.pencilRotation.play()
             }
         }
     }
