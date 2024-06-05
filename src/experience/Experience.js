@@ -185,14 +185,14 @@ export default class Experience extends EventEmitter {
         const experienceLayer = document.querySelector('#experience-layer')
         experienceLayer?.classList.remove('visible')
 
+        const cursor = document.querySelector('#cursor')
+        cursor?.classList.remove('visible')
+
         gsap.to(this.targetElement, {
             opacity: 0,
-            delay: 50,
+            delay: 44,
             duration: 6,
-            ease: 'linear',
-            onComplete: () => {
-                console.log("Experience container faded out");
-            }
+            ease: 'linear'
         });
 
     }

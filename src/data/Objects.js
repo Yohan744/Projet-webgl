@@ -4,7 +4,7 @@ import Cassette from "../experience/World/Props/Essential/Cassette";
 import Pencil from "../experience/World/Props/Essential/Pencil";
 import Telephone from "../experience/World/Props/Telephone";
 import RubiksCube from "../experience/World/Props/RubiksCube";
-import Television from "../experience/World/Props/Essential/Television";
+import Television from "../experience/World/Props/Television";
 import RecordPlayer from "../experience/World/Props/RecordPlayer";
 import Telecran from "../experience/World/Props/Telecran";
 

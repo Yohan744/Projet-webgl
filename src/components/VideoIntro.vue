@@ -93,16 +93,18 @@ export default {
 
   .skip {
     position: fixed;
-    top: 0;
-    right: 0;
-    display: flex;
+    bottom: 5px;
+    right: 5px;
+    // display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px 20px;
+    padding: 5px 10px;
     background: white;
     z-index: 6;
     cursor: pointer;
     border-radius: 10px;
+    opacity: 0.5;
+    display: none;
 
     p {
       position: relative;

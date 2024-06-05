@@ -115,3 +115,92 @@ a {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
+@keyframes glow-rubikub {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
+                0 0 20px rgba(255, 255, 255, 0.8), 
+                0 0 30px rgba(255, 255, 255, 0.8), 
+                0 0 40px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1), 
+                0 0 30px rgba(255, 255, 255, 1), 
+                0 0 40px rgba(255, 255, 255, 1), 
+                0 0 50px rgba(255, 255, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
+                0 0 20px rgba(255, 255, 255, 0.8), 
+                0 0 30px rgba(255, 255, 255, 0.8), 
+                0 0 40px rgba(255, 255, 255, 0.8);
+  }
+}
+@keyframes glow-masthead {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2),
+                 0 0 30px rgba(255, 255, 255, 0.2),
+                 0 0 40px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
+                 0 0 30px rgba(255, 255, 255, 0.4),
+                 0 0 40px rgba(255, 255, 255, 0.4),
+                 0 0 50px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2),
+                 0 0 30px rgba(255, 255, 255, 0.2),
+                 0 0 40px rgba(255, 255, 255, 0.2);
+  }
+}
+@keyframes glow-inside {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2),
+                 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 15px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                 0 0 15px rgba(255, 255, 255, 0.5),
+                 0 0 20px rgba(255, 255, 255, 0.5),
+                 0 0 25px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2),
+                 0 0 10px rgba(255, 255, 255, 0.2),
+                 0 0 15px rgba(255, 255, 255, 0.2),
+                 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes handwriting {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+
+.general-padding {
+  padding: 200px
+}
+@media (max-width: 1200px) {
+  .general-padding {
+  padding: 100px
+  }
+}
+@media (max-width: 1024px) {
+  .general-padding {
+  padding: 80px
+  }
+}
+@media (max-width: 768px) {
+  .general-padding {
+  padding: 20px
+  }
+}

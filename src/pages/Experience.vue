@@ -1,8 +1,12 @@
 <template>
+
   <main ref="experienceWrapper" id="experienceWrapper">
-    <div ref="startButton" class="start-button" @click="handleClickStartButton"
-         v-bind:class="{visible: showStartButton}">
-      <p>start experience</p>
+    <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{visible: showStartButton}">
+      <div class="rubik-container">
+        <div class="glowing-circle"></div>
+        <img src="/src/assets/img/objects/object8.png" alt="Rubik's Cube" class="rubik-cube">
+        <p class="rubik-text">Cliquez sur le Rubik's Cube pour découvrir les objets de Mona dans le grenier</p>
+      </div>
     </div>
 
     <Loading v-if="!isLoaded && isVideoIntroWatched" v-bind:class="{visible: !isLoaded && isVideoIntroWatched}"

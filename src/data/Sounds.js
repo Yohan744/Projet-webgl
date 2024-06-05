@@ -1,5 +1,4 @@
 const s = './assets/sounds/';
-const g = './assets/sounds/general/';
 const p = './assets/sounds/props/';
 const fx = './assets/sounds/fx/';
 
@@ -7,7 +6,7 @@ export const data = {
 
     background: {
         src: s + 'background.mp3',
-        volume: 0.2,
+        volume: 0.5,
         autoplay: false,
         preload: true,
         loop: true,
@@ -241,7 +240,7 @@ export const data = {
 
     commode2: {
         src: p + 'commode2.mp3',
-        volume: 0.75,
+        volume: 0.675,
         preload: true,
         loop: false,
     },
@@ -327,7 +326,7 @@ export const data = {
 
     unlockZone: {
         src: fx + 'unlockZone.mp3',
-        volume: 0.3,
+        volume: 0.175,
         preload: true,
         loop: false,
     },
