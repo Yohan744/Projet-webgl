@@ -345,23 +345,6 @@ export default {
     transform: translateY(-100%);
   }
 }
-
-/* Add styles for h1 and h2 to ensure they are correctly styled */
-h1, h2 {
-  margin: 0;
-  padding: 0;
-  color: white;
-}
-
-h1 {
-  font-size: 2.5em;
-  font-weight: bold;
-}
-
-h2 {
-  font-size: 1.5em;
-  font-weight: normal;
-}
 </style>
 
 

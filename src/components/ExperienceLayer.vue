@@ -10,14 +10,19 @@
 
     <div ref="settingsWrapper" class="settings-wrapper" @click="handleClickSettingsWrapper">
       <div class="settings-panel">
-        <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
+        <h3>Paramètres</h3>
+        <div class="mute-wrapper">
+          <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
+        </div>
         <div class="volume-wrapper">
-          <p>Global volume</p>
+          <p>Global volume : </p>
           <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
           <p>{{globalVolume}}</p>
         </div>
-        <router-link to="/">Go back to home</router-link>
-        <router-link to="/" @click="resetExperience">Reset experience</router-link>
+        <div class="route-wrapper">
+          <router-link to="/">Retour à l'accueil</router-link>
+        <router-link to="/" @click="resetExperience">Recommencer l'expérience</router-link>
+        </div>
       </div>
     </div>
 
