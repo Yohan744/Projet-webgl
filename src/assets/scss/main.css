@@ -357,14 +357,15 @@
   from, to { border-color: transparent; }
   50% { border-color: white; }
 }
+
 .typing {
   width: 0;
   animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
 }
-#experience-layer .instruction-text p {
 
-  position: absolute;
-  top: 10px;
+#experience-layer .instruction-text p {
+  position: fixed;
+  top: 5dvh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -375,9 +376,8 @@
   color: white;
   max-width: 80%;
   background: rgba(0, 0, 0, 0.1);
-  font-size: 24px !important;
+  font-size: 2em;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
 }
 
 #masthead-outro {
