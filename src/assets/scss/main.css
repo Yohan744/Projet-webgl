@@ -193,6 +193,11 @@
 #experience-layer .go-back-icon.animate {
   animation: clignoter 1s infinite;
 }
+@keyframes clignoter {
+  0% { opacity: 1; }
+  40% { opacity: 0; }
+  100% { opacity: 1; }
+}
 #experience-layer .go-back-icon:hover {
   opacity: 0.6;
 }
@@ -272,12 +277,16 @@
   height: 100%;
   width: auto;
   filter: grayscale(100%);
-  opacity: 0.5;
-  transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  opacity: 0.7;
+  border: white  solid 2px;
+  transform: scale(1.1);
+  transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), transform 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .inventory-wrapper div.visible img {
   filter: grayscale(0%);
   opacity: 1;
+  border: none;
+  transform: scale(1);
 }
 #experience-layer .settings-wrapper {
   position: fixed;
@@ -349,6 +358,37 @@
 #experience-layer .settings-wrapper .settings-panel a {
   margin-top: 20px;
   cursor: none;
+}
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: white; }
+}
+.typing {
+  width: 0;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+#experience-layer .instruction-text p {
+
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-align: center;
+  font-family: "SometypeMono", sans-serif;
+  color: white;
+  max-width: 80%;
+  background: rgba(0, 0, 0, 0.1);
+  font-size: 24px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
 }
 
 #masthead-outro {
