@@ -20,10 +20,10 @@
 
   .go-back-icon, .settings-icon {
     position: absolute;
-    top: 35px;
-    left: 35px;
-    height: 40px;
-    width: 40px;
+    top: 40px;
+    left: 40px;
+    height: 50px;
+    width: 50px;
     display: flex;
     place-items: center;
     pointer-events: none;
@@ -63,9 +63,9 @@
   }
 
   .settings-icon {
-    top: 35px;
+    top: 40px;
     left: auto;
-    right: 35px;
+    right: 40px;
     z-index: 3;
     opacity: 1;
     transition: transform 0.8s $ease-power3-out;
@@ -113,8 +113,8 @@
 
   .inventory-wrapper {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    right: 25px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -123,8 +123,8 @@
 
     div {
       position: relative;
-      height: 35px;
-      width: 35px;
+      height: 50px;
+      width: 50px;
       margin-left: 20px;
       overflow: hidden;
       user-select: none;
@@ -136,8 +136,7 @@
         width: auto;
         filter: grayscale(100%);
         opacity: 0.5;
-        transform: scale(1.1);
-        transition: filter 1.25s $ease-power3-out, opacity 1.25s $ease-power3-out, transform 1.25s $ease-power3-out;
+        transition: filter 1.25s $ease-power3-out, opacity 1.25s $ease-power3-out;
       }
 
       &.visible {
@@ -145,7 +144,6 @@
         img {
           filter: grayscale(0%);
           opacity: 1;
-          transform: scale(1);
         }
 
       }

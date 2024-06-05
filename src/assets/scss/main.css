@@ -167,10 +167,10 @@
 }
 #experience-layer .go-back-icon, #experience-layer .settings-icon {
   position: absolute;
-  top: 35px;
-  left: 35px;
-  height: 40px;
-  width: 40px;
+  top: 40px;
+  left: 40px;
+  height: 50px;
+  width: 50px;
   display: flex;
   place-items: center;
   pointer-events: none;
@@ -193,18 +193,24 @@
 #experience-layer .go-back-icon.animate {
   animation: clignoter 1s infinite;
 }
-@keyframes clignoter {
-  0% { opacity: 1; }
-  40% { opacity: 0; }
-  100% { opacity: 1; }
-}
 #experience-layer .go-back-icon:hover {
   opacity: 0.6;
 }
+@keyframes clignoter {
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 #experience-layer .settings-icon {
-  top: 35px;
+  top: 40px;
   left: auto;
-  right: 35px;
+  right: 40px;
   z-index: 3;
   opacity: 1;
   transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -244,8 +250,8 @@
 }
 #experience-layer .inventory-wrapper {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 25px;
+  right: 25px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -254,8 +260,8 @@
 }
 #experience-layer .inventory-wrapper div {
   position: relative;
-  height: 55px;
-  width: 55px;
+  height: 50px;
+  width: 50px;
   margin-left: 20px;
   overflow: hidden;
   user-select: none;
@@ -266,16 +272,12 @@
   height: 100%;
   width: auto;
   filter: grayscale(100%);
-  opacity: 0.7;
-  border: white  solid 2px;
-  transform: scale(1.1);
-  transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), transform 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  opacity: 0.5;
+  transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .inventory-wrapper div.visible img {
   filter: grayscale(0%);
   opacity: 1;
-  border: none;
-  transform: scale(1);
 }
 #experience-layer .settings-wrapper {
   position: fixed;
@@ -347,37 +349,6 @@
 #experience-layer .settings-wrapper .settings-panel a {
   margin-top: 20px;
   cursor: none;
-}
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent; }
-  50% { border-color: white; }
-}
-.typing {
-  width: 0;
-  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-}
-#experience-layer .instruction-text p {
-
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-align: center;
-  font-family: "SometypeMono", sans-serif;
-  color: white;
-  max-width: 80%;
-  background: rgba(0, 0, 0, 0.1);
-  font-size: 24px !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
 }
 
 #masthead-outro {
