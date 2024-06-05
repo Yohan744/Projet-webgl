@@ -193,11 +193,6 @@
 #experience-layer .go-back-icon.animate {
   animation: clignoter 1s infinite;
 }
-@keyframes clignoter {
-  0% { opacity: 1; }
-  40% { opacity: 0; }
-  100% { opacity: 1; }
-}
 #experience-layer .go-back-icon:hover {
   opacity: 0.6;
 }
@@ -277,16 +272,12 @@
   height: 100%;
   width: auto;
   filter: grayscale(100%);
-  opacity: 0.7;
-  border: white  solid 2px;
-  transform: scale(1.1);
-  transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), transform 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  opacity: 0.5;
+  transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .inventory-wrapper div.visible img {
   filter: grayscale(0%);
   opacity: 1;
-  border: none;
-  transform: scale(1);
 }
 #experience-layer .settings-wrapper {
   position: fixed;
@@ -321,8 +312,8 @@
 #experience-layer .settings-wrapper .settings-panel {
   position: relative;
   transform: translateY(40px);
-  height: 300px;
-  width: 500px;
+  max-height: 300px;
+  max-width: 500px;
   background-color: #fff;
   border-radius: 10px;
   display: flex;
@@ -332,10 +323,12 @@
   opacity: 0;
   transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
+#experience-layer .settings-wrapper .settings-panel .mute-wrapper {
+  display: flex;
+}
 #experience-layer .settings-wrapper .settings-panel .mute {
   position: relative;
   margin-bottom: 20px;
-  font-size: 20px;
   color: black;
 }
 #experience-layer .settings-wrapper .settings-panel .volume-wrapper {
@@ -347,7 +340,6 @@
 }
 #experience-layer .settings-wrapper .settings-panel .volume-wrapper p {
   position: relative;
-  font-size: 20px;
   color: black;
 }
 #experience-layer .settings-wrapper .settings-panel .volume-wrapper input {
@@ -355,25 +347,80 @@
   margin: 0 12px;
   cursor: none;
 }
+#experience-layer .settings-wrapper .settings-panel .volume-wrapper input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 10px 0;
+}
+#experience-layer .settings-wrapper .settings-panel .volume-wrapper input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  background: grey;
+  border-radius: 5px;
+}
+#experience-layer .settings-wrapper .settings-panel .volume-wrapper input[type=range]::-webkit-slider-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #737DB9;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -4px;
+  /* Adjust to center the thumb */
+}
+#experience-layer .settings-wrapper .settings-panel .volume-wrapper input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  background: #737DB9;
+  border-radius: 5px;
+}
+#experience-layer .settings-wrapper .settings-panel .volume-wrapper input[type=range]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #737DB9;
+  cursor: pointer;
+}
+#experience-layer .settings-wrapper .settings-panel .volume-wrapper input[type=range]::-ms-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  background: lightgrey;
+  border-radius: 5px;
+  border-color: transparent;
+  color: transparent;
+}
+#experience-layer .settings-wrapper .settings-panel .volume-wrapper input[type=range]::-ms-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #6171cf;
+  cursor: pointer;
+}
+#experience-layer .settings-wrapper .settings-panel .router-wrapper {
+  display: flex;
+}
 #experience-layer .settings-wrapper .settings-panel a {
-  margin-top: 20px;
-  cursor: none;
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  border: 2px solid #88c590;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #88c590;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  text-align: center;
+  width: fit-content;
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s;
 }
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent; }
-  50% { border-color: white; }
-}
-.typing {
-  width: 0;
-  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+#experience-layer .settings-wrapper .settings-panel a:hover {
+  background-color: #88c590;
+  color: white;
 }
 #experience-layer .instruction-text p {
-
   position: absolute;
   top: 10px;
   left: 50%;
@@ -388,7 +435,6 @@
   background: rgba(0, 0, 0, 0.1);
   font-size: 24px !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
 }
 
 #masthead-outro {
@@ -550,6 +596,44 @@ a {
   }
   100% {
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 255, 255, 0.2), 0 0 40px rgba(255, 255, 255, 0.2);
+  }
+}
+@keyframes glow-inside {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 25px rgba(255, 255, 255, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.2), 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+}
+@keyframes handwriting {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+.general-padding {
+  padding: 200px;
+}
+
+@media (max-width: 1200px) {
+  .general-padding {
+    padding: 100px;
+  }
+}
+@media (max-width: 1024px) {
+  .general-padding {
+    padding: 80px;
+  }
+}
+@media (max-width: 768px) {
+  .general-padding {
+    padding: 20px;
   }
 }
 
