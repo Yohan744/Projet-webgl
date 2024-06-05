@@ -70,7 +70,7 @@ export default {
         "",
         "Explorer les <strong>diapositives</strong>",
         "Fouiller dans la <strong>commode</strong>",
-        "Découvrer la <strong>cassette</strong> cachée dans <strong>l'enveloppe</strong>",
+        "Découvrez la <strong>cassette</strong> cachée dans <strong>l'enveloppe</strong>",
         "Trouver le <strong>crayon</strong> pour rembobiner les souvenirs",
         "Dénicher le <strong>walkman</strong>",
       ],
