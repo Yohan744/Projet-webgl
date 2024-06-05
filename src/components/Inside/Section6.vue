@@ -2,8 +2,10 @@
   <div class="gallery-page general-padding">
     <h2 class="main-title">L'équipe</h2>
     <p class="sub-text">
-      Dans une décennie qui se transforme. Projet réalisé dans le cadre de la formation Master de machin machin par la CCI Haute-Savoie et l’École des Gobelins. Le cours sur le Cinéma 4D et webGL, nous avons dû réaliser une expérience immersive pour un centre culturel fictif. Le sujet était “c’était mieux ! c’était mieux avant ? C’était mieux avant “ sur le thème de la communication et des médias.
+      Projet réalisé dans le cadre du master " Expert en création numérique interactive" par l’École des Gobelins et l'école By CCI Haute-Savoie.
     </p>
+    <p> Thème : c’était mieux avant ! c’était mieux avant ? C’était mieux avant</p>
+     <p>Sujet : Communication et médias.</p>
     <div class="gallery">
       <div v-for="(item, index) in items" :key="index" class="gallery-item">
         <div class="image-container" @mouseover="hoverItem = index" @mouseleave="hoverItem = null">
@@ -15,31 +17,33 @@
         </div>
       </div>
     </div>
+    
+    
     <div class="thanks-section">
       <h2>Remerciements</h2>
-      <p>
+      <div class="justify">
+        <p>
         Nos professeurs : Eric Gaudet-Traffy, Yann Qilquin et les KIDS : Guillaume Imbert & Vincent Larsonneur
       </p>
-      <p>Ainsi qu’à L’école by CCi Digital Campus & les Gobelins Paris</p>
+      <p>L’école by CCi Digital Campus & les Gobelins Paris</p>
       <p>
-        Compositeurs : Emmanuel et Damien Lacore
+        Les compositeurs : Emmanuel et Damien Lacore
       </p>
       <p>
-        Voix off : 
-        <br>Marguerite : mamie de Léa
-        <br>Dahlia : Léa Simonet
-        <br>Sam : Lucie Lesnier
-        <br>Mona : maman de Léa
+        Les voix off : 
+        <br>Marguerite - mamie de Léa
+        <br>Dahlia - Léa Simonet
+        <br>Sam - Lucie Lesnier
+        <br>Mona - maman de Léa
       </p>
       <p>
-        Projet scolaire réalisé dans le cadre du Master 1 ECNI aux Gobelins l’école de l’image
-      </p>
-      <p>
-       Merci à toutes les personnes qui nous ont apportés leurs témoignages sur leur expérience des années 80
+       Merci à toutes les personnes qui nous ont apportés leurs témoignages sur leur expérience des années 80's.
       </p>
       <p>
         <strong>Tous droits réservés - 2024</strong>
       </p>
+      </div>
+     
     </div>
   </div>
 </template>
@@ -52,12 +56,12 @@ export default {
     return {
       hoverItem: null,
       items: [
-        { name: 'Maud FLEURIET', title: 'Designeuse', src: '/src/assets/img/members/maud.png', sentence: 'Toujours partante pour danser sur des chansons de Queen!' },
-        { name: 'Lucie LESNIER', title: 'Développeuse', src: '/src/assets/img/members/lucie.png', sentence: 'J adore les histoires d amour...' },
+        { name: 'Maud FLEURIET', title: 'Designeuse', src: '/src/assets/img/members/maud.png', sentence: 'Toujours partante pour danser sur Let\'s dance de David Bowie!' },
+        { name: 'Lucie LESNIER', title: 'Développeuse', src: '/src/assets/img/members/lucie.png', sentence: 'J\{adore les histoires d\'amour...' },
         { name: 'Anaïs MOREAU', title: 'Développeuse', src: '/src/assets/img/members/anais.png', sentence: 'J ai un tourne disque mais spotify tient mieux dans ma poche.' },
-        { name: 'Yohan QUINQUIS', title: 'Développeur', src: '/src/assets/img/members/yohan.png', sentence: 'Je préfère les styles vestimentaires d aujourd hui.' },
-        { name: 'Léa SIMONET', title: 'Designeuse', src: '/src/assets/img/members/lea.png', sentence: 'Chez papi, il y a plein de vieux objets qu il adore me faire découvrir.' },
-        { name: 'Mathilde VAUQUIERES', title: 'Designeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'Balavoine il me rappelle des souvenirs d enfance avec ma mère.' }
+        { name: 'Yohan QUINQUIS', title: 'Développeur', src: '/src/assets/img/members/yohan.png', sentence: 'Je préfère les styles vestimentaires d\'aujourd hui.' },
+        { name: 'Léa SIMONET', title: 'Designeuse', src: '/src/assets/img/members/lea.png', sentence: 'Chez papi, il y a plein de vieux objets qu\'il adore me faire découvrir.' },
+        { name: 'Mathilde VAUQUIERES', title: 'Designeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'Balavoine il me rappelle des souvenirs d\{enfance avec ma mère.' }
       ]
     };
   }
@@ -66,24 +70,6 @@ export default {
 
 <style scoped>
 
-.general-padding {
-  padding: 200px
-}
-@media (max-width: 1200) {
-  .general-padding {
-  padding: 100px
-  }
-}
-@media (max-width: 1024px) {
-  .general-padding {
-  padding: 80px
-  }
-}
-@media (max-width: 768px) {
-  .general-padding {
-  padding: 20px
-  }
-}
 
 .gallery-page {
   text-align: center;
@@ -169,9 +155,12 @@ export default {
   padding-left: 100px;
   padding-right: 100px;
   max-width: 1000px;
-  text-align: center
+  text-align: center;
+  max-width: 700px;
 }
-
+.justify {
+  text-align: justify;
+}
 .thanks-section h2 {
   margin-bottom: 20px;
 }

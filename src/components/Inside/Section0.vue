@@ -38,35 +38,6 @@ export default {
 </script>
 
 <style scoped>
-@keyframes glow-inside {
-  0% {
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2),
-                 0 0 10px rgba(255, 255, 255, 0.2),
-                 0 0 15px rgba(255, 255, 255, 0.2),
-                 0 0 20px rgba(255, 255, 255, 0.2);
-  }
-  50% {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
-                 0 0 15px rgba(255, 255, 255, 0.5),
-                 0 0 20px rgba(255, 255, 255, 0.5),
-                 0 0 25px rgba(255, 255, 255, 0.5);
-  }
-  100% {
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2),
-                 0 0 10px rgba(255, 255, 255, 0.2),
-                 0 0 15px rgba(255, 255, 255, 0.2),
-                 0 0 20px rgba(255, 255, 255, 0.2);
-  }
-}
-
-@keyframes handwriting {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
 
 .content-container {
   

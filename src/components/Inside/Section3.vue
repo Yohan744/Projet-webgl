@@ -127,25 +127,6 @@ export default {
 
 <style scoped>
 
-.general-padding {
-  padding: 200px
-}
-@media (max-width: 1200px) {
-  .general-padding {
-  padding: 100px
-  }
-}
-@media (max-width: 1024px) {
-  .general-padding {
-  padding: 80px
-  }
-}
-@media (max-width: 768px) {
-  .general-padding {
-  padding: 20px
-  }
-}
-
 .parallax-container {
   position: relative;
   width: 100%;
