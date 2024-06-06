@@ -2,13 +2,12 @@
   <div class="content-container">
     <h2 class="title" id="title1">Là où poussent</h2>
     <h1 class="title" id="title2">les fleurs</h1>
-    <!-- <img src="/src/assets/img/fleur.png" alt=""> -->
     <div class="image-container"></div>
     <div class="buttons">
-      <button @click="handleButtonClick">
+      <div @click="handleButtonClick">
         <p class="seeMore">En apprendre plus </p>
-        <img src="/src/assets/img/arrow_bottom.png" alt="">
-      </button>
+        <img src="/assets/images/arrow_bottom.png" alt="bottom arrow">
+      </div>
     </div>
   </div>
 </template>
@@ -40,7 +39,6 @@ export default {
 <style scoped>
 
 .content-container {
-  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -102,8 +100,7 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('/src/assets/img/fond-intro.png') no-repeat center center;
-  background-size: cover;
+  background: url('/assets/images/fond-intro.png') no-repeat center/cover;
   z-index: 0;
 }
 

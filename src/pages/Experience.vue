@@ -4,7 +4,7 @@
     <div ref="startButton" class="start-button" @click="handleClickStartButton" v-bind:class="{visible: showStartButton}">
       <div class="rubik-container">
         <div class="glowing-circle"></div>
-        <img src="/src/assets/img/objects/object8.png" alt="Rubik's Cube" class="rubik-cube">
+        <img src="/assets/images/objects/object8.png" alt="Rubik's Cube" class="rubik-cube">
         <p class="rubik-text">Cliquez sur le Rubik's Cube pour découvrir les objets de Mona dans le grenier</p>
       </div>
     </div>
@@ -63,7 +63,8 @@ export default {
     };
   },
   beforeMount() {
-    if (this.gameManager.state.lastVisitedRoute !== '/' && !this.appStore.$state.isVideoIntroWatched) {
+    console.log(this.gameManager.state.lastVisitedRoute)
+    if (this.gameManager.state.lastVisitedRoute !== '/' && this.gameManager.state.lastVisitedRoute !== '/inside' && !this.appStore.$state.isVideoIntroWatched) {
       this.router.push('/');
     } else {
       this.routeCheck = true;

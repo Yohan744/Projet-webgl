@@ -16,10 +16,10 @@
       <div class="settings-panel">
         <h3>Paramètres</h3>
         <div class="mute-wrapper">
-          <p class="mute" @click="toggleMuted">{{ isMuted }} sound</p>
+          <p class="mute" @click="toggleMuted">{{ isMuted }} le son</p>
         </div>
         <div class="volume-wrapper">
-          <p>Global volume : </p>
+          <p>Volume : </p>
           <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
           <p>{{globalVolume}}</p>
         </div>
@@ -28,10 +28,6 @@
         <router-link to="/" @click="resetExperience">Recommencer l'expérience</router-link>
         </div>
       </div>
-    </div>
-
-    <div class="pocket-button" @click="handlePocketButtonClick" :class="{ visible: gameManager.state.isPocketButtonVisible && gameManager.state.isCassetteInFrontOfCamera }">
-      <p>Mettre dans la poche</p>
     </div>
 
     <Inventory/>
@@ -81,7 +77,7 @@ export default {
   },
   computed: {
     isMuted() {
-      return this.appStore.$state.muted ? 'Unmute' : 'Mute';
+      return this.appStore.$state.muted ? 'Activer' : 'Couper';
     },
     isAnyItemInInventory() {
       return Object.values(this.gameManager.inventory).some(value => value);
@@ -177,16 +173,6 @@ export default {
       if (e.target === this.$refs.settingsWrapper) {
         this.handleSettingsIconClick();
       }
-    },
-    handlePocketButtonClick() {
-      if (this.gameManager.state.isPencilInFrontOfCamera) {
-        this.gameManager.updateObjectToPocket('pencil');
-      } else if (this.gameManager.state.isCassetteInFrontOfCamera) {
-        this.gameManager.updateObjectToPocket('cassette');
-      }
-    },
-    handleInventoryObjectClick(name) {
-      this.gameManager.setInventoryObjectInFrontOfCamera(name);
     },
     resetExperience() {
       this.appStore.resetAll();

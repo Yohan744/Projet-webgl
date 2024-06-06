@@ -15,9 +15,9 @@ export default {
   data() {
     return {
       imagesSection2: {
-        left: '/src/assets/img/transition/Biarritz.png',
-        center: '/src/assets/img/transition/CartePostale.png',
-        right: '/src/assets/img/transition/Gouville.png'
+        left: './assets/images/transition/Biarritz.png',
+        center: './assets/images/transition/CartePostale.png',
+        right: './assets/images/transition/Gouville.png'
       }
     }
   }

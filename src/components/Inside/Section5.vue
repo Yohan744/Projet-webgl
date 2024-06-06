@@ -5,7 +5,7 @@
         <div class="info-title">Société</div>
       </div>
       <div class="info-content">
-        <img src="/src/assets/img/info-lgbt/Causette.png" alt="Image description" class="info-image-50">
+        <img src="/assets/images/info-lgbt/Causette.png" alt="Image description" class="info-image-50">
         <div class="text-content">
           <p>
             En 2023, nous célébrons <strong>les 10 ans du mariage pour tous en France</strong>, une étape historique vers l'égalité des droits pour les couples de même sexe.
@@ -36,7 +36,7 @@
             Par ailleurs, les réseaux sociaux sont devenus des plateformes puissantes pour soutenir le mouvement LGBT, offrant des espaces de dialogue, de visibilité et de mobilisation pour défendre les droits et promouvoir l'égalité.
           </p>
         </div>
-        <img src="/src/assets/img/info-lgbt/TelMonaSam.png" alt="Image description" class="info-image-50">
+        <img src="/assets/images/info-lgbt/TelMonaSam.png" alt="Image description" class="info-image-50">
       </div>
     </div>
 
@@ -70,17 +70,17 @@
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title"  @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage" >LGBTiphobies, le rapport de 2024</div>
+        <div class="info-title"  @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage" >LGBTiphobies, le rapport de 2024</div>
       </div>
       <div class="info-content">
         <div class="text-content">
           <div class="chart-toggle-buttons">
-            <button   @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
-            <button   @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires</button>
+            <button   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
+            <button   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires</button>
           </div>
           <highcharts :options="currentChartOptions"></highcharts>
           <div>
-            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@
 
     <div class="info-panel info-panel-left">
       <div class="info-title-container-left">
-        <div class="info-title"  @mouseover="showImage('/src/assets/img/info-lgbt/HomophobieTue.png')" @mouseleave="hideImage">Quelle évolution?</div>
+        <div class="info-title"  @mouseover="showImage('/assets/images/info-lgbt/HomophobieTue.png')" @mouseleave="hideImage">Quelle évolution?</div>
       </div>
       <div class="info-content">
         <div class="text-content">
@@ -99,7 +99,7 @@
             <highcharts :options="chartOptions" ref="chart"></highcharts>
           </div>
           <div>
-            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"  @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"  @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title" @mouseover="showImage('/src/assets/img/info-lgbt/Resistance.png')" @mouseleave="hideImage">Espaces publics, espaces intimes, espaces virtuels</div>
+        <div class="info-title" @mouseover="showImage('/assets/images/info-lgbt/Resistance.png')" @mouseleave="hideImage">Espaces publics, espaces intimes, espaces virtuels</div>
       </div>
       <div class="info-content">
         <div class="text-content">
@@ -116,7 +116,7 @@
           </p>
           <highcharts :options="chartOptions3" ref="chart"></highcharts>
           <div>
-            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/src/assets/img/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
         

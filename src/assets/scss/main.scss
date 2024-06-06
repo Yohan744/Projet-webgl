@@ -3,8 +3,6 @@
 @import "experience";
 @import "experience-layer";
 
-@import 'outro/masthead';
-
 @import "404";
 
 @font-face {
@@ -65,7 +63,7 @@ html {
 
 .main-content {
   min-height: 100vh;
-  background: url('/src/assets/img/fond.png') no-repeat center center fixed;
+  background: url('/assets/images/fond.png') no-repeat center center fixed;
   background-size: cover;
 }
 

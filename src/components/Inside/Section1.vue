@@ -60,49 +60,49 @@ export default {
         { 
           name: 'Tablette de sable', 
           anecdote: 'Populaire dans les années 80, la tablette de sable permettait aux enfants de dessiner et d\'effacer facilement avec un stylet, offrant une alternative économique et réutilisable aux blocs de papier.', 
-          src: '/src/assets/img/objects/object1.png',
+          src: './assets/images/objects/object1.png',
           color: '#B6E5EB'
         },
         { 
           name: 'Walkman', 
           anecdote: 'Incontournable dans les années 80, le Walkman, un lecteur de cassettes portable avec des écouteurs, révolutionnait la façon d\'écouter de la musique en permettant aux gens d\'emmener leurs chansons préférées partout.', 
-          src: '/src/assets/img/objects/object2.png',
+          src: './assets/images/objects/object2.png',
           color: '#A7CF90'
         },
         { 
           name: 'Téléphone à cadran', 
           anecdote: 'Utilisé dans la plupart des foyers des années 80, le téléphone à cadran fixe nécessitait de composer les numéros en tournant un cadran rotatif, rendant l\'expérience téléphonique unique avec son "clic-clac" distinctif.', 
-          src: '/src/assets/img/objects/object3.png',
+          src: './assets/images/objects/object3.png',
           color: '#F3C767' 
         },
         { 
           name: 'Cassette à rembobiner', 
           anecdote: 'Les cassettes audio étaient le format musical dominant dans les années 80. Elles nécessitaient parfois un crayon pour rembobiner manuellement la bande, prolongeant ainsi leur durée de vie.', 
-          src: '/src/assets/img/objects/object4.png',
+          src: './assets/images/objects/object4.png',
           color: '#C8829F' 
         },
         { 
           name: 'Vinyl et tourne-disque', 
           anecdote: 'Les vinyles, écoutés sur un tourne-disque, offraient une qualité sonore chaleureuse. Écouter un album était une activité souvent partagée en famille ou entre amis.', 
-          src: '/src/assets/img/objects/object5.png',
+          src: './assets/images/objects/object5.png',
           color: '#737DB9' 
         },
         { 
           name: 'Magazines des années 80', 
           anecdote: 'Les magazines des années 80 étaient une fenêtre sur le monde, regorgeant de modes, tendances et nouvelles de l\'époque, fournissant des mises à jour avant l\'ère d\'Internet.', 
-          src: '/src/assets/img/objects/object6.png',
+          src: './assets/images/objects/object6.png',
           color: '#EC9781' 
         },
         { 
           name: 'Disque de Balavoine', 
           anecdote: 'Daniel Balavoine était une icône de la musique française dans les années 80. Ses albums, comme "Sauver l\'amour", étaient souvent joués en boucle sur les tourne-disques.', 
-          src: '/src/assets/img/objects/object7.png',
+          src: './assets/images/objects/object7.png',
           color: '#B6E5EB' 
         },
         { 
           name: 'Rubik\'s Cube', 
           anecdote: 'Le Rubik\'s Cube, un puzzle en forme de cube avec des faces colorées à aligner, a connu une énorme popularité dans les années 80, devenant un symbole de l\'ingéniosité et un défi incontournable.', 
-          src: '/src/assets/img/objects/object8.png',
+          src: './assets/images/objects/object8.png',
           color: '#F3C767'
         }
       ]

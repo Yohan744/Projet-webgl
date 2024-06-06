@@ -10,6 +10,8 @@
 import HeaderBanner from '../components/Inside/HeaderBanner.vue';
 import MainContent from '../components/Inside/MainContent.vue';
 import ScrollButton from '../components/Inside/ScrollButton.vue';
+import {onBeforeRouteLeave} from "vue-router";
+import {useGameManager} from "../assets/js/GameManager";
 
 export default {
   name: 'Inside',
@@ -22,6 +24,13 @@ export default {
     return {
       activeTab: 0
     };
+  },
+  setup() {
+    onBeforeRouteLeave((to, from, next) => {
+      const gameManager = useGameManager();
+      gameManager.setLastVisitedRoute(from.fullPath);
+      next();
+    });
   },
   methods: {
     scrollToSection(index) {

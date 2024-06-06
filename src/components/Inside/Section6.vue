@@ -56,12 +56,12 @@ export default {
     return {
       hoverItem: null,
       items: [
-        { name: 'Maud FLEURIET', title: 'Designeuse', src: '/src/assets/img/members/maud.png', sentence: 'Toujours partante pour danser sur Let\'s dance de David Bowie!' },
-        { name: 'Lucie LESNIER', title: 'Développeuse', src: '/src/assets/img/members/lucie.png', sentence: 'J\{adore les histoires d\'amour...' },
-        { name: 'Anaïs MOREAU', title: 'Développeuse', src: '/src/assets/img/members/anais.png', sentence: 'J ai un tourne disque mais spotify tient mieux dans ma poche.' },
-        { name: 'Yohan QUINQUIS', title: 'Développeur', src: '/src/assets/img/members/yohan.png', sentence: 'Je préfère les styles vestimentaires d\'aujourd hui.' },
-        { name: 'Léa SIMONET', title: 'Designeuse', src: '/src/assets/img/members/lea.png', sentence: 'Chez papi, il y a plein de vieux objets qu\'il adore me faire découvrir.' },
-        { name: 'Mathilde VAUQUIERES', title: 'Designeuse', src: '/src/assets/img/members/mathilde.png', sentence: 'Balavoine il me rappelle des souvenirs d\{enfance avec ma mère.' }
+        { name: 'Maud FLEURIET', title: 'Designeuse', src: './assets/images/members/maud.png', sentence: 'Toujours partante pour danser sur Let\'s dance de David Bowie!' },
+        { name: 'Lucie LESNIER', title: 'Développeuse', src: './assets/images/members/lucie.png', sentence: 'J\{adore les histoires d\'amour...' },
+        { name: 'Anaïs MOREAU', title: 'Développeuse', src: './assets/images/members/anais.png', sentence: 'J ai un tourne disque mais spotify tient mieux dans ma poche.' },
+        { name: 'Yohan QUINQUIS', title: 'Développeur', src: './assets/images/members/yohan.png', sentence: 'Je préfère les styles vestimentaires d\'aujourd hui.' },
+        { name: 'Léa SIMONET', title: 'Designeuse', src: './assets/images/members/lea.png', sentence: 'Chez papi, il y a plein de vieux objets qu\'il adore me faire découvrir.' },
+        { name: 'Mathilde VAUQUIERES', title: 'Designeuse', src: './assets/images/members/mathilde.png', sentence: 'Balavoine il me rappelle des souvenirs d\{enfance avec ma mère.' }
       ]
     };
   }

@@ -28,7 +28,7 @@
 <script>
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import mediaData from '/src/assets/img/years/videoLinks.json';
+import mediaData from '/src/assets/json/videoLinks.json';
 
 gsap.registerPlugin(ScrollTrigger);
 

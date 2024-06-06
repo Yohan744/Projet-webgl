@@ -1,6 +1,6 @@
 <template>
     
-    <button class="scroll-button" @click="scrollToTop"><img src="/src/assets/img/arrow_bottom.png" alt=""></button>
+    <button class="scroll-button" @click="scrollToTop"><img src="/assets/images/arrow_bottom.png" alt=""></button>
   </template>
   
   <script>
