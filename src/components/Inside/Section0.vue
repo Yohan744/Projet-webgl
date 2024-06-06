@@ -100,7 +100,7 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('/assets/images/fond-intro.png') no-repeat center/cover;
+  background: url('/assets/images/fond-intro.webp') no-repeat center/cover;
   z-index: 0;
 }
 
