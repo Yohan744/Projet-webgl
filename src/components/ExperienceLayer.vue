@@ -66,11 +66,11 @@ export default {
         "",
         "Explorer les <strong>diapositives</strong>",
         "Fouiller dans la <strong>commode</strong>",
-        "Découvrez la <strong>cassette</strong> cachée dans <strong>l'enveloppe</strong>",
+        "Découvrir la <strong>cassette</strong> cachée dans <strong>l'enveloppe</strong>",
         "Trouver le <strong>crayon</strong> pour rembobiner les souvenirs",
         "Dénicher le <strong>walkman</strong>",
       ],
-      currentInstruction: "Dépoussiérez les souvenirs sur la <strong>photo</strong>",
+      currentInstruction: "Dépoussiérer les souvenirs sur la <strong>photo</strong>",
       displayedText: "",
       typingSpeed: 50
     };
@@ -79,9 +79,6 @@ export default {
     isMuted() {
       return this.appStore.$state.muted ? 'Activer' : 'Couper';
     },
-    isAnyItemInInventory() {
-      return Object.values(this.gameManager.inventory).some(value => value);
-    }
   },
   watch: {
     smoothGlobalVolume(newVal) {
@@ -147,8 +144,14 @@ export default {
       let index = 0;
       const interval = setInterval(() => {
         if (index < text.length) {
-          this.displayedText += text[index];
-          index++;
+          if (text[index] === "<") {
+            const tagCloseIndex = text.indexOf(">", index);
+            this.displayedText += text.slice(index, tagCloseIndex + 1);
+            index = tagCloseIndex + 1;
+          } else {
+            this.displayedText += text[index];
+            index++;
+          }
         } else {
           clearInterval(interval);
         }
