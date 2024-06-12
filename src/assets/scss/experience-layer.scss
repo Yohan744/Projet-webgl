@@ -142,6 +142,8 @@
         width: auto;
         filter: grayscale(100%);
         opacity: 0.5;
+        user-select: none;
+        -webkit-user-drag: none;
         transition: filter 1.25s $ease-power3-out, opacity 1.25s $ease-power3-out;
       }
 

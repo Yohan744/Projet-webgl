@@ -63,7 +63,6 @@ export default {
     };
   },
   beforeMount() {
-    console.log(this.gameManager.state.lastVisitedRoute)
     if (this.gameManager.state.lastVisitedRoute !== '/' && this.gameManager.state.lastVisitedRoute !== '/inside' && !this.appStore.$state.isVideoIntroWatched) {
       this.router.push('/');
     } else {

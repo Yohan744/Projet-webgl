@@ -1,7 +1,7 @@
 <template>
   <div ref="videoWrapper" class="video-intro-wrapper">
     <div v-if="videoElement">
-      <video ref="videoElement" :src="videoUrl" autoplay playsinline @canplaythrough="playVideo" @ended="onVideoEnded"></video>
+      <video ref="videoElement" :src="videoUrl" autoplay playsinline @canplaythrough="playVideo" @ended="markVideoWatched"></video>
       <div class="skip" @click="skipVideo">
         <p>Skip</p>
       </div>
@@ -32,19 +32,11 @@ export default {
       return this.videoManagerState.introVideoElement;
     }
   },
-  mounted() {
-    if (this.videoElement) {
-      this.$refs.videoWrapper.appendChild(this.videoElement);
-    }
-  },
   methods: {
     playVideo() {
       this.updateOpacityTo(1, () => {
         this.$refs.videoElement?.play();
       });
-    },
-    onVideoEnded() {
-      this.markVideoWatched();
     },
     markVideoWatched() {
       this.updateOpacityTo(0, () => {

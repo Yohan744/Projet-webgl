@@ -21,7 +21,6 @@ export default class RubiksCube extends Prop {
 
     }
     onClick() {
-        console.log("click rubik's cube")
     }
 
     destroy() {

@@ -521,8 +521,6 @@ export default class Envelop extends EventEmitter {
             this.voicesPlayed[index] = true
             this.isSpeaking = false;
 
-            console.log(this.interactableObjects.cassette.getCassetteBottomRightCornerPosition())
-
             if (index === 5 && this.gameManager.state.gameStepId === 3) {
                 this.gameManager.incrementGameStepId()
                 this.setCassetteToPocket()

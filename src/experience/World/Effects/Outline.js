@@ -20,7 +20,6 @@ export default class Outline {
         if (typeof this.outlineScale === 'number') {
             this.clonedModel.scale.setScalar(this.outlineScale)
         } else if (typeof this.outlineScale === 'object') {
-            console.log(this.outlineScale)
             this.clonedModel.scale.set(this.outlineScale.x, this.outlineScale.y, this.outlineScale.z)
         }
         this.clonedModel.traverse(child => {

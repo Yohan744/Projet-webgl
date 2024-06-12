@@ -1,7 +1,7 @@
 <template>
   <div ref="videoWrapper" class="video-outro-wrapper">
     <div v-if="videoElement">
-      <video ref="videoElement" :src="videoUrl" autoplay playsinline @canplaythrough="playVideo" @ended="onVideoEnded"></video>
+      <video ref="videoElement" :src="videoUrl" autoplay playsinline @canplaythrough="playVideo" @ended="markVideoWatched"></video>
     </div>
   </div>
 </template>
@@ -32,26 +32,16 @@ export default {
       return this.videoManagerState.outroVideoElement;
     }
   },
-  mounted() {
-    if (this.videoElement) {
-      this.$refs.videoWrapper.appendChild(this.videoElement);
-    }
-  },
   methods: {
     playVideo() {
       this.updateOpacityTo(1, () => {
         this.$refs.videoElement?.play();
       });
     },
-    onVideoEnded() {
-      console.log("Outro video ended");
-      this.markVideoWatched();
-      this.router.push('/inside')
-    },
     markVideoWatched() {
       this.updateOpacityTo(0, () => {
+        this.router.push('/inside')
         this.$refs.videoWrapper?.remove();
-        this.appStore.setVideoOutroWatched();
       });
     },
     updateOpacityTo(opacity, callback) {

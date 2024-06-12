@@ -21,7 +21,6 @@ export default class RecordPlayer extends Prop {
 
     }
     onClick() {
-        console.log("click record player")
     }
 
     destroy() {

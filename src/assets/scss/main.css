@@ -107,7 +107,7 @@
 #experienceWrapper #cursor.visible {
   opacity: 1;
 }
-@media only screen and (max-width: 992px) {
+@media only screen and (max-width: 576px) {
   #experienceWrapper #cursor {
     display: none;
   }
@@ -119,13 +119,13 @@
   align-items: center;
 }
 #experienceWrapper .glowing-circle {
+  position: absolute;
+  top: 0;
+  left: 33%;
   width: 170px;
   height: 170px;
   border-radius: 50%;
   background-color: white;
-  position: absolute;
-  top: 0;
-  left: 33%;
   transform: translateY(10%);
   animation: glow-rubikub 2s infinite;
 }
@@ -273,6 +273,8 @@
   width: auto;
   filter: grayscale(100%);
   opacity: 0.5;
+  user-select: none;
+  -webkit-user-drag: none;
   transition: filter 1.25s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 #experience-layer .inventory-wrapper div.visible img {

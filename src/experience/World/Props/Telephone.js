@@ -21,7 +21,6 @@ export default class Telephone extends Prop {
 
     }
     onClick() {
-        console.log("click telephone")
     }
 
     destroy() {

@@ -22,7 +22,6 @@ export default class Television extends Prop {
     }
 
     onClick() {
-        console.log("click TV")
     }
 
     destroy() {

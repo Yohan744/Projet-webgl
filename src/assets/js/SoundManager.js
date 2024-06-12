@@ -50,14 +50,12 @@ export default class SoundManager {
         const sound = this.sounds[key];
         if (!this.appStore.$state.muted && !sound.playing()) {
             if (sound.state() === 'loaded') {
-                console.log(`Fading in ${key} over ${duration}ms`);
                 const targetVolume = sound.volume();
                 sound.volume(0); // Set initial volume to 0
                 sound.play();
                 sound.fade(0, targetVolume, duration);
             } else {
                 sound.once('load', () => {
-                    console.log(`Fading in ${key} over ${duration}ms after load`);
                     const targetVolume = sound.volume();
                     sound.volume(0); // Set initial volume to 0
                     sound.play();
@@ -70,7 +68,6 @@ export default class SoundManager {
     fadeOut(key, duration) {
         const sound = this.sounds[key];
         if (!this.appStore.$state.muted && sound.playing()) {
-            console.log(`Fading out ${key} over ${duration}ms`);
             sound.fade(sound.volume(), 0, duration);
         }
     }

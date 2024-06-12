@@ -1,7 +1,7 @@
 <template>
 
   <div class="inventory-wrapper">
-    <div v-for="(item, index) in inventoryItems" :key="index" @click="handleInventoryObjectClick(index)" :class="{ 'visible': isVisible(index) }">
+    <div v-for="(item, index) in inventoryItems" :key="index" :class="{ 'visible': isVisible(index) }">
       <img :src="item.imageSrc" :alt="item.name"/>
     </div>
   </div>
@@ -42,17 +42,6 @@ export default {
   computed: {
     isVisible() {
       return index => index < this.gameManager.state.gameStepId;
-    },
-  },
-  methods: {
-    handleInventoryObjectClick(index) {
-
-      if (index < this.gameManager.state.gameStepId) {
-        console.log("click on: ", this.inventoryItems[index].name)
-      } else {
-        console.log("not available yet")
-      }
-
     },
   },
 }

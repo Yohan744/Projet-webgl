@@ -21,7 +21,6 @@ export default class Telecran extends Prop {
 
     }
     onClick() {
-        console.log("click telecran")
     }
 
     destroy() {
