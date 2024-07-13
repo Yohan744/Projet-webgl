@@ -8,13 +8,16 @@
         <img src="/assets/images/info-lgbt/Causette.png" alt="Image description" class="info-image-50">
         <div class="text-content">
           <p>
-            En 2023, nous célébrons <strong>les 10 ans du mariage pour tous en France</strong>, une étape historique vers l'égalité des droits pour les couples de même sexe.
+            En 2023, nous célébrons <strong>les 10 ans du mariage pour tous en France</strong>, une étape historique
+            vers l'égalité des droits pour les couples de même sexe.
           </p>
           <p>
-            <strong>Depuis 2021, la Procréation Médicalement Assistée (PMA)</strong> est également ouverte à toutes les femmes, indépendamment de leur situation matrimoniale ou de leur orientation sexuelle.
+            <strong>Depuis 2021, la Procréation Médicalement Assistée (PMA)</strong> est également ouverte à toutes les
+            femmes, indépendamment de leur situation matrimoniale ou de leur orientation sexuelle.
           </p>
           <p>
-            Chaque année en juin, <strong>mois de la fierté</strong>, nous honorons ces avancées et continuons à lutter pour une société plus inclusive et respectueuse des diversités.
+            Chaque année en juin, <strong>mois de la fierté</strong>, nous honorons ces avancées et continuons à lutter
+            pour une société plus inclusive et respectueuse des diversités.
           </p>
         </div>
       </div>
@@ -27,13 +30,17 @@
       <div class="info-content">
         <div class="text-content">
           <p>
-            En 2024, les smartphones et les réseaux sociaux ont révolutionné la communication, rendant les échanges quotidiens faciles même dans les relations à distance.
+            En 2024, les smartphones et les réseaux sociaux ont révolutionné la communication, rendant les échanges
+            quotidiens faciles même dans les relations à distance.
           </p>
           <p>
-            Grâce à ces technologies, il est possible de rester en contact avec ses proches en temps réel, peu importe la distance.
+            Grâce à ces technologies, il est possible de rester en contact avec ses proches en temps réel, peu importe
+            la distance.
           </p>
           <p>
-            Par ailleurs, les réseaux sociaux sont devenus des plateformes puissantes pour soutenir le mouvement LGBT, offrant des espaces de dialogue, de visibilité et de mobilisation pour défendre les droits et promouvoir l'égalité.
+            Par ailleurs, les réseaux sociaux sont devenus des plateformes puissantes pour soutenir le mouvement LGBT,
+            offrant des espaces de dialogue, de visibilité et de mobilisation pour défendre les droits et promouvoir
+            l'égalité.
           </p>
         </div>
         <img src="/assets/images/info-lgbt/TelMonaSam.png" alt="Image description" class="info-image-50">
@@ -45,16 +52,20 @@
         <div class="info-title">Musique</div>
       </div>
       <div class="info-content">
-        <iframe src="https://open.spotify.com/embed/playlist/00vXCJ3TKAAHqktbLdJJ54?utm_source=generator&theme=0" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        <iframe src="https://open.spotify.com/embed/playlist/00vXCJ3TKAAHqktbLdJJ54?utm_source=generator&theme=0"
+                width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
         <div class="text-content">
           <p>
-            La scène musicale accueille de nombreux artistes qui soutiennent activement la cause LGBT et contribuent à sa visibilité.
+            La scène musicale accueille de nombreux artistes qui soutiennent activement la cause LGBT et contribuent à
+            sa visibilité.
           </p>
           <p>
-            Ces artistes utilisent leurs plateformes pour sensibiliser le public, défendre les droits des personnes LGBT et promouvoir l'inclusivité à travers leur musique et leur présence médiatique.
+            Ces artistes utilisent leurs plateformes pour sensibiliser le public, défendre les droits des personnes LGBT
+            et promouvoir l'inclusivité à travers leur musique et leur présence médiatique.
           </p>
           <p>
-            Leurs actions et leur influence jouent un rôle crucial dans l'évolution des mentalités et la lutte pour l'égalité.
+            Leurs actions et leur influence jouent un rôle crucial dans l'évolution des mentalités et la lutte pour
+            l'égalité.
           </p>
         </div>
       </div>
@@ -62,25 +73,34 @@
 
     <div class="info-question">
       <h2 class="main-title">Vous avez dit "évolution" ?</h2>
-        <div class="text-content">
-          <p>Les chiffres de 2024 du rapport sur les LGBTiphobies de 2023 témoignent d'une aggravation des violences et des discriminations à l'encontre des personnes LGBT+ en France.
-          </p>
-        </div>
+      <div class="text-content">
+        <p>Les chiffres de 2024 du rapport sur les LGBTiphobies de 2023 témoignent d'une aggravation des violences et
+          des discriminations à l'encontre des personnes LGBT+ en France.
+        </p>
+      </div>
     </div>
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title"  @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage" >LGBTiphobies, le rapport de 2024</div>
+        <div class="info-title" @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')"
+             @mouseleave="hideImage">LGBTiphobies, le rapport de 2024
+        </div>
       </div>
       <div class="info-content">
         <div class="text-content">
           <div class="chart-toggle-buttons">
-            <button   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions</button>
-            <button   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"  :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires</button>
+            <button @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"
+                    :class="{ active: activeChart === 1 }" @click="switchChart(1)">Types d'agressions
+            </button>
+            <button @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage"
+                    :class="{ active: activeChart === 2 }" @click="switchChart(2)">Manifestations supplémentaires
+            </button>
           </div>
           <highcharts :options="currentChartOptions"></highcharts>
           <div>
-            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf"
+               target="_blank" @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')"
+               @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -88,18 +108,23 @@
 
     <div class="info-panel info-panel-left">
       <div class="info-title-container-left">
-        <div class="info-title"  @mouseover="showImage('/assets/images/info-lgbt/HomophobieTue.png')" @mouseleave="hideImage">Quelle évolution?</div>
+        <div class="info-title" @mouseover="showImage('/assets/images/info-lgbt/HomophobieTue.png')"
+             @mouseleave="hideImage">Quelle évolution?
+        </div>
       </div>
       <div class="info-content">
         <div class="text-content">
           <p>
-            <strong class="dataKey">266</strong> Agressions physiques LGBT+  ont été rapportées par SOS homophobie en 2023
+            <strong class="dataKey">266</strong> Agressions physiques LGBT+ ont été rapportées par SOS homophobie en
+            2023
           </p>
           <div class="info-data">
             <highcharts :options="chartOptions" ref="chart"></highcharts>
           </div>
           <div>
-            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"  @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf"
+               target="_blank" @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')"
+               @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
       </div>
@@ -107,19 +132,24 @@
 
     <div class="info-panel info-panel-right">
       <div class="info-title-container">
-        <div class="info-title" @mouseover="showImage('/assets/images/info-lgbt/Resistance.png')" @mouseleave="hideImage">Espaces publics, espaces intimes, espaces virtuels</div>
+        <div class="info-title" @mouseover="showImage('/assets/images/info-lgbt/Resistance.png')"
+             @mouseleave="hideImage">Espaces publics, espaces intimes, espaces virtuels
+        </div>
       </div>
       <div class="info-content">
         <div class="text-content">
           <p>
-            "Internet est aujourd’hui utilisé comme un relais de messages LGBTIphobes et une prolongation du harcèlement et des discriminations vécues dans le monde réel"
+            "Internet est aujourd’hui utilisé comme un relais de messages LGBTIphobes et une prolongation du harcèlement
+            et des discriminations vécues dans le monde réel"
           </p>
           <highcharts :options="chartOptions3" ref="chart"></highcharts>
           <div>
-            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf" target="_blank"   @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')" @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
+            <a href="https://ressource.sos-homophobie.org/Rapports_annuels/Rapport_LGBTIphobies_2024.pdf"
+               target="_blank" @mouseover="showImage('/assets/images/info-lgbt/RapportLGBT.png')"
+               @mouseleave="hideImage">Rapport LGBTIphobies 2024, SOS Homophobie</a>
           </div>
         </div>
-        
+
       </div>
     </div>
 
@@ -135,7 +165,6 @@ import Highcharts from 'highcharts';
 
 export default {
   name: 'NewSection',
-  
   components: {
     highcharts: HighchartsVue.component
   },
@@ -153,7 +182,7 @@ export default {
           backgroundColor: 'transparent',
           width: null
         },
-        legend:{ enabled:false },
+        legend: {enabled: false},
         title: {
           text: 'Évolution des agressions'
         },
@@ -161,7 +190,7 @@ export default {
           enabled: false
         },
         xAxis: {
-          categories: ['2016', '2017', '2018', '2019', '2020','2021','2022','2023']
+          categories: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023']
         },
         yAxis: {
           min: 0,
@@ -183,16 +212,16 @@ export default {
               radius: 3,
               fillColor: '#FFFFFF',
               lineWidth: 2,
-              lineColor: null 
+              lineColor: null
             },
             dataLabels: {
               enabled: true,
               align: 'left',
               crop: false,
               useHTML: false,
-              formatter: function() {
+              formatter: function () {
                 if (this.point.x === this.series.data.length - 1) {
-                  return '<span style="color: '+ this.color + '">' + Highcharts.numberFormat(this.y, 0) + '</span>';
+                  return '<span style="color: ' + this.color + '">' + Highcharts.numberFormat(this.y, 0) + '</span>';
                 } else {
                   return null;
                 }
@@ -223,7 +252,7 @@ export default {
         credits: {
           enabled: false
         },
-        legend:{ enabled:false },
+        legend: {enabled: false},
         title: {
           text: "Types d'agressions"
         },
@@ -267,7 +296,7 @@ export default {
           type: 'column',
           backgroundColor: 'transparent'
         },
-        legend:{ enabled:false },
+        legend: {enabled: false},
         credits: {
           enabled: false
         },
@@ -276,20 +305,20 @@ export default {
         },
         xAxis: {
           categories: [
-            'Insultes', 
-            'Rejet', 
-            'Menaces', 
-            'Harcèlement', 
+            'Insultes',
+            'Rejet',
+            'Menaces',
+            'Harcèlement',
             'Dégradations / vols',
-            'Sexualisation', 
-            'Traquenard', 
-            'Inaction', 
+            'Sexualisation',
+            'Traquenard',
+            'Inaction',
             'Diffamation',
-            'Discrimination', 
-            'Amalgame pédocrim.', 
+            'Discrimination',
+            'Amalgame pédocrim.',
             'Agress. sex.',
-            'Outing', 
-            'Invisibilisation', 
+            'Outing',
+            'Invisibilisation',
             'Contrôle déplacements'
           ],
           title: {
@@ -344,7 +373,7 @@ export default {
           type: 'column',
           backgroundColor: 'transparent'
         },
-        legend:{ enabled:false },
+        legend: {enabled: false},
         credits: {
           enabled: false
         },
@@ -352,7 +381,7 @@ export default {
           text: 'Evolution des contextes principaux de lgbtiphobies entre 2022 et 2023'
         },
         xAxis: {
-          categories : ['haine en ligne', 'famille', 'commerces, services', 'lieux publics', 'voisinage', 'mal de vivre'],
+          categories: ['haine en ligne', 'famille', 'commerces, services', 'lieux publics', 'voisinage', 'mal de vivre'],
           title: {
             text: null
           },
@@ -432,7 +461,6 @@ export default {
 <style scoped>
 
 
-
 .new-section {
   position: relative;
   display: block;
@@ -463,6 +491,7 @@ export default {
 .info-panel-right {
   float: right;
 }
+
 .info-panel-left {
   float: left;
 }
@@ -508,12 +537,7 @@ export default {
   margin-bottom: 15px;
   border-radius: 8px;
 }
-.info-image-30 {
-  width: 30%;
-  max-width: 600px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-}
+
 .info-data {
   padding: 40px;
 }
@@ -541,9 +565,9 @@ export default {
   color: white;
 }
 
-a  {
-   color: #EC9781;
-   z-index: 2;
+a {
+  color: #EC9781;
+  z-index: 2;
 }
 
 a:hover {
@@ -554,7 +578,6 @@ a:hover {
 .hover-image {
   position: fixed;
   pointer-events: none;
-  /* z-index: 1000; */
   z-index: 1;
 }
 
@@ -591,4 +614,5 @@ a:hover {
     margin-bottom: 0;
   }
 }
+
 </style>

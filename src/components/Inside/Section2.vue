@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <ThreeColumns :images="imagesSection2" />
-  </div>
+  <ThreeColumns :images="imagesSection2"/>
 </template>
 
 <script>

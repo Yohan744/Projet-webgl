@@ -7,11 +7,13 @@
 </template>
 
 <script>
+import { inject } from '@vercel/analytics';
 
 export default {
   name: 'App',
   mounted() {
     window.addEventListener("keydown", (e) => this.goFullScreen(e))
+    inject();
   },
   beforeUnmount() {
     window.removeEventListener("keydown", (e) => this.goFullScreen(e))

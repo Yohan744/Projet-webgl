@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <ThreeColumns :images="imagesSection4" />
-  </div>
+  <ThreeColumns :images="imagesSection4"/>
 </template>
 
 <script>
@@ -9,7 +7,6 @@ import ThreeColumns from './ThreeColumns.vue';
 
 export default {
   name: 'Section4',
-  
   components: {
     ThreeColumns
   },

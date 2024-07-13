@@ -5,41 +5,43 @@
     </button>
     <div :class="['tabs', { 'tabs-hidden': !menuOpen && isMobileView, 'tabs-visible': menuOpen && isMobileView }]">
       <span
-        v-for="(tab, index) in tabs" 
-        :key="tab" 
-        class="tab" 
-        :class="{ active: activeSection === index }"
-        @click="scrollToSection(index)">
+          v-for="(tab, index) in tabs"
+          :key="tab"
+          class="tab"
+          :class="{ active: activeSection === index }"
+          @click="scrollToSection(index)">
         {{ tab }}
         <span v-if="activeSection === index" v-html="heartSvg"></span>
       </span>
     </div>
     <router-link
-      :to="videoReady ? '/experience' : ''"
-      class="header-button"
-      :class="{ disabled: !videoReady }"
-      @click.prevent="!videoReady">
+        :to="videoReady ? '/experience' : ''"
+        class="header-button"
+        :class="{ disabled: !videoReady }"
+        @click.prevent="!videoReady">
       {{ textVideoReady }}
     </router-link>
     <button class="share-button" @click="toggleSharePopup">
       <span v-if="!isMobileView">Partager</span>
       <span v-else>
         <svg class="share-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.03-.47-.08-.7l7.11-4.05c.53.5 1.23.82 2.02.82 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.03.47.08.7L6.91 9.77C6.38 9.3 5.68 9 5 9 3.34 9 2 10.34 2 12s1.34 3 3 3c.68 0 1.38-.3 1.91-.77l7.12 4.05c-.05.22-.08.45-.08.69 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/>
+          <path
+              d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.03-.47-.08-.7l7.11-4.05c.53.5 1.23.82 2.02.82 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.03.47.08.7L6.91 9.77C6.38 9.3 5.68 9 5 9 3.34 9 2 10.34 2 12s1.34 3 3 3c.68 0 1.38-.3 1.91-.77l7.12 4.05c-.05.22-.08.45-.08.69 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/>
         </svg>
       </span>
     </button>
     <div v-if="sharePopupVisible" class="share-popup">
       <button @click="copyURL">Copier le lien</button>
-      <a href="https://www.instagram.com/lopf_2024?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">Instagram</a>
+      <a href="https://www.instagram.com/lopf_2024?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+         target="_blank">Instagram</a>
     </div>
   </div>
 </template>
 
 
 <script>
-import { useVideoManager } from "../../assets/js/VideoManager";
-import { watch } from "vue";
+import {useVideoManager} from "../../assets/js/VideoManager";
+import {watch} from "vue";
 
 export default {
   name: 'HeaderBanner',
@@ -117,7 +119,6 @@ export default {
   }
 }
 </script>
-
 
 
 <style scoped>

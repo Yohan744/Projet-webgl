@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <section v-for="(section, index) in sections" :key="index" :id="`section-${index}`" ref="sections">
-      <component :is="section" :is-visible="isSectionVisible(index)" />
+      <component :is="section" :is-visible="isSectionVisible(index)"/>
     </section>
   </div>
 </template>
@@ -53,7 +53,7 @@ export default {
       const sectionIndex = this.tabToSectionMapping[index];
       const section = document.getElementById(`section-${sectionIndex}`);
       if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
+        section.scrollIntoView({behavior: 'smooth'});
       }
     },
     handleScroll() {
@@ -69,8 +69,8 @@ export default {
           const viewportHeight = window.innerHeight;
 
           if (
-            (rect.top >= 0 && rect.bottom <= viewportHeight) ||
-            (rect.top < 0 && rect.bottom > viewportHeight / 2)
+              (rect.top >= 0 && rect.bottom <= viewportHeight) ||
+              (rect.top < 0 && rect.bottom > viewportHeight / 2)
           ) {
             activeSection = index;
           }
@@ -111,6 +111,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 section {
   min-height: 100vh;
   overflow: hidden;

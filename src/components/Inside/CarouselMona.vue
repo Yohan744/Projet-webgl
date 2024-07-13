@@ -2,12 +2,12 @@
   <div class="carousel-container">
     <div class="carousel">
       <div class="carousel-inner">
-        <div 
-          class="carousel-item" 
-          v-for="(image, index) in 6"
-          :key="index" 
-          :class="{ active: currentIndex === index }"
-          :style="{ 
+        <div
+            class="carousel-item"
+            v-for="(index) in 6"
+            :key="index"
+            :class="{ active: currentIndex === index }"
+            :style="{
             transform: `rotate(${(index - currentIndex) * 5}deg) translate(${(index - currentIndex) * 10}px, ${(index - currentIndex) * 5}px)`, 
             zIndex: imagesLength - Math.abs(currentIndex - index)
           }"
@@ -89,7 +89,7 @@ export default {
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);
-  z-index: 10; 
+  z-index: 10;
 }
 
 .carousel-controls button {

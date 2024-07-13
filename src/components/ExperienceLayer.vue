@@ -4,9 +4,7 @@
       <img :src="goBackIcon" alt="Go back"/>
     </div>
 
-    <div class="instruction-text">
-      <p v-html="displayedText"></p>
-    </div>
+    <p class="instruction-text" v-html="displayedText"></p>
 
     <div ref="settings" @click="handleSettingsIconClick" class="settings-icon visible">
       <img src="../assets/icons/settings.svg" alt="Settings"/>
@@ -21,11 +19,11 @@
         <div class="volume-wrapper">
           <p>Volume : </p>
           <input ref="globalVolumeInput" type="range" min="0" max="1" step="0.01" v-model="smoothGlobalVolume">
-          <p>{{globalVolume}}</p>
+          <p>{{ globalVolume }}</p>
         </div>
         <div class="route-wrapper">
           <router-link to="/">Retour à l'accueil</router-link>
-        <router-link to="/" @click="resetExperience">Recommencer l'expérience</router-link>
+          <router-link to="/" @click="resetExperience">Recommencer l'expérience</router-link>
         </div>
       </div>
     </div>
@@ -36,15 +34,15 @@
 </template>
 
 <script>
-import { useAppStore } from "../stores/appStore";
+import {useAppStore} from "../stores/appStore";
 import homeIcon from '../assets/icons/home.svg';
 import arrowLeftIcon from '../assets/icons/arrow-left.svg';
-import { useGameManager } from "../assets/js/GameManager";
+import {useGameManager} from "../assets/js/GameManager";
 import Inventory from "./Inventory.vue";
 
 export default {
   name: 'ExperienceLayer',
-  components: { Inventory },
+  components: {Inventory},
   props: {
     soundManager: Object,
   },

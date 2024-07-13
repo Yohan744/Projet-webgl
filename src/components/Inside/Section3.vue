@@ -63,8 +63,8 @@ export default {
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: `.year-section-${index}`,
-            start: "top 80%", 
-            end: "bottom 20%",  
+            start: "top 80%",
+            end: "bottom 20%",
             scrub: true,
             onEnter: () => this.currentYear = year,
             onEnterBack: () => this.currentYear = year,
@@ -82,7 +82,7 @@ export default {
     adjustMediaSizes() {
       const mediaContainers = document.querySelectorAll('.media-container');
       mediaContainers.forEach(container => {
-        const totalHeight = 80 * window.innerHeight / 100; 
+        const totalHeight = 80 * window.innerHeight / 100;
         const textElements = container.querySelectorAll('p');
         let textHeight = 0;
         textElements.forEach(text => {
@@ -108,7 +108,7 @@ export default {
       if (window.innerWidth >= 768) {
         const mediaItem = event.currentTarget;
         mediaItem.style.transform = 'scale(1)';
-        mediaItem.style.opacity = 0.8; 
+        mediaItem.style.opacity = 0.8;
         mediaItem.style.zIndex = 1;
       }
     },
@@ -163,7 +163,6 @@ export default {
 .year-section {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   min-height: 100vh;
   padding: 0 5%;
   margin: 5vh 0;
@@ -172,7 +171,7 @@ export default {
 
 .media-container {
   width: 40%;
-  max-height: 80vh; 
+  max-height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -181,15 +180,14 @@ export default {
 .media-item {
   margin-bottom: 20px;
   transition: transform 0.3s ease, opacity 0.3s ease, z-index 0.3s ease;
-  opacity: 0.8; 
+  opacity: 0.8;
 }
 
 .media-item iframe, .media-item img {
-  width: 100%;
-  height: 100%;
   height: auto;
+  width: 100%;
   border-radius: 8px;
-  object-fit: contain; 
+  object-fit: contain;
 }
 
 iframe {
@@ -202,7 +200,7 @@ iframe {
     width: 60%;
     margin: 20px 0;
   }
-  
+
   iframe {
     min-height: 300px;
     min-width: 300px;
@@ -220,6 +218,7 @@ iframe {
 }
 
 @media (max-width: 768px) {
+
   .year-section {
     flex-direction: column;
   }
@@ -230,19 +229,17 @@ iframe {
   }
 
   .media-item {
-    pointer-events: none; 
+    pointer-events: none;
   }
+
   iframe {
     min-height: 100px;
     min-width: 100px;
   }
 
-
 }
 
-
 .two-items .media-item:nth-child(1) {
-  transform: translateX(50px);
   transform: translateY(40px);
   left: 15px;
 }
@@ -252,10 +249,5 @@ iframe {
   left: -15px;
 
 }
-
-.three-items{
-  display: ruby;
-}
-
 
 </style>

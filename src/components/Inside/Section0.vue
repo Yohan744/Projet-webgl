@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     handleButtonClick() {
-      document.getElementById('section-1').scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('section-1').scrollIntoView({behavior: 'smooth'});
     },
     triggerHandwritingAnimation() {
       const titles = document.querySelectorAll('.title');
@@ -29,7 +29,7 @@ export default {
         setTimeout(() => {
           title.style.visibility = 'visible';
           title.classList.add('handwriting');
-        }, index * 2000); 
+        }, index * 2000);
       });
     }
   }
@@ -66,24 +66,25 @@ export default {
   visibility: hidden;
 }
 
- 
+
 @media (max-width: 768px) {
-    .title {
-      font-size: 10px;
-    } 
+  .title {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 992px) {
+  .title[data-v-71bb5894]:first-child {
+    margin-top: 20vh;
   }
 
-  @media (max-width: 992px) {
-    .title[data-v-71bb5894]:first-child  {
-      margin-top:20vh;
-    }
-    .title {
-      font-size: 30px;
-    }
+  .title {
+    font-size: 30px;
   }
+}
 
 .title:first-child {
-  margin-top: 10vh; 
+  margin-top: 10vh;
 }
 
 .title.handwriting {
@@ -131,6 +132,7 @@ button {
 button:hover {
   color: #A7CF90;
 }
+
 </style>
 
 

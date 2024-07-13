@@ -13,26 +13,28 @@
         </div>
         <br>
         <p>
-          Durant son adolescence, elle se passionne pour le surf et prend des cours chaque été. 
+          Durant son adolescence, elle se passionne pour le surf et prend des cours chaque été.
           Elle y rencontre Sam, une jeune fille à laquelle elle s'attache.
         </p>
         <br>
         <p>
-          Dans les années 80, elle passe beaucoup de temps à écouter de la musique. Elle collectionne les cassettes 
+          Dans les années 80, elle passe beaucoup de temps à écouter de la musique. Elle collectionne les cassettes
           de ses artistes préférés : Daniel Balavoine, Mylène Farmer, David Bowie et Culture Club.
         </p>
         <br>
         <div class="boxed-text">
           <p>
-            Ce sont des icones queer issus de la culture pop auxquelles elle s’identifie à travers leurs œuvres. 
-            Elles lui offrent un autre regard sur le monde et l’aideront à <strong>se construire</strong> durant l’adolescence.
+            Ce sont des icones queer issus de la culture pop auxquelles elle s’identifie à travers leurs œuvres.
+            Elles lui offrent un autre regard sur le monde et l’aideront à <strong>se construire</strong> durant
+            l’adolescence.
           </p>
         </div>
       </div>
     </div>
     <h3>La boite à outils de Mona</h3>
     <div class="bottom-band">
-      <div v-for="(item, index) in items" :key="index" class="square" @mouseover="showPopup(index)" @mouseleave="hidePopup" :style="{ backgroundColor: item.color }">
+      <div v-for="(item, index) in items" :key="index" class="square" @mouseover="showPopup(index)"
+           @mouseleave="hidePopup" :style="{ backgroundColor: item.color }">
         <img :src="item.src" :alt="item.name">
         <div v-if="popupVisible === index" class="popup">
           <p><strong>{{ item.name }}</strong></p>
@@ -57,51 +59,51 @@ export default {
     return {
       popupVisible: null,
       items: [
-        { 
-          name: 'Tablette de sable', 
-          anecdote: 'Populaire dans les années 80, la tablette de sable permettait aux enfants de dessiner et d\'effacer facilement avec un stylet, offrant une alternative économique et réutilisable aux blocs de papier.', 
+        {
+          name: 'Tablette de sable',
+          anecdote: 'Populaire dans les années 80, la tablette de sable permettait aux enfants de dessiner et d\'effacer facilement avec un stylet, offrant une alternative économique et réutilisable aux blocs de papier.',
           src: './assets/images/objects/object1.png',
           color: '#B6E5EB'
         },
-        { 
-          name: 'Walkman', 
-          anecdote: 'Incontournable dans les années 80, le Walkman, un lecteur de cassettes portable avec des écouteurs, révolutionnait la façon d\'écouter de la musique en permettant aux gens d\'emmener leurs chansons préférées partout.', 
+        {
+          name: 'Walkman',
+          anecdote: 'Incontournable dans les années 80, le Walkman, un lecteur de cassettes portable avec des écouteurs, révolutionnait la façon d\'écouter de la musique en permettant aux gens d\'emmener leurs chansons préférées partout.',
           src: './assets/images/objects/object2.png',
           color: '#A7CF90'
         },
-        { 
-          name: 'Téléphone à cadran', 
-          anecdote: 'Utilisé dans la plupart des foyers des années 80, le téléphone à cadran fixe nécessitait de composer les numéros en tournant un cadran rotatif, rendant l\'expérience téléphonique unique avec son "clic-clac" distinctif.', 
+        {
+          name: 'Téléphone à cadran',
+          anecdote: 'Utilisé dans la plupart des foyers des années 80, le téléphone à cadran fixe nécessitait de composer les numéros en tournant un cadran rotatif, rendant l\'expérience téléphonique unique avec son "clic-clac" distinctif.',
           src: './assets/images/objects/object3.png',
-          color: '#F3C767' 
+          color: '#F3C767'
         },
-        { 
-          name: 'Cassette à rembobiner', 
-          anecdote: 'Les cassettes audio étaient le format musical dominant dans les années 80. Elles nécessitaient parfois un crayon pour rembobiner manuellement la bande, prolongeant ainsi leur durée de vie.', 
+        {
+          name: 'Cassette à rembobiner',
+          anecdote: 'Les cassettes audio étaient le format musical dominant dans les années 80. Elles nécessitaient parfois un crayon pour rembobiner manuellement la bande, prolongeant ainsi leur durée de vie.',
           src: './assets/images/objects/object4.png',
-          color: '#C8829F' 
+          color: '#C8829F'
         },
-        { 
-          name: 'Vinyl et tourne-disque', 
-          anecdote: 'Les vinyles, écoutés sur un tourne-disque, offraient une qualité sonore chaleureuse. Écouter un album était une activité souvent partagée en famille ou entre amis.', 
+        {
+          name: 'Vinyl et tourne-disque',
+          anecdote: 'Les vinyles, écoutés sur un tourne-disque, offraient une qualité sonore chaleureuse. Écouter un album était une activité souvent partagée en famille ou entre amis.',
           src: './assets/images/objects/object5.png',
-          color: '#737DB9' 
+          color: '#737DB9'
         },
-        { 
-          name: 'Magazines des années 80', 
-          anecdote: 'Les magazines des années 80 étaient une fenêtre sur le monde, regorgeant de modes, tendances et nouvelles de l\'époque, fournissant des mises à jour avant l\'ère d\'Internet.', 
+        {
+          name: 'Magazines des années 80',
+          anecdote: 'Les magazines des années 80 étaient une fenêtre sur le monde, regorgeant de modes, tendances et nouvelles de l\'époque, fournissant des mises à jour avant l\'ère d\'Internet.',
           src: './assets/images/objects/object6.png',
-          color: '#EC9781' 
+          color: '#EC9781'
         },
-        { 
-          name: 'Disque de Balavoine', 
-          anecdote: 'Daniel Balavoine était une icône de la musique française dans les années 80. Ses albums, comme "Sauver l\'amour", étaient souvent joués en boucle sur les tourne-disques.', 
+        {
+          name: 'Disque de Balavoine',
+          anecdote: 'Daniel Balavoine était une icône de la musique française dans les années 80. Ses albums, comme "Sauver l\'amour", étaient souvent joués en boucle sur les tourne-disques.',
           src: './assets/images/objects/object7.png',
-          color: '#B6E5EB' 
+          color: '#B6E5EB'
         },
-        { 
-          name: 'Rubik\'s Cube', 
-          anecdote: 'Le Rubik\'s Cube, un puzzle en forme de cube avec des faces colorées à aligner, a connu une énorme popularité dans les années 80, devenant un symbole de l\'ingéniosité et un défi incontournable.', 
+        {
+          name: 'Rubik\'s Cube',
+          anecdote: 'Le Rubik\'s Cube, un puzzle en forme de cube avec des faces colorées à aligner, a connu une énorme popularité dans les années 80, devenant un symbole de l\'ingéniosité et un défi incontournable.',
           src: './assets/images/objects/object8.png',
           color: '#F3C767'
         }
@@ -124,7 +126,7 @@ export default {
 .content-container {
   display: flex;
   flex-direction: column;
-  height: auto; 
+  height: auto;
   overflow: hidden;
 }
 
@@ -166,7 +168,7 @@ export default {
 
 .bottom-band {
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   place-content: center;
   padding: 10px;
   width: 80%;
@@ -191,17 +193,17 @@ export default {
   height: auto;
   border-radius: 8px;
   transition: transform 0.3s;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .square:hover {
-  transform: rotateY(15deg) rotateX(15deg); 
+  transform: rotateY(15deg) rotateX(15deg);
   z-index: 10;
   opacity: 1;
 }
 
 .square:hover img {
-  transform: scale(1.3); 
+  transform: scale(1.3);
 }
 
 .popup {
@@ -211,7 +213,7 @@ export default {
   font-size: 16px;
   bottom: 100%;
   left: 50%;
-  transform:scale(0);
+  transform: scale(0);
   min-width: 300px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -268,10 +270,6 @@ export default {
   }
 }
 
-.buttons {
-  margin-top: 20px;
-}
-
 button {
   padding: 10px 20px;
   font-size: 16px;
@@ -292,13 +290,13 @@ button:hover {
   }
 
   .bottom-band {
-    justify-content: center; 
+    justify-content: center;
   }
 }
 
 @media (max-width: 480px) {
   .square {
-    width: 100px; 
+    width: 100px;
     height: 100px;
     margin-bottom: 10px;
   }

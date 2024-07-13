@@ -6,13 +6,13 @@
   justify-content: flex-start;
   align-items: center;
   background: url('/assets/images/fond-intro.webp') no-repeat center/cover;
-  background-size: cover; 
+  background-size: cover;
 
   a {
     position: relative;
     font-size: 20px;
     border-radius: 20px;
-    padding: 10px 20px; 
+    padding: 10px 20px;
     text-decoration: none;
     background-color: #A7CF90;
     color: white;
@@ -38,19 +38,21 @@
     font-weight: lighter;
     padding-right: 1em;
     padding-left: 1em;
-    color : white;
+    color: white;
     animation: glow-masthead 2s infinite;
-  }
-  
-  @media (max-width: 768px) {
-    .masthead-title {
-      font-size: 20px;
-    } 
+
+    @media screen and (max-width: 992px) {
+      font-size: 50px;
+      line-height: 2;
+      animation: none;
+    }
+
+    @media screen and (max-width: 576px) {
+      font-size: 40px;
+      width: 100%;
+      padding: 20px;
+    }
+
   }
 
-  @media (max-width: 992px) {
-    .masthead-title {
-      font-size: 50px;
-    }
-  }
 }
